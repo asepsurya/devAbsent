@@ -1,1 +1,2 @@
 php artisan db:seed --class=IndoRegionSeeder
+php artisan install:api

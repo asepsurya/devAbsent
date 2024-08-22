@@ -4,10 +4,10 @@
             <img src="{{ asset('asset/img/logo.png') }}" alt="Logo">
         </a>
         <a href="index.html" class="logo-small">
-            <img src="{{ asset('asset/img/logo.png') }}" alt="Logo">
+            <img src="{{ asset('asset/img/logo-icon.png') }}" alt="Logo">
         </a>
         <a href="index.html" class="dark-logo">
-            <img src="{{ asset('asset/img/logo.png') }}" alt="Logo">
+            <img src="{{ asset('asset/img/logo-white.png') }}" alt="Logo">
         </a>
         <a id="toggle_btn" href="javascript:void(0);">
             <i class="ti ti-layout-align-left"></i>
@@ -22,7 +22,7 @@
     </a>
     <div class="header-user">
         <div class="nav user-menu">
-            <div class="nav-item nav-search-inputs me-auto">  
+            <div class="nav-item nav-search-inputs me-auto">
             </div>
             {{-- Night Mode --}}
             <div class="pe-1">
@@ -147,8 +147,11 @@
                     <span class="chat-status-dot"></span>
                 </a>
             </div>
+            <div class="pe-1">
+              <a href="" class="btn btn-outline-light bg-white  position-relative "><span class="ti ti-key"></span> Ubah Password</a>
+            </div>
             {{-- user --}}
-            <div class="d-flex align-items-center"> 
+            <div class="d-flex align-items-center">
                 <div class="dropdown ms-1">
                     <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center"
                         data-bs-toggle="dropdown">
@@ -194,7 +197,7 @@
                 @csrf
                 <button type="sumbit" class="dropdown-item"> Keluar</button>
             </form>
-        
+
         </div>
     </div>
 

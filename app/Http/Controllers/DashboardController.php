@@ -16,4 +16,9 @@ class DashboardController extends Controller
             'title'=>'Dashboard',
         ]);
     }
+    public function teacherDashboard(){
+        return view('dashboard.teacher',[
+            'title'=>'Dashboard',
+        ]);
+    }
 }

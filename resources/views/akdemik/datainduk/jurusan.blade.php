@@ -48,13 +48,13 @@
             </div>
         </div>
     </div>
-    <div class="card-body p-0"> 
+    <div class="card-body p-0">
         <div class="table-responsive " >
             <table class="table table-nowrap mb-0" id="myTable">
                 <thead>
                     <tr>
                         <th class="bg-light-400">#</th>
-              
+
                         <th class="bg-light-400">Nama Jurusan</th>
                         <th class="bg-light-400">Status</th>
                         <th class="bg-light-400">Action</th>
@@ -65,10 +65,10 @@
                         $no=1;
                     @endphp
                     @foreach ($jurusans as $item )
-                  
-                    <tr class="odd"> 
+
+                    <tr class="odd">
                         <td>{{ $no++ }}</td>
-                       
+
                         <td>{{ $item->nama_jurusan }}</td>
                         <td>
                             @if($item->status == 1)
@@ -77,16 +77,16 @@
                             @else
                             <span class="badge badge-soft-danger d-inline-flex align-items-center"><i
                                 class="ti ti-circle-filled fs-5 me-1"></i>Tidak Aktif</span>
-                            @endif          
-                        </td>        
-                        <td > 
+                            @endif
+                        </td>
+                        <td >
                             <div class="hstack gap-2 fs-15">
-                                <a data-bs-toggle="modal" data-bs-target="#edit_jurusan-{{ $item->id }}" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i class="ti ti-pencil-minus"></i></a>
-                                <a href="{{ route('dataIndukJurusanDelete',$item->id) }}" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i class="ti ti-trash"></i></a>
+                                <a  data-bs-toggle="modal" data-bs-target="#edit_jurusan-{{ $item->id }}" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i class="ti ti-pencil-minus"></i></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus" href="{{ route('dataIndukJurusanDelete',$item->id) }}" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i class="ti ti-trash"></i></a>
                                 </div>
                         </td>
                     </tr>
-                          
+
                     @endforeach
                 </tbody>
             </table>
@@ -103,7 +103,7 @@
                         <i class="ti ti-x"></i>
                     </button>
                 </div>
-               
+
                     <div class="modal-body">
                         <div class="row">
                             <form action="{{ route('dataIndukJurusanUpdate') }}" method="post">
@@ -120,7 +120,7 @@
                                         <option value="1" @if($item->status== 1) selected  @endif>Aktif</option>
                                         <option value="2"  @if($item->status== 2) selected @endif>Tidak Aktif</option>
                                     </select>
-                                </div>  
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -129,11 +129,11 @@
                         <button type="submit" class="btn btn-primary">Tambah</button>
                     </form>
                     </div>
-                
+
             </div>
         </div>
     </div>
-        
+
 @endforeach
     {{-- modal tambah Jurusan --}}
     <div class="modal fade" id="add_jurusan" aria-modal="true" role="dialog">
@@ -145,7 +145,7 @@
                         <i class="ti ti-x"></i>
                     </button>
                 </div>
-               
+
                     <div class="modal-body">
                         <div class="row">
                             <form action="{{ route('dataIndukJurusanAdd') }}" method="post">
@@ -162,8 +162,8 @@
                                         <option value="2">Tidak Aktif</option>
                                     </select>
                                 </div>
-     
-    
+
+
                             </div>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                         <button type="submit" class="btn btn-primary">Tambah</button>
                     </form>
                     </div>
-                
+
             </div>
         </div>
     </div>
@@ -194,7 +194,7 @@
           } else {
             tr[i].style.display = "none";
           }
-        }       
+        }
       }
     }
     </script>

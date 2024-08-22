@@ -16,8 +16,10 @@ return new class extends Migration
             $table->string('id_tahun_pelajaran')->nullable();
             $table->string('id_kelas')->nullable();
             $table->string('id_mapel')->nullable();
+            $table->string('semester')->nullable();
+            $table->string('id_gtk')->nullable();
             $table->string('status')->nullable();
-        
+
             $table->timestamps();
         });
     }

@@ -13,4 +13,21 @@ class gtk extends Model
     public function Usergtk(){
         return $this->belongsTo('App\Models\user','nik','nomor');
     }
+    public function kota(){
+        return $this->belongsTo('App\Models\Regency','id_kota','id');
+    }
+    public function kecamatan(){
+        return $this->belongsTo('App\Models\District','id_kecamatan','id');
+    }
+    public function desa(){
+        return $this->belongsTo('App\Models\Village','id_desa','id');
+    }
+    public function Mapelgtk(){
+        return $this->belongsTo('App\Models\grupMapel','nik','id_gtk');
+    }
+    public function MapelgtkList(){
+        return $this->hasMany('App\Models\grupMapel','id_gtk','nik');
+    }
+
+
 }

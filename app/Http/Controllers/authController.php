@@ -41,45 +41,66 @@ class authController extends Controller
             'email'=>'required|email|unique:Users',
             'password'=>'required|same:Cpassword|min:6',
         ]);
-       
+
         $validator['status'] = '1';
         $validator['tanggal_masuk'] = '';
         $validator['id_rfid']= '';
         $validator ['id_kelas' ]= '';
         $validator['id_rombel']='';
-        
+
         student::create($validator);
-        
+
         $validatedData = $request->validate([
             'nama'=>'required',
             'email'=>'required|email|unique:Users',
             'password'=>'required|same:Cpassword|min:6',
-       
+
         ]);
          // // enkripsi password
          $validatedData['password'] = Hash::make($validatedData['password'] );
          $validatedData['nama'] = $request->nama;
          $validatedData['nomor'] = $request->nis;
          $validatedData['role'] = '4';
-         
+         $validatedData['status'] = '1';
+
          User::create($validatedData);
          return redirect('/login')->with('Berhasil','Hallo Selamat Datang'.$request->nama);
     }
     // login Action
     public function loginAction(request $request){
+
         $cek = $request->validate([
             'email'=>'required|email',
             'password'=>'required|min:6'
         ]);
-        
+        $cek['status'] = '2';
         if(Auth::attempt($cek)){
             $request->session()->regenerate();
-            toastr()->success('Login Berhasil');
-            return redirect()-> intended('/dashboard');
+
+            if(Auth()->user()->role == '1'){
+                toastr()->success('Login Berhasil');
+                return redirect()-> intended('/dashboard');
+            }elseif(Auth()->user()->role == 'walikelas'){
+                toastr()->success('Login Berhasil');
+                return redirect()-> intended('/TeacherDashboard');
+            }elseif(Auth()->user()->role == 'guru'){
+                toastr()->success('Login Berhasil');
+                return redirect()-> intended('/TeacherDashboard');
+            }elseif(Auth()->user()->role == 'siswa'){
+                toastr()->success('Login Berhasil');
+                return redirect()-> intended('/student/dashboard');
+
+            }else{
+                toastr()->success('Login Berhasil');
+                return redirect()-> intended('/dashboard');
+
+            }
+
         }
-        //jika login error
-        toastr()->error('Login Gagal!! Periksa Kembali Data Anda');
-        return back()->with('loginError','Login Gagal!! Periksa Kembali Data Anda');
+            //jika login error
+            toastr()->error('Login Gagal!! Periksa Kembali Data Anda');
+            return back()->with('loginError','Login Gagal!! Periksa Kembali Data Anda');
+
     }
 
     // logout action
@@ -97,7 +118,7 @@ class authController extends Controller
         // }
         // abort(403);
     }
-   
+
     public function create(request $request){
         return ' halama create';
     }

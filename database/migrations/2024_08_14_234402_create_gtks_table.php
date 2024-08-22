@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('gender');
             $table->string('tempat_lahir');
             $table->string('tanggal_lahir');      
-            $table->string('agama');
-       
+            $table->string('agama'); 
             $table->string('alamat');
+            $table->string('telp');
             $table->string('id_provinsi');
             $table->string('id_kota');
             $table->string('id_kecamatan');
@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('tanggal_masuk')->nullable();
             $table->string('id_rfid')->nullable();
             $table->string('id_jenis_gtk')->nullable();
+            $table->string('gambar')->nullable();
             $table->timestamps();
         });
     }

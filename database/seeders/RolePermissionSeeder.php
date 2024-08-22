@@ -55,6 +55,7 @@ class RolePermissionSeeder extends Seeder
             'nama'=>'Wali Kelas',
             'email'=>'walikelas.sakti@gmail.com',
             'role'=>'2',
+            'status'=>'2',
         ],$default_user_value));
 
         $user->assignRole($role1);
@@ -64,6 +65,7 @@ class RolePermissionSeeder extends Seeder
             'nama'=>'Guru',
             'email'=>'guru.sakti@gmail.com',
             'role'=>'3',
+            'status'=>'2',
         ],$default_user_value));
 
         $user->assignRole($role2);
@@ -73,6 +75,7 @@ class RolePermissionSeeder extends Seeder
             'nama'=>'Sample Student',
             'email'=>'siswa.sakti@gmail.com',
             'role'=>'4',
+            'status'=>'2',
         ],$default_user_value));
 
         $user->assignRole($role3);
@@ -82,6 +85,7 @@ class RolePermissionSeeder extends Seeder
             'nama'=>'Sample Student 1',
             'email'=>'siswa1.sakti@gmail.com',
             'role'=>'4',
+            'status'=>'2',
         ],$default_user_value));
 
         $user->assignRole($role3);
@@ -90,6 +94,7 @@ class RolePermissionSeeder extends Seeder
             'nama'=>'Sample Student 2',
             'email'=>'siswa2.sakti@gmail.com',
             'role'=>'4',
+            'status'=>'2',
         ],$default_user_value));
 
         $user->assignRole($role3);
@@ -99,6 +104,7 @@ class RolePermissionSeeder extends Seeder
             'nama'=>'Administrator',
             'email'=>'superAdmin.sakti@gmail.com',
             'role'=>'1',
+            'status'=>'2',
         ],$default_user_value));
 
         $user->assignRole($role4);

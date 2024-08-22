@@ -13,4 +13,7 @@ class Kelas extends Model
     public function jurusanKelas(){
         return $this->belongsTo('App\Models\jurusan','id_jurusan','id');
     }
+    public function jmlRombel(){
+        return $this->hasMany('App\Models\rombel','id_kelas','id');
+    }
 }

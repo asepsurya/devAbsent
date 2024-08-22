@@ -6,4 +6,5 @@ return [
     AzisHapidin\IndoRegion\IndoRegionServiceProvider::class,
     RealRashid\SweetAlert\SweetAlertServiceProvider::class,
     Spatie\Permission\PermissionServiceProvider::class,
+    Clockwork\Support\Laravel\ClockworkServiceProvider::class
 ];

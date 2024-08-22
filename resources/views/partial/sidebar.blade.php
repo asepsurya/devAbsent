@@ -40,7 +40,7 @@
                                     </a>
                                 </li>
                             </ul>
-                            
+
                         </li>
                     </ul>
                     @endcan
@@ -60,8 +60,8 @@
                                         Induk</span><span class="menu-arrow"></span></a>
                                     <ul class="mx-3">
                                         <li><a href="/akademik/datainduk/student"
-                                                class="{{ Request::is('akademik/datainduk/student') ? 'active' : ''}}">Peserta Didik</a></li>
-                                  
+                                                class="{{ Request::is('akademik/datainduk/student*') ? 'active' : ''}}">Peserta Didik</a></li>
+
                                         <li><a href="/akademik/datainduk/jurusan"
                                                 class="{{ Request::is('akademik/datainduk/jurusan') ? 'active' : ''}}">Jurusan</a>
                                         </li>
@@ -82,13 +82,13 @@
                                     <ul class="mx-3">
                                         <li><a href="/akademik/pengaturan/mapel"
                                                 class="{{ Request::is('akademik/pengaturan/mapel') ? 'active' : ''}}">Mata Pelajaran</a></li>
-                                        <li><a href="/pengaturan/gurupatpel"
-                                                class="{{ Request::is('pengaturan/gurumatpel') ? 'active' : ''}}">Guru Mata Pelajaran</a></li>
-                                        <li><a href="/pengaturan/walikelas"
-                                                class="{{ Request::is('pengaturan/walikelas') ? 'active' : ''}}">Wali Kelas</a>
+                                        <li><a href="/akademik/pengaturan/subject_teachers"
+                                                class="{{ Request::is('akademik/pengaturan/subject_teachers') ? 'active' : ''}}">Guru Mata Pelajaran</a></li>
+                                        <li><a href="/akademik/pengaturan/walikelas"
+                                                class="{{ Request::is('akademik/pengaturan/walikelas') ? 'active' : ''}}">Wali Kelas</a>
                                         </li>
-                                        <li><a href="/pengaturan/rombel"
-                                                class="{{ Request::is('pengaturan/rombel') ? 'active' : ''}}">Rombongan Belajar</a>
+                                        <li><a href="/akademik/pengaturan/rombel"
+                                                class="{{ Request::is('akademik/pengaturan/rombel') ? 'active' : ''}}">Rombongan Belajar</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -119,7 +119,7 @@
                                 <li><a href="/gtk/all"
                                         class="{{ Request::is('gtk/all') ? 'active' : ''}}">Semua GTK</a></li>
                                 <li><a href="/gtk/employment_types"
-                                        class="{{ Request::is('gtk/employment_types') ? 'active' : ''}}">Jenis GTK</a></li>      
+                                        class="{{ Request::is('gtk/employment_types') ? 'active' : ''}}">Jenis GTK</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -133,12 +133,19 @@
                 </li>
                 <li>
                     <ul>
-                        <li>
-                            <a href="##"><i class="ti ti-nfc"></i><span>Registrasi RFID</span></a>
+                        <li class="{{ Request::is('rfid') ? 'active' : ''}}">
+                            <a href="{{ route('rfid') }}"><i class="ti ti-nfc"></i><span>Registrasi RFID</span></a>
                         </li>
                     </ul>
                 </li>
-                
+                <li>
+                    <ul>
+                        <li class="{{ Request::is('verifikasiuser') ? 'active' : ''}}">
+                            <a href="/verifikasiuser"><i class="ti ti-user"></i><span>Verifikasi Pengguna </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Jadwal</span></h6>
@@ -171,13 +178,13 @@
                                         <li><a href="/user/administrator"
                                                 class="{{ Request::is('user/administrator') ? 'active' : ''}}">Administrator</a></li>
                                         <li><a href="/user/students"
-                                                class="{{ Request::is('user/students') ? 'active' : ''}}">Peserta Didik</a></li>      
+                                                class="{{ Request::is('user/students') ? 'active' : ''}}">Peserta Didik</a></li>
                                         <li><a href="/user/employees"
-                                                class="{{ Request::is('user/employees') ? 'active' : ''}}">GTK</a></li>      
+                                                class="{{ Request::is('user/employees') ? 'active' : ''}}">GTK</a></li>
                                         <li><a href="/user/modules"
-                                                class="{{ Request::is('user/modules') ? 'active' : ''}}">Daftar Modul</a></li>      
+                                                class="{{ Request::is('user/modules') ? 'active' : ''}}">Daftar Modul</a></li>
                                         <li><a href="/user/user_privileges"
-                                                class="{{ Request::is('user/user_privileges') ? 'active' : ''}}">Hak Akses</a></li>      
+                                                class="{{ Request::is('user/user_privileges') ? 'active' : ''}}">Hak Akses</a></li>
                                     </ul>
                                 </li>
                             </ul>
