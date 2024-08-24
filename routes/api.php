@@ -11,7 +11,7 @@ Route::Post('/akademik/datainduk/tahunajarAdd',[DataIndukController::class,'data
 
 Route::get('/rfid',[rfidController::class,'rfidAPI'])->name('rfidAPI');
 Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
-Route::get('/rfid/add',[rfidController::class,'rfidadd'])->name('rfidadd');
+Route::get('/absent/entry',[rfidController::class,'rfidadd'])->name('rfidadd');
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');

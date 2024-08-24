@@ -37,53 +37,16 @@
         <h4>Lis Data RFID</h4>
     </div>
     <div class="card-body p-0 ">
-        <div class="row m-3">
-            <form action="{{ route('rfidadd') }}" method="post">
-                @csrf
-            <div class="col-md-12">
-                <div class="mb-3">
-                    <label class="form-label">ID RFID</label>
-                    <input type="text" class="form-control" name="id_rfid" required readonly id="rfid">
-                    <small>Akan terisi otoamatis ketika scan RFID</small>
-                    <div class="my-3">
-                        <button class="btn btn-primary soft w-100">Simpan</button>
-                    </div>
-
-                </div>
-            </div>
-            </form>
-        </div>
         <div class="table-responsive">
                <div id="mydata">
-                    {{-- @foreach ($rfid as $item)
-                    <tr>
-                        <td>{{ $no++ }}</td>
-                        <td>
-                           {{ $item->id_rfid }}
-                        </td>
-                    </tr>
-                    @endforeach --}}
-
         </div>
     </div>
 </div>
 @section('javascript')
+
     <script>
-        function cekrfid(){
-            $.ajax({
-                type : "GET",
-                url: "{{ route('rfidData') }}",
-                cache:false,
-                success:function(response){
-                    console.log(response);
-                    $("#rfid").val(response)
-                }
-            });
-        }
-        // setiap 2 detik
-        setInterval(cekrfid,2000);
-    </script>
-    <script>
+        function refreshdata(){
+
         var content="";
         $.ajax({
             url:"{{ route('rfidDataGET') }}",
@@ -106,6 +69,8 @@
                 $('#mydata').html(content);
             }
         });
+    }
+        setInterval(refreshdata,2000);
     </script>
 @endsection
 @endsection
