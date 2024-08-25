@@ -45,13 +45,13 @@ class rfidController extends Controller
                             'out'=>$timenow
                         ]);
                     }else{
+                        // belum absen Input  jam entry
+                        $status = "ENTRY";
                         absent::create([
                             'tanggal'=>date('d/m/y'),
                             'id_rfid'=>$item->id_rfid,
                             'entry'=> $timenow
                         ]);
-                        // belum absen Input  jam entry
-                        $status = "ENTRY";
                     }
                     return response()->json([
                         'waktu'=>date('d/m/Y ', strtotime($item->created_at)),
@@ -62,13 +62,13 @@ class rfidController extends Controller
                 }
             }
         }else{
-            rfid::create([
-                'id_rfid'=>$request->id_rfid,
-                'status'=>'1'
-            ]);
             return response()->json([
                 // RFID TIDAK TERDAFTAR - INPUT RFID
                 'status'=>'INVALID',
+            ]);
+            rfid::create([
+                'id_rfid'=>$request->id_rfid,
+                'status'=>'1'
             ]);
         }
     }
