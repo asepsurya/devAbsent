@@ -88,7 +88,6 @@ class rfidController extends Controller
                 }
             }
         }else{
-
             rfid::create([
                 'id_rfid'=>$request->rfid,
                 'status'=>'1'
@@ -97,10 +96,6 @@ class rfidController extends Controller
             return response()->json([
                 // RFID TIDAK TERDAFTAR - INPUT RFID
                 'status'=>'INVALID',
-            ]);
-            rfid::create([
-                'id_rfid'=>$request->id_rfid,
-                'status'=>'1'
             ]);
         }
     }
