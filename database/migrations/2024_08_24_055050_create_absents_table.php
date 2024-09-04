@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('entry')->nullable();
             $table->string('out')->nullable();
             $table->string('status')->nullable();
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

@@ -9,4 +9,9 @@ class absent extends Model
 {
     use HasFactory;
     protected $guarded=['id'];
+
+    public function absent(){
+        return $this->belongsTo('App\Models\gtk','id_rfid','id_rfid');
+    }
+
 }

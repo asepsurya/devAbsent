@@ -56,7 +56,21 @@
                                 <input type="file" name="gambar" id="gambar" class="form-control">
                              </div>
                         </div>
+                        <div class="my-2">
+                            <label for="form-label">RFID</label>
+                            <select name="id_rfid" id="id_rfid" class="form-control select2">
+                                @if($item->id_rfid == "")
+                                <option value=""selected>-- Pilih RFID yang tersedia --</option>
+                                @else
+                                <option value="{{ $item->id_rfid }}" selected>{{ $item->id_rfid }}</option>
+                                @endif
+                                @foreach ($rfid as $item2 )
+                                    <option value="{{ $item2->id_rfid }}" >{{ $item2->id_rfid }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                 </div>
+
             </div>
 
         </div>
@@ -91,25 +105,36 @@
 
         </div>
     </div>
-
+    <div class="col">
+        <div class="mb-2">
+            <label class="form-label">NIK/ No. KITAS (Untuk WNA) <span class="text-danger">*</span></label>
+                <input type="text" class="form-control @error('nik') is-invalid @enderror"
+                    placeholder="Nomor Induk Kependudukan" name="nik" value="{{ $item->nik }}" id="nik"
+                    onkeypress="return onlyNumberKey(event)" required maxlength="16">
+                @error('nik')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+        </div>
+    </div>
     <div class="row">
-
         <input type="text" name="id" id="id" value="{{ $item->nik }}" hidden>
         <input type="text" name="oldImage" value="{{ $item->gambar }}" hidden>
         <div class="col-lg-6">
             <div class="mb-2">
-                <label class="form-label">NIK/ No. KITAS (Untuk WNA)</label>
-                <input type="text" class="form-control @error('nik') is-invalid @enderror"
-                    placeholder="Nomor Induk " name="nik"  id="nis"
-                    onkeypress="return onlyNumberKey(event)" required value="{{ $item->nik }}"maxlength="10">
-                @error('nik')
+                <label class="form-label"> Nomor NIP </label>
+                <input type="text" class="form-control @error('nip') is-invalid @enderror"
+                    placeholder="Nomor Induk Pegawai Sipil " name="nip" value="{{ $item->nip }}" id="nip"
+                    onkeypress="return onlyNumberKey(event)"  >
+                @error('nip')
                 <div class="invalid-feedback">
                     {{ $message }}
                 </div>
                 @enderror
             </div>
             <div class="mb-2">
-                <label class="form-label">Tempat Lahir</label>
+                <label class="form-label">Tempat Lahir <span class="text-danger">*</span></label>
                 <input type="text" value="{{ $item->tempat_lahir }}"
                     class="form-control @error('tempat_lahir') is-invalid @enderror"
                     placeholder="Tasikmalaya" name="tempat_lahir" required>
@@ -120,13 +145,13 @@
                 @enderror
             </div>
             <div class="mb-2">
-                <label class="form-label">Jenis Kelamin</label>
+                <label class="form-label">Jenis Kelamin <span class="text-danger">*</span></label>
                 <select name="gender" id="gender2"
                     class="form-control select2 @error('gender') is-invalid @enderror" required>
                     <option value="" selected>- Jenis Kelamin -
                     </option>
-                    <option value="1" {{ $item->gender ==1 ? 'selected' : '' }}>Laki - Laki</option>
-                    <option value="2" {{ $item->gender==2 ? 'selected' : '' }}>Perempuan</option>
+                    <option value="L" {{ $item->gender =='L' ? 'selected' : '' }}>Laki - Laki</option>
+                    <option value="P" {{ $item->gender== 'P' ? 'selected' : '' }}>Perempuan</option>
                 </select>
                 @error('gender')
                 <div class="invalid-feedback">
@@ -139,7 +164,7 @@
 
         <div class="col-lg-6">
             <div class="mb-2">
-                <label class="form-label">Nama Lengkap</label>
+                <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
                 <input type="text" value="{{ $item->nama }}"
                     class="form-control @error('nama') is-invalid @enderror"
                     placeholder="Nama Lengkap Siswa" name="nama" id="nama">
@@ -150,7 +175,7 @@
                 @enderror
             </div>
             <div class="mb-2">
-                <label class="form-label">Tanggal Lahir</label>
+                <label class="form-label">Tanggal Lahir <span class="text-danger">*</span></label>
                 <div class="input-icon position-relative">
                     <span class="input-icon-addon">
                         <i class="ti ti-calendar"></i>
@@ -166,7 +191,7 @@
                 </div>
             </div>
             <div class="mb-2">
-                <label class="form-label">Agama</label>
+                <label class="form-label">Agama <span class="text-danger">*</span></label>
                 <select name="agama" id="agama2"
                     class="form-control select2 @error('agama') is-invalid @enderror" required>
                     <option value="" selected>- Pilih Agama -
@@ -194,7 +219,7 @@
 
     </div>
     <div class="col">
-        <label class="form-label">Nomor Telepon (WhatsApp)</label>
+        <label class="form-label">Nomor Telepon (WhatsApp) <span class="text-danger">*</span></label>
         <input type="text" value="{{ $item->telp }}"
             class="form-control @error('telp') is-invalid @enderror" placeholder="Telepon"
             name="telp" id="telp2" required>
@@ -208,7 +233,7 @@
 <div class="mt-4 " id="sectionTwo">
 
     <div class="mb-2">
-        <label class="form-label">Jenis GTK</label>
+        <label class="form-label">Jenis GTK <span class="text-danger">*</span></label>
         <select name="jns_gtk" id="jenis_gtk2"
             class="form-control select2   @error('jns_gtk') is-invalid @enderror" required>
 
@@ -229,7 +254,7 @@
             <label class="form-label">Alamat</label>
             <input type="text" value="{{ $item->alamat }}"
                 class="form-control @error('alamat') is-invalid @enderror"
-                placeholder="Contoh : Jl.Pegangsaan RT.02 RW.04" name="alamat" id="alamat" required>
+                placeholder="Contoh : Jl.Pegangsaan RT.02 RW.04" name="alamat" id="alamat" >
             @error('alamat')
             <div class="invalid-feedback">
                 {{ $message }}
@@ -243,7 +268,7 @@
             <div class="mb-2">
                 <label class="form-label">Provinsi</label>
                 <select name="id_provinsi" id="provinsi2"
-                    class="form-control select2 @error('id_provinsi') is-invalid @enderror" required>
+                    class="form-control select2 @error('id_provinsi') is-invalid @enderror" >
                     <option value="">Pilih Provinsi</option>
                     @foreach ($provinsi as $p)
                     <option value="{{ $p->id }}" {{ $item->id_provinsi == $p->id ? 'selected' : ''
@@ -260,7 +285,9 @@
                 <label class="form-label">Kota/Kabupaten</label>
                 <select name="id_kota" id="kabupaten2"
                     class="form-control select2  @error('id_kota') is-invalid @enderror" >
+                    @if($item->id_kota)
                     <option value="{{ $item->id_kota }}" selected >{{ $item->kota->name }}</option>
+                    @endif
                 </select>
                 @error('id_kota')
                 <div class="invalid-feedback">
@@ -274,8 +301,10 @@
             <div class="mb-2">
                 <label
                     class="form-label  @error('id_kecamatan') is-invalid @enderror">Kecamatan</label>
-                <select name="id_kecamatan" id="kecamatan2" class="form-control select2" required>
+                <select name="id_kecamatan" id="kecamatan2" class="form-control select2" >
+                    @if($item->id_kecamatan)
                     <option value="{{ $item->id_kecamatan }}" selected>{{ $item->kecamatan->name }}</option>
+                    @endif
                 </select>
                 @error('id_kecamatan')
                 <div class="invalid-feedback">
@@ -286,8 +315,10 @@
             <div class="mb-2">
                 <label class="form-label">Kelurahan/Desa</label>
                 <select name="id_desa" id="desa2"
-                    class="form-control select2 @error('id_desa') is-invalid @enderror" required>
+                    class="form-control select2 @error('id_desa') is-invalid @enderror" >
+                    @if($item->id_desa )
                     <option value="{{ $item->id_desa }}">{{ $item->desa->name }}</option>
+                    @endif
                 </select>
                 @error('id_desa')
                 <div class="invalid-feedback">
@@ -298,8 +329,8 @@
         </div>
         <div class="col">
             <div class="mb-2">
-                <label class="form-label">Email</label>
-                <input type="email" value="{{ $item->userGTK->email }}"
+                <label class="form-label">Email <span class="text-danger">*</span></label>
+                <input type="email" value="@if( $item->userGTK->email)  {{ $item->userGTK->email }} @endif"
                     class="form-control @error('email') is-invalid @enderror"
                     placeholder="mail@example.com" name="email" id="email" required>
                 @error('email')
@@ -309,7 +340,7 @@
                 @enderror
             </div>
             <div class="mb-2">
-                <label class="form-label">Status GTK</label>
+                <label class="form-label">Status GTK <span class="text-danger">*</span></label>
                <select name="status" id="status" class="form-control select2">
                 <option value="1" {{ $item->status == 1 ? 'selected' :  '' }}>Aktif</option>
                 <option value="2" {{ $item->status == 2 ? 'selected' :  '' }}>Tidak Aktif</option>
@@ -320,17 +351,7 @@
                 </div>
                 @enderror
             </div>
-            <div class="mb-3">
-                <label class="form-label">RFID</label>
-                <select name="id_rfid" id="id_rfid" class="form-control select2">
-                    <option value=""selected>-- Pilih RFID yang tersedia --</option>
-                    @foreach ($rfid as $item )
-                        <option value="{{ $item->id }}">{{ $item->id_rfid }}</option>
-                    @endforeach
 
-                </select>
-
-            </div>
             <div class="mb-2">
                 <label class="form-label">Tanggal Masuk</label>
                 <div class="input-icon position-relative">
@@ -435,6 +456,16 @@
                 })
             })
         });
+</script>
+<script>
+    function onlyNumberKey(evt) {
+
+        // Only ASCII character in that range allowed
+        let ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+            return false;
+        return true;
+    }
 </script>
 @endsection
 @endsection

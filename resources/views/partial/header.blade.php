@@ -23,6 +23,19 @@
     <div class="header-user">
         <div class="nav user-menu">
             <div class="nav-item nav-search-inputs me-auto">
+               <div class="top-nav-search">
+                <a href="javascript:void(0);" class="responsive-search">
+                    <i class="fa fa-search"></i>
+                </a>
+                <form action="#" class="dropdown">
+                    <div class="searchinputs" id="dropdownMenuClickable">
+                        <input type="text" placeholder="Search Menu" name="search" id="a">
+                        <div class="search-addon">
+                            <button type="submit"><i class="ti ti-command"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
             </div>
             {{-- Night Mode --}}
             <div class="pe-1">

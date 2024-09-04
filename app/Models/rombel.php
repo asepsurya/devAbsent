@@ -13,4 +13,8 @@ class rombel extends Model
     public function rombelStudent(){
         return $this->belongsTo('App\Models\student','nis','nis');
     }
+    public function rombelAbsent(){
+        return $this->hasMany('App\Models\absent','id_rfid','id_rfid');
+    }
+
 }

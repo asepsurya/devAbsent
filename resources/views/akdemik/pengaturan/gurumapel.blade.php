@@ -38,11 +38,10 @@
                 class="fas fa-xmark"></i></button>
     </div>
     <div class="p-3">
-        <li>Pilih <strong>Tahun Pelajaran</strong>, <strong>Semester</strong>, dan <strong>Kelas</strong> yang akan
-            diatur Guru Mata Pelajarannya, kemudian klik tombol <strong>"CARI DATA"</strong></li>
-        <li>Setelah data tampil, pada kolom <strong>"GURU PENGAJAR"</strong> silahkan dipilih Guru Pengajar sesuai Mata
-            Pelajaran di kolom <strong>"MATA PELAJARAN"</strong> </li>
-           <li>Maka akan secara <b>otomatis</b> terpilih sesuai Data yang anda pilih</li>
+            <p class="my-1">1. Pilih Tahun Pelajaran, Semester, dan Kelas yang akan diatur Guru Mata Pelajarannya.</p>
+            <p class="my-1">2. Klik tombol "<strong>CARI DATA</strong>" untuk menampilkan data.</p>
+            <p class="my-1">3. Setelah data muncul, pada kolom "<strong>GURU PENGAJAR</strong>", pilih Guru Pengajar yang sesuai dengan Mata Pelajaran di kolom "<strong>MATA PELAJARAN</strong>".</p>
+            <p class="my-1">4. Data akan otomatis terpilih berdasarkan pilihan Anda.</p>
 
     </div>
 </div>

@@ -25,7 +25,7 @@
                         <li class="submenu">
                             <a href="javascript:void(0);"
                                 class=" {{ Request::is('absensi*') ? 'subdrop active' : ''}}"><i
-                                    class="ti ti-checklist"></i><span>Absensi</span><span class="menu-arrow"></span></a>
+                                    class="ti ti-checklist"></i><span>Absensi RFID</span><span class="menu-arrow"></span></a>
                             <ul>
                                 <li>
                                     <a href="/absensi/student"
@@ -126,8 +126,8 @@
                 </li>
                 <li>
                     <ul>
-                        <li>
-                            <a href="##"><i class="ti ti-device-laptop"></i><span>Daftar Perangkat</span></a>
+                        <li class="{{ Request::is('device/lisensi*') ? 'active' : ''}}">
+                            <a href="{{ route('lisensiIndex') }}"><i class="ti ti-key"></i><span>Lisensi</span></a>
                         </li>
                     </ul>
                 </li>

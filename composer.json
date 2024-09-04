@@ -7,12 +7,16 @@
     "require": {
         "php": "^8.2",
         "azishapidin/indoregion": "^3.0",
+        "irfa/php-sn-generator": "^1.1",
         "itsgoingd/clockwork": "^5.2",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "maatwebsite/excel": "^3.1",
+        "psr/simple-cache": "1.0",
         "realrashid/sweet-alert": "^7.2",
         "spatie/laravel-permission": "^6.9",
+        "yajra/laravel-datatables-oracle": "11.0",
         "yoeunes/toastr": "^3.0"
     },
     "require-dev": {

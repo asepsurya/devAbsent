@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('rombels', function (Blueprint $table) {
             $table->id();
-            $table->string('id_rombel');
+
             $table->string('nis');
             $table->string('id_kelas');
             $table->string('id_tahun_pelajaran');
             $table->string('status')->nullable();
+            $table->string('id_rfid')->nullable();
             $table->timestamps();
         });
     }

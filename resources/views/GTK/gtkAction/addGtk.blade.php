@@ -53,14 +53,27 @@
 
         </div>
     </div>
+    <div class="col">
+        <div class="mb-2">
+            <label class="form-label">NIK/ No. KITAS (Untuk WNA) <span class="text-danger">*</span></label>
+                <input type="text" class="form-control @error('nik') is-invalid @enderror"
+                    placeholder="Nomor Induk Kependudukan" name="nik" value="{{ old('nik') }}" id="nik"
+                    onkeypress="return onlyNumberKey(event)" required maxlength="16">
+                @error('nik')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-6">
             <div class="mb-2">
-                <label class="form-label">NIK/ No. KITAS (Untuk WNA) <span class="text-danger">*</span></label>
-                <input type="text" class="form-control @error('nik') is-invalid @enderror"
-                    placeholder="Nomor Induk " name="nik" value="{{ old('nik') }}" id="nik"
-                    onkeypress="return onlyNumberKey(event)" required maxlength="16">
-                @error('nik')
+                <label class="form-label"> Nomor NIP </label>
+                <input type="text" class="form-control @error('nip') is-invalid @enderror"
+                    placeholder="Nomor Induk Pegawai Sipil " name="nip" value="{{ old('nip') }}" id="nip"
+                    onkeypress="return onlyNumberKey(event)" >
+                @error('nip')
                 <div class="invalid-feedback">
                     {{ $message }}
                 </div>
@@ -81,10 +94,9 @@
                 <label class="form-label">Jenis Kelamin <span class="text-danger">*</span></label>
                 <select name="gender" id="gender"
                     class="form-control select2 @error('gender') is-invalid @enderror" required>
-                    <option value="" selected>- Jenis Kelamin -
-                    </option>
-                    <option value="1" {{ old('gender')==1 ? 'selected' : '' }}>Laki - Laki</option>
-                    <option value="2" {{ old('gender')==2 ? 'selected' : '' }}>Perempuan</option>
+
+                    <option value="L" {{ old('gender')=='L' ? 'selected' : '' }}>Laki - Laki</option>
+                    <option value="P" {{ old('gender')=='P' ? 'selected' : '' }}>Perempuan</option>
                 </select>
                 @error('gender')
                 <div class="invalid-feedback">
@@ -128,8 +140,7 @@
                 <label class="form-label">Agama <span class="text-danger">*</span></label>
                 <select name="agama" id="agama"
                     class="form-control select2 @error('agama') is-invalid @enderror" required>
-                    <option value="" selected>- Pilih Agama -
-                    </option>
+
                     <option value="Islam" {{ old('agama')=='Islam' ? 'selected' : '' }}>Islam
                     </option>
                     <option value="Kristen" {{ old('agama')=='Kristen' ? 'selected' : '' }}>Kristen
@@ -198,7 +209,7 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="mb-2">
-                <label class="form-label">Provinsi <span class="text-danger">*</span></label>
+                <label class="form-label">Provinsi </label>
                 <select name="id_provinsi" id="provinsi"
                     class="form-control select2 @error('id_provinsi') is-invalid @enderror" required>
                     <option value="">Pilih Provinsi</option>
@@ -214,7 +225,7 @@
                 @enderror
             </div>
             <div class="mb-2">
-                <label class="form-label">Kota/Kabupaten <span class="text-danger">*</span></label>
+                <label class="form-label">Kota/Kabupaten </label>
 
                 <select name="id_kota" id="kabupaten"
                     class="form-control select2  @error('id_kota') is-invalid @enderror" required>
@@ -231,7 +242,7 @@
         <div class="col-lg-6">
             <div class="mb-2">
                 <label
-                    class="form-label  @error('id_kecamatan') is-invalid @enderror">Kecamatan <span class="text-danger">*</span></label>
+                    class="form-label  @error('id_kecamatan') is-invalid @enderror">Kecamatan </label>
                 <select name="id_kecamatan" id="kecamatan" class="form-control select2" required></select>
                 @error('id_kecamatan')
                 <div class="invalid-feedback">
@@ -240,7 +251,7 @@
                 @enderror
             </div>
             <div class="mb-2">
-                <label class="form-label">Kelurahan/Desa <span class="text-danger">*</span></label>
+                <label class="form-label">Kelurahan/Desa </label>
                 <select name="id_desa" id="desa"
                     class="form-control select2 @error('id_desa') is-invalid @enderror" required></select>
                 @error('id_desa')
@@ -355,6 +366,16 @@
                 })
             })
         });
+</script>
+<script>
+    function onlyNumberKey(evt) {
+
+        // Only ASCII character in that range allowed
+        let ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+            return false;
+        return true;
+    }
 </script>
 @endsection
 @endsection

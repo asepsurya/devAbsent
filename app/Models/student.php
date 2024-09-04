@@ -19,4 +19,8 @@ class student extends Model
     public function desa(){
         return $this->belongsTo('App\Models\Village','id_desa','id');
     }
+    public function absent(){
+        return $this->belongsTo('App\Models\absent','id_rfid','id_rfid');
+    }
+
 }

@@ -10,15 +10,22 @@ use App\Models\Jurusan;
 use App\Models\Mapel;
 use App\Models\rfid;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
+use App\Imports\StudentsImport;
+use App\Exports\StudentsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\TahunPelajaran;
 use Illuminate\View\View;
 
 class DataIndukController extends Controller
 {
-    public function dataIndukStudent() : View {
+    public function dataIndukStudent(request $request) {
+        if ($request->ajax()) {
+            return DataTables::of(student::query())->addIndexColumn()->toJson();
+        }
         return view('akdemik.datainduk.student',[
             'title'=>'Data Peserta Didik',
-            'students'=>student::orderBy('id', 'DESC')->with(['kota','kecamatan','desa'])->paginate(10),
+            'students'=>student::orderBy('id', 'DESC')->get('id'),
             'provinsi'=>Province::all()
         ]);
     }
@@ -85,9 +92,9 @@ class DataIndukController extends Controller
     public function studentEditIndex($id){
         return view('akdemik.datainduk.students.editStudent',[
             'title'=>'Edit Data Peserta Didik',
-            'students'=>student::where('id',decrypt($id))->get(),
+            'students'=>student::where('id',$id)->get(),
             'provinsi'=>Province::all(),
-            'rfid'=>rfid::all()
+            'rfid'=>rfid::where('status','1')->get(),
         ]);
     }
     public function dataIndukStudentEdit(request $request){
@@ -119,10 +126,45 @@ class DataIndukController extends Controller
             $validator['foto'] = $request->file('foto')->store('FotoProfile');
         }
         student::where('id',$request->id)->update($validator);
+        rfid::where('id_rfid',$request->id_rfid)->update(['status'=>'2']);
         toastr()->success('Data Berhasil disimpan');
         return redirect()->back();
 
     }
+    public function studentDelete ($id){
+        student::where('id',$id)->delete();
+        toastr()->success('Data Berhasil dihapus');
+        return redirect()->back();
+    }
+    public function studentImport(request $request){
+        try {
+            $request->validate([
+                'file' => 'required|mimes:csv,xls,xlsx'
+            ]);
+            // menangkap file excel
+            $file = $request->file('file');
+            // membuat nama file unik
+            $nama_file = rand().$file->getClientOriginalName();
+            // upload ke folder file_siswa di dalam folder public
+            $file->move('file_siswa',$nama_file);
+
+            // import data
+            Excel::import(new StudentsImport, public_path('/file_siswa/'.$nama_file));
+            // notifikasi dengan session
+            toastr()->success('Data Berhasil diImport');
+            // alihkan halaman kembali
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            return redirect()->back();
+        }
+
+
+    }
+    public function studentEksportExcel(){
+        $date = date('d-m-Y');
+        return Excel::download(new StudentsExport, 'Data Siswa-'.$date.'.xlsx');
+    }
+
     public function dataIndukJurusanAdd(request $request){
         Jurusan::create([
             'nama_jurusan'=>$request->nama,

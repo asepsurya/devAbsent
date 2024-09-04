@@ -126,9 +126,9 @@
                                         @csrf
                                         <input type="text" name="id_kelas_asal" value="{{ request('id_kelas_asal') }}" hidden >
                                         <input type="text" name="tahunAjarAsal" value="{{ request('tahunAjarAsal') }}" hidden >
-                                        <input type="text" name="id_rombel" class="Getrombel" value="{{ old('id_rombel') }}" hidden >
+                                        <input type="text" name="id_rfid"  value="{{ $item->id_rfid }}" hidden >
                                         <input type="text" name="nis" value="{{ $item->nis }}" value="{{ old('nis') }}" hidden>
-                                        <input type="text" name="id_kelas" class="GetKelas" value="{{ old('id_kelas') }}" hidden>
+                                        <input type="text" name="id_kelas" class="GetKelas" value="{{ request('id_kelas_tujuan') }}" hidden >
                                         <input type="text" name="id_tahun_pelajaran" class="GetTahunPelajaran" value="{{ old('id_tahun_pelajaran') }}" hidden >
                                         <button type="submit" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                             title="Pindah" class="btn btn-icon btn-sm btn-soft-success rounded-pill"><i
@@ -269,7 +269,7 @@
         var val = e.options[e.selectedIndex].value;
         document.getElementById("id_kelas_tujuan").value = val;
         $(".GetKelas").val(val);
-        $(".Getrombel").val('RMBL'+ val);
+
     }
     // $(".GetKelas").val(document.getElementById("id_kelas_tujuan").value) ;
     // $(".GetTahunPelajaran").val(document.getElementById("tahun_ajaran_tujuan").value);

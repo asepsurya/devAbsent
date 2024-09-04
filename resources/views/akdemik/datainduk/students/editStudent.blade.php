@@ -56,12 +56,21 @@
                     <label for="form-label">Foto</label>
                     <input type="file" class="form-control" name="foto">
                     <input type="text" name="oldImage" value="{{ $item->foto }}" hidden>
-                    <div class="mt-2">
-                        <label for="form-label">RFID</label>
-                        <select name="id_rfid" id="id_rfid" class="form-control select2">
-                            <option value="1" selected>1</option>
-                        </select>
-                    </div>
+
+                </div>
+                <div class="my-3">
+                    <label for="form-label">RFID</label>
+                    <select name="id_rfid" id="id_rfid" class="form-control select2">
+                         @if($item->id_rfid == "")
+                        <option value=""selected>-- Pilih RFID yang tersedia --</option>
+                        @else
+                        <option value="{{ $item->id_rfid }}" selected>{{ $item->id_rfid }}</option>
+                        @endif
+                        @foreach ($rfid as $item2 )
+                            <option value="{{ $item2->id_rfid }}" >{{ $item2->id_rfid }}</option>
+                        @endforeach
+                    </select>
+
                 </div>
             </div>
 
@@ -97,8 +106,8 @@
                 <select name="gender" id="gender" class="form-control select2 @error('gender') is-invalid @enderror">
                     <option value="" selected>- Jenis Kelamin -
                     </option>
-                    <option value="1" {{ $item->gender==1 ? 'selected' : '' }}>Laki - Laki</option>
-                    <option value="2" {{ $item->gender==2 ? 'selected' : '' }}>Perempuan</option>
+                    <option value="L" {{ $item->gender== 'L' ? 'selected' : '' }}>Laki - Laki</option>
+                    <option value="P" {{ $item->gender== 'P' ? 'selected' : '' }}>Perempuan</option>
                 </select>
                 @error('gender')
                 <div class="invalid-feedback">
@@ -237,16 +246,7 @@
             </div>
 
         </div>
-        <div class="mb-3">
-            <label class="form-label">RFID</label>
-            <select name="id_rfid" id="id_rfid" class="form-control select2">
-                <option value=""selected>-- Pilih RFID yang tersedia --</option>
-                @foreach ($rfid as $item )
-                    <option value="{{ $item->id }}">{{ $item->id_rfid }}</option>
-                @endforeach
-            </select>
 
-        </div>
         <div class="mb-2">
             <label class="form-label">Status</label>
             <select name="status" class="form-control select2 @error('status') is-invalid @enderror">

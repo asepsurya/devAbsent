@@ -60,8 +60,9 @@ class pengaturanAkademik extends Controller
         if(request('id_kelas_asal') =="all"){
             $data = student::where(['status'=>'1'])->get();
         }elseif(request('id_kelas_asal') == "belumDiatur"){
-            $data = student::where(['id_kelas'=> '','status'=>'1'])->get();
-        }else{
+            $data = student::where(['id_kelas'=> '','id_kelas'=>NULL,'status'=>'1'])->get();
+        }
+        else{
             $data = student::where(['id_kelas'=> request('id_kelas_asal'),'status'=>'1'])->get();
         }
         // filter Tujuan Kelas
@@ -75,7 +76,6 @@ class pengaturanAkademik extends Controller
             'studentsClass'=>$mydata,
             'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'DESC')->get(),
             'kelas'=>Kelas::where('status','1')->with('jurusanKelas')->get(),
-
         ]);
     }
 
@@ -83,23 +83,23 @@ class pengaturanAkademik extends Controller
         $cek = rombel::where(['nis'=>$request->nis])->get();
         if($cek->count() != 0){
             foreach($cek as $item){
-                    if($item->id_rombel == $request->id_rombel){
+                    if($item->id_kelas == $request->id_kelas){
                         Alert::warning('Data Sudah Terdaftar Dikelas ini' );
                         return redirect()->back()->withInput();
                     }
                     else{
-                        if($request->id_tahun_pelajaran == "" || $request->id_kelas==''){
-                            Alert::error('Mohon Pilih Kelas Tujuan terlebih dahulu' );
+                        if($request->id_tahun_pelajaran == "" || $request->id_kelas=='' || $request->id_rfid==''){
+                            Alert::error('Mohon Periksa Kembali Pilih Kelas Tujuan dan RFID terlebih dahulu' );
                             return redirect()->back()->withInput();
                         }else{
                             rombel::where('nis',$request->nis)->update([
-                                'id_rombel'=>$request->id_rombel,
+                                'id_rfid'=>$request->id_rfid,
                                 'id_kelas'=>$request->id_kelas,
                                 'id_tahun_pelajaran'=>$request->id_tahun_pelajaran,
                             ]);
                             student::where('nis',$request->nis)->update([
                                 'id_kelas'=>$request->id_kelas,
-                                'id_rombel'=>$request->id_rombel,
+                                'id_rfid'=>$request->id_rfid,
                             ]);
                             toastr()->success('Data Berhasil dipindahkan');
                             return redirect(route('PengaturaRombel','id_kelas_asal='.$request->id_kelas_asal.'&tahunAjarAsal='.$request->tahunAjarAsal.'&id_kelas_tujuan='.$request->id_kelas.'&id_tahun_pelajaran='.$request->id_tahun_pelajaran))->withInput();
@@ -108,12 +108,12 @@ class pengaturanAkademik extends Controller
                     }
              }
         }else{
-            if($request->id_kelas == "" || $request->id_tahun_pelajaran == ""){
-                        Alert::error('Mohon Pilih Kelas Tujuan terlebih dahulu' );
+            if($request->id_kelas == "" || $request->id_tahun_pelajaran == "" || $request->id_rfid==''){
+                        Alert::error('Mohon Periksa Kembali Pilih Kelas Tujuan dan RFID terlebih dahulu' );
                         return redirect()->back()->withInput();
             }else{
                         rombel::create([
-                            'id_rombel'=>$request->id_rombel,
+                            'id_rfid'=>$request->id_rfid,
                             'nis'=>$request->nis,
                             'id_kelas'=>$request->id_kelas,
                             'id_tahun_pelajaran'=>$request->id_tahun_pelajaran,
@@ -121,7 +121,7 @@ class pengaturanAkademik extends Controller
                            ]);
                         student::where('nis',$request->nis)->update([
                             'id_kelas'=>$request->id_kelas,
-                            'id_rombel'=>$request->id_rombel,
+                            'id_rfid'=>$request->id_rfid,
                            ]);
 
                         toastr()->success('Data Berhasil disubmit');

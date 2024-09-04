@@ -76,8 +76,8 @@
                 <select name="gender" id="gender"
                     class="form-control select2 @error('gender') is-invalid @enderror">
 
-                    <option value="1" {{ old('gender')==1 ? 'selected' : '' }}>Laki - Laki</option>
-                    <option value="2" {{ old('gender')==2 ? 'selected' : '' }}>Perempuan</option>
+                    <option value="L" {{ old('gender')=='L' ? 'selected' : '' }}>Laki - Laki</option>
+                    <option value="P" {{ old('gender')=='P' ? 'selected' : '' }}>Perempuan</option>
                 </select>
                 @error('gender')
                 <div class="invalid-feedback">
@@ -213,6 +213,16 @@
 </div>
 </form>
 @section('javascript')
+<script>
+    function onlyNumberKey(evt) {
+
+        // Only ASCII character in that range allowed
+        let ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+            return false;
+        return true;
+    }
+</script>
 <script>
     $(function(){
         $.ajaxSetup({

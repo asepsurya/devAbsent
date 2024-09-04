@@ -14,17 +14,18 @@ return new class extends Migration
         Schema::create('gtks', function (Blueprint $table) {
             $table->id();
             $table->string('nik');
+            $table->string('nip')->nullable()->unique();
             $table->string('nama');
             $table->string('gender');
             $table->string('tempat_lahir');
-            $table->string('tanggal_lahir');      
-            $table->string('agama'); 
-            $table->string('alamat');
+            $table->string('tanggal_lahir');
+            $table->string('agama');
+            $table->string('alamat')->nullable();
             $table->string('telp');
-            $table->string('id_provinsi');
-            $table->string('id_kota');
-            $table->string('id_kecamatan');
-            $table->string('id_desa');
+            $table->string('id_provinsi')->nullable();
+            $table->string('id_kota')->nullable();
+            $table->string('id_kecamatan')->nullable();
+            $table->string('id_desa')->nullable();
             $table->string('status')->nullable();
             $table->string('tanggal_masuk')->nullable();
             $table->string('id_rfid')->nullable();

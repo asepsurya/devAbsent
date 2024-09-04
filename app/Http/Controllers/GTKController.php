@@ -11,15 +11,22 @@ use App\Models\rfid;
 use App\Models\grupMapel;
 use App\Models\media;
 use Validator;
+use Yajra\DataTables\Facades\DataTables;
+use App\Imports\GtkImport;
+use App\Imports\UserImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 class GTKController extends Controller
 {
-    public function GTKall(){
+    public function GTKall(request $request){
+        if ($request->ajax()) {
+            return DataTables::of(gtk::orderBy('id', 'DESC'))->addIndexColumn()->toJson();
+        }
         return view('GTK.gtk',[
             'title'=>'Guru dan Tenaga Kependidikan',
             'provinsi'=>Province::all(),
-            'gtk'=>gtk::orderBy('id', 'DESC')->with(['Usergtk'])->paginate(10),
+            'gtk'=>gtk::orderBy('id', 'DESC')->get(['id','nik']),
 
         ]);
     }
@@ -74,6 +81,7 @@ class GTKController extends Controller
         }else{
             gtk::create([
                 'nik' => $request->nik,
+                'nip' => $request->nip,
                 'tempat_lahir' => $request->tempat_lahir,
                 'gender' => $request->gender,
                 'nama' => $request->nama,
@@ -111,7 +119,7 @@ class GTKController extends Controller
             'provinsi'=>Province::all(),
             'jnsGTK'=>JenisGTK::all(),
             'gtk'=>gtk::where('id',$id)->with(['Usergtk','kota','kecamatan','desa','MapelgtkList','Mapelgtklist.mata_pelajaran','Mapelgtklist.kelas','Mapelgtklist.kelas.jurusanKelas'])->get(),
-            'rfid'=>rfid::all()
+            'rfid'=>rfid::where('status','1')->get()
         ]);
     }
 
@@ -120,13 +128,14 @@ class GTKController extends Controller
          $validasiGambar = $request->validate([
             'gambar'=>'image|file',
             'nik' => 'required',
+            'nip' => '',
             'tempat_lahir' => 'required',
             'gender' => 'required',
             'nama' => 'required',
             'tanggal_lahir' => 'required',
             'agama' => 'required',
             'telp' =>'required',
-            'alamat' => 'required',
+            'alamat' => '',
             'telp' => 'required',
             'id_provinsi' => '',
             'id_kota' => '',
@@ -154,8 +163,33 @@ class GTKController extends Controller
             'role'=>'3',
             'status'=>'2'
         ]);
+        rfid::where('id_rfid',$request->id_rfid)->update(['status'=>'2']);
         toastr()->success('Data Berhasil disimpan');
         return redirect()->back();
+
+        }
+        public function GTKimport(request $request){
+            $request->validate([
+                'file' => 'required|mimes:csv,xls,xlsx'
+            ]);
+            // menangkap file excel
+            $file = $request->file('file');
+            // membuat nama file unik
+            $nama_file = rand().$file->getClientOriginalName();
+
+            try {
+                     // upload ke folder file_siswa di dalam folder public
+            $file->move('file_gtk',$nama_file);
+                 // import data
+            Excel::import(new GtkImport, public_path('/file_gtk/'.$nama_file));
+            Excel::import(new UserImport, public_path('/file_gtk/'.$nama_file));
+            // notifikasi dengan session
+            toastr()->success('Data Berhasil diImport');
+            // alihkan halaman kembali
+            return redirect()->back();
+            } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+                return redirect()->back()->compact('e');
+            }
 
         }
 

@@ -13,7 +13,8 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataIndukController;
 use App\Http\Controllers\verifikasiUserController;
-use App\Http\Controllers\rfidController;
+use App\Http\Controllers\lisensiController;
+use App\Http\Controllers\API\rfidController;
 
 Route::get('/', function () {
     return view('frontpage.index');
@@ -36,14 +37,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/student/dashboard',[DashboardController::class,'Studentindex']);
     Route::get('/holidays',[HolidaysController::class,'index']);
     // route Absensi
-    Route::get('/absensi/student',[AbsensiController::class,'absensiStudent']);
-    Route::get('/absensi/teacher',[AbsensiController::class,'absensiTeacher']);
+    Route::get('/absensi/student',[AbsensiController::class,'absensiStudent'])->name('absensiStudent');
+    Route::post('/absensi/student/add',[AbsensiController::class,'absensiStudentAdd'])->name('absensiStudentAdd');
+    Route::get('/absensi/teacher',[AbsensiController::class,'absensiTeacher'])->name('absensiTeacher');
     // route Data Induk
     Route::get('/akademik/datainduk/student',[DataIndukController::class,'dataIndukStudent'])->name('dataIndukStudent');
     Route::get('/akademik/datainduk/student/add',[DataIndukController::class,'dataIndukStudentAddIndex'])->name('dataIndukStudentAddIndex');
     Route::post('/akademik/datainduk/studentAddAction',[DataIndukController::class,'dataIndukStudentAdd'])->name('dataIndukStudentAdd');
     Route::get('/akademik/datainduk/studentEdit/{id}',[DataIndukController::class,'studentEditIndex'])->name('studentEditIndex');
     Route::post('/akademik/datainduk/studentEditAction',[DataIndukController::class,'dataIndukStudentEdit'])->name('dataIndukStudentEdit');
+    Route::get('/akademik/datainduk/studentDelete{id}',[DataIndukController::class,'studentDelete'])->name('studentDelete');
+    Route::post('/akademik/datainduk/studentImport',[DataIndukController::class,'studentImport'])->name('studentImport');
+    Route::get('/akademik/datainduk/studentEksportExcel',[DataIndukController::class,'studentEksportExcel'])->name('studentEksportExcel');
 
     Route::get('/akademik/datainduk/jurusan',[DataIndukController::class,'dataIndukJurusan']);
     Route::post('/akademik/datainduk/jurusanAdd',[DataIndukController::class,'dataIndukJurusanAdd'])->name('dataIndukJurusanAdd');
@@ -86,10 +91,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/gtk/update/{id}',[GTKController::class,'GTKupdateIndex'])->name('GTKupdateIndex');
     Route::post('/gtk/updateAction',[GTKController::class,'GTKupdate'])->name('GTKupdate');
     Route::get('/gtk/deleteAction{id}',[GTKController::class,'GTKdelete'])->name('GTKdelete');
+    Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
     // route rfid
     Route::get('/rfid',[rfidController::class,'rfid'])->name('rfid');
     Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
-    Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
+    Route::get('/rfid/delete{id}',[rfidController::class,'rfidDelete'])->name('rfidDelete');
+    // Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
+
+    Route::get('/device/lisensi',[lisensiController::class,'lisensiIndex'])->name('lisensiIndex');
+    Route::get('/device/lisensiGet',[lisensiController::class,'lisensiIndexGet'])->name('lisensiIndexGet');
 
     Route::get('/gtk/employment_types',[GTKController::class,'employmenttypesIndex']);
     Route::post('/gtk/employment_typesAdd',[GTKController::class,'employmenttypesIndexAdd'])->name('employmenttypesIndexAdd');

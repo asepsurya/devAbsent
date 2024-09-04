@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->string('nis');
+            $table->string('nis')->unique();
             $table->string('nama');
             $table->string('gender');
             $table->string('tempat_lahir');
@@ -27,7 +27,6 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->string('tanggal_masuk')->nullable();
             $table->string('id_rfid')->nullable();
-            $table->string('id_user')->nullale();
             $table->string('id_kelas')->nullable();
             $table->string('id_rombel')->nullable();
             $table->string('id_tahun_ajar')->nullable();

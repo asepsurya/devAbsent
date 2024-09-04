@@ -1,6 +1,9 @@
 @extends('layout.main')
 @section('container')
+@section('css')
+<link rel="stylesheet" href="{{ asset('asset/css/DataTables.css') }}">
 
+@endsection
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
@@ -19,122 +22,250 @@
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
         <div class="pe-1 mb-2">
-            <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh">
-                <i class="ti ti-refresh"></i>
+            <a href="#" class="btn btn-outline-light bg-white  me-1"
+                data-bs-toggle="modal" data-bs-target="#import">
+                <i class="ti ti-file-arrow-left "></i> Import
             </a>
         </div>
-        <div class="pe-1 mb-2">
-            <button type="button" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                data-bs-placement="top" aria-label="Print" data-bs-original-title="Print">
-                <i class="ti ti-printer"></i>
-            </button>
+        <div class="dropdown me-2 mb-2">
+            <a href="javascript:void(0);" class="dropdown-toggle btn btn-light fw-medium d-inline-flex align-items-center " data-bs-toggle="dropdown" >
+                <i class="ti ti-file-export me-2"></i>Export
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end p-3 " style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 41px);" data-popper-placement="bottom-end">
+                <li>
+                    <a href="javascript:void(0);" class="dropdown-item rounded-1"><i class="ti ti-file me-2"></i>Export
+                        as PDF</a>
+                </li>
+                <li>
+                    <a href="{{ route('studentEksportExcel') }}" class="dropdown-item rounded-1"><i class="ti ti-file-spreadsheet me-2"></i>Export
+                        as Excel </a>
+                </li>
+            </ul>
         </div>
-        <div class="pe-1 mb-2">
-            <button type="button" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                data-bs-placement="top" aria-label="Import data" data-bs-original-title="Impor Data">
-                <i class="ti ti-file-spreadsheet"></i>
-            </button>
-        </div>
+
         <div class="mb-2">
-            <a href="{{ route('dataIndukStudentAddIndex') }}" class="btn btn-primary d-flex align-items-center" ><i
+            <a href="{{ route('dataIndukStudentAddIndex') }}" class="btn btn-primary d-flex align-items-center"><i
                     class="ti ti-square-rounded-plus me-2"></i> Peserta Didik</a>
         </div>
     </div>
 </div>
 {{-- End Header --}}
+{{-- Jika Terjadi Kesalahan --}}
+@if($errors->any())
+<div class="alert alert-warning overflow-hidden p-0" role="alert">
+    <div class="p-3 bg-warning text-fixed-white d-flex justify-content-between">
+        <h6 class="aletr-heading mb-0 text-fixed-white"><span class="ti ti-alert-triangle"></span> Laporan Kesalahan</h6>
+        <button type="button" class="btn-close p-0 text-fixed-white" data-bs-dismiss="alert" aria-label="Close"><i
+                class="fas fa-xmark"></i></button>
+    </div>
+    <hr class="my-0">
+    <div class="p-3">
+        @foreach ($errors->all() as $error)
+        <div>{{ $error }}</div>
+        @endforeach
+    </div>
+</div>
+@endif
+
+@if ($gagal = Session::get('gagal'))
+<div class="alert alert-danger overflow-hidden p-0" role="alert">
+    <div class="p-3 bg-danger text-fixed-white d-flex justify-content-between">
+        <h6 class="aletr-heading mb-0 text-fixed-white"><span class="ti ti-alert-triangle"></span> Laporan Kesalahan</h6>
+        <button type="button" class="btn-close p-0 text-fixed-white" data-bs-dismiss="alert" aria-label="Close"><i
+                class="fas fa-xmark"></i></button>
+    </div>
+    <hr class="my-0">
+    <div class="p-3">
+        <div>{{ $gagal }}</div>
+
+    </div>
+</div>
+		@endif
 
 <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
         <h4 class="mb-3"><span class="ti ti-user"></span> Daftar Peserta Didik</h4>
         <div class="d-flex align-items-center flex-wrap">
-            <div class="input-icon-start mb-3 me-2 position-relative">
-                <span class="icon-addon">
-                    <i class="ti ti-users"></i>
-                </span>
-                <input type="text" class="form-control " placeholder="Cari Peserta Didik.." id="myInput"
-                    onkeyup="myFunction()">
-            </div>
+
         </div>
     </div>
     <div class="card-body p-0 ">
 
         <div class="table-responsive ">
-            <table class="table table-nowrap mb-0" id="myTable">
+            <table class="table no-footer stripe hover " id="myTable">
                 <thead>
                     <tr>
-                        <th class="bg-light-400">#</th>
-                        <th class="bg-light-400"></th>
-                        <th class="bg-light-400">NIS</th>
-                        <th class="bg-light-400">Nama Peserta Didik</th>
-                        <th class="bg-light-400">Jenis Kelamin</th>
-                        <th class="bg-light-400">Tempat Lahir</th>
-                        <th class="bg-light-400">Tanggal Lahir</th>
-                        <th class="bg-light-400">Rombongan Belajar</th>
+                        <th>#</th>
+                        <th></th>
+                        <th>NIS</th>
+                        <th>Nama Peserta Didik</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Tempat Lahir</th>
+                        <th>Tanggal Lahir</th>
+                        <th>Rombongan Belajar</th>
 
-                        <th class="bg-light-400">Status</th>
-                        <th class="bg-light-400">Tanggal Masuk</th>
-
+                        <th>Status</th>
+                        <th>Tanggal Masuk</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @php $no=1 @endphp
-                    @foreach ($students as $item )
-                    <tr class="odd">
-                        <td>{{ $no++ }}.</td>
-                        <td>
-                            <div class="hstack gap-2 fs-15">
-                                <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit" href="{{ route('studentEditIndex',encrypt($item->id)) }}"  class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i
-                                        class="ti ti-pencil-minus"></i></a>
-                                <a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus"  href="javascript:void(0);"
-                                    class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i
-                                        class="ti ti-trash"></i></a>
-                            </div>
-                        </td>
-                        <td><a href="student-details.html" class="link-primary">{{ $item->nis }}</a></td>
-                        <td>
-                            {{ $item->nama }}
-                        </td>
-                        <td>
-                            @if ($item->gender == 1)
-                            Laki - Laki
-                            @else
-                            Perempuan
-                            @endif
-                        </td>
-                        <td>{{ $item->tempat_lahir }}</td>
-                        <td>{{date('d F Y', strtotime($item->tanggal_lahir)) }}</td>
-                        <td>Farmasi Klinis & Komunitas</td>
-                        <td>
-                            @if ($item->status == 1)
-                            <span class="badge badge-soft-success d-inline-flex align-items-center"><i
-                                    class="ti ti-circle-filled fs-5 me-1"></i>Aktif</span>
-                            @else
-                            <span class="badge badge-soft-danger d-inline-flex align-items-center"><i
-                                    class="ti ti-circle-filled fs-5 me-1"></i>Tidak Aktif</span>
-                            @endif
-
-                        </td>
-                        <td>
-                            @if($item->tanggal_masuk)
-                            {{ date('d F Y', strtotime($item->tanggal_masuk)) }}
-                            @else
-                            Belum disetel
-                            @endif
-                        </td>
-
-                    </tr>
-                    @endforeach
-                </tbody>
             </table>
-
         </div>
-        <div class="d-flex justify-content-end m-3"> {{ $students->links() }}</div>
+
+    </div>
+</div>
+@foreach ($students as $item )
+
+<div class="modal  fade effect-super-scaled " id="delete-modal-{{ $item->id }}" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="students.html">
+                <div class="modal-body text-center">
+                    <span class="avatar avatar-xl bg-danger-transparent me-2 my-3 ">
+                        <i class="ti ti-trash-x fs-1" ></i>
+                    </span>
+                    <h4>Confirm Deletion </h4>
+                    <p>You want to delete all the marked items, this cant be undone once you delete.</p>
+                    <div class="d-flex justify-content-center">
+                        <a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</a>
+                        <a href="{{ route('studentDelete',$item->id) }}" type="submit" class="btn btn-danger">Yes, Delete</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+
+<div class="modal fade effect-sign " id="import" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered text-center" role="document">
+        <div class="modal-content modal-content-demo">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Import Data Peserta Didik</h4><button aria-label="Close" class="btn-close"
+                    data-bs-dismiss="modal"></button>
+            </div>
+            <form id="fileUploadForm" action="{{ route('studentImport') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body text-start">
+                    <input type="file" name="file" class="form-control" required>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary w-100"><span class="ti ti-cloud-upload"></span> Import Data</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section('javascript')
+<script src="{{ asset('asset/js/DataTables.js') }}"></script>
+
+
 <script>
+    $(function() {
+        var table = new DataTable('#myTable', {
+            layout:{
+                topEnd:{
+                    search:{
+                        placeholder:'Search...',
+                        text:'_INPUT_'
+                    }
+                }
+            },
+            processing: true,
+            order: [[1, 'desc']],
+            serverSide: true,
+            ajax: '{!! route('dataIndukStudent') !!}', // memanggil route yang menampilkan data json
+            columns: [{ // mengambil & menampilkan kolom sesuai tabel database
+                    data: 'DT_RowIndex',
+                    sortable: false,
+                    target:[1],
+                    searchable:false,
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'id',
+                    sortable: false,
+                    render: function(data, type, row, meta){
+                        if(type === 'display'){
+                            data = '<div class="hstack gap-2 fs-15">'+
+                                '<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit" href="/akademik/datainduk/studentEdit/'+data+'"  class="btn btn-icon btn-sm btn-soft-info rounded-pill">'+
+                                    '<i class="ti ti-pencil-minus"></i></a>'+
+                                '<a  data-bs-toggle="modal" data-bs-target="#delete-modal-'+data+'" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i class="ti ti-trash"></i></a>'+
+                            '</div>'
+
+                        }
+                        return data;
+                    },
+                    targets: -1
+                 },
+                {
+                    data: 'nis',
+                    name: 'nis'
+                },
+                {
+                    data: 'nama',
+                    name: 'nama'
+                },
+                {
+                    data: 'gender',
+                    render: function(data, type, row, meta){
+                        if(data === 'L'){
+                            data = 'Laki - Laki'
+                        }else{
+                            data = 'Perempuan'
+                        }
+                        return data;
+                    },
+                    targets: -1
+                },
+                {
+                    data: 'tempat_lahir',
+                    name: 'tempat_lahir'
+                },
+                {
+                    data: 'tanggal_lahir',
+                    name: 'tanggal_lahir'
+                },
+                {
+                    data: 'tempat_lahir',
+                    name: 'tempat_lahir'
+                },
+                {
+                    data: 'status',
+                    render:function(data){
+                    if(data === '1'){
+                        data = '<span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>'
+                    }else{
+                        data = '<span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak Aktif</span>'
+                    }
+                    return data;
+                   }
+                },
+                {
+                    data: 'tanggal_masuk',
+                    render:function(data){
+                    if(data){
+                        data = data
+                    }else{
+                        data = 'Belum disetel'
+                    }
+                    return data;
+                   }
+                },
+
+
+
+
+            ]
+        });
+
+
+    });
+</script>
+{{-- <script>
     function myFunction() {
       var input, filter, table, tr, td, i, txtValue;
       input = document.getElementById("myInput");
@@ -153,19 +284,7 @@
         }
       }
     }
-</script>
-<script>
-    function detailssubmit() {
-        alert("Your details were Submitted");
-    }
-    function onlyNumberKey(evt) {
+</script> --}}
 
-        // Only ASCII character in that range allowed
-        let ASCIICode = (evt.which) ? evt.which : evt.keyCode
-        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
-            return false;
-        return true;
-    }
-</script>
 @endsection
 @endsection

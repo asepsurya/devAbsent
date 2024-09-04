@@ -29,7 +29,7 @@
         </div>
        <div class="mb-2">
             <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-effect="effect-scale" data-bs-toggle="modal" data-bs-target="#add_holiday"><i class="ti ti-square-rounded-plus me-2"></i>Hari Libur</a>
-            </div> 
+            </div>
     </div>
 </div>
 {{-- End Header --}}
@@ -88,7 +88,7 @@
                                 <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i class="ti ti-trash"></i></a>
                             </div>
                         </td>
-                    </tr> 
+                    </tr>
                 </tbody>
             </table>
         </div>
