@@ -57,14 +57,14 @@ class rfidController extends Controller
                             'status'=>'Hadir'
                         ]);
                     }else{
+                        // belum absen Input  jam entry
+                        $status = "ENTRY";
                         absent::create([
                             'tanggal'=>date('d/m/Y'),
                             'id_rfid'=>$item->id_rfid,
                             'entry'=> $timenow,
                             'status'=>'Hadir'
                         ]);
-                        // belum absen Input  jam entry
-                        $status = "ENTRY";
                     }
 
                     $ceknama = gtk::where('id_rfid',$request->rfid)->get();
@@ -88,13 +88,20 @@ class rfidController extends Controller
                 }
             }
         }else{
+<<<<<<< HEAD:app/Http/Controllers/API/rfidController.php
             rfid::create([
                 'id_rfid'=>$request->rfid,
                 'status'=>'1'
             ]);
+=======
+>>>>>>> 985fec03834abadf31d35b954868479b111261b2:app/Http/Controllers/rfidController.php
             return response()->json([
                 // RFID TIDAK TERDAFTAR - INPUT RFID
                 'status'=>'INVALID',
+            ]);
+            rfid::create([
+                'id_rfid'=>$request->id_rfid,
+                'status'=>'1'
             ]);
         }
     }
