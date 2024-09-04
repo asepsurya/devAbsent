@@ -88,13 +88,12 @@ class rfidController extends Controller
                 }
             }
         }else{
-<<<<<<< HEAD:app/Http/Controllers/API/rfidController.php
+
             rfid::create([
                 'id_rfid'=>$request->rfid,
                 'status'=>'1'
             ]);
-=======
->>>>>>> 985fec03834abadf31d35b954868479b111261b2:app/Http/Controllers/rfidController.php
+
             return response()->json([
                 // RFID TIDAK TERDAFTAR - INPUT RFID
                 'status'=>'INVALID',
