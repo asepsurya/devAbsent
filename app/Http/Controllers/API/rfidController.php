@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 class rfidController extends Controller
 {
-    public function rfid(request $request){
+    public function rfid(request $request) {
         if ($request->ajax()) {
             return DataTables::of(rfid::query())->toJson();
         }
@@ -24,7 +24,7 @@ class rfidController extends Controller
         ]);
     }
     // untuk mengirim data RFID API
-    public function rfidAPI(request $request){
+    public function rfidAPI(request $request) {
         $data = rfid::orderBy('id','ASC')->get();
         return response()->json([
             'status'=>true,
@@ -33,13 +33,13 @@ class rfidController extends Controller
         ],200);
     }
 
-    public function rfidadd(request $request){
+    public function rfidadd(request $request) {
         date_default_timezone_set('Asia/Jakarta');
         $timenow= date('H:i');
         $data = rfid::where('id_rfid',$request->rfid)->get();
-        if($data->count()){
+        if($data->count()) {
             foreach($data as $item){
-                if($item->status == '1'){
+                if($item->status == '1') {
                     return response()->json([
                         'status'=>'RFID Not Bind',
                     ]);

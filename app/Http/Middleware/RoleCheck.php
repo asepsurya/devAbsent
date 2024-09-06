@@ -18,9 +18,6 @@ class RoleCheck
         if (!auth()->check() || !auth()->user()->isAdmin()) {
             return redirect('/login');
         }
-
-
-
         return $next($request);
     }
 }

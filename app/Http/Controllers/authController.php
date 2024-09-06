@@ -77,23 +77,21 @@ class authController extends Controller
         if(Auth::attempt($cek)){
             $request->session()->regenerate();
 
-            if(Auth()->user()->role == '1'){
+            if(Auth()->user()->role == 1){
                 toastr()->success('Login Berhasil');
                 return redirect()-> intended('/dashboard');
-            }elseif(Auth()->user()->role == 'walikelas'){
+            }elseif(Auth()->user()->role == 2){
                 toastr()->success('Login Berhasil');
                 return redirect()-> intended('/TeacherDashboard');
-            }elseif(Auth()->user()->role == 'guru'){
+            }elseif(Auth()->user()->role == 3){
                 toastr()->success('Login Berhasil');
                 return redirect()-> intended('/TeacherDashboard');
-            }elseif(Auth()->user()->role == 'siswa'){
+            }elseif(Auth()->user()->role == 4){
                 toastr()->success('Login Berhasil');
                 return redirect()-> intended('/student/dashboard');
-
             }else{
                 toastr()->success('Login Berhasil');
-                return redirect()-> intended('/dashboard');
-
+                return redirect()-> intended('/');
             }
 
         }
