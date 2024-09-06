@@ -18,24 +18,24 @@ class PenggunaController extends Controller
         return view('pengguna.pesertadidik',[
             'title' => 'Peserta Didik',
             'students'=>User::where('role','siswa')->with('student')->get()
-        ]);  
+        ]);
     }
     public function useremployeesIndex(){
         return view('pengguna.GTK',[
             'title' => 'Guru dan Tenaga Kependidikan'
-        ]); 
+        ]);
     }
     public function usermodulesIndex(){
         $roles = DB::table('roles')->get();
         return view('pengguna.modul',[
             'title' => 'Daftar Modul',
             'roles' => $roles
-        ]);  
+        ]);
     }
     public function user_privilegesIndex(){
         return view('pengguna.hakAkses',[
             'title' => 'Hak Akses'
-        ]);  
+        ]);
     }
     public function userAdministratorAdd(request $request){
         toastr()->error('An error has occurred please try again later.');

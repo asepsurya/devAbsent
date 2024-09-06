@@ -234,8 +234,8 @@
 
     <div class="mb-2">
         <label class="form-label">Jenis GTK <span class="text-danger">*</span></label>
-        <select name="jns_gtk" id="jenis_gtk2"
-            class="form-control select2   @error('jns_gtk') is-invalid @enderror" required>
+        <select name="id_jenis_gtk" id="id_jenis_gtk"
+            class="form-control select2   @error('id_jenis_gtk') is-invalid @enderror" required>
 
             @foreach ($jnsGTK as $item2 )
                  <option value="{{ $item2->id }}" {{ $item2->id == $item->id_jenis_gtk ? 'selected' : '' }}>{{ $item2->nama }}</option>

@@ -43,8 +43,11 @@ class rfidController extends Controller
                     return response()->json([
                         'status'=>'RFID Not Bind',
                     ]);
-                }
-                else{
+                } else if($item->status == '3') {
+                        return response()->json([
+                            'status'=>'BLOCKED',
+                    ]);
+                } else {
                     $cek = absent::where([
                         'id_rfid'=>$request->rfid,'tanggal'=>date('d/m/Y')
                     ])->get();
@@ -56,7 +59,7 @@ class rfidController extends Controller
                             'out'=>$timenow,
                             'status'=>'Hadir'
                         ]);
-                    }else{
+                    } else {
                         // belum absen Input  jam entry
                         $status = "ENTRY";
                         absent::create([
@@ -87,7 +90,7 @@ class rfidController extends Controller
                     ]);
                 }
             }
-        }else{
+        } else {
             rfid::create([
                 'id_rfid'=>$request->rfid,
                 'status'=>'1'
@@ -120,7 +123,7 @@ class rfidController extends Controller
                 rfid::where('id',$id)->delete();
                 toastr()->success('Data Berhasil dihapus');
                 return redirect()->back();
-            }else{
+            } else {
                 toastr()->error('Data Sudah Tertaut, tidak bisa dihapus');
                 return redirect()->back();
 

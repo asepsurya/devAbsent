@@ -120,6 +120,6 @@ class authController extends Controller
     }
 
     public function create(request $request){
-        return ' halama create';
+        return 'halaman create';
     }
 }

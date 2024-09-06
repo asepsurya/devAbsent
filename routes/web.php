@@ -107,7 +107,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/gtk/employment_typesDelete{id}',[GTKController::class,'employmenttypesIndexDelete'])->name('employmenttypesIndexDelete');
 
     // route Pengguna
-    Route::get('/user/administrator',[penggunaController::class,'userAdministratorIndex']);
+    Route::get('/user/administrator',[penggunaController::class,'userAdministratorIndex'])->name('userAdministratorIndex');
     Route::post('/user/administratorAdd',[penggunaController::class,'userAdministratorAdd'])->name('userAdministratorAdd');
     Route::get('/user/students',[penggunaController::class,'userStudentsIndex']);
     Route::get('/user/employees',[penggunaController::class,'useremployeesIndex']);
