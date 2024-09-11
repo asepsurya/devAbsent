@@ -17,10 +17,11 @@ class rfidController extends Controller
 {
     public function rfid(request $request){
         if ($request->ajax()) {
-            return DataTables::of(rfid::query())->toJson();
+            return DataTables::of(rfid::orderBy('id', 'DESC'))->addIndexColumn()->toJson();
         }
         return view('rfid.rfid',[
             'title'=>'Registrasi RFID',
+            'rfid'=>rfid::orderBy('id', 'DESC')->with(['rfidStudent','rfidGTK'])->get()
         ]);
     }
     // untuk mengirim data RFID API
@@ -54,7 +55,7 @@ class rfidController extends Controller
                         $status ="EXIT";
                         absent::where('id_rfid',$request->rfid)->update([
                             'out'=>$timenow,
-                            'status'=>'Hadir'
+                            'status'=>'H'
                         ]);
                     }else{
                         // belum absen Input  jam entry
@@ -63,7 +64,7 @@ class rfidController extends Controller
                             'tanggal'=>date('d/m/Y'),
                             'id_rfid'=>$item->id_rfid,
                             'entry'=> $timenow,
-                            'status'=>'Hadir'
+                            'status'=>'H'
                         ]);
                     }
 
@@ -84,6 +85,7 @@ class rfidController extends Controller
                         'nama'=>$nama,
                         'uid'=>$item->id_rfid,
                         'status'=>$status,
+
                     ]);
                 }
             }

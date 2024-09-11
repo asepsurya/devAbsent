@@ -23,4 +23,12 @@ class student extends Model
         return $this->belongsTo('App\Models\absent','id_rfid','id_rfid');
     }
 
+    public function rombelstudent(){
+        return $this->belongsTo('App\Models\rombel','nis','nis');
+    }
+
+    public function studentUser(){
+        return $this->belongsTo('App\Models\User','nis','nomor');
+    }
+
 }

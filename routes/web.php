@@ -6,15 +6,16 @@ use App\Http\Controllers\GTKController;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\lisensiController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\API\rfidController;
 use App\Http\Controllers\HolidaysController;
 use App\Http\Controllers\pengaturanAkademik;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataIndukController;
+use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\verifikasiUserController;
-use App\Http\Controllers\lisensiController;
-use App\Http\Controllers\API\rfidController;
 
 Route::get('/', function () {
     return view('frontpage.index');
@@ -27,14 +28,35 @@ Route::middleware('guest')->group(function () {
     Route::post('/loginAction',[authController::class,'loginAction'])->name('loginAction');
     Route::get('/register',[authController::class,'registerIndex']);
     Route::post('/registerInput',[authController::class,'registerInput'])->name('registerInput');
+    Route::post('/registerInput/teacher',[authController::class,'registerInputTeacher'])->name('registerInputTeacher');
+    Route::get('/register/info',[authController::class,'registerinfo'])->name('registerinfo');
 
 });
 
+
 Route::middleware('auth')->group(function () {
-    // route Dashboard
-    Route::get('/dashboard',[DashboardController::class,'index']);
-    Route::get('/TeacherDashboard',[DashboardController::class,'teacherDashboard']);
-    Route::get('/student/dashboard',[DashboardController::class,'Studentindex']);
+    Route::get('/profile/{id}',[authController::class,'profileIndex'])->name('profileIndex');
+    Route::post('/profile/edit/action',[authController::class,'profileUpdate'])->name('profileUpdate');
+    Route::post('/profile/edit/imageProfile',[authController::class,'imageProfile'])->name('imageProfile');
+    // Role Permision pengguna
+    Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard.admin')->middleware('role:Super-Admin');
+    // Role Permision untuk walikelas
+    Route::middleware('role:walikelas')->group(function () {
+        Route::get('/walikelas/dashboard',[DashboardController::class,'walikelasDashboard'])->name('dashboard.walikelas');
+    });
+    // Role Permision untuk guru
+    Route::middleware('role:guru')->group(function () {
+        Route::get('/teacher/dashboard',[DashboardController::class,'teacherDashboard'])->name('dashboard.teacher');
+    });
+    // Role Permision untuk siswa
+    Route::middleware('role:siswa')->group(function () {
+        Route::get('/student/dashboard',[DashboardController::class,'Studentindex'])->name('dashboard.student');
+    });
+
+
+
+    Route::get('/class/list',[kelaslistController::class,'kelaslist'])->name('kelaslist');
+    Route::get('/class/list/detail',[kelaslistController::class,'kelaslistdetail'])->name('kelaslistdetail');
     Route::get('/holidays',[HolidaysController::class,'index']);
     // route Absensi
     Route::get('/absensi/student',[AbsensiController::class,'absensiStudent'])->name('absensiStudent');
@@ -48,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/akademik/datainduk/studentEditAction',[DataIndukController::class,'dataIndukStudentEdit'])->name('dataIndukStudentEdit');
     Route::get('/akademik/datainduk/studentDelete{id}',[DataIndukController::class,'studentDelete'])->name('studentDelete');
     Route::post('/akademik/datainduk/studentImport',[DataIndukController::class,'studentImport'])->name('studentImport');
+    Route::get('/akademik/datainduk/student/import',[DataIndukController::class,'studentIndex'])->name('studentIndex');
     Route::get('/akademik/datainduk/studentEksportExcel',[DataIndukController::class,'studentEksportExcel'])->name('studentEksportExcel');
 
     Route::get('/akademik/datainduk/jurusan',[DataIndukController::class,'dataIndukJurusan']);
@@ -91,6 +114,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/gtk/update/{id}',[GTKController::class,'GTKupdateIndex'])->name('GTKupdateIndex');
     Route::post('/gtk/updateAction',[GTKController::class,'GTKupdate'])->name('GTKupdate');
     Route::get('/gtk/deleteAction{id}',[GTKController::class,'GTKdelete'])->name('GTKdelete');
+    Route::post('/gtk/import/index',[GTKController::class,'GTKimportIndex'])->name('GTKimportIndex');
     Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
     // route rfid
     Route::get('/rfid',[rfidController::class,'rfid'])->name('rfid');
@@ -124,3 +148,4 @@ Route::post('/logout',[authController::class,'logout'])->name('logout');
 Route::post('/getkabupaten',[RegionController::class,'getkabupaten'])->name('getkabupaten');
 Route::post('/getkecamatan',[RegionController::class,'getkecamatan'])->name('getkecamatan');
 Route::post('/getdesa',[RegionController::class,'getdesa'])->name('getdesa');
+Route::post('/getwalikelas',[RegionController::class,'getwalikelas'])->name('getwalikelas');

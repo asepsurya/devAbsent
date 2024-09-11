@@ -69,10 +69,25 @@
             <div class="card-body p-0 mb-0">
                 <div class="alert alert-primary overflow-hidden p-0 mb-0">
                     <form action="{{ route('PengaturaRombel') }}" method="get">
-
+                        {{-- this.form.submit() --}}
+                        <input type="text" value="{{ request('id_tahun_pelajaran') }}" name="id_tahun_pelajaran" hidden>
+                        <input type="text" value="{{ request('id_tahun_pelajaran') }}" name="id_kelas_tujuan" hidden>
+                        <div class="col m-3">
+                            <label class="form-label ">Tahun Pelajaran</label>
+                            <select name="tahunAjarAsal" id="tahunAsal" class="form-control select2" onchange="this.form.submit()">
+                                <option value="" selected>-- Tahun Pelajaran --</option>
+                                @foreach ($tahunAjar as $item )
+                                <option value="{{ $item->id }}" {{ $item->id ==
+                                    request('tahunAjarAsal') ?
+                                    'selected' :
+                                    '' }}>{{ $item->tahun_pelajaran }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="col m-3">
                             <label class="form-label">Kelas Asal</label>
-                            <select name="id_kelas_asal" id="" class="select2" onchange="this.form.submit()">
+                            <select name="id_kelas_asal" id="kelasAsal" class="form-control select2" onchange="this.form.submit()">
                                 <option value="" selected>-- Pilih Kelas --</option>
                                 <option value="belumDiatur" {{ request('id_kelas_asal')=='belumDiatur' ? 'selected' : ''
                                     }}>Belum Diatur</option>
@@ -85,27 +100,20 @@
                                 @endforeach
                             </select>
                         </div>
-                        @if(request('id_kelas_asal')!= "belumDiatur")
-                        <div class="col m-3">
-                            <label class="form-label ">Tahun Pelajaran</label>
-                            <select name="tahunAjarAsal" class="form-control select2" onchange="this.form.submit()">
-                                @foreach ($tahunAjar as $item )
-                                <option value="{{ $item->id }}" {{ $item->id ==
-                                    request('id_tahun_pelajaran') ?
-                                    'selected' :
-                                    '' }}>{{ $item->tahun_pelajaran }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @endif
+
+
                     </form>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-nowrap mb-0" id="myTable">
                         <thead>
                             <tr>
-                                <th class="bg-light-400" width="10%">#</th>
+                                <th class="bg-light-400" width="3%">
+                                    <div class="form-check form-check-md">
+                                        <input class="form-check-input" type="checkbox" id="select-all">
+                                        </div>
+                                </th>
+
                                 <th class="bg-light-400">NIS</th>
                                 <th class="bg-light-400">Nama Lengkap</th>
                                 <th class="bg-light-400" width="10%"></th>
@@ -118,7 +126,12 @@
                             @endphp
                             @foreach ($students as $item)
                             <tr>
-                                <td>{{ $no++ }}</td>
+                                <td>
+                                    <div class="form-check form-check-md">
+                                        <input class="form-check-input" type="checkbox">
+                                        </div>
+                                </td>
+
                                 <td class="text-primary">{{ $item->nis }}</td>
                                 <td>{{ $item->nama }}</td>
                                 <th>
@@ -136,10 +149,8 @@
                                         {{-- old --}}
 
                                     </form>
-
                             </tr>
                             @endforeach
-
                         </tbody>
                     </table>
                 </div>
@@ -147,27 +158,52 @@
         </div>
     </div>
     <div class="col-lg-6">
-        <div class="card">
+        <div class="card mb-0">
             <div class="card-body p-0 ">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h4><span class="ti ti-settings"></span> Kelas Tujuan</h4>
                     <div>
-                        <form action="{{ route('PengaturaRombel') }}" method="get">
-                            <div class="p-1">
-                                <button class="btn btn-outline-light bg-white  me-1 btn-sm w-100"><span class="ti ti-eye"></span> Tampilkan Data</button>
-                            </div>
+                        <div class="input-icon-start me-2 position-relative">
+                            <span class="icon-addon">
+                                <i class="ti ti-search"></i>
+                            </span>
+                        <input type="text" class="form-control " placeholder="Search" id="myInput1"
+                        onkeyup="myFunction1()">
                         </div>
+                    </div>
                     </div>
                 </div>
                 <div class="alert alert-success overflow-hidden p-0 mb-0" role="alert">
                     <hr class="my-0">
                     <div class="p-3">
+                        <form action="{{ route('PengaturaRombel') }}" method="get">
                         <p class="mb-0">
-
+                            <input type="text" id="id_kelas_awal" value="{{ request('id_kelas_asal') }}"  name="id_kelas_asal" hidden>
+                            <input type="text" id="id_ajaran_awal" value="{{ request('tahunAjarAsal') }}" name="tahunAjarAsal" hidden>
                             <div>
                                 <div class="col mb-2">
+                                    <label class=" form-label ">Tahun Pelajaran</label>
+                                    <select name="id_tahun_pelajaran" id="tahunAjar" class="form-control select2" onchange="TahunAjarValue();" >
+                                        <option value="" selected>-- Pilih Kelas --</option>
+                                        @foreach ($tahunAjar as $item )
+                                        <option value="{{ $item->id }}"  {{ $item->id ==
+                                            request('id_tahun_pelajaran') ?
+                                            'selected' :
+                                            '' }}>{{ $item->tahun_pelajaran }}
+                                        </option>
+                                        @php
+                                        if(request('id_tahun_pelajaran')){
+                                        $a = request('id_tahun_pelajaran');
+                                        }else{
+                                        $a = '';
+                                        }
+                                        @endphp
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col mb-2">
                                     <label class="form-label">Pilih Kelas Tujuan</label>
-                                    <select name="id_kelas_tujuan" id="kelas" class="form-control select2" onchange="KelasValue()">
+                                    <select name="id_kelas_tujuan" id="kelas" class="form-control select2" onchange="KelasValue();this.form.submit() ">
                                         <option value="" selected>-- Pilih Kelas --</option>
                                         @foreach ($kelas as $item )
                                         <option value="{{ $item->id }}"
@@ -192,41 +228,21 @@
                                     </select>
 
                                 </div>
-                                <div class="col mb-2">
-                                    <label class=" form-label ">Tahun Pelajaran</label>
-                                    <select name="id_tahun_pelajaran" id="tahunAjar" class="form-control select2" onchange="TahunAjarValue()" >
-                                        <option value="" selected>-- Pilih Tahun Pelajaran --</option>
-                                        @foreach ($tahunAjar as $item )
-                                        <option value="{{ $item->id }}"  {{ $item->id ==
-                                            request('id_tahun_pelajaran') ?
-                                            'selected' :
-                                            '' }}>{{ $item->tahun_pelajaran }}
-                                        </option>
-                                        @php
-                                        if(request('id_tahun_pelajaran')){
-                                        $a = request('id_tahun_pelajaran');
-                                        }else{
-                                        $a = '';
-                                        }
-                                        @endphp
-                                        @endforeach
-                                    </select>
-
-                                </div>
-
 
                                 </p>
                             </div>
                         </form>
 
                     </div>
+
                     <input type="text" id="id_kelas_tujuan" value="{{ $c }}" hidden >
                     <input type="text" id="tahun_ajaran_tujuan" value="{{ $a }}" hidden>
 
                 </div>
             </div>
-            <div class="table-responsive">
-                <table class="table table-nowrap mb-0">
+
+            <div class="table-responsive mt-0">
+                <table class="table table-nowrap mb-0" id="table">
                     <thead>
                         <tr>
                             <th class="bg-light-400" width="10%">#</th>
@@ -242,12 +258,13 @@
                         @foreach ($studentsClass as $item)
                         <tr>
                             <td>{{ $no++ }}.</td>
-                            <td>{{ $item->nis}}</td>
+                            <td class="link-primary">{{ $item->nis}}</td>
                             <td>{{ $item->rombelStudent->nama}}</td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
+
             </div>
         </div>
 
@@ -256,6 +273,53 @@
 </div>
 </div>
 @section('javascript')
+{{-- <script>
+    $(function(){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+            });
+            $(function (){
+                $('#kelasAsal').on('change',function(){
+                    let kelasAsal = $('#kelasAsal').val();
+                    $.ajax({
+                        type : 'POST',
+                        url : "{{route('getkelasAwal')}}",
+                        data : {
+                            kelasAsal:kelasAsal
+                        },
+                        cache : false,
+                        success: function(msg){
+                            $('#id_kelas_awal').val(msg);
+
+                        },
+                        error: function(data) {
+                            console.log('error:',data)
+                        },
+                    })
+                })
+
+                $('#tahunAsal').on('change',function(){
+                    let tahunAsal = $('#tahunAsal').val();
+                    $.ajax({
+                        type : 'POST',
+                        url : "{{route('gettahunajaranawal')}}",
+                        data : {
+                            tahunAsal:tahunAsal
+                        },
+                        cache : false,
+                        success: function(msg){
+                            $('#id_ajaran_awal').val(msg);
+                        },
+                        error: function(data) {
+                            console.log('error:',data)
+                        },
+                    })
+                })
+            });
+    });
+</script> --}}
+
 <script>
     function TahunAjarValue() {
         var e = document.getElementById("tahunAjar");
@@ -263,7 +327,7 @@
         document.getElementById("tahun_ajaran_tujuan").value = val;
         $(".GetTahunPelajaran").val(val);
 
-    }
+     }
     function KelasValue() {
         var e = document.getElementById("kelas");
         var val = e.options[e.selectedIndex].value;
@@ -271,11 +335,32 @@
         $(".GetKelas").val(val);
 
     }
+
+
+
     // $(".GetKelas").val(document.getElementById("id_kelas_tujuan").value) ;
     // $(".GetTahunPelajaran").val(document.getElementById("tahun_ajaran_tujuan").value);
 
 </script>
 <script>
+    function myFunction1() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("myInput1");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("table");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[2];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
     function myFunction() {
       var input, filter, table, tr, td, i, txtValue;
       input = document.getElementById("myInput");

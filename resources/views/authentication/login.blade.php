@@ -9,8 +9,7 @@
     <meta name="author" content="Dreams technologies - Bootstrap Admin Template">
     <meta name="robots" content="noindex, nofollow">
     <title>Absensi Sakti | {{ $title }}</title>
-    <link rel="shortcut icon" type="image/x-icon"
-        href="https://preskool.dreamstechnologies.com/html/template/assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('asset/img/logo-icon.png') }}">
     <script src="{{ asset('asset/js/lightDark.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <link rel="stylesheet" href="{{ asset('asset/css/boostrap.min.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.2/feather.min.js"
@@ -58,14 +57,14 @@
                                 <form action="{{ route('loginAction') }}" method="post">
                                     @csrf
                                     <div class="mb-3 ">
-                                        <label class="form-label">Email</label>
+                                        <label class="form-label">Username</label>
                                         <div class="input-icon mb-3 position-relative">
                                             <span class="input-icon-addon">
                                                 <i class="ti ti-mail"></i>
                                             </span>
                                             <input type="text"
                                                 class="form-control @error('email') is-invalid @enderror "
-                                                placeholder="example@mail.com" name="email" id="email">
+                                                placeholder="Username" name="email" id="email">
                                             @error('email')
                                             <div class="invalid-feedback">
                                                 {{ $message }}

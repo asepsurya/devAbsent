@@ -155,6 +155,7 @@
             </div>
             {{-- message --}}
             <div class="pe-1">
+
                 <a href="https://preskool.dreamstechnologies.com/html/template/chat.html" class="btn btn-outline-light bg-white btn-icon position-relative me-1">
                     <i class="ti ti-brand-hipchat"></i>
                     <span class="chat-status-dot"></span>
@@ -164,28 +165,114 @@
               <a href="" class="btn btn-outline-light bg-white  position-relative "><span class="ti ti-key"></span> Ubah Password</a>
             </div>
             {{-- user --}}
+
+            {{-- @foreach ( auth()->user()->load('gtk') as  $item) --}}
             <div class="d-flex align-items-center">
                 <div class="dropdown ms-1">
                     <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center"
                         data-bs-toggle="dropdown">
                         <span class="avatar avatar-md rounded">
-                            <img src="https://preskool.dreamstechnologies.com/html/template/assets/img/profiles/avatar-27.jpg" alt="Img" class="img-fluid">
+                    {{-- default --}}
+
+                        {{-- user siswa --}}
+                        @if(auth()->user()->role == "siswa")
+                         @if(Auth::user()->student == NULL)
+                            <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
+                         @else
+                            @if(Auth::user()->student->foto == "" )
+                                <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
+                            @else
+                                <img src="/storage/{{ Auth::user()->student->foto }}" alt='Img' class='img-fluid'>
+                            @endif
+                         @endif
+                        @endif
+
+                       @if(auth()->user()->role == "guru")
+                         @if(Auth::user()->gtk == NULL)
+                            <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                         @else
+                            @if(Auth::user()->gtk->gambar == "" )
+                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                            @else
+                                <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                            @endif
+                         @endif
+                        @endif
+
+                        @if( auth()->user()->role == "walikelas")
+                            @if(Auth::user()->gtk == NULL)
+                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                            @else
+                            @if(Auth::user()->gtk->gambar == "" )
+                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                            @else
+                                <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                            @endif
+                            @endif
+                        @endif
+
+                        @if(auth()->user()->role == "admin")
+                            <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                        @endif
+
                         </span>
                     </a>
                     <div class="dropdown-menu">
                         <div class="d-block">
                             <div class="d-flex align-items-center p-2">
                                 <span class="avatar avatar-md me-2 online avatar-rounded">
-                                    <img src="https://preskool.dreamstechnologies.com/html/template/assets/img/profiles/avatar-27.jpg" alt="img">
+
+                                    @if(auth()->user()->role == "siswa")
+                                    @if(Auth::user()->student == NULL)
+                                       <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
+                                    @else
+                                       @if(Auth::user()->student->foto == "" )
+                                           <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
+                                       @else
+                                           <img src="/storage/{{ Auth::user()->student->foto }}" alt='Img' class='img-fluid'>
+                                       @endif
+                                    @endif
+                                   @endif
+
+                                  @if(auth()->user()->role == "guru")
+                                    @if(Auth::user()->gtk == NULL)
+                                       <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                    @else
+                                       @if(Auth::user()->gtk->gambar == "" )
+                                           <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                       @else
+                                           <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                       @endif
+                                    @endif
+                                   @endif
+
+                                   @if( auth()->user()->role == "walikelas")
+                                       @if(Auth::user()->gtk == NULL)
+                                           <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                       @else
+                                       @if(Auth::user()->gtk->gambar == "" )
+                                           <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                       @else
+                                           <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                       @endif
+                                       @endif
+                                   @endif
+
+                                   @if(auth()->user()->role == "admin")
+                                       <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                   @endif
+
                                 </span>
                                 <div>
                                     <h6 class>{{ auth()->user()->nama }}</h6>
-                                    <p class="text-primary mb-0">{{ auth()->user()->role }}</p>
+                                    <p class="text-primary mb-0">{{ auth()->user()->email }}</p>
                                 </div>
                             </div>
                             <hr class="m-0">
-                            <a class="dropdown-item d-inline-flex align-items-center p-2" href="profile.html">
+                            @if (auth()->user()->role != "admin")
+                                <a class="dropdown-item d-inline-flex align-items-center p-2" href="{{ route('profileIndex',auth()->user()->nomor) }}">
                                 <i class="ti ti-user-circle me-2"></i>Profile Saya</a>
+                            @endif
                             <a class="dropdown-item d-inline-flex align-items-center p-2"
                                 href="profile-settings.html"><i class="ti ti-settings me-2"></i>Setelan</a>
                             <hr class="m-0">
@@ -198,13 +285,14 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
     <div class="dropdown mobile-user-menu">
         <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
             aria-expanded="false"><i class="ti ti-align-justified"></i></a>
         <div class="dropdown-menu dropdown-menu-end">
-            <a class="dropdown-item" href="profile.html">Profile Saya</a>
+            <a class="dropdown-item" href="{{ route('profileIndex',auth()->user()->nomor) }}">Profile Saya</a>
             <a class="dropdown-item" href="profile-settings.html">Setelan</a>
             <form action="{{ route('logout') }}" method="post">
                 @csrf

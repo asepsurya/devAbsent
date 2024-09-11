@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\student;
+use App\Models\User;
 use Session;
 use Maatwebsite\Excel\Concerns\ToModel;
 
@@ -27,7 +28,6 @@ class StudentsImport implements ToModel
                 'agama'=>$row[5],
                 'status'=>$row[6],
             ]);
-
         }
 
     }

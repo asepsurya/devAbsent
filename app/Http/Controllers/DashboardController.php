@@ -21,4 +21,9 @@ class DashboardController extends Controller
             'title'=>'Dashboard',
         ]);
     }
+    public function walikelasDashboard(){
+        return view('dashboard.walikelas',[
+            'title'=>'Dashboard',
+        ]);
+    }
 }

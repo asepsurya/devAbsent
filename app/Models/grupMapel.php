@@ -13,7 +13,7 @@ class grupMapel extends Model
     public function mata_pelajaran(){
         return $this->belongsTo('App\Models\Mapel','id_mapel','id');
     }
-    public function guru2(){
+    public function guru(){
         return $this->belongsTo('App\Models\gtk','id_gtk','nik');
     }
     public function kelas(){

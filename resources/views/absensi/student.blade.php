@@ -19,28 +19,43 @@
                 <li class="breadcrumb-item">
                     <a href="javascript:void(0);">Absensi</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Student</li>
+                <li class="breadcrumb-item active" aria-current="page">Absensi Siswa</li>
             </ol>
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-
+            <h4><span class="ti ti-calendar-due"></span> {{ Carbon\Carbon::parse(now())->translatedFormat('l, d F Y') }} | <span id="jam" class="text-muted"></span> </h4>
     </div>
 </div>
 {{-- End Header --}}
+<div class="bg-white p-3 border rounded-1 d-flex align-items-center justify-content-between flex-wrap mb-4 pb-0">
+    <h4 class="mb-3">Form Absensi Siswa  </h4>
+    <div class="d-flex align-items-center flex-wrap">
 
-<div class="card ">
-    <div class="card-header ">
-        <h3><span class="ti ti-settings"></span> Pilih Kelas</h3>
+        <div class="d-flex align-items-center bg-white  p-1 mb-3 me-2">
+
+            <div class="input-icon-start me-2 position-relative">
+                <span class="icon-addon">
+                    <i class="ti ti-search"></i>
+                </span>
+                <input type="text" class="form-control " placeholder="Search" id="myInput" onkeyup="myFunction()">
+            </div>
     </div>
+    </div>
+</div>
+
+
+<div class="bg-white p-3 border rounded-1 p-4" >
+
     <div class="card-body ">
         <form action="{{ route('absensiStudent') }}" method="get" data-bs-display="static">
 
         <div class="row ">
             <label class="col-lg-3 form-label mt-1">Tahun Pelajaran</label>
             <div class="col-lg-9">
-                <select name="tahun" id="tahunAjar" class="form-control select2"   onchange="this.form.submit()">
-                    <option value="" selected>--Tahun Ajaran--</option>
+                {{-- this.form.submit() --}}
+                <select name="tahun" id="tahunAjar" class="form-control select2"   onchange="">
+
                     @foreach ($tahunAjar as $item )
                     <option value="{{ $item->id }}" {{ $item->id == request('tahun') ? 'selected' : '' }}>{{
                         $item->tahun_pelajaran }}
@@ -54,18 +69,29 @@
         <div class="row my-2">
             <label class="col-lg-3 form-label mt-2">Kelas</label>
             <div class="col-lg-9">
-                <select name="kelas" id="kelas" class="form-control select2"  onchange="this.form.submit()">
+                <select name="kelas" id="kelas" class="form-control select2"  onchange="">
                     <option value="" selected>-- Pilih Kelas --</option>
                     @foreach ($kelas as $item )
                     <option value="{{ $item->id }}" {{ $item->id == request('kelas') ? 'selected' : '' }}>{{
                         $item->nama_kelas }} - {{
-                        $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</option>
+                        $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }} </option>
                     {{-- get Default Value --}}
-                    @php $c = request('kelas') @endphp
+
+                    @php $c = request('kelas');  @endphp
                     @endforeach
                 </select>
             </div>
+
         </div>
+
+        <div class="row my-2">
+            <label class="col-lg-3 form-label mt-2">Wali Kelas</label>
+            <div class="col-lg-9">
+                <input type="text" class="form-control" id="walikelas" name="walikelas"  value="{{ request('walikelas') }}">
+            </div>
+        </div>
+
+
         <div class="row my-2">
             <label class="col-lg-3 form-label mt-2">Tanggal</label>
             <div class="col-lg-9">
@@ -75,89 +101,103 @@
 
             <div class="row mt-2">
                 <div class="col-lg-3"></div>
-                <div class="col-lg-9"> <button class="btn btn-soft-success w-100"><span class="ti ti-search"></span> Cari Data</button></div>
+                <div class="col-lg-9"> <button class="btn btn-primary "><span class="ti ti-search"></span> Cari Data</button></div>
             </div>
 
         </form>
     </div>
 </div>
+
 <div class="card">
-    <div class="card-header d-flex align-items-center justify-content-between">
-        <h4><span class="ti ti-settings"></span> Daftar Hadir</h4>
-        <div>
-            <div class="input-icon-start me-2 position-relative">
-                <span class="icon-addon">
-                    <i class="ti ti-search"></i>
-                </span>
-                <input type="text" class="form-control " placeholder="Search" id="myInput" onkeyup="myFunction()">
-            </div>
-        </div>
-    </div>
     <div class="card-body p-0 ">
         <div class="table-responsive">
             <table class="table table-nowrap mb-0" id="myTable">
                 <thead>
                     <tr >
-                        <th class="bg-light-400" width="5%">#</th>
-                        <th class="bg-light-400" width="5%"><input type="checkbox" name="" id="as" class="checkbox"></th>
-                        <th class="bg-light-400" width="20%">RFID</th>
-                        <th class="bg-light-400">Nama Lengkap</th>
-
-                        <th class="bg-light-400">Status</th>
-                        <th class="bg-light-400"></th>
+                        <th width="1%" class="border">#</th>
+                        <th width="1%" >
+                            <div class="form-check form-check-md">
+                            <input class="form-check-input" type="checkbox" id="select-all">
+                            </div></th>
+                        <th width="3%">RFID</th>
+                        <th width="50%">Nama Lengkap</th>
+                        <th class="border" >H</th>
+                        <th class="border">S</th>
+                        <th class="border">I</th>
+                        <th class="border">A</th>
+                        <th></th>
 
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $no=1;
-                    @endphp
-                    @foreach ($rombel as $item)
+                    {{-- <form action="{{ route('absensiStudentAdd') }}" method="post" id="2" >
+                        @csrf --}}
+                    @if(request('tanggal'))
+                    @php $no=1; @endphp
+                    @foreach ($rombel as $item )
 
-                    <tr>
-                        <td>{{ $no++ }}.</td>
-                        <td><input type="checkbox" name="" id="as" class="checkbox"></td>
-                        <td>{{ $item->rombelStudent->id_rfid }}</td>
-                        <td>{{ $item->rombelStudent->nama }}</td>
+                     <tr>
+                        <td class="border">{{ $no++ }}.</td>
                         <td>
-                            {{-- jika data ada --}}
-
-                                @foreach($item->rombelAbsent as $data)
-
-                                    @if($data->tanggal == request('tanggal') )
-                                        {{-- menentukan Jenis Badge --}}
-                                        @if($data->status =="Hadir")
-                                            <span class="badge badge-soft-success d-inline-flex align-items-center"><i class="ti ti-circle-filled fs-5 me-1"></i>Hadir</span>
-                                        @elseif ($data->status =="Sakit")
-                                            <span class="badge badge-soft-warning d-inline-flex align-items-center"><i class="ti ti-circle-filled fs-5 me-1"></i>Sakit</span>
-                                        @elseif ($data->status =="Izin")
-                                            <span class="badge badge-soft-info d-inline-flex align-items-center"><i class="ti ti-circle-filled fs-5 me-1"></i>Izin</span>
-                                        @else
-                                            <span class="badge badge-soft-danger d-inline-flex align-items-center"><i class="ti ti-circle-filled fs-5 me-1"></i>Tidak Hadir</span>
-                                        @endif
-
-
-                                    @endif
-
-
-                                @endforeach
-
-
-
-
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" name="data[]" value="{{ $item->id_rfid }}" type="checkbox">
+                                </div>
                         </td>
+                        <td><a class="link-primary" href="#">{{ $item->id_rfid}}</a></td>
+                        <td>{{ $item->rombelStudent->nama }}</td>
+                        <form action="{{ route('absensiStudentAdd') }}" method="post" >
+                            @csrf
 
-                        <td><button class="btn btn-outline-primary bg-white btn-sm " data-bs-toggle="modal" data-bs-target="#editAbsent-{{ $item->id }}"><span class="ti ti-settings"></span>Aksi Kehadiran</button></td>
+                            <td class="border">
+                           <div class="form-check form-check-md">
+                                <input class="form-check-input a" value="H"  type="radio" name="status" id="{{ $item->id }}" onclick="this.form.submit()"
+                            @if($item->absent)
+                            @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'H' ? 'Checked': '' : '' }}    @endforeach
+                            @endif >
+                            </div>
+                                </td>
+                            <td class="border">
+                            <div class="form-check form-check-md">
+                                <input class="form-check-input a" value="S"  type="radio" name="status" id="{{ $item->id }}" onclick="this.form.submit()"
+                                @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'S' ? 'Checked': '' : '' }}    @endforeach
+                                >
+                            </div>
+                                </td>
+                            <td class="border">
+                            <div class="form-check form-check-md">
+                                <input class="form-check-input a" value="I" type="radio"  name="status" id="{{ $item->id }}"onclick="this.form.submit()" $cek
+                                @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'I' ? 'Checked': '' : '' }}    @endforeach
+                             >
+                            </div>
+                                </td>
+                            <td class="border">
+                            <div class="form-check form-check-md">
+                                <input class="form-check-input a" value="A" type="radio"  name="status" id="{{ $item->id }}"onclick="this.form.submit()"
+                                @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'A' ? 'Checked': '' : '' }}    @endforeach
+                                >
+                            </div>
+                                </td>
+                            <td hidden>
+                            <input type="text" name="id_rfid" value="{{ $item->id_rfid }}">
+                            <input type="text" name="tanggal" value="{{ request('tanggal') }}">
+                                </td>
+                        </form>
+
+                        <td><button class="btn btn-outline-primary bg-white btn-sm " data-bs-toggle="modal" data-bs-target="#editAbsent-{{ $item->id }}"><span class="ti ti-eye"></span> </button></td>
                     </tr>
-                    @endforeach
+                        @endforeach
+                        {{-- <button type="submit" formaction="{{ route('absensiStudentAdd') }}">Simpan</button>
+                    </form> --}}
+                    @endif
                 </tbody>
             </table>
-        </div>
 
+        </div>
     </div>
 </div>
-@foreach ($rombel as $item)
 
+
+@foreach ($rombel as $item)
 {{-- modal Edit --}}
 <div class="modal fade" id="editAbsent-{{ $item->id }}" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
@@ -172,118 +212,161 @@
                 @csrf
                 <div class="modal-body">
                     <div class="row">
-
+                        <div class="col d-flex justify-content-center mb-3">
+                            @if($item->rombelStudent->foto)
+                            <img src="/storage/{{ $item->rombelStudent->foto }}"
+                                class="avatar avatar-xxxl me-4 img-thumbnail rounded-pill" alt="foto">
+                            @else
+                            <img src="{{ asset('asset/img/user-default.jpg') }}"
+                                class="avatar avatar-xxxl me-4 img-thumbnail rounded-pill" alt="foto">
+                            @endif
+                        </div>
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Tanggal <span class="ti ti-calendar-due"></span></label>
-                                        <input type="text" class="form-control" name="tanggal" value="{{ request('tanggal') }}" readonly required>
+                                        <label class="form-label">Tanggal <span
+                                                class="ti ti-calendar-due"></span></label>
+                                        <input type="text" class="form-control" name="tanggal"
+                                            value="{{ request('tanggal') }}" readonly required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label class="form-label">RFID <span class="ti ti-nfc"></span></label>
-                                        <input type="text" class="form-control" name="id_rfid" value="{{ $item->rombelStudent->id_rfid }}" readonly required>
+                                        <input type="text" class="form-control" name="id_rfid"
+                                            value="{{ $item->id_rfid }}" readonly required>
                                     </div>
                                 </div>
                             </div>
-
-
                             <div class="mb-3">
                                 <label class="form-label">Nama Lengkap</label>
                                 <input type="text" class="form-control" name="nama" value="{{ $item->rombelStudent->nama }}" readonly>
                             </div>
+
                             <div class="mb-3">
-
                                 <label class="form-label">Status Kehadiran</label><br>
-                               <div class="btn-group w-100">
+                                <div class="btn-group w-100 " >
+                                    <input type="radio" class="btn-check " value="H"
+                                        @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?
+                                    $ky->status == 'H' ? 'Checked': '' : '' }} @endforeach disabled >
+                                    <label class="btn btn-outline-light" for="z{{ $item->id }}">Hadir</label>
 
+                                    <input type="radio" class="btn-check a " value="S"
+                                        @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?
+                                    $ky->status == 'S' ? 'Checked': '' : '' }} @endforeach  disabled>
 
-                                        <input type="radio" class="btn-check a" name="status" id="option1{{ $item->id }}" autocomplete="off" value="Hadir"
-                                       @if( $item->rombelStudent->absent) {{ $item->rombelStudent->absent->status == "Hadir" ? 'checked' :''}}@endif
-                                        required >
-                                        <label class="btn btn-outline-light" for="option1{{ $item->id }}" >Hadir</label>
+                                    <label class="btn btn btn-outline-light" for="z{{ $item->id }}">Sakit</label>
+                                    <input type="radio" class="btn-check  a" value="I"
+                                        @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?
+                                    $ky->status == 'I' ? 'Checked': '' : '' }} @endforeach disabled>
+                                    <label class="btn btn btn-outline-light" for="z{{ $item->id }}">Izin</label>
 
-                                        <input type="radio" class="btn-check b" name="status" id="option2{{ $item->id }}" autocomplete="off" value="Sakit"
-                                        @if( $item->rombelStudent->absent){{ $item->rombelStudent->absent->status == "Sakit" ? 'checked' :''}}@endif required >
-                                        <label class="btn btn btn-outline-light" for="option2{{ $item->id }}">Sakit</label>
-
-                                        <input type="radio" class="btn-check c" name="status" id="option3{{ $item->id }}" autocomplete="off" value="Izin"
-                                        @if( $item->rombelStudent->absent) {{ $item->rombelStudent->absent->status == "Izin" ? 'checked' :''}} @endif required   >
-                                        <label class="btn btn btn-outline-light" for="option3{{ $item->id }}">Izin</label>
-
-                                        <input type="radio" class="btn-check d" name="status" id="option4{{ $item->id }}" autocomplete="off" value="Tidak Hadir"
-                                        @if( $item->rombelStudent->absent){{$item->rombelStudent->absent->status == "Tidak Hadir"  ? 'checked' :''}}  @endif required >
-                                        <label class="btn btn btn-outline-light" for="option4{{ $item->id }}">Tidak Hadir</label>
-
+                                    <input type="radio" class="btn-check a "  value="A"
+                                        @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?
+                                    $ky->status == 'A' ? 'Checked': '' : '' }} @endforeach disabled>
+                                    <label class="btn btn btn-outline-light" for="z{{ $item->id }}">Tidak Hadir</label>
+                                </div>
                             </div>
-
-                            </div>
-                            <div class="row inOut" >
+                            @foreach ($item->rombelAbsent as $ky )
+                            @if ($ky->tanggal == request('tanggal'))
+                            @if ($ky->status == 'H')
+                            <div class="row inOut">
                                 <div class="col-lg-6">
                                     <div class="mb-3">
+                                        <input type="text" name="status" hidden @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal ==
+                                        request('tanggal') ? $ky->status ? 'value='.$ky->status.'': '' : '' }} @endforeach>
                                         <label class="form-label">Entry</label>
-                                        <input type="time" class="form-control entry" name="entry" @if($item->rombelStudent->absent) value="{{ $item->rombelStudent->absent->entry }}" @endif >
+                                        <div class="date-pic">
+                                            <input type="text" class="form-control entry timepicker" name="entry" @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ? $ky->entry  ? 'value='.$ky->entry.'' : '' : '' }} @endforeach >
+                                            <span class="cal-icon"><i class="ti ti-clock"></i></span>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label class="form-label">Out</label>
-                                        <input type="time" class="form-control out" name="out" @if($item->rombelStudent->absent) value="{{ $item->rombelStudent->absent->out }}" @endif >
+                                        <div class="date-pic">
+                                            <input type="text" class="form-control out timepicker" name="out" @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ? $ky->out  ? 'value='.$ky->out.'' : '' : '' }}  @endforeach>
+                                            <span class="cal-icon"><i class="ti ti-clock"></i></span>
+                                        </div>
+
                                     </div>
                                 </div>
 
                             </div>
-                            <div class="mb-3 ket"  id="">
-                                <label class="form-label">Deskripsi</label>
-                                <textarea rows="4" class="form-control keterangan" name="keterangan" placeholder="Keterangan Sakit/izin/Tidak Hadir">@if($item->rombelStudent->absent) {{ $item->rombelStudent->absent->keterangan }} @endif</textarea>
+                            @endif
+                            @endif
+                            @endforeach
+                            <div class="mb-3 ket" id="">
+                                <label class="form-label">Keterangan</label>
+                                <textarea rows="4" class="form-control keterangan" name="keterangan"
+                                    placeholder="Keterangan Sakit/izin/Tidak Hadir">@foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ? $ky->keterangan  ? $ky->keterangan : '' : '' }} @endforeach</textarea>
                             </div>
-
+                            <button class="btn btn-primary w-100">Simpan</button>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
 
-                    <button type="submit" class="btn btn-primary w-100">Update</button>
-
-                </div>
             </form>
         </div>
     </div>
+</div>
 </div>
 
 @endforeach
 @section('javascript')
 
 <script>
-      $(".inOut").hide();
-      $(".ket").hide();
-     $(".a").click(function(){
-        $(".inOut").show();
-        $(".ket").hide();
-        $(".keterangan").val('');
-     });
-     $(".b").click(function(){
-        $(".entry").val('');
-        $(".out").val('');
-        $(".inOut").hide();
-        $(".ket").show();
-     });
-     $(".c").click(function(){
-        $(".entry").val('');
-        $(".out").val('');
-        $(".inOut").hide();
-        $(".ket").show();
-     });
-     $(".d").click(function(){
-        $(".entry").val('');
-        $(".out").val('');
-        $(".inOut").hide();
-        $(".ket").hide();
-     });
+    $(function(){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+            });
+            $(function (){
+                $('#kelas').on('change',function(){
+                    let id_kelas = $('#kelas').val();
 
+                    $.ajax({
+                        type : 'POST',
+                        url : "{{route('getwalikelas')}}",
+                        data : {id_kelas:id_kelas},
+                        cache : false,
+
+                        success: function(msg){
+                            $('#walikelas').val(msg);
+                        },
+                        error: function(data) {
+                            console.log('error:',data)
+                        },
+                    })
+                })
+            });
+    });
 </script>
+
+<script type="text/javascript">
+    window.onload = function() { jam(); }
+
+    function jam() {
+        var e = document.getElementById('jam'),
+        d = new Date(), h, m, s;
+        h = d.getHours();
+        m = set(d.getMinutes());
+        s = set(d.getSeconds());
+
+        e.innerHTML = h +':'+ m +':'+ s;
+
+        setTimeout('jam()', 1000);
+    }
+
+    function set(e) {
+        e = e < 10 ? '0'+ e : e;
+        return e;
+    }
+</script>
+
 <script>
     function myFunction() {
       var input, filter, table, tr, td, i, txtValue;
@@ -304,6 +387,7 @@
       }
     }
 </script>
+
 <script>
     // set Defalult select ke dala input Box
     function copyTextValue() {
@@ -326,8 +410,6 @@
     }
 
 </script>
-<script>
 
-</script>
 @endsection
 @endsection

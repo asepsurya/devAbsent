@@ -11,6 +11,7 @@ use App\Models\rfid;
 use App\Models\grupMapel;
 use App\Models\media;
 use Validator;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\Imports\GtkImport;
 use App\Imports\UserImport;
@@ -65,15 +66,11 @@ class GTKController extends Controller
        ]);
     }
 
-
     public function GTKadd(request $request){
        $validasi = Validator::make($request->all(),[
         'nik'=>'required|unique:gtks',
         'email'=>'required|unique:users',
-        // 'id_provinsi'=>'required',
-        // 'id_kota'=>'required',
-        // 'id_kecamatan'=>'required',
-        // 'id_desa'=>'required',
+
        ]);
         if ($validasi->fails()){
                 toastr()->error('Data Gagal Disimpan');
@@ -108,6 +105,18 @@ class GTKController extends Controller
                 'role'=>'3',
                 'status'=>'2'
             ]);
+
+            // insert to tabel model_has_roles untuk Role Hak Akses
+            $cekid = User::where('nomor',$request->nik)->get();
+            foreach($cekid as $key){
+                $getid = $key->id;
+                DB::table('model_has_roles')->insert([
+                    'role_id' => '2',
+                    'model_type'=>'App\Models\User',
+                    'model_id'=>$getid
+                ]);
+            }
+
             toastr()->success('Data Berhasil disimpan');
             return redirect()->back();
         }
@@ -163,11 +172,19 @@ class GTKController extends Controller
             'role'=>'3',
             'status'=>'2'
         ]);
+
         rfid::where('id_rfid',$request->id_rfid)->update(['status'=>'2']);
         toastr()->success('Data Berhasil disimpan');
         return redirect()->back();
 
         }
+
+        public function GTKimportIndex(){
+            return view('GTK.import.import',[
+                'title'=>' Daftar Peserta Didik '
+            ]);
+        }
+
         public function GTKimport(request $request){
             $request->validate([
                 'file' => 'required|mimes:csv,xls,xlsx'
@@ -194,6 +211,11 @@ class GTKController extends Controller
         }
 
         public function GTKdelete($id){
+            $cekid = User::where('nomor',$id)->get();
+            foreach($cekid as $key){
+                $getid = $key->id;
+                DB::table('model_has_roles')->where('model_id','=', $getid)->delete();
+             }
             gtk::where('nik',$id)->delete();
             User::where('nomor',$id)->delete();
             toastr()->success('Data Berhasil dihapus');

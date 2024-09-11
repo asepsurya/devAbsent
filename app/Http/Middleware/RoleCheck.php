@@ -19,7 +19,21 @@ class RoleCheck
             return redirect('/login');
         }
 
+        if(Auth()->user()->role === 'admin'){
+            return redirect()->route('dashboard.admin');
 
+        }elseif(Auth()->user()->role === 'walikelas'){
+            toastr()->success('Login Berhasil');
+            return redirect()->route('dashboard.walikelas');
+
+        }elseif(Auth()->user()->role === 'guru'){
+            toastr()->success('Login Berhasil');
+            return redirect()->route('dashboard.teacher');
+
+        }elseif(Auth()->user()->role === 'siswa'){
+            toastr()->success('Login Berhasil');
+            return redirect()->route('dashboard.student');
+        }
 
         return $next($request);
     }
