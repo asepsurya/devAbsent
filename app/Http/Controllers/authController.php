@@ -247,6 +247,6 @@ class authController extends Controller
     }
 
     public function create(request $request){
-        return 'halaman create';
+        return ' halama create';
     }
 }
