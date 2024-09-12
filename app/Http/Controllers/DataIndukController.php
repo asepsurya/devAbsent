@@ -69,7 +69,7 @@ class DataIndukController extends Controller
     }
     public function dataIndukStudentAdd(request $request){
         $validator = $request->validate([
-            'nis' => 'required|min:10|unique:students',
+            'nis' => 'required|min:9|unique:students',
             'nama' => 'required',
             'tempat_lahir' => 'required',
             'gender' => 'required',
