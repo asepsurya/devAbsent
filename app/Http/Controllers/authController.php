@@ -28,7 +28,7 @@ class authController extends Controller
     }
     public function registerInput(request $request){
         $validator = $request->validate([
-            'nis' => 'required|min:10|unique:students',
+            'nis' => 'required|min:9|unique:students',
             'nama' => 'required',
             'tempat_lahir' => 'required',
             'gender' => 'required',
@@ -85,7 +85,7 @@ class authController extends Controller
     public function registerInputTeacher(request $request){
         $validator = $request->validate([
             'nik' => 'required|min:10|unique:gtks',
-            'nip' => 'min:18|unique:gtks',
+            'nip' => 'min:10|unique:gtks',
             'nama' => 'required',
             'tempat_lahir' => 'required',
             'gender' => 'required',
