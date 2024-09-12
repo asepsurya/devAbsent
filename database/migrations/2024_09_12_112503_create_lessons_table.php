@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('sk')->nullable(); // input nomor sk
             $table->string('tanggal_sk')->nullable(); // input tanggal sk
             $table->string('jml_jam')->nullable(); // input jumlah jam pelajaran
+            $table->string('status');
             $table->timestamps();
         });
     }
