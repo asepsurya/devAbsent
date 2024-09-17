@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('lisensis', function (Blueprint $table) {
             $table->id();
-            $table->string('instansi');
-            $table->string('lisensi')->unique();
-            $table->string('status');
+            $table->string('instansi_id')->unique(); // Perguruan Tinggi : NIDN,   Perguruan Menengah dan Dasar : NPSN
+            $table->string('instansi'); // Nama Instansi
+            $table->string('lisensi')->unique(); // Lisensi Code
+            $table->enum('subscription_type', ['Lifetime', 'Yearly', 'Monthly']);
+            $table->string('expired'); //  Tanggal Expired
+            $table->enum('status', ['Active', 'Pending', 'Expired']);
             $table->timestamps();
         });
     }

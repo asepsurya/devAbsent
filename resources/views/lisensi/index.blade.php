@@ -43,13 +43,23 @@
                 @foreach ($lisensi as $item)
                     <h4>{{ $item->lisensi }}</h4>
                     <div class="mt-2">
-                        @if($item->status == '1')
-                        <span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>
-                        @else
-                        <span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak Aktif</span>
+                        @if($item->status == 'Active')
+                        <span class="badge badge-soft-success d-inline-flex align-items-center">Active</span>
+                            @if($item->subscription_type == 'Lifetime')
+                            <span class="badge badge-soft-info d-inline-flex align-items-center">Subcription : {{ $item->subscription_type }}</span>
+                            @elseif($item->subscription_type == 'Yearly')
+                            <span class="badge badge-soft-info d-inline-flex align-items-center">Subcription : {{ $item->subscription_type }}</span>
+                            <span class="badge badge-soft-warning d-inline-flex align-items-center">Expired : {{ $item->expired }}</span>
+                            @elseif($item->subscription_type == 'Monthly')
+                            <span class="badge badge-soft-info d-inline-flex align-items-center">Subcription : {{ $item->subscription_type }}</span>
+                            <span class="badge badge-soft-warning d-inline-flex align-items-center">Expired : {{ $item->expired }}</span>
+                            @endif
+                        @elseif($item->status == 'Pending')
+                        <span class="badge badge-soft-warning d-inline-flex align-items-center">Pending</span>
+                        @elseif($item->status == 'Expired')
+                        <span class="badge badge-soft-danger d-inline-flex align-items-center">Expired : {{ $item->expired }}</span>
                         @endif
                     </div>
-
                 @endforeach
 
             </div>
