@@ -10,12 +10,12 @@ use Alert;
 class lisensiController extends Controller
 {
     public function lisensiIndex(Request $request){
-
             return view('lisensi.index',[
                 'title'=>'Lisensi',
                 'lisensi'=>lisensi::where(['instansi_id'=>'20271907'])->get()
             ]);
     }
+
     public function lisensiIndexGet(request $request){
          // generate Serial Number
          $sn = new SerialNumber();
@@ -41,5 +41,35 @@ class lisensiController extends Controller
              ]);
          }
          return redirect()->back();
+    }
+
+    public function checkExpired()
+    {
+        // Ambil semua lisensi dari database
+        $lisensi = Lisensi::all();
+
+        // Tanggal hari ini
+        $today = Carbon::now();
+
+        // Loop untuk mengecek setiap lisensi
+        foreach ($lisensi as $item) {
+            // Pastikan lisensi memiliki tanggal expired yang valid
+            if ($item->expired !== 'Lifetime') {
+                $expiredDate = Carbon::parse($item->expired);
+
+                // Bandingkan dengan hari ini
+                if ($expiredDate->greaterThan($today)) {
+                    // Menghitung selisih hari
+                    $daysRemaining = $expiredDate->diffInDays($today);
+
+                    echo "Lisensi untuk {$item->instansi} akan habis dalam {$daysRemaining} hari.<br>";
+                } else {
+                    // Jika sudah expired
+                    echo "Lisensi untuk {$item->instansi} sudah expired.<br>";
+                }
+            } else {
+                echo "Lisensi untuk {$item->instansi} adalah Lifetime.<br>";
+            }
+        }
     }
 }

@@ -124,6 +124,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/device/lisensi',[lisensiController::class,'lisensiIndex'])->name('lisensiIndex');
     Route::get('/device/lisensiGet',[lisensiController::class,'lisensiIndexGet'])->name('lisensiIndexGet');
+    Route::get('/device/checkLicense', [LisensiController::class, 'checkExpired']);
+
+    Route::post('/subcribe/payment', [PaymentController::class, 'createCharge']);
 
     Route::get('/gtk/employment_types',[GTKController::class,'employmenttypesIndex']);
     Route::post('/gtk/employment_typesAdd',[GTKController::class,'employmenttypesIndexAdd'])->name('employmenttypesIndexAdd');

@@ -46,12 +46,12 @@
                         @if($item->status == 'Active')
                         <span class="badge badge-soft-success d-inline-flex align-items-center">Active</span>
                             @if($item->subscription_type == 'Lifetime')
-                            <span class="badge badge-soft-info d-inline-flex align-items-center">Subcription : {{ $item->subscription_type }}</span>
+                            <span class="badge badge-soft-info d-inline-flex align-items-center">{{ $item->subscription_type }}</span>
                             @elseif($item->subscription_type == 'Yearly')
-                            <span class="badge badge-soft-info d-inline-flex align-items-center">Subcription : {{ $item->subscription_type }}</span>
+                            <span class="badge badge-soft-info d-inline-flex align-items-center">{{ $item->subscription_type }}</span>
                             <span class="badge badge-soft-warning d-inline-flex align-items-center">Expired : {{ $item->expired }}</span>
                             @elseif($item->subscription_type == 'Monthly')
-                            <span class="badge badge-soft-info d-inline-flex align-items-center">Subcription : {{ $item->subscription_type }}</span>
+                            <span class="badge badge-soft-info d-inline-flex align-items-center">{{ $item->subscription_type }}</span>
                             <span class="badge badge-soft-warning d-inline-flex align-items-center">Expired : {{ $item->expired }}</span>
                             @endif
                         @elseif($item->status == 'Pending')
