@@ -8,7 +8,7 @@
     <meta name="keywords" content="admin, estimates, bootstrap, business, html5, responsive, Projects">
     <meta name="author" content="Dreams technologies - Bootstrap Admin Template">
     <meta name="robots" content="noindex, nofollow">
-    <title>404 Page not found</title>
+    <title>500 Internal Server Error</title>
 
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('asset/img/logo-icon.png') }}">
     {{-- <script src="{{ asset('asset/js/jquery-3.7.1.min.js') }}"></script> --}}
