@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <meta name="description" content="Preskool - Bootstrap Admin Template">
     <meta name="keywords" content="admin, estimates, bootstrap, business, html5, responsive, Projects">
@@ -24,9 +25,11 @@
     <link rel="stylesheet" href="{{ asset('asset/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
+<style>
 
-<body class="account-page">
-
+</style>
+<body class="account-page bg-light-gradient">
+    <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:cover;">
     <div class="main-wrapper">
         <div class="container">
             <div class="row justify-content-center">
@@ -83,6 +86,17 @@
                                             </div>
                                             @enderror
                                         </div>
+                                        {{-- start Chatcha --}}
+                                        <div class="mt-3">
+                                            {!! NoCaptcha::renderJs() !!}
+                                            {!! NoCaptcha::display() !!}
+                                        </div>
+                                        @if ($errors->has('g-recaptcha-response'))
+                                        <span class="help-block">
+                                            <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+                                        </span>
+                                        @endif
+                                        {{-- end --}}
                                     </div>
                                     <div class="form-wrap form-wrap-checkbox mb-3">
                                         <div class="d-flex align-items-center">

@@ -27,7 +27,7 @@
                 <i class="ti ti-printer"></i>
             </button>
         </div>
-    
+
     </div>
 </div>
 {{-- End Header --}}
@@ -44,35 +44,44 @@
                         <th class="bg-light-400">NIK</th>
                         <th class="bg-light-400">Nama Lengkap</th>
                         <th class="bg-light-400">Telp</th>
-                        <th class="bg-light-400">Handphone</th>
+                        <th class="bg-light-400">gender</th>
                         <th class="bg-light-400">Email</th>
                         <th class="bg-light-400">Action</th>
 
                     </tr>
                 </thead>
                 <tbody>
+                    @php $no=1 @endphp
+                    @foreach ($gtks as $item )
+                    @if($item->gtk)
                     <tr>
-                        <td>1.</td>
+                        <td>{{ $no++ }}</td>
                         <td>
-                            1231312312123
+                          <a class="text-primary">{{ $item->gtk->nik }}</a>
                         </td>
-                        <td>aAgun Hercules</td>
-                        <td>-</td>
-                        <td>0895254555447</td>
-                        <td>Agun@gmail.com</td>
+                        <td> {{ $item->gtk->nama }}</td>
+                        <td> {{ $item->gtk->telp }}</td>
+                        <td>
+                            @if ($item->gtk->gender == 'L')
+                            L
+                        @else
+                            P
+                        @endif
+                        </td>
+                        <td>{{ $item->email }}</td>
                         <td>
                             <div class="hstack gap-2 fs-15">
                                 <a data-bs-toggle="modal" data-bs-target="#add_holiday" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i
                                         class="ti ti-pencil-minus"></i></a>
-                                <a href="javascript:void(0);"
-                                    class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i
-                                        class="ti ti-trash"></i></a>
+
                             </div>
                         </td>
                     </tr>
-
+                    @endif
+                    @endforeach
                 </tbody>
             </table>
+            {{ $gtks->links() }}
         </div>
     </div>
 </div>
@@ -91,8 +100,8 @@
                     <div class="row">
                         <form action="" method="post">
                             <div class="col-md-12">
-                                
-        
+
+
                                 <div class="mb-3">
                                     <label class="form-label">Kata Sandi</label>
                                     <div class="pass-group mb-3">
@@ -107,7 +116,7 @@
                                         <span class="ti toggle-password ti-eye-off"></span>
                                     </div>
                                 </div>
-                            
+
                             </div>
                     </div>
                 </div>
@@ -115,7 +124,7 @@
                     <button type="submit" class="btn btn-primary w-100"><span class="ti ti-pencil-plus"></span> Ubah</button>
             </form>
         </div>
-     
+
     </div>
 </div>
 </div>

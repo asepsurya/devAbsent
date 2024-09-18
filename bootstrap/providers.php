@@ -10,4 +10,5 @@ return [
     Irfa\SerialNumber\SerialNumberGeneratorSeviceProvider::class,
     Yajra\DataTables\DataTablesServiceProvider::class,
     Maatwebsite\Excel\ExcelServiceProvider::class,
+    Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
 ];

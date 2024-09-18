@@ -42,7 +42,7 @@
     </div>
 </div>
 @foreach ($rfid as $item)
-
+@if( $item->rfidStudent || $item->rfidGTK)
 <div class="modal fade" id="detail-{{ $item->id_rfid }}" aria-labelledby="exampleModalToggleLabel" tabindex="-1"
      aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
@@ -57,10 +57,21 @@
                         <div class="d-flex align-items-center">
                             <a href="student-details.html" class="avatar avatar-lg flex-shrink-0">
                             @if($item->rfidStudent)
-                                <img src="/storage/{{ $item->rfidStudent->foto }}" alt='Img' class='img-fluid rounded-circle'>
+                                @if($item->rfidStudent->foto != NULL )
+                                    <img src="/storage/{{ $item->rfidStudent->foto }}" alt='Img' class='img-fluid rounded-circle'>
+                                @else
+                                    <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluidimg-fluid rounded-circle'>
+                                @endif
+                            @elseif ($item->rfidGTK)
+                                @if($item->rfidGTK->gambar != '' )
+                                    <img src="/storage/{{ $item->rfidGTK->gambar }}" alt='Img' class='img-fluid rounded-circle'>
+                                @else
+                                    <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluidimg-fluid rounded-circle'>
+                                @endif
                             @else
                                  <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluidimg-fluid rounded-circle'>
                             @endif
+
                             </a>
                             <div class="ms-2">
                                 <p class="text-dark mb-0">
@@ -70,11 +81,11 @@
                                         @if($item->rfidStudent)
                                             {{ $item->rfidStudent->nama }}
 
-                                            @php $gender = $item->rfidStudent->gender; $role = $item->rfidStudent->studentUser->role @endphp
+                                            @php $gender = $item->rfidStudent->gender; $role = $item->rfidStudent->studentUser->role; @endphp
                                         @endif
                                         @if($item->rfidGTK)
                                             {{ $item->rfidGTK->nama }}
-                                            @php $gender = $item->rfidGTK->gender;  $role = $item->rfidGTK->Usergtk->role @endphp
+                                            @php $gender = $item->rfidGTK->gender;  $role = $item->rfidGTK->Usergtk->role; @endphp
                                         @endif
                                 </h5>
                             </div>
@@ -103,6 +114,7 @@
         </div>
     </div>
 </div>
+@endif
 @endforeach
 @section('javascript')
 <script src="{{ asset('asset/js/DataTables.js') }}"></script>

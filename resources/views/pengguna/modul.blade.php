@@ -27,7 +27,7 @@
                 <i class="ti ti-printer"></i>
             </button>
         </div>
-    
+
     </div>
 </div>
 {{-- End Header --}}
@@ -52,7 +52,7 @@
                         $no=1;
                     @endphp
                     @foreach ( $roles as $item )
-                    
+
                     <tr>
                         <td>{{ $no++ }}</td>
                         <td>
@@ -62,7 +62,7 @@
                         <td>
                             <div class="d-flex align-items-center">
                                 <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2" data-bs-toggle="modal" data-bs-target="#edit_role"><i class="ti ti-edit-circle text-primary"></i></a>
-                                <a href="permission.html" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="ti ti-shield text-skyblue"></i></a>
+                                <a href="{{ route('usermodulesPermission') }}" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="ti ti-shield text-skyblue"></i></a>
                                 <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x text-danger"></i></a>
                                 </div>
                         </td>
@@ -88,8 +88,8 @@
                     <div class="row">
                         <form action="" method="post">
                             <div class="col-md-12">
-                                
-        
+
+
                                 <div class="mb-3">
                                     <label class="form-label">Modul</label>
                                     <div class="pass-group mb-3">
@@ -104,7 +104,7 @@
                                         <span class="ti toggle-password ti-eye-off"></span>
                                     </div>
                                 </div>
-                            
+
                             </div>
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                     <button type="submit" class="btn btn-primary w-100"><span class="ti ti-pencil-plus"></span> Ubah</button>
             </form>
         </div>
-     
+
     </div>
 </div>
 </div>

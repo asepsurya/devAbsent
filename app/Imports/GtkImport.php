@@ -5,7 +5,8 @@ namespace App\Imports;
 use App\Models\gtk;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Session;
-class GtkImport implements ToModel
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+class GtkImport implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
@@ -14,23 +15,25 @@ class GtkImport implements ToModel
     */
     public function model(array $row)
     {
-        if(gtk::where('nik', '=', $row[0])->exists()) {
+        if(gtk::where('nik', '=', $row['nik'])->exists()) {
             Session::flash('gagal',"Data tidak dapat diimpor karena ada NIK yang duplikat");
         }else{
         return new gtk([
-            'nik'=>$row[0],
-            'nip'=>$row[1],
-            'nama'=>$row[2],
-            'gender'=>$row[3],
-            'tempat_lahir'=>$row[4],
-            'tanggal_lahir'=>$row[5],
-            'agama'=>$row[6],
-            'telp'=>$row[7],
-            'status'=>$row[9],
-            'id_jenis_gtk'=>$row[10],
+            'nik'=>$row['nik'],
+            'nip'=>$row['nip'],
+            'nama'=>$row['nama'],
+            'gender'=>$row['gender'],
+            'tempat_lahir'=>$row['tempat_lahir'],
+            'tanggal_lahir'=>$row['tanggal_lahir'],
+            'agama'=>$row['agama'],
+            'telp'=>$row['telp'],
+            'status'=>'1',
+            'id_jenis_gtk'=>'3',
         ]);
-        Session::flash('sukses',"Data Berhasil diimport");
         }
-
+    }
+    public function headingRow(): int
+    {
+        return 6;
     }
 }

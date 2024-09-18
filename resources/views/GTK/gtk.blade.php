@@ -149,7 +149,7 @@
 
                 <div class="p-2" align="left">
                     <p class="my-1">Berikut ini informasi yang harus diperhatikan :</p>
-                    <p class="my-1 mx-2">1. Untuk Contoh Format Dokumen anda bisa download di link ini. <a href="#" target="_blank" rel="noopener noreferrer"> Download </a> </p>
+                    <p class="my-1 mx-2">1. Untuk Contoh Format Dokumen anda bisa download di link ini. <a href="{{ asset('asset/import_sample/Data Guru.xlsx') }}" target="_blank" rel="noopener noreferrer"> Download </a> </p>
                     <p class="my-1 mx-2">2. File yang di Import Harus bertype .xlsx atau type file Excel</p>
 
                 </div>

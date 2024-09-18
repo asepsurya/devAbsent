@@ -65,16 +65,16 @@
                         <td>{{ $item->gtk->nik }} - {{ $item->gtk->nama }}</td>
                         <td>
                             <center>
-                            <span class="badge badge-soft-success d-inline-flex align-items-center"><i class="ti ti-circle-filled fs-5 me-1"></i>
-                                {{ $item->kelas->jmlRombel->count() }}
+                            <span class="badge badge-soft-success d-inline-flex align-items-center">
+                                {{ $item->kelas->jmlRombel->count() }} Siswa
                             </span>
                             </center>
 
                         </td>
                         <td>
                             <div class="hstack gap-2 fs-15">
-                                <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i class="ti ti-pencil-minus"></i></a>
-                                <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i class="ti ti-trash"></i></a>
+                                <a data-bs-toggle="modal" data-bs-target="#edit-{{ $item->id_gtk }}" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i class="ti ti-pencil-minus"></i></a>
+                                <a  data-bs-effect="effect-scale" data-bs-toggle="modal" data-bs-target="#edit-{{ $item->nik }}" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i class="ti ti-trash"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -103,7 +103,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Tahun Pelajaran</label>
                                 <select name="tahun" class="select2" required>
-                                    <option value="" selected>-- Tahun Pelajaran --</option>
+
                                     @foreach ($tahunAjar as $item)
                                         <option value="{{ $item->id }}" >{{ $item->tahun_pelajaran }}</option>
                                     @endforeach
@@ -120,7 +120,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Wali Kelas</label>
-                                <select name="id_gtk" class="select2">
+                                <select name="id_gtk" class="select2" id="walikelas">
                                     <option value="" selected required>-- Pilih Wali Kelas --</option>
                                     @foreach ($gtk as $item )
                                     <option value="{{ $item->nik }}">{{ $item->nik }} - {{ $item->nama }}</option>
@@ -139,5 +139,67 @@
         </div>
     </div>
 </div>
+@foreach ($walikelas as $item2 )
+<div class="modal fade" id="edit-{{ $item2->id_gtk }}" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Setelan Wali Kelas</h4>
+                <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+            <form action="{{ route('pengaturanWalikelasAdd') }}" method="post">
+                @csrf
+                <div class="modal-body">
+                    <div class="row">
 
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label">Tahun Pelajaran</label>
+                                <select name="tahun" class="select2" required>
+
+                                    @foreach ($tahunAjar as $item)
+                                        <option value="{{ $item->id }}" {{ $item->id == $item2->id ? 'selected' : ''}} >{{ $item->tahun_pelajaran }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Kelas</label>
+                                <select name="kelas" class="select2" required>
+                                    <option value="" selected>-- Pilih Kelas --</option>
+                                    @foreach ($kelas as $item)
+                                        <option value="{{ $item->id }}" {{ $item->id == $item2->id_kelas ? 'selected' : ''}}  >{{ $item->nama_kelas }} {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Wali Kelas</label>
+                                <select name="id_gtk" class="select2" id="walikelas">
+                                    <option value="" selected required>-- Pilih Wali Kelas --</option>
+                                    @foreach ($gtk as $item )
+                                    <option value="{{ $item->nik }}" {{ $item->nik == $item2->gtk->nik ? 'selected' : ''}}>{{ $item->nik }} - {{ $item->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="submit" class="btn btn-primary w-100">Tambah</button>
+             </form>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+@section('javascript')
+<script>
+    $('.select2').select2({
+        dropdownParent: $('#add_holiday')
+    });
+</script>
+@endsection
 @endsection

@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'SN' => Irfa\SerialNumber\Facades\SerialNumber::class,
             'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+            'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

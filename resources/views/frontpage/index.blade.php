@@ -3,6 +3,7 @@
 
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- ===============================================-->
@@ -19,122 +20,13 @@
     <link rel="manifest" href="{{ asset('landing/img/favicons/manifest.json') }}">
     <meta name="msapplication-TileImage" content="{{ asset('landing/img/favicons/mstile-150x150.png') }}">
     <meta name="theme-color" content="#ffffff">
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- ===============================================-->
     <!--    Stylesheets-->
     <!-- ===============================================-->
     <link href="{{ asset('landing/css/theme.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
-<style>
-    * {
-  margin: 0;
-  padding: 0;
-  font-family: "Poppins", sans-serif;
-}
-
-.action {
-
-  top: 20px;
-  right: 30px;
-}
-
-.action .profile {
-  position: relative;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.action .profile img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.action .menu {
-  position: absolute;
-  top: 120px;
-  right: -10px;
-  filter: drop-shadow(0 0 0.75rem rgb(230, 228, 228));
-  background: rgb(255, 255, 255);
-  width: 200px;
-  box-sizing: 0 5px 25px rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-  transition: 0.5s;
-  visibility: hidden;
-  opacity: 0;
-}
-
-.action .menu.active {
-  top: 80px;
-  visibility: visible;
-  opacity: 1;
-}
-
-.action .menu::before {
-  content: "";
-  position: absolute;
-  top: -5px;
-  right: 28px;
-  width: 20px;
-  height: 20px;
-  background: #fff;
-  transform: rotate(45deg);
-}
-
-.action .menu h3 {
-  width: 100%;
-  text-align: center;
-  font-size: 18px;
-  padding: 20px 0;
-  font-weight: 500;
-  color: #555;
-  line-height: 1.5em;
-}
-
-.action .menu h3 span {
-  font-size: 14px;
-  color: #cecece;
-  font-weight: 300;
-}
-
-.action .menu ul li {
-  list-style: none;
-  padding: 16px 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  display: flex;
-  align-items: center;
-}
-
-.action .menu ul li img {
-  max-width: 20px;
-  margin-right: 10px;
-  opacity: 0.5;
-  transition: 0.5s;
-}
-
-.action .menu ul li:hover img {
-  opacity: 1;
-}
-
-.action .menu ul li a {
-  display: inline-block;
-  text-decoration: none;
-  color: #555;
-  font-weight: 500;
-  transition: 0.5s;
-}
-
-.action .menu ul li:hover a {
-  color: #7854F7;
-}
-
-</style>
+    <link rel="stylesheet" href="{{ asset('asset/css/customlanding.css') }}">
   </head>
   <body>
     <!-- ===============================================-->
@@ -145,27 +37,59 @@
         <div class="container-fluid"><a class="navbar-brand" href="#"><img src="{{ asset('asset/img/logo.png') }}" alt="" width="169" /></a>
           <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto ms-lg-4 ms-xl-7 border-bottom border-lg-bottom-0 pt-2 pt-lg-0 g-5">
-              <li class="nav-item"><a class="nav-link fw-medium active" aria-current="page" href="#section1">Beranda</a></li>
+            <ul class="navbar-nav me-auto ms-lg-5 ms-xl-8 border-bottom border-lg-bottom-0 ">
+              <li class="nav-item"><a class="nav-link fw-medium active" aria-current="page" href="#section1"> Beranda</a></li>
               <li class="nav-item"><a class="nav-link fw-medium" href="#section2">Berita</a></li>
               <li class="nav-item"><a class="nav-link fw-medium" href="#section3">Komunitas </a></li>
 
             </ul>
+            <div class="d-flex align-items-center">
+
             @if(auth()->user())
             <div class="d-flex py-3 py-lg-0">
                 <div class="action">
+
                     <div class="profile" onclick="menuToggle();">
+                        {{-- user siswa --}}
                         @if(auth()->user()->role == "siswa")
-                        @if(Auth::user()->student == NULL)
-                           <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
-                        @else
-                           @if(Auth::user()->student->foto == "" )
-                               <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
-                           @else
-                               <img src="/storage/{{ Auth::user()->student->foto }}" alt='Img' class='img-fluid'>
-                           @endif
+                         @if(Auth::user()->student == NULL)
+                            <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
+                         @else
+                            @if(Auth::user()->student->foto == "" )
+                                <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
+                            @else
+                                <img src="/storage/{{ Auth::user()->student->foto }}" alt='Img' class='img-fluid'>
+                            @endif
+                         @endif
                         @endif
-                       @endif
+
+                       @if(auth()->user()->role == "guru")
+                         @if(Auth::user()->gtk == NULL)
+                            <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                         @else
+                            @if(Auth::user()->gtk->gambar == "" )
+                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                            @else
+                                <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                            @endif
+                         @endif
+                        @endif
+
+                        @if( auth()->user()->role == "walikelas")
+                            @if(Auth::user()->gtk == NULL)
+                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                            @else
+                            @if(Auth::user()->gtk->gambar == "" )
+                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                            @else
+                                <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                            @endif
+                            @endif
+                        @endif
+
+                        @if(auth()->user()->role == "admin" || auth()->user()->role == "superadmin" )
+                            <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                        @endif
 
                       @if(auth()->user()->role == "guru")
                         @if(Auth::user()->gtk == NULL)
@@ -196,19 +120,26 @@
                        @endif
 
                     </span>
+
                     <div>
-                        <h6 class>{{ auth()->user()->nama }}</h6>
-                        <p class="text-primary mb-0">{{ auth()->user()->email }}</p>
+
                     </div>
                     </div>
                     <div class="menu">
-                      <h3 class="mb-0">{{ auth()->user()->nama }}<br /><span class="text-primary">{{ auth()->user()->email }}</span></h3>
+                      <h3 class="mb-0">{{ auth()->user()->nama }}<br>
+                        <div class="px-2 pt-1">
+                            <input type="text" class="form-control" value="{{ auth()->user()->email }}" disabled>
+                        </div>
+
+                        <small><span class="text-primary"></span></small></h3>
                       <ul>
                         <li>
                             @if(auth()->user()->role =="admin")
                                 @php $link = route('dashboard.admin')  @endphp
                             @elseif (auth()->user()->role=="walikelas")
                                 @php $link = route('dashboard.walikelas')  @endphp
+                            @elseif (auth()->user()->role=="superadmin")
+                                @php $link = route('dashboard.superadmin')  @endphp
                             @elseif (auth()->user()->role == "guru")
                                 @php $link = route('dashboard.teacher')  @endphp
                             @else
@@ -235,41 +166,63 @@
               </div>
             </div>
             @else
-            <form class="d-flex py-3 py-lg-0"><a class="btn btn-info order-0 me-1" href="/login" role="button"><span class="ti ti-login"></span> Masuk Aplikasi</a>
+            <form class="d-flex py-3 py-lg-0"><a class="btn btn-lg btn-info rounded-pill me-2" href="/login" role="button"><span class="ti ti-login"></span> Masuk Aplikasi</a>
             </form>
-
                 @endif
-
-
-
           </div>
         </div>
       </nav>
       <section class="py-0 bg-light-gradient" id="section1">
+
         <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:contain;">
         </div>
         <!--/.bg-holder-->
 
         <div class="container">
-          <div class="row align-items-center">
-            <div class="col-lg-6 col-md-5 order-md-1 pt-8"><img class="img-fluid" src="{{ asset('landing/img/gallery/OrangASN.png') }}" alt="" /></div>
-            <div class="col-md-7 col-lg-6 text-center text-md-start pt-5 pt-md-9">
-              <h1 class="display-2 fw-bold fs-4 fs-md-5 fs-xl-6 ml-2">Absen Pintar,<br />Kerja Lebih Cerdas.</h1>
 
-                <div class=" m-0">
-                    <div class="card-body">
-                        <div class="alert alert-success d-flex align-items-center mb-24" role="alert">
-                            <i class="ti ti-info-square-rounded me-2 fs-14"></i>
-                            <div class="fs-14">
-                            These Result are obtained from the syllabus completion on the respective Class
-                            </div>
-                            </div>
-                        <input type="text" class="form-control my-3" placeholder="Nama Siswa" value="DADANG SURJANA" readonly>
-                        <input type="text" class="form-control my-3" placeholder="Kelas" value="X RPL 1" readonly>
+          <div class="row align-items-center">
+
+            <div class="col-lg-6 col-md-5 order-md-1 pt-9">
+
+                <center><h4 class="mb-3"><span class="ti ti-calendar-due"></span> {{ Carbon\Carbon::parse(now())->translatedFormat('l, d F Y') }} | <span id="jam" class="text-muted"></span> </h4></center>
+                {{-- <img class="img-fluid" src="{{ asset('landing/img/illustrations/hero.png') }}" alt=""> --}}
+                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script><dotlottie-player src="https://lottie.host/a08fe931-1e93-4930-b4b0-714be508f0fc/XZEEsrlaoz.json" background="transparent" speed="1" style="width: 600px; height: 600px" direction="-1" playMode="bounce" loop autoplay></dotlottie-player>
+            </div>
+            <div class="col-md-7 col-lg-6 text-center text-md-start pt-md-9">
+                <h1 class="display-2 fw-bold fs-4 fs-md-5 fs-xl-6  ">Absensi Pintar,  <br>Kerja lebih Cerdas.</h1>
+                <h5 class=" typewrite pb-3 text-muted" data-period="2000" data-type='[ "Selamat Datang di Absensi Pintar","Hallo apa kabar..? ","Apakah anda sudah Absen Hari ini..?" ]'></h5>
+                <div class=" mb-2 mt-2">
+                        <div id="info"></div>
+                        <div class="mb-3">
+                            <label class="form-label">UID :</label>
+                            <select name="id_rfid" id="id_rfid" class="form-control" disabled></select>
+                            <label class="form-label my-3">Nama Lengkap :</label>
+                            <input type="text" class="form-control " id="nama"  disabled>
+
+                        </div>
+
+                        <center><label><span class="ti ti-history"></span> Riwayat Absensi</label></center>
+                        <div class="table-responsive bg-white scrollme">
+                            <table class="table table-nowrap mb-0 table-fixed"  >
+                                <thead>
+                                    <tr >
+                                        <th class="bg-light-400"> <span class="ti ti-calendar-event"></span> Tanggal</th>
+                                        <th class="bg-light-400"> <span class="ti ti-users"></span> Nama Lengkap</th>
+                                        <th class="bg-light-400">Status</th>
+
+                                    </tr>
+                                </thead>
+
+                                    <tbody id="myData"></tbody>
+
+
+                            </table>
+                        </div>
+
                     </div>
                 </div>
 
-              <a class="btn btn-lg btn-info rounded-pill me-2" href="#" role="button">Start a New Store </a><span> or  </span><a class="btn btn-link ps-1 ps-md-4 ps-lg-1" href="#" role="button"> Customize &amp; Extend ›</a>
+              {{-- <a class="btn btn-lg btn-info rounded-pill me-2" href="#" role="button">Start a New Store </a><span> or  </span><a class="btn btn-link ps-1 ps-md-4 ps-lg-1" href="#" role="button"> Customize &amp; Extend ›</a> --}}
             </div>
           </div>
         </div>
@@ -312,7 +265,7 @@
       <!-- <section> close ============================-->
       <!-- ============================================-->
 
-      <section class="bg-100 pb-0" id="section3">
+      <section class="bg-100 pb-0 mb-0" id="section3">
         <div class="container">
           <div class="row flex-center">
             <div class="col-xl-5 text-center mb-5 z-index-1">
@@ -322,22 +275,21 @@
           </div>
         </div>
         <div class="position-relative text-center">
-          <div class="bg-holder" style="background-image:url(undefined);background:url({{ asset('assets/img/gallery/people-bg-shape.png') }}) no-repeat center bottom, url(assets/img/gallery/people-bg-dot.png) no-repeat center bottom;">
-          </div>
+
           <!--/.bg-holder-->
           <img class="img-fluid position-relative z-index-1" src="{{ asset('landing/img/gallery/people.png') }}" alt="" />
         </div>
       </section>
-      <section class="py-0">
-        <div class="bg-holder z-index-2" style="background-image:url({{ asset('landing/img/illustrations/cta-bg.png') }});background-position:bottom right;background-size:61px 60px;margin-top:15px;margin-right:15px;margin-left:-58px;">
-        </div>
+
+      {{-- <section class="py-0">
+
         <!--/.bg-holder-->
 
         <div class="container-fluid px-0">
           <div class="card py-4 border-0 rounded-0 bg-primary">
             <div class="card-body">
               <div class="row flex-center">
-                <div class="col-xl-9 d-flex justify-content-center mb-3 mb-xl-0">
+                <div class="col-xl-9 d-flex justify-content-center  mb-xl-0">
                   <h2 class="text-light fw-bold">WooCommerce - the most customizable eCommerce<br />platform for building your online business.</h2>
                 </div>
                 <div class="col-xl-3 text-center"><a class="btn btn-lg btn-outline-light rounded-pill" href="#">GET STARTED</a></div>
@@ -345,7 +297,7 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> --}}
 
       <!-- ============================================-->
       <!-- <section> begin ============================-->
@@ -440,7 +392,23 @@
       <!-- <section> close ============================-->
       <!-- ============================================-->
 
+<!-- Modal -->
+<div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Hallo Selamat Selamat Datang
+        </div>
 
+      </div>
+    </div>
+  </div>
 
 
       <!-- ============================================-->
@@ -459,15 +427,178 @@
     <!--    JavaScripts-->
     <!-- ===============================================-->
 
-    <script src="{{ asset('landing/vendors/bootstrap/bootstrap.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="{{ asset('landing/vendors/is/is.min.js') }}"></script>
     <script src="{{ asset('landing/js/theme.js') }}"></script>
+     <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
+
     <script>
         function menuToggle() {
           const toggleMenu = document.querySelector(".menu");
           toggleMenu.classList.toggle("active");
         }
       </script>
+
+</script>
+   <script>
+        function refreshdata(){
+            $.ajax({
+                url:"{{ route('rfidDataGET') }}",
+                method:"GET",
+                cache:false,
+                success: function(data){
+                    $('#id_rfid').html(data);
+                }
+            });
+
+
+        let id_rfid = $('#id_rfid').val();
+        var e = document.getElementById("id_rfid");
+            function onChange() {
+            var value = e.value;
+            $.ajax({
+                url:"{{ route('rfidData') }}",
+                method:"GET",
+                cache:false,
+                data : {id_rfid:id_rfid},
+                success: function(data){
+                    $('#nama').val(data);
+                    if(data){
+                    $('#info').html(
+                        '<div class="alert alert-primary" role="alert">'+
+                        'Halo '+data+',<br>Terimakasih telah mengisi absen hari ini. Semoga harimu menyenangkan dan tetap semangat belajar! '+
+                        '</div>'
+                    );
+                    }else{
+                        $('#info').html('');
+                    }
+                }
+            });
+
+            }
+            e.onchange = onChange;
+            onChange();
+            }
+            setInterval(refreshdata,2000);
+    </script>
+    </script>
+
+        <script>
+            function refreshdata2(){
+
+            var content="";
+            $.ajax({
+                url:"{{ route('listabsents') }}",
+                method:"GET",
+                dataType:"json",
+                success: function(response){
+                    if(response.length === 0){
+                        content+='<tr>'+
+                                    '<td colspan="3">'+
+                                        '<center> <span class="ti ti-mood-confuzed"></span><i> Belum ada riwayat absensi untuk hari ini..</i>'+
+                                            '</center>'+
+                                        '</td>'+
+                                    '</tr>'
+                    }else{
+
+                        for(i=0;i<response.length;i++){
+                            content+= '<tr><td>'+response[i].date+' <span class="ti ti-clock-hour-1"></span> '+response[i].time+'</td>'
+                        if(response[i].student){
+                            content += '<td>'+response[i].student.nama+ '</td>'
+                        }else{
+                            content += '<td>'+response[i].gtk.nama+ '</td>'
+                        }
+                        content+= '<td>'+response[i].status+'</td></tr>'
+                        // console.log(value['fname']);
+                    }
+                    }
+
+                    $('#myData').html(content);
+                }
+            });
+        }
+            setInterval(refreshdata2,2000);
+
+        </script>
+
+<script>
+function jam() {
+        var e = document.getElementById('jam'),
+        d = new Date(), h, m, s;
+        h = d.getHours();
+        m = set(d.getMinutes());
+        s = set(d.getSeconds());
+
+        e.innerHTML = h +':'+ m +':'+ s;
+
+        setTimeout('jam()', 1000);
+    }
+
+    function set(e) {
+        e = e < 10 ? '0'+ e : e;
+        return e;
+    }
+
+
+    var TxtType = function(el, toRotate, period) {
+    this.toRotate = toRotate;
+    this.el = el;
+    this.loopNum = 0;
+    this.period = parseInt(period, 10) || 2000;
+    this.txt = '';
+    this.tick();
+    this.isDeleting = false;
+    };
+
+    TxtType.prototype.tick = function() {
+    var i = this.loopNum % this.toRotate.length;
+    var fullTxt = this.toRotate[i];
+
+    if (this.isDeleting) {
+    this.txt = fullTxt.substring(0, this.txt.length - 1);
+    } else {
+    this.txt = fullTxt.substring(0, this.txt.length + 1);
+    }
+
+    this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+
+    var that = this;
+    var delta = 200 - Math.random() * 100;
+
+    if (this.isDeleting) { delta /= 2; }
+
+    if (!this.isDeleting && this.txt === fullTxt) {
+    delta = this.period;
+    this.isDeleting = true;
+    } else if (this.isDeleting && this.txt === '') {
+    this.isDeleting = false;
+    this.loopNum++;
+    delta = 500;
+    }
+
+    setTimeout(function() {
+    that.tick();
+    }, delta);
+    };
+
+    window.onload = function() {
+     jam();
+    var elements = document.getElementsByClassName('typewrite');
+    for (var i=0; i<elements.length; i++) {
+    var toRotate = elements[i].getAttribute('data-type');
+    var period = elements[i].getAttribute('data-period');
+    if (toRotate) {
+    new TxtType(elements[i], JSON.parse(toRotate), period);
+    }
+    }
+    // INJECT CSS
+    var css = document.createElement("style");
+    css.type = "text/css";
+    css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
+    document.body.appendChild(css);
+    };
+</script>
   </body>
 
 </html>

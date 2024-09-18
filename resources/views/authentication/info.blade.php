@@ -25,8 +25,8 @@
     <link rel="stylesheet" href="{{ asset('asset/css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
 
-<body class="account-page">
-
+<body class="account-page bg-light-gradient">
+    <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:cover;">
     <div class="main-wrapper">
         <div class="container">
             <div class="row justify-content-center">

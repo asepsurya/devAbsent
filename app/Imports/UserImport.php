@@ -6,7 +6,8 @@ use App\Models\User;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Facades\Hash;
 use Session;
-class UserImport implements ToModel
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+class UserImport implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
@@ -15,19 +16,21 @@ class UserImport implements ToModel
     */
     public function model(array $row)
     {
-        if(User::where('nomor', '=', $row[0])->exists()) {
+        if(User::where('nomor', '=', $row['nik'])->exists() || User::where('email', '=', $row['email'])->exists()) {
             Session::flash('gagal',"Data tidak dapat diimpor karena ada file yang duplikat");
         }else{
             return new User([
-                'nomor'=>$row[0],
-                'nama'=>$row[2],
-                'email'=>$row[8],
-                'password'=>Hash::make($row[0]),
-                'role'=>$row[10],
+                'nomor'=>$row['nik'],
+                'nama'=>$row['nama'],
+                'email'=>$row['email'],
+                'password'=>Hash::make($row['nik']),
+                'role'=>'3',
                 'status'=>'2',
             ]);
-            Session::flash('sukses',"Data Berhasil diimport");
         }
-
+    }
+    public function headingRow(): int
+    {
+        return 6;
     }
 }

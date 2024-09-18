@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\TahunPelajaran;
-use App\Models\Kelas;
-use App\Models\rombel;
-use App\Models\absent;
-use App\Models\gtk;
 use Alert;
+use App\Models\gtk;
+use App\Models\Kelas;
+use App\Models\absent;
+use App\Models\rombel;
+use App\Models\student;
 ;
 use Illuminate\Http\Request;
+use App\Models\TahunPelajaran;
 
 class AbsensiController extends Controller
 {
@@ -17,7 +18,10 @@ class AbsensiController extends Controller
             $data =  rombel::where([
                 'id_tahun_pelajaran'=> request('tahun'),
                 'id_kelas'=>request('kelas'),
-                ])->with(['rombelStudent','rombelAbsent'])->get();
+                ])->with(['rombelStudent','rombelAbsent','notRFID'])->get();
+         }
+         if(request('kelas') == "all"){
+            $data = rombel::where('status','1')->with(['rombelStudent','rombelAbsent','notRFID'])->get();
          }
 
         return view('absensi.student',[
@@ -25,16 +29,15 @@ class AbsensiController extends Controller
             'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'DESC')->get(),
             'kelas'=>Kelas::where('status','1')->with('jurusanKelas')->get(),
             'rombel'=>$data,
-
             'absent'=>absent::where(['tanggal'=>request('tanggal')])->get(),
 
         ]);
     }
     public function absensiTeacher(request $request){
-
+// ->whereNotNull('id_rfid')
         return view('absensi.teacher',[
             'title'=>'Absensi Guru dan Tenaga Kependidikan',
-            'gtk'=>gtk::where(['status'=>'1'])->whereNotNull('id_rfid')->with('absent','rombelAbsent')->get(),
+            'gtk'=>gtk::where(['status'=>'1'])->with('absent','rombelAbsent')->get(),
             'absentTanggal'=>absent::where(['tanggal'=>request('tanggal','absent')])->get(),
         ]);
 

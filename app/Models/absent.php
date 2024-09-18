@@ -13,5 +13,11 @@ class absent extends Model
     public function absent(){
         return $this->belongsTo('App\Models\gtk','id_rfid','id_rfid');
     }
+    public function student(){
+        return $this->belongsTo('App\Models\student','id_rfid','id_rfid');
+    }
+    public function gtk(){
+        return $this->belongsTo('App\Models\gtk','id_rfid','id_rfid');
+    }
 
 }

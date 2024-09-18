@@ -1,12 +1,12 @@
 <div class="header">
     <div class="header-left active">
-        <a href="index.html" class="logo logo-normal">
+        <a href="/" target="_blank" class="logo logo-normal">
             <img src="{{ asset('asset/img/logo.png') }}" alt="Logo">
         </a>
-        <a href="index.html" class="logo-small">
+        <a href="/" target="_blank" class="logo-small">
             <img src="{{ asset('asset/img/logo-icon.png') }}" alt="Logo">
         </a>
-        <a href="index.html" class="dark-logo">
+        <a href="/" target="_blank" class="dark-logo">
             <img src="{{ asset('asset/img/logo-white.png') }}" alt="Logo">
         </a>
         <a id="toggle_btn" href="javascript:void(0);">
@@ -211,7 +211,7 @@
                             @endif
                         @endif
 
-                        @if(auth()->user()->role == "admin")
+                        @if(auth()->user()->role == "admin" || auth()->user()->role == "superadmin" )
                             <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                         @endif
 
@@ -258,7 +258,7 @@
                                        @endif
                                    @endif
 
-                                   @if(auth()->user()->role == "admin")
+                                   @if(auth()->user()->role == "admin" || auth()->user()->role == "superadmin"  )
                                        <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                    @endif
 
@@ -269,7 +269,7 @@
                                 </div>
                             </div>
                             <hr class="m-0">
-                            @if (auth()->user()->role != "admin")
+                            @if (auth()->user()->role != "superadmin")
                                 <a class="dropdown-item d-inline-flex align-items-center p-2" href="{{ route('profileIndex',auth()->user()->nomor) }}">
                                 <i class="ti ti-user-circle me-2"></i>Profile Saya</a>
                             @endif

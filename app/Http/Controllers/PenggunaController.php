@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
-use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
+use Spatie\Permission\Models\Permission;
 
 class PenggunaController extends Controller
 {
@@ -17,12 +18,13 @@ class PenggunaController extends Controller
     public function userStudentsIndex(){
         return view('pengguna.pesertadidik',[
             'title' => 'Peserta Didik',
-            'students'=>User::where('role','siswa')->with('student')->get()
+            'students'=>User::where('role','siswa')->with('student')->paginate(15)
         ]);
     }
     public function useremployeesIndex(){
         return view('pengguna.GTK',[
-            'title' => 'Guru dan Tenaga Kependidikan'
+            'title' => 'Guru dan Tenaga Kependidikan',
+            'gtks'=>User::where('role','guru')->with('gtk')->paginate(15)
         ]);
     }
     public function usermodulesIndex(){
@@ -40,5 +42,12 @@ class PenggunaController extends Controller
     public function userAdministratorAdd(request $request){
         toastr()->error('An error has occurred please try again later.');
         return redirect()->back();
+    }
+    public function usermodulesPermission(){
+
+        return view('pengguna.permission',[
+            'title'=>'Roles Permission',
+            'modules'=>Permission::all()
+        ]);
     }
 }

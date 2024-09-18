@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -29,7 +30,8 @@
 
 <body>
 
-    <body class="account-page">
+    <body class="account-page bg-light-gradient">
+        <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:cover;">
         <div class="main-wrapper">
             <div class="container">
                 <div class="row justify-content-center">
@@ -188,7 +190,9 @@
                                                                     @enderror
                                                                 </div>
                                                             </div>
+                                                            <i><small>Cek Nomor NIS <a class="link-primary" href="https://nisn.data.kemdikbud.go.id/index.php/Cindex/caribynama/" target="_blank" rel="noopener noreferrer">klik disini</a></small></i>
                                                             <div class="my-3 ">
+
                                                                 <a class="btn btn-primary w-100"
                                                                     id="sectionOneBtn">Berikutnya <span
                                                                         class="ti ti-arrow-narrow-right"></span></a>
@@ -330,6 +334,17 @@
                                                             </div>
 
                                                         </div>
+                                                       {{-- start Chatcha --}}
+                                                        <div class="my-3">
+                                                            {!! NoCaptcha::renderJs() !!}
+                                                            {!! NoCaptcha::display() !!}
+                                                        </div>
+                                                        @if ($errors->has('g-recaptcha-response'))
+                                                        <span class="help-block">
+                                                            <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+                                                        </span>
+                                                        @endif
+                                                        {{-- end --}}
                                                         <button type="submit" class="btn btn-primary w-100">Mendaftar
                                                             <span class="ti ti-arrow-narrow-right"></span></button>
 
@@ -626,6 +641,18 @@
                                                             </div>
 
                                                         </div>
+                                                   {{-- start Chatcha --}}
+                                                        <div class="my-3">
+                                                            {!! NoCaptcha::renderJs() !!}
+                                                            {!! NoCaptcha::display() !!}
+                                                        </div>
+                                                        @if ($errors->has('g-recaptcha-response'))
+                                                        <span class="help-block">
+                                                            <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+                                                        </span>
+                                                        @endif
+                                                        {{-- end --}}
+
                                                         <button type="submit" class="btn btn-primary w-100">Mendaftar
                                                             <span class="ti ti-arrow-narrow-right"></span></button>
 
@@ -661,7 +688,7 @@
         <script src="{{ asset('asset/js/bootstrap.bundle.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript">
         </script>
 
-
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript">
         </script>
         <script src="{{ asset('asset/js/owl.carousel.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript">
@@ -771,6 +798,14 @@
         </script>
         </script>
         <script>
+            function notif(){
+                Swal.fire({
+                    icon: "error",
+                    title: "Ada form yang masih kosong",
+                    text: "Mohon isi data yang lengkap sesuai form yang tersedia!",
+                    footer: 'Copyright © 2024 - Absensi Sakti'
+                    });
+            }
             $("#sectionTwo").hide();
             $("#sectionThree").hide();
             $("#sectionOneBtn").click(function(){
@@ -781,7 +816,7 @@
                 var tanggal_lahir=$("#tanggal_lahir").val();
                 var agama=$("#agama").val();
                 if (nis=="" || nama=="" || gender =="" || tempat_lahir =="" || tanggal_lahir =="" || agama ==""){
-                    alert("Isi data dengan lengkap");
+                    notif();
                 }else{
                     $("#sectionOne").hide();
                     $("#sectionTwo").show();
@@ -791,11 +826,11 @@
             $("#sectionTwoBtn").click(function(){
                 var alamat=$("#alamat").val();
                 var provinsi=$("#provinsi").val();
-                var kota=$("#kota").val();
+                var kota=$("#kabupaten").val();
                 var kecamatan=$("#kecamatan").val();
                 var desa=$("#desa").val();
                 if (alamat=="" || provinsi=="" || kota =="" || desa =="" || kecamatan ==""){
-                    alert("Isi data dengan lengkap");
+                    notif();
                 }else{
                     $("#sectionOne").hide();
                     $("#sectionTwo").hide();
@@ -825,7 +860,7 @@
         var tanggal_lahir=$("#tanggal_lahir2").val();
         var agama=$("#agama2").val();
         if (nis=="" || nama=="" || gender =="" || tempat_lahir =="" || tanggal_lahir =="" || agama ==""){
-            alert("Isi data dengan lengkap");
+            notif();
         }else{
             $("#sectionOneteacher").hide();
             $("#sectionTwoteacher").show();
@@ -835,11 +870,11 @@
     $("#sectionTwoBtnteacher").click(function(){
         var alamat=$("#alamat2").val();
         var provinsi=$("#provinsi2").val();
-        var kota=$("#kota2").val();
+        var kota=$("#kabupaten2").val();
         var kecamatan=$("#kecamatan2").val();
         var desa=$("#desa2").val();
-        if (alamat=="" || provinsi=="" || kota =="" || desa =="" || kecamatan ==""){
-            alert("Isi data dengan lengkap");
+        if (alamat=="" || provinsi==""  || desa =="" || kecamatan ==""){
+            notif();
         }else{
             $("#sectionOneteacher").hide();
             $("#sectionTwoteacher").hide();

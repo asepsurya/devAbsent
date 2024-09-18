@@ -14,12 +14,17 @@ class rombel extends Model
         return $this->belongsTo('App\Models\student','nis','nis');
     }
 
-
-    public function absent(){
-        return $this->belongsTo('App\Models\absent','id_rfid','id_rfid');
+    // public function absent(){
+    //     return $this->belongsTo('App\Models\absent','id_rfid','id_rfid');
+    // }
+    public function notRFID(){
+        return $this->hasMany('App\Models\absent','id_rfid','nis');
     }
     public function rombelAbsent(){
         return $this->hasMany('App\Models\absent','id_rfid','id_rfid');
+    }
+    public function getkelas(){
+        return $this->belongsTo('App\Models\Kelas','id_kelas','id');
     }
 
 }

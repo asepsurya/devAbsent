@@ -74,7 +74,7 @@
                         <input type="text" value="{{ request('id_tahun_pelajaran') }}" name="id_kelas_tujuan" hidden>
                         <div class="col m-3">
                             <label class="form-label ">Tahun Pelajaran</label>
-                            <select name="tahunAjarAsal" id="tahunAsal" class="form-control select2" onchange="this.form.submit()">
+                            <select name="tahunAjarAsal" id="tahunAsal" class="form-control select2" onchange="">
                                 <option value="" selected>-- Tahun Pelajaran --</option>
                                 @foreach ($tahunAjar as $item )
                                 <option value="{{ $item->id }}" {{ $item->id ==
@@ -137,12 +137,12 @@
                                 <th>
                                     <form action="{{ route('PengaturaRombelUpdate') }}" method="post">
                                         @csrf
-                                        <input type="text" name="id_kelas_asal" value="{{ request('id_kelas_asal') }}" hidden >
-                                        <input type="text" name="tahunAjarAsal" value="{{ request('tahunAjarAsal') }}" hidden >
+                                        <input type="text" name="id_kelas_asal" value="{{ request('id_kelas_asal') }}"  hidden>
+                                        <input type="text" name="tahunAjarAsal" value="{{ request('tahunAjarAsal') }}" hidden>
                                         <input type="text" name="id_rfid"  value="{{ $item->id_rfid }}" hidden >
                                         <input type="text" name="nis" value="{{ $item->nis }}" value="{{ old('nis') }}" hidden>
                                         <input type="text" name="id_kelas" class="GetKelas" value="{{ request('id_kelas_tujuan') }}" hidden >
-                                        <input type="text" name="id_tahun_pelajaran" class="GetTahunPelajaran" value="{{ old('id_tahun_pelajaran') }}" hidden >
+                                        <input type="text" name="id_tahun_pelajaran" class="GetTahunPelajaran" value="{{ request('id_tahun_pelajaran') }}" hidden >
                                         <button type="submit" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                             title="Pindah" class="btn btn-icon btn-sm btn-soft-success rounded-pill"><i
                                                 class="ti ti-arrows-right"></i></button>

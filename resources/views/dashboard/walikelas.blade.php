@@ -1,20 +1,10 @@
 @extends('layout.main')
 @section('container')
 
-
-
             <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
                 <div class="my-auto mb-2">
-                    <h3 class="page-title mb-1">Teacher Dashboard</h3>
-                    <nav>
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item">
-                                <a
-                                    href="https://preskool.dreamstechnologies.com/html/template/index.html">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">Teacher Dashboard</li>
-                        </ol>
-                    </nav>
+                    <h3 class="page-title mb-1">Dashboard</h3>
+
                 </div>
             </div>
 

@@ -2,17 +2,9 @@
 @section('container')
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
-    <h3 class="page-title mb-1">Student Dashboard</h3>
-    <nav>
-    <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item">
-    <a href="index.html">Dashboard</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">Student Dashboard</li>
-    </ol>
-    </nav>
+        <h3 class="page-title mb-1">Dashboard</h3>
     </div>
-    </div>
+</div>
 
 <div class="row flex-fill">
     <div class="col-xl-6 d-flex">
@@ -21,23 +13,69 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center row-gap-3 mb-3">
                         <div class="avatar avatar-xxl rounded flex-shrink-0 me-3">
-                            <img src="https://preskool.dreamstechnologies.com/html/template/assets/img/students/student-13.jpg" alt="Img">
+                           {{-- user siswa --}}
+                        @if(auth()->user()->role == "siswa")
+                        @if(Auth::user()->student == NULL)
+                           <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
+                        @else
+                           @if(Auth::user()->student->foto == "" )
+                               <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
+                           @else
+                               <img src="/storage/{{ Auth::user()->student->foto }}" alt='Img' class='img-fluid'>
+                           @endif
+                        @endif
+                       @endif
+
+                      @if(auth()->user()->role == "guru")
+                        @if(Auth::user()->gtk == NULL)
+                           <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                        @else
+                           @if(Auth::user()->gtk->gambar == "" )
+                               <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                           @else
+                               <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                           @endif
+                        @endif
+                       @endif
+
+                       @if( auth()->user()->role == "walikelas")
+                           @if(Auth::user()->gtk == NULL)
+                               <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                           @else
+                           @if(Auth::user()->gtk->gambar == "" )
+                               <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                           @else
+                               <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                           @endif
+                           @endif
+                       @endif
+
+                       @if(auth()->user()->role == "admin" || auth()->user()->role == "superadmin" )
+                           <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                       @endif
+
+
                         </div>
                         <div class="d-block">
-                            <span class="badge bg-transparent-primary text-primary mb-1">NIS : #ST1234546</span>
-                            <h3 class="text-truncate text-white mb-1">Angelo Riana</h3>
+                            <span class="badge bg-transparent-primary text-primary mb-1">NIS : {{ auth()->user()->nomor }}</span>
+                            <h3 class="text-truncate text-white mb-1">{{ auth()->user()->nama }}</h3>
                             <div class="d-flex align-items-center flex-wrap row-gap-2 text-gray-2">
-                                <span class="border-end me-2 pe-2">Class : III, C</span>
-                                <span>Roll No : 36545</span>
+                                <span class="  pe-2">
+                                   Kelas :
+                                </span>
+                                @if(Auth::user()->rombelstudent)
+                                <span> {{ Auth::user()->rombelstudent->getkelas->jurusanKelas->nama_jurusan }} {{ Auth::user()->rombelstudent->getkelas->sub_kelas }}</span>
+                                @else
+                                <span>Belum disetel</span>
+                                @endif
                             </div>
                         </div>
                     </div>
                     <div
                         class="d-flex align-items-center justify-content-between profile-footer flex-wrap row-gap-3 pt-4">
                         <div class="d-flex align-items-center">
-                            <h6 class="text-white">1st Quarterly</h6>
-                            <span class="badge bg-success d-inline-flex align-items-center ms-2"><i
-                                    class="ti ti-circle-filled fs-5 me-1"></i>Pass</span>
+                            <h6 class="text-white">Status</h6>
+                            <span class="badge bg-success d-inline-flex align-items-center ms-2">{{ auth()->user()->status == '2' ?' Aktif' : 'Tidak Aktif'  }}</span>
                         </div>
                         <a href="edit-student.html" class="btn btn-primary">Edit Profile</a>
                     </div>

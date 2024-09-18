@@ -24,6 +24,8 @@
          @php $relation = 'gtk'; $img ='gambar'; @endphp
     @elseif (auth()->user()->role == "walikelas")
          @php $relation = 'gtk'; $img ='gambar'; @endphp
+    @elseif (auth()->user()->role == "admin")
+         @php $relation = 'gtk'; $img ='gambar'; @endphp
     @endif
 
     <div class="d-md-flex d-block mt-3">

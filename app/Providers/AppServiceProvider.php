@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
 	    Carbon::setLocale('id');
 
         Gate::before(function ($user, $ability) {
-            if ($user->hasRole('Super-Admin')) {
+            if ($user->hasRole('superadmin')) {
                 return true;
             }
         });

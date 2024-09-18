@@ -10,10 +10,11 @@ use App\Models\Jurusan;
 use App\Models\Mapel;
 use App\Models\User;
 use App\Models\rfid;
+use App\Models\model_has_roles;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
-use App\Imports\RolesStudentImport;
 use App\Imports\UserStudentImport;
+use App\Imports\MyRolesStudentImport;
 use App\Imports\StudentsImport;
 use App\Exports\StudentsExport;
 use Illuminate\Support\Facades\Hash;
@@ -192,29 +193,29 @@ class DataIndukController extends Controller
 
     public function studentImport(request $request){
         try {
-            $request->validate([
-                'file' => 'required|mimes:csv,xls,xlsx'
-            ]);
-            // menangkap file excel
-            $file = $request->file('file');
-            // membuat nama file unik
-            $nama_file = rand().$file->getClientOriginalName();
-            // upload ke folder file_siswa di dalam folder public
-            $file->move('file_siswa',$nama_file);
 
-            // import data
-            Excel::import(new StudentsImport, public_path('/file_siswa/'.$nama_file));
-            Excel::import(new UserStudentImport, public_path('/file_siswa/'.$nama_file));
-            // Excel::import(new RolesStudentImport, public_path('/file_siswa/'.$nama_file));
-
-            // notifikasi dengan session
-            toastr()->success('Data Berhasil diImport');
-            // alihkan halaman kembali
-            return redirect()->back();
         } catch (\Throwable $th) {
             return redirect()->back();
         }
+        $request->validate([
+            'file' => 'required|mimes:csv,xls,xlsx'
+        ]);
+        // menangkap file excel
+        $file = $request->file('file');
+        // membuat nama file unik
+        $nama_file = rand().$file->getClientOriginalName();
+        // upload ke folder file_siswa di dalam folder public
+        $file->move('file_siswa',$nama_file);
 
+        // import data
+        Excel::import(new UserStudentImport, public_path('/file_siswa/'.$nama_file));
+        Excel::import(new StudentsImport, public_path('/file_siswa/'.$nama_file));
+        Excel::import(new MyRolesStudentImport, public_path('/file_siswa/'.$nama_file));
+
+        // notifikasi dengan session
+        toastr()->success('Data Berhasil diImport');
+        // alihkan halaman kembali
+        return redirect()->back();
 
     }
     public function studentEksportExcel(){

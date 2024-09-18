@@ -123,11 +123,12 @@
                     <span class="avatar avatar-xl bg-danger-transparent me-2 my-3 ">
                         <i class="ti ti-trash-x fs-1" ></i>
                     </span>
-                    <h4>Confirm Deletion </h4>
-                    <p>You want to delete all the marked items, this cant be undone once you delete.</p>
+                    <h4>Konfirmasi Penghapusan? </h4>
+                    <p>
+                        Anda ingin menghapus semua item yang ditandai. Ini tidak dapat dibatalkan setelah dihapus.</p>
                     <div class="d-flex justify-content-center">
-                        <a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</a>
-                        <a href="{{ route('studentDelete',$item->nis) }}" type="submit" class="btn btn-danger">Yes, Delete</a>
+                        <a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Batal</a>
+                        <a href="{{ route('studentDelete',$item->nis) }}" type="submit" class="btn btn-danger">Ya, Hapus</a>
                     </div>
                 </div>
             </form>
@@ -143,6 +144,19 @@
             <div class="modal-header">
                 <h4 class="modal-title">Import Data Peserta Didik</h4><button aria-label="Close" class="btn-close"
                     data-bs-dismiss="modal"></button>
+            </div>
+            <div class="alert alert-primary overflow-hidden p-0 m-2" role="alert">
+                <div class="p-3 bg-primary text-fixed-white d-flex justify-content-between">
+                    <h6 class="aletr-heading mb-0 text-fixed-white">Informasi Singkat</h6>
+
+                </div>
+
+                <div class="p-2" align="left">
+                    <p class="my-1">Berikut ini informasi yang harus diperhatikan :</p>
+                    <p class="my-1 mx-2">1. Untuk Contoh Format Dokumen anda bisa download di link ini. <a href="{{ asset('asset/import_sample/Data Siswa Sample.xlsx') }}" target="_blank" rel="noopener noreferrer"> Download </a> </p>
+                    <p class="my-1 mx-2">2. File yang di Import Harus bertype .xlsx atau type file Excel</p>
+
+                </div>
             </div>
             <form id="fileUploadForm" action="{{ route('studentImport') }}" method="POST" enctype="multipart/form-data">
                 @csrf

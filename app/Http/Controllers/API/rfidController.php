@@ -1,17 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\API;
-use App\Http\Controllers\Controller;
-
 use DB;
+
+use Alert;
+use Carbon\Carbon;
+use App\Models\gtk;
 use App\Models\rfid;
-use App\Models\entyrfid;
 use App\Models\absent;
 use App\Models\student;
-use App\Models\gtk;
-use Alert;
-use Yajra\DataTables\Facades\DataTables;
+use App\Models\entyrfid;
 use Illuminate\Http\Request;
+use App\Models\absentsHistory;
+use App\Http\Controllers\Controller;
+use Yajra\DataTables\Facades\DataTables;
 
 class rfidController extends Controller
 {
@@ -60,6 +62,15 @@ class rfidController extends Controller
                             'out'=>$timenow,
                             'status'=>'H'
                         ]);
+                          absentsHistory::create([
+                            'date'=>date('d/m/Y'),
+                            'time'=>$timenow,
+                            'uid'=>$item->id_rfid,
+                            'status'=>$status
+                        ]);
+
+
+
                     } else {
                         // belum absen Input  jam entry
                         $status = "ENTRY";
@@ -68,6 +79,12 @@ class rfidController extends Controller
                             'id_rfid'=>$item->id_rfid,
                             'entry'=> $timenow,
                             'status'=>'H'
+                        ]);
+                        absentsHistory::create([
+                            'date'=>date('d/m/Y'),
+                            'time'=>$timenow,
+                            'uid'=>$item->id_rfid,
+                            'status'=>$status
                         ]);
                     }
 
@@ -84,7 +101,7 @@ class rfidController extends Controller
                         }
                     }
                     return response()->json([
-                        'waktu'=>date('d/m/Y ', strtotime($item->created_at)),
+                        'waktu'=>Carbon::parse(now())->translatedFormat('d/m/Y'),
                         'nama'=>$nama,
                         'uid'=>$item->id_rfid,
                         'status'=>$status,
@@ -105,19 +122,28 @@ class rfidController extends Controller
         }
     }
     // Untuk Mengambil Data
-    public function rfidData(){
-        $data = entyrfid::orderBy('id','DESC')->get();
+    public function rfidData(request $request){
+        $data = absentsHistory::where('uid',$request->id_rfid)->get();
         foreach($data as $item){
-            return $item->id_rfid;
+            if($item->gtk){
+                return $item->gtk->nama;
+            }else{
+                return $item->student->nama;
+            }
+
         }
 
     }
-    // public function rfidDataGET(request $request){
-    //     return DataTables::of(rfid::query())->toJson();
-    //     // $data = rfid::orderBy('id','DESC')->get();
-    //     // return $data;
+    public function rfidDataGET(request $request){
 
-    // }
+        $data = absentsHistory::where('date',date('d/m/Y'))->orderBy('id','DESC')->get();
+        foreach($data as $item){
+            $option = "<option value='$item->uid' selected> $item->uid</option>";
+             return $option;
+         }
+
+
+    }
     public function rfidDelete($id){
         $data = rfid::where('id',$id)->get();
         foreach($data as $key){

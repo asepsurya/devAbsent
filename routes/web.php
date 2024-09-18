@@ -1,11 +1,13 @@
 <?php
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GTKController;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\landingController;
 use App\Http\Controllers\lisensiController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\API\rfidController;
@@ -17,11 +19,23 @@ use App\Http\Controllers\DataIndukController;
 use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\verifikasiUserController;
 
-Route::get('/', function () {
-    return view('frontpage.index');
+Route::get('/',[landingController::class,'index'])->name('index');
+Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
+Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
+Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
+
+route::get('sss',function(){
+    // memberikan Permission
+    $user= User::FindorFail(413);
+    // $user->givePermissionTo('menu');
+    // hapus Permission
+    // $user->revokePermissionTo('delete student');
+
 });
 Route::get('/role',[authController::class,'role'])->name('role');
 Route::get('/role/create',[authController::class,'create'])->middleware('role:walikelas');
+
+
 Route::middleware('guest')->group(function () {
     // route Auth
     Route::get('/login',[authController::class,'loginIndex'])->middleware('guest')->name('login');
@@ -33,13 +47,16 @@ Route::middleware('guest')->group(function () {
 
 });
 
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile/{id}',[authController::class,'profileIndex'])->name('profileIndex');
     Route::post('/profile/edit/action',[authController::class,'profileUpdate'])->name('profileUpdate');
     Route::post('/profile/edit/imageProfile',[authController::class,'imageProfile'])->name('imageProfile');
     // Role Permision pengguna
-    Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard.admin')->middleware('role:Super-Admin');
+    Route::get('/dashboard',[DashboardController::class,'superadmin'])->name('dashboard.superadmin')->middleware(['role:superadmin']);
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/dashboard',[DashboardController::class,'index'])->name('dashboard.admin');
+    });
+
     // Role Permision untuk walikelas
     Route::middleware('role:walikelas')->group(function () {
         Route::get('/walikelas/dashboard',[DashboardController::class,'walikelasDashboard'])->name('dashboard.walikelas');
@@ -52,7 +69,6 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:siswa')->group(function () {
         Route::get('/student/dashboard',[DashboardController::class,'Studentindex'])->name('dashboard.student');
     });
-
 
 
     Route::get('/class/list',[kelaslistController::class,'kelaslist'])->name('kelaslist');
@@ -118,9 +134,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
     // route rfid
     Route::get('/rfid',[rfidController::class,'rfid'])->name('rfid');
-    Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
+
     Route::get('/rfid/delete{id}',[rfidController::class,'rfidDelete'])->name('rfidDelete');
-    // Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
+
 
     Route::get('/device/lisensi',[lisensiController::class,'lisensiIndex'])->name('lisensiIndex');
     Route::get('/device/lisensiGet',[lisensiController::class,'lisensiIndexGet'])->name('lisensiIndexGet');
@@ -136,6 +152,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/students',[penggunaController::class,'userStudentsIndex']);
     Route::get('/user/employees',[penggunaController::class,'useremployeesIndex']);
     Route::get('/user/modules',[penggunaController::class,'usermodulesIndex']);
+    Route::get('/user/permission',[penggunaController::class,'usermodulesPermission'])->name('usermodulesPermission');
     Route::get('/user/user_privileges',[penggunaController::class,'user_privilegesIndex']);
 
     Route::get('/verifikasiuser',[verifikasiUserController::class,'verifikasiUser']);

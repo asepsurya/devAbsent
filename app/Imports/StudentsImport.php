@@ -6,8 +6,8 @@ use App\Models\student;
 use App\Models\User;
 use Session;
 use Maatwebsite\Excel\Concerns\ToModel;
-
-class StudentsImport implements ToModel
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+class StudentsImport implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
@@ -16,19 +16,23 @@ class StudentsImport implements ToModel
     */
     public function model(array $row)
     {
-        if(student::where('nis', '=', $row[0])->exists()) {
+        if(student::where('nis', '=', $row['nis'])->exists()) {
             Session::flash('gagal',"Data tidak dapat diimpor karena ada NIS yang duplikat");
         }else{
             return new student([
-                'nis'=>$row[0],
-                'nama'=>$row[1],
-                'gender'=>$row[2],
-                'tempat_lahir'=>$row[3],
-                'tanggal_lahir'=>$row[4],
-                'agama'=>$row[5],
-                'status'=>$row[6],
+                'nis'=>$row['nis'],
+                'nama'=>$row['nama'],
+                'gender'=>$row['gender'],
+                'tempat_lahir'=>$row['tempat_lahir'],
+                'tanggal_lahir'=>$row['tanggal_lahir'],
+                'agama'=>$row['agama'],
+                'status'=>'1',
             ]);
         }
 
+    }
+    public function headingRow(): int
+    {
+        return 10;
     }
 }

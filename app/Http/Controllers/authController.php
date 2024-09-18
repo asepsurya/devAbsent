@@ -48,7 +48,10 @@ class authController extends Controller
         $validator['id_rfid']= '';
         $validator ['id_kelas' ]= '';
         $validator['id_rombel']='';
-
+        // validasi chaptcha
+        $request->validate([
+             'g-recaptcha-response' => 'required|captcha'
+        ]);
         student::create($validator);
         $validatedData = $request->validate([
             'nama'=>'required',
@@ -85,7 +88,7 @@ class authController extends Controller
     public function registerInputTeacher(request $request){
         $validator = $request->validate([
             'nik' => 'required|min:10|unique:gtks',
-            'nip' => 'min:18|unique:gtks',
+            'nip' => '',
             'nama' => 'required',
             'tempat_lahir' => 'required',
             'gender' => 'required',
@@ -100,7 +103,10 @@ class authController extends Controller
             'password'=>'required|same:Cpassword|min:6',
             'telp'=>'required',
         ]);
-
+        // validasi chaptcha
+        $request->validate([
+             'g-recaptcha-response' => 'required|captcha'
+        ]);
         $validator['status'] = '1';
         $validator['tanggal_masuk'] = '';
         $validator['id_rfid']= '';
@@ -137,13 +143,19 @@ class authController extends Controller
          return redirect()->route('registerinfo');
 
     }
+
     // login Action
     public function loginAction(request $request){
 
         $cek = $request->validate([
             'email'=>'required',
-            'password'=>'required|min:6'
+            'password'=>'required|min:6',
         ]);
+        // validasi chaptcha
+        $request->validate([
+             'g-recaptcha-response' => 'required|captcha'
+        ]);
+
         $cek['status'] = '2';
         if(Auth::attempt($cek)){
             $request->session()->regenerate();
@@ -151,6 +163,9 @@ class authController extends Controller
             if(Auth()->user()->role === 'admin'){
                 toastr()->success('Login Berhasil');
                 return redirect()-> intended(route('dashboard.admin'));
+            } elseif(Auth()->user()->role === 'superadmin'){
+                toastr()->success('Login Berhasil');
+                return redirect()-> intended(route('dashboard.superadmin'));
 
             }elseif(Auth()->user()->role === 'walikelas'){
                 toastr()->success('Login Berhasil');
@@ -170,6 +185,8 @@ class authController extends Controller
             return back()->with('loginError','Login Gagal!! Periksa Kembali Data Anda');
 
         }
+
+
     }
 
     public function profileIndex($id){

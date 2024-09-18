@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Province;
-use App\Models\JenisGTK;
-use App\Models\gtk;
-use App\Models\User;
-use App\Models\rfid;
-use App\Models\grupMapel;
-use App\Models\media;
 use Validator;
-use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\Facades\DataTables;
+use App\Models\gtk;
+use App\Models\rfid;
+use App\Models\User;
+use App\Models\media;
+use App\Models\JenisGTK;
+use App\Models\Province;
+use App\Models\grupMapel;
 use App\Imports\GtkImport;
 use App\Imports\UserImport;
+use Illuminate\Http\Request;
+use App\Imports\MyRolesGTKImport;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Hash;
+use Yajra\DataTables\Facades\DataTables;
+
 class GTKController extends Controller
 {
     public function GTKall(request $request){
@@ -193,20 +195,16 @@ class GTKController extends Controller
             $file = $request->file('file');
             // membuat nama file unik
             $nama_file = rand().$file->getClientOriginalName();
-
-            try {
                      // upload ke folder file_siswa di dalam folder public
             $file->move('file_gtk',$nama_file);
                  // import data
-            Excel::import(new GtkImport, public_path('/file_gtk/'.$nama_file));
             Excel::import(new UserImport, public_path('/file_gtk/'.$nama_file));
+            Excel::import(new GtkImport, public_path('/file_gtk/'.$nama_file));
+            Excel::import(new MyRolesGTKImport, public_path('/file_gtk/'.$nama_file));
             // notifikasi dengan session
             toastr()->success('Data Berhasil diImport');
             // alihkan halaman kembali
             return redirect()->back();
-            } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-                return redirect()->back()->compact('e');
-            }
 
         }
 

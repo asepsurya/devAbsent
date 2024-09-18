@@ -46,4 +46,8 @@ class User extends Authenticatable
     public function gtk(){
         return $this->belongsTo(gtk::class,'nomor','nik');
     }
+    public function rombelstudent(){
+        return $this->belongsTo('App\Models\rombel','nomor','nis');
+    }
+
 }

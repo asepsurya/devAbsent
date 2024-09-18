@@ -31,7 +31,7 @@
                 </li>
 
                 <li>
-                @can('menu')
+                {{-- @can('menu') --}}
                     <h6 class="submenu-hdr"><span>Management</span></h6>
                     <ul>
                         <li class="submenu">
@@ -40,7 +40,7 @@
                                     class="ti ti-checklist"></i><span>Absensi</span><span class="menu-arrow"></span></a>
                             <ul>
                                 <li>
-                                    <a href="/absensi/student?tanggal={{ date('d/m/Y') }}"
+                                    <a href="/absensi/student?kelas=all&tanggal={{ date('d/m/Y') }}"
                                        class="{{ Request::is('absensi/student') ? 'active' : ''}}">
                                         Peserta Didik
                                     </a>
@@ -57,9 +57,8 @@
                             <a href="/class/list" ><i class="ti ti-list-details"></i><span>Data Kelas</span></a>
                         </li>
                     </ul>
-                    @endcan
+                    {{-- @endcan --}}
                 </li>
-
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Master Data</span></h6>

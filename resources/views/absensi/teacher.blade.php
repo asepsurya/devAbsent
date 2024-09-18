@@ -97,7 +97,14 @@
                                     <input class="form-check-input" name="data[]" value="{{ $item->id_rfid }}" type="checkbox">
                                 </div>
                         </td>
-                        <td><a class="link-primary" href="#">{{ $item->id_rfid}}</a></td>
+                        <td>
+                            @if($item->id_rfid == '')
+                               Belum disetel
+                              @else
+                              <a class="link-primary" href="#">
+                                {{ $item->id_rfid}}</a>
+                              @endif
+                        </td>
                         <td>{{ $item->nama }}</td>
                         <form action="{{ route('absensiStudentAdd') }}" method="post" >
                             @csrf
@@ -188,6 +195,9 @@
                                         <label class="form-label">RFID <span class="ti ti-nfc"></span></label>
                                         <input type="text" class="form-control" name="id_rfid"
                                             value="{{ $item->id_rfid }}" readonly required>
+                                            @if($item->id_rfid == "")
+                                                <small><a href="{{ route('GTKupdateIndex',$item->id) }}" target="_blank" rel="noopener noreferrer">Setel RFID?</a></small>
+                                            @endif
                                     </div>
                                 </div>
                             </div>

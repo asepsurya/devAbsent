@@ -26,4 +26,9 @@ class DashboardController extends Controller
             'title'=>'Dashboard',
         ]);
     }
+    public function superadmin(){
+        return view('dashboard.superadmin',[
+            'title'=>'Dashboard',
+        ]);
+    }
 }

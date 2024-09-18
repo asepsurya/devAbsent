@@ -70,7 +70,7 @@ class pengaturanAkademik extends Controller
             $data = student::where(['status'=>'1'])->get();
 
         }elseif(request('id_kelas_asal') == "belumDiatur"){
-            $data = student::where(['id_kelas'=> '','id_kelas'=>'','status'=>'1'])->get();
+            $data = student::where(['id_kelas'=>NULL,'status'=>'1'])->get();
         }
 
         else{
@@ -104,13 +104,13 @@ class pengaturanAkademik extends Controller
                             return redirect()->back()->withInput();
                         }else{
                             rombel::where('nis',$request->nis)->update([
-                                'id_rfid'=>$request->id_rfid,
+                                // 'id_rfid'=>$request->id_rfid,
                                 'id_kelas'=>$request->id_kelas,
                                 'id_tahun_pelajaran'=>$request->id_tahun_pelajaran,
                             ]);
                             student::where('nis',$request->nis)->update([
                                 'id_kelas'=>$request->id_kelas,
-                                'id_rfid'=>$request->id_rfid,
+                                // 'id_rfid'=>$request->id_rfid,
                             ]);
                             toastr()->success('Data Berhasil dipindahkan');
                             return redirect(route('PengaturaRombel','id_kelas_asal='.$request->id_kelas_asal.'&tahunAjarAsal='.$request->tahunAjarAsal.'&id_kelas_tujuan='.$request->id_kelas.'&id_tahun_pelajaran='.$request->id_tahun_pelajaran))->withInput();
@@ -124,7 +124,7 @@ class pengaturanAkademik extends Controller
                         return redirect()->back()->withInput();
             }else{
                         rombel::create([
-                            'id_rfid'=>$request->id_rfid,
+                            // 'id_rfid'=>$request->id_rfid,
                             'nis'=>$request->nis,
                             'id_kelas'=>$request->id_kelas,
                             'id_tahun_pelajaran'=>$request->id_tahun_pelajaran,
@@ -132,7 +132,7 @@ class pengaturanAkademik extends Controller
                            ]);
                         student::where('nis',$request->nis)->update([
                             'id_kelas'=>$request->id_kelas,
-                            'id_rfid'=>$request->id_rfid,
+                            // 'id_rfid'=>$request->id_rfid,
                            ]);
 
                         toastr()->success('Data Berhasil disubmit');
