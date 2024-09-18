@@ -9,8 +9,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles; 
- 
+    use HasFactory, Notifiable, HasRoles;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -42,5 +42,8 @@ class User extends Authenticatable
     }
     public function student(){
         return $this->belongsTo('App\Models\student','nomor','nis');
+    }
+    public function gtk(){
+        return $this->belongsTo(gtk::class,'nomor','nik');
     }
 }

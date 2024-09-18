@@ -4,20 +4,32 @@
             <ul>
                 <li>
                     <a href="javascript:void(0);" class="d-flex align-items-center border bg-white rounded p-2 mb-4">
-                        <img src="https://preskool.dreamstechnologies.com/html/template/assets/img/icons/global-img.svg"
+                        <img src="{{ asset('asset/img/smk.png') }}"
                             class="avatar avatar-md img-fluid rounded" alt="Profile">
                         <span class="text-dark ms-2 fw-normal">SMKS SATYA BHAKTI</span>
                     </a>
                 </li>
             </ul>
+
             <ul>
                 <li>
+                    @if(auth()->user()->role =="admin")
+                        @php $link = route('dashboard.admin')  @endphp
+                    @elseif (auth()->user()->role=="walikelas")
+                        @php $link = route('dashboard.walikelas')  @endphp
+                    @elseif (auth()->user()->role == "guru")
+                        @php $link = route('dashboard.teacher')  @endphp
+                    @else
+                        @php $link = route('dashboard.student')  @endphp
+                    @endif
                     <ul>
-                        <li class="{{ Request::is('dashboard') ? 'active' : ''}}">
-                            <a href="/dashboard"><i class="ti ti-layout-dashboard"></i><span>Beranda</span></a>
+                        <li>
+                            <a href="{{ $link }}"><i class="ti ti-layout-dashboard"></i><span>Beranda  </span></a>
                         </li>
+
                     </ul>
                 </li>
+
                 <li>
                 @can('menu')
                     <h6 class="submenu-hdr"><span>Management</span></h6>
@@ -25,26 +37,29 @@
                         <li class="submenu">
                             <a href="javascript:void(0);"
                                 class=" {{ Request::is('absensi*') ? 'subdrop active' : ''}}"><i
-                                    class="ti ti-checklist"></i><span>Absensi RFID</span><span class="menu-arrow"></span></a>
+                                    class="ti ti-checklist"></i><span>Absensi</span><span class="menu-arrow"></span></a>
                             <ul>
                                 <li>
-                                    <a href="/absensi/student"
+                                    <a href="/absensi/student?tanggal={{ date('d/m/Y') }}"
                                        class="{{ Request::is('absensi/student') ? 'active' : ''}}">
                                         Peserta Didik
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/absensi/teacher"
+                                    <a href="/absensi/teacher?tanggal={{ date('d/m/Y') }}"
                                        class="{{ Request::is('absensi/teacher') ? 'active' : ''}}">
                                        GTK
                                     </a>
                                 </li>
                             </ul>
-
+                        </li>
+                        <li  class="{{ Request::is('class/list*') ? 'active' : ''}}">
+                            <a href="/class/list" ><i class="ti ti-list-details"></i><span>Data Kelas</span></a>
                         </li>
                     </ul>
                     @endcan
                 </li>
+
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Master Data</span></h6>
@@ -92,12 +107,13 @@
                                         </li>
                                     </ul>
                                 </li>
+
                                 <li class="submenu">
                                     <a href="javascript:void(0);"
-                                        class=" {{ Request::is('import*') ? 'subdrop active' : ''}}"> Import Data</span><span class="menu-arrow"></span></a>
+                                        class=" {{ Request::is('student/import') ? 'subdrop active' : ''}}"> Import Data</span><span class="menu-arrow"></span></a>
                                     <ul class="mx-3">
-                                        <li><a href="/import/student"
-                                                class="{{ Request::is('import/student') ? 'active' : ''}}">Peserta Didik</a></li>
+                                        <li><a href="{{ route('studentIndex') }}"
+                                                class="{{ Request::is('datainduk/student/import') ? 'active' : ''}}">Peserta Didik</a></li>
                                         <li><a href="/import/teacher"
                                                 class="{{ Request::is('import/teacher') ? 'active' : ''}}">GTK</a></li>
                                         <li><a href="/import/mapel"
@@ -109,6 +125,7 @@
                     </ul>
                     <ul>
                 </li>
+
                 <li>
                     <ul>
                         <li class="submenu">

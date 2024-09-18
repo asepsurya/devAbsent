@@ -34,10 +34,13 @@ class AbsensiController extends Controller
 
         return view('absensi.teacher',[
             'title'=>'Absensi Guru dan Tenaga Kependidikan',
-            'gtk'=>gtk::where(['status'=>'1'])->whereNotNull('id_rfid')->with('absent')->get(),
-            'absentTanggal'=>absent::where(['tanggal'=>request('tanggal')])->get(),
+            'gtk'=>gtk::where(['status'=>'1'])->whereNotNull('id_rfid')->with('absent','rombelAbsent')->get(),
+            'absentTanggal'=>absent::where(['tanggal'=>request('tanggal','absent')])->get(),
         ]);
 
+    }
+    public function absensiStudentAdd1(request $request){
+        dd($request);
     }
     public function absensiStudentAdd(request $request){
         $cek =  absent::where(['tanggal'=>request('tanggal'),'id_rfid'=>$request->id_rfid])->get();
@@ -48,13 +51,13 @@ class AbsensiController extends Controller
             }else{
                 absent::where(['tanggal'=>request('tanggal'),'id_rfid'=>$request->id_rfid])->update([
                     "tanggal" => $request->tanggal,
-                    "entry" => $request->entry,
+                    "entry" => date('H:i'),
                     "out" => $request->out,
                     "status" => $request->status,
                     "keterangan" => $request->keterangan
                 ]);
                 gtk::where('id_rfid',$request->id_rfid)->update(['last_absent'=>request('tanggal')]);
-                Alert::success('Data Berhasil Disimpan' );
+                toastr()->success('Berhasil Disimpan');
                 return redirect()->back();
             }
         }else{
@@ -65,13 +68,13 @@ class AbsensiController extends Controller
                 absent::create([
                     "tanggal" => $request->tanggal,
                     "id_rfid" => $request->id_rfid,
-                    "entry" => $request->entry,
+                    "entry" => date('H:i'),
                     "out" => $request->out,
                     "status" => $request->status,
                     "keterangan" => $request->keterangan
                 ]);
                 gtk::where('id_rfid',$request->id_rfid)->update(['last_absent'=>request('tanggal')]);
-                Alert::success('Data Berhasil Disimpan' );
+                toastr()->success('Berhasil Disimpan');
                 return redirect()->back();
             }
         }

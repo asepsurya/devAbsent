@@ -41,69 +41,17 @@
         <p>Menu ini digunakan untuk mengatur daftar Mata Pelajaran pada tiap semester. Pastikan sebelum proses
             pembelajaran dimulai sudah mengatur daftar Mata Pelajaran yang akan diajarkan dengan cara sebagai berikut :
         </p>
-        <li>Pilih Mata Pelajaran dengan cara mengklik tombol panah hijau, dan akan otomatis menambah data ke sebelah kanan tabel</li>
+        <li>Pilih Mata Pelajaran dengan cara mengklik tombol panah hijau, dan akan otomatis menambah data ke sebelah
+            kanan tabel</li>
 
         <li>Kemudian Pilih <b>Tahun Pelajaran, Semester</b>, dan <b>Kelas</b> pada tabel di sebelah kanan sebagai target
             penyimpanan Mata Pelajaran yang terpilih.</li>
         <li>Klik tombol <b>"Apply dan Simpan"</b> untuk menyimpan ke daftar Mata pelajaran</b>.</li><br>
-        <p> <b>Perlu diperhatikan</b> pada tabel <u>pengaturan mata pelajaran</u> pada tabel di bawah terdapat tanda warna merah samping tabel yang mengartikan bahwa data belum sepenuhnya tersimpan.</p>
+        <p> <b>Perlu diperhatikan</b> pada tabel <u>pengaturan mata pelajaran</u> pada tabel di bawah terdapat tanda
+            warna merah samping tabel yang mengartikan bahwa data belum sepenuhnya tersimpan.</p>
     </div>
 </div>
 <div class="row">
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-header d-flex align-items-center justify-content-between">
-                <h3><span class="ti ti-settings"></span> Pilih Mata Pelajaran</h3>
-                <div>
-                    <div class="input-icon-start me-2 position-relative">
-                        <span class="icon-addon">
-                            <i class="ti ti-search"></i>
-                        </span>
-                        <input type="text" class="form-control " placeholder="Search" id="myInput"
-                            onkeyup="myFunction()">
-                    </div>
-                </div>
-            </div>
-            <div class="card-body p-0 ">
-
-                <div class="table-responsive">
-                    <table class="table table-nowrap mb-0" id="myTable">
-                        <thead>
-                            <tr>
-                                <th class="bg-light-400" width="10%">#</th>
-                                <th class="bg-light-400">Mata Pelajaran</th>
-                                <th class="bg-light-400" width="10%"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            @php
-                            $no=1;
-                            @endphp
-                            @foreach ($mapel as $item)
-
-                            <tr>
-                                <td>{{ $no++ }}</td>
-                                <td>{{ $item->nama }}</td>
-                                <th>
-
-                                    <form action="{{ route('pengaturanMapelAdd') }}" method="post">
-                                        @csrf
-                                        <input type="text" name="id_mapel" id="MapelVal" value="{{ $item->id }}" hidden>
-                                        <button type="submit"
-                                            class="btn btn-icon btn-sm btn-soft-success rounded-pill"><i
-                                                class="ti ti-arrows-right"></i></button>
-
-                                    </form>
-                            </tr>
-                            @endforeach
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="col-lg-6">
         <div class="card">
             <div class="card-body p-0 ">
@@ -129,7 +77,7 @@
                                     <div class="col-lg-9">
                                         <select name="tahunAjar" id="tahunAjar" class="form-control select2"
                                             onchange="copyTextValue()" form="myform">
-                                            <option value="" selected >-- Tahun Pelajaran --</option>
+                                            <option value="" selected>-- Tahun Pelajaran --</option>
                                             @foreach ($tahunAjar as $item )
                                             <option value="{{ $item->id }}" {{ $item->id ==
                                                 request('id_tahun_pelajaran') ?
@@ -146,7 +94,7 @@
                                     <div class="col-lg-9">
                                         <select name="semester" id="semester" class="form-control select2"
                                             onchange="semesterValue()" form="myform">
-                                            <option value="" selected >-- Pilih Semester --</option>
+                                            <option value="" selected>-- Pilih Semester --</option>
                                             <option value="Ganjil" {{ request('id_semester')=="Ganjil" ? 'selected' :''
                                                 }}>
                                                 Ganjil</option>
@@ -162,9 +110,9 @@
                                     <div class="col-lg-9">
                                         <select name="kelas" id="kelas" class="form-control select2"
                                             onchange="kelasValue()" form="myform">
-                                            <option value="" selected >-- Pilih Kelas --</option>
+                                            <option value="" selected>-- Pilih Kelas --</option>
                                             @foreach ($kelas as $item )
-                                            <option value="{{ $item->id }}"{{ $item->id == request('id_kelas') ?
+                                            <option value="{{ $item->id }}" {{ $item->id == request('id_kelas') ?
                                                 'selected' :
                                                 '' }} >{{ $item->nama_kelas }} - {{
                                                 $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</option>
@@ -188,9 +136,10 @@
                             <button class="btn btn-soft-primary w-100"><span class="ti ti-upload"></span> 2. Apply
                                 dan Simpan</button>
                             {{-- Input Box untuk mengambil Data Default --}}
-                            <input type="text" name="tahun" id="id_tahun_pelajaranVal" value="{{ $a }}" hidden >
-                            <input type="text" name="semester" id="semesterVal" value="Ganjil" hidden >
-                            <input type="text" name="kelas" id="kelasVal" value="{{ $c }}" hidden >
+                            <input type="text" name="tahun" id="id_tahun_pelajaranVal" value="{{ $a }}" hidden>
+                            <input type="text" name="semester" id="semesterVal" value="Ganjil" hidden>
+                            <input type="text" name="kelas" id="kelasVal" value="{{ $c }}" hidden>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -232,22 +181,22 @@
                         @foreach ($grupMapel as $item)
 
 
-                            <tr>
-                                <td>{{ $no++ }}</td>
-                                <td>
-                                    <a href="{{ route('pengaturanMapelDelete',$item->id) }}"
-                                        class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i
-                                            class="ti ti-trash"></i></a>
-                                </td>
-                                <td>{{ $item->mata_pelajaran->nama }}</td>
-                                <td>
-                                    @if ($item->id_gtk)
-                                    {{ $item->guru->nama }}
-                                    @else
-                                    Belum disetel
-                                    @endif
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>{{ $no++ }}</td>
+                            <td>
+                                <a href="{{ route('pengaturanMapelDelete',$item->id) }}"
+                                    class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i
+                                        class="ti ti-trash"></i></a>
+                            </td>
+                            <td>{{ $item->mata_pelajaran->nama }}</td>
+                            <td>
+                                @if ($item->id_gtk)
+                                {{ $item->guru->nama }}
+                                @else
+                                Belum disetel
+                                @endif
+                            </td>
+                        </tr>
 
                         @endforeach
 
@@ -255,10 +204,66 @@
                 </table>
             </div>
         </div>
-        </form>
+        </div>
+    </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h3><span class="ti ti-settings"></span> Pilih Mata Pelajaran</h3>
+                <div>
+                    <div class="input-icon-start me-2 position-relative">
+                        <span class="icon-addon">
+                            <i class="ti ti-search"></i>
+                        </span>
+                        <input type="text" class="form-control " placeholder="Search" id="myInput"
+                            onkeyup="myFunction()">
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0 ">
+
+                <div class="table-responsive">
+                    <table class="table table-nowrap mb-0" id="myTable">
+                        <thead>
+                            <tr>
+                                <th class="bg-light-400" width="10%"></th>
+                                <th class="bg-light-400" width="10%">#</th>
+                                <th class="bg-light-400">Mata Pelajaran</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @php
+                            $no=1;
+                            @endphp
+                            @foreach ($mapel as $item)
+                            <tr><td>
+                                <form action="{{ route('pengaturanMapelAdd') }}" method="post">
+                                    @csrf
+                                    <input type="text" name="id_mapel" id="MapelVal" value="{{ $item->id }}" hidden>
+                                    <button type="submit"
+                                        class="btn btn-icon btn-sm btn-soft-success rounded-pill"><i
+                                            class="ti ti-arrows-left"></i></button>
+
+                                </form>
+                            </td>
+                                <td>{{ $no++ }}</td>
+                                <td>{{ $item->nama }}</td>
+
+                            </tr>
+                            @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
-</div>
+
 
 {{-- modal tambah Hari Libur --}}
 <div class="modal fade" id="add_holiday" aria-modal="true" role="dialog">

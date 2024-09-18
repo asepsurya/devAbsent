@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('mapels', function (Blueprint $table) {
             $table->id();
             $table->String('nama');
-            $table->String('jml_jam');
-            $table->String('type');
+            $table->String('kode_mapel')->nullable(); // input kode mapel
+            $table->String('jml_jam'); // dijadikan patokan max jam pelajaran
+            $table->enum('type', ['umum', 'kejuruan']); // kelompok mapel
             $table->String('status');
             $table->timestamps();
         });

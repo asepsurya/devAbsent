@@ -123,7 +123,7 @@
                                 <select name="id_gtk" class="select2">
                                     <option value="" selected required>-- Pilih Wali Kelas --</option>
                                     @foreach ($gtk as $item )
-                                    <option value="{{ $item->id }}">{{ $item->nik }} - {{ $item->nama }}</option>
+                                    <option value="{{ $item->nik }}">{{ $item->nik }} - {{ $item->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>

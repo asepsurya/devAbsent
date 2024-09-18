@@ -5,10 +5,12 @@ use App\Models\Mapel;
 use App\Models\TahunPelajaran;
 use App\Models\Kelas;
 use App\Models\gtk;
+use App\Models\User;
 use App\Models\grupMapel;
 use App\Models\walikelas;
 use App\Models\student;
 use App\Models\rombel;
+use Illuminate\Support\Facades\DB;
 use Alert;
 use Validator;
 use Illuminate\Http\Request;
@@ -50,6 +52,13 @@ class pengaturanAkademik extends Controller
             'id_kelas'=>$request->kelas,
             'id_gtk'=>$request->id_gtk
         ]);
+
+          User::where('nomor',$request->id_gtk)->update(['role'=>'walikelas']);
+          $cekid = User::where('nomor',$request->id_gtk)->get();
+          foreach($cekid as $key){
+              $getid = $key->id;
+              DB::table('model_has_roles')->where('model_id','=', $getid)->update(array('role_id'=>'1'));
+          }
         toastr()->success('Data Berhasil disimpan');
         return redirect()->back();
     }
@@ -59,9 +68,11 @@ class pengaturanAkademik extends Controller
         // jika ada request atau filter 1
         if(request('id_kelas_asal') =="all"){
             $data = student::where(['status'=>'1'])->get();
+
         }elseif(request('id_kelas_asal') == "belumDiatur"){
-            $data = student::where(['id_kelas'=> '','id_kelas'=>NULL,'status'=>'1'])->get();
+            $data = student::where(['id_kelas'=> '','id_kelas'=>'','status'=>'1'])->get();
         }
+
         else{
             $data = student::where(['id_kelas'=> request('id_kelas_asal'),'status'=>'1'])->get();
         }
@@ -88,8 +99,8 @@ class pengaturanAkademik extends Controller
                         return redirect()->back()->withInput();
                     }
                     else{
-                        if($request->id_tahun_pelajaran == "" || $request->id_kelas=='' || $request->id_rfid==''){
-                            Alert::error('Mohon Periksa Kembali Pilih Kelas Tujuan dan RFID terlebih dahulu' );
+                        if($request->id_tahun_pelajaran == "" || $request->id_kelas=='' ){
+                            Alert::error('Mohon Periksa Kembali Kelas Tujuan terlebih dahulu' );
                             return redirect()->back()->withInput();
                         }else{
                             rombel::where('nis',$request->nis)->update([
@@ -108,8 +119,8 @@ class pengaturanAkademik extends Controller
                     }
              }
         }else{
-            if($request->id_kelas == "" || $request->id_tahun_pelajaran == "" || $request->id_rfid==''){
-                        Alert::error('Mohon Periksa Kembali Pilih Kelas Tujuan dan RFID terlebih dahulu' );
+            if($request->id_kelas == "" || $request->id_tahun_pelajaran == "" ){
+                        Alert::error('Mohon Periksa Kembali Kelas Tujuan terlebih dahulu' );
                         return redirect()->back()->withInput();
             }else{
                         rombel::create([

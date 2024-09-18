@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('id_kelas')->nullable();
             $table->string('id_rombel')->nullable();
             $table->string('id_tahun_ajar')->nullable();
+            $table->string('last_absent')->nullable();
             $table->string('foto')->nullable();
             $table->timestamps();
         });

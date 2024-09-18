@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('tanggal_masuk')->nullable();
             $table->string('id_rfid')->nullable();
             $table->string('id_jenis_gtk')->nullable();
+            $table->string('last_absent')->nullable();
             $table->string('gambar')->nullable();
             $table->timestamps();
         });

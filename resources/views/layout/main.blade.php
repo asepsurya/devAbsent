@@ -2,13 +2,13 @@
 <html lang="id" data-theme="light" data-sidebar="light" data-color="primary" data-topbar="white" data-layout="default">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <meta name="description" content="Preskool - Bootstrap Admin Template">
     <meta name="keywords" content="admin, estimates, bootstrap, business, html5, responsive, Projects">
     <meta name="author" content="Dreams technologies - Bootstrap Admin Template">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Absensi Sakti | {{ $title }}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('asset/img/logo-icon.png') }}">
     {{-- <script src="{{ asset('asset/js/jquery-3.7.1.min.js') }}"></script> --}}

@@ -11,7 +11,7 @@ class walikelas extends Model
     protected $guarded=['id'];
 
     public function gtk(){
-        return $this->belongsTo('App\Models\gtk','id_gtk','id');
+        return $this->belongsTo('App\Models\gtk','id_gtk','nik');
     }
     public function tahun_ajar(){
         return $this->belongsTo('App\Models\TahunPelajaran','id_tahun_pelajaran','id');

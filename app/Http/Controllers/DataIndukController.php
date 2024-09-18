@@ -8,11 +8,16 @@ use App\Models\Province;
 use App\Models\Kelas;
 use App\Models\Jurusan;
 use App\Models\Mapel;
+use App\Models\User;
 use App\Models\rfid;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use App\Imports\RolesStudentImport;
+use App\Imports\UserStudentImport;
 use App\Imports\StudentsImport;
 use App\Exports\StudentsExport;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\TahunPelajaran;
 use Illuminate\View\View;
@@ -21,18 +26,18 @@ class DataIndukController extends Controller
 {
     public function dataIndukStudent(request $request) {
         if ($request->ajax()) {
-            return DataTables::of(student::query())->addIndexColumn()->toJson();
+            return DataTables::of(student::orderBy('id', 'DESC'))->addIndexColumn()->toJson();
         }
         return view('akdemik.datainduk.student',[
             'title'=>'Data Peserta Didik',
-            'students'=>student::orderBy('id', 'DESC')->get('id'),
+            'students'=>student::orderBy('id', 'DESC')->get(['id','nis']),
             'provinsi'=>Province::all()
         ]);
     }
     public function dataIndukJurusan(){
         return view('akdemik.datainduk.jurusan',[
             'title'=>'Data Jurusan',
-            'jurusans'=>jurusan::all(),
+            'jurusans'=>Jurusan::all(),
 
         ]);
     }
@@ -40,7 +45,7 @@ class DataIndukController extends Controller
         return view('akdemik.datainduk.kelas',[
             'title'=>'Data Kelas',
             'kelas'=>Kelas::orderBy('id', 'DESC')->with('jurusanKelas')->get(),
-            'jurusans'=>jurusan::where('status','1')->get()
+            'jurusans'=>Jurusan::where('status','1')->get()
         ]);
     }
     public function dataIndukMapel(){
@@ -64,7 +69,7 @@ class DataIndukController extends Controller
     }
     public function dataIndukStudentAdd(request $request){
         $validator = $request->validate([
-            'nis' => 'required|min:10|unique:students',
+            'nis' => 'required|min:9|unique:students',
             'nama' => 'required',
             'tempat_lahir' => 'required',
             'gender' => 'required',
@@ -85,6 +90,27 @@ class DataIndukController extends Controller
         $validator['foto']='';
 
         student::create($validator);
+
+        User::create([
+            'nomor'=>$request->nis,
+            'nama'=>$request->nama,
+            'email'=>$request->nis,
+            'password'=>Hash::make($request->nis),
+            'role'=>'4',
+            'status'=>'2'
+        ]);
+
+        // insert to tabel model_has_roles untuk Role Hak Akses
+        $cekid = User::where('nomor',$request->nis)->get();
+        foreach($cekid as $key){
+            $getid = $key->id;
+            DB::table('model_has_roles')->insert([
+                'role_id' => '3',
+                'model_type'=>'App\Models\User',
+                'model_id'=>$getid
+            ]);
+        }
+        // role walikelas:1 guru:2 siswa:3 admin:4
         toastr()->success('Data Berhasil diSimpan');
         return redirect()->route('dataIndukStudent');
 
@@ -132,10 +158,38 @@ class DataIndukController extends Controller
 
     }
     public function studentDelete ($id){
-        student::where('id',$id)->delete();
+        // cek table siswa untuk menghapus rfid
+        $cekstudentrfid =  student::where('nis',$id)->get();
+        foreach($cekstudentrfid as $key){
+            rfid::where('id_rfid',$key->id_rfid)->update(['status'=>'1']);
+        }
+        // hapus data tabel student
+        student::where('nis',$id)->delete();
+        // Hapus data Table model_has_roles
+        $cekid = User::where('nomor',$id)->get();
+        foreach($cekid as $key){
+            $getid = $key->id;
+            DB::table('model_has_roles')->where('model_id','=', $getid)->delete();
+        }
+        // Hapus Tabel User
+        User::where('nomor',$id)->delete();
+
         toastr()->success('Data Berhasil dihapus');
         return redirect()->back();
     }
+    public function studentIndex(){
+        $file = asset('file_siswa/340817178Data Siswa Sample.xlsx');
+       $data =  Excel::load($file, function($reader) {
+            $results = $reader->get();
+            $results = $reader->all();
+         })->get();
+
+        return view('akdemik.datainduk.students.import',[
+            'title'=>'Import Data Peserta Didik',
+            'a'=> $data
+        ]);
+    }
+
     public function studentImport(request $request){
         try {
             $request->validate([
@@ -150,6 +204,9 @@ class DataIndukController extends Controller
 
             // import data
             Excel::import(new StudentsImport, public_path('/file_siswa/'.$nama_file));
+            Excel::import(new UserStudentImport, public_path('/file_siswa/'.$nama_file));
+            // Excel::import(new RolesStudentImport, public_path('/file_siswa/'.$nama_file));
+
             // notifikasi dengan session
             toastr()->success('Data Berhasil diImport');
             // alihkan halaman kembali
@@ -176,7 +233,7 @@ class DataIndukController extends Controller
     }
 
     public function dataIndukJurusanUpdate(request $request){
-        jurusan::where('id',$request->id)->update([
+        Jurusan::where('id',$request->id)->update([
             'nama_jurusan'=>$request->nama,
             'status'=>$request->status,
         ]);
@@ -184,7 +241,7 @@ class DataIndukController extends Controller
         return redirect()->back();
     }
     public function dataIndukJurusanDelete($id){
-        jurusan::where('id',$id)->delete();
+        Jurusan::where('id',$id)->delete();
         toastr()->success('Data Berhasil dihapus');
         return redirect()->back();
     }
