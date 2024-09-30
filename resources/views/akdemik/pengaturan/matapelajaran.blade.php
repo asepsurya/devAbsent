@@ -22,10 +22,17 @@
             </a>
         </div>
         <div class="pe-1 mb-2">
-            <button type="button" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                data-bs-placement="top" aria-label="Print" data-bs-original-title="Print">
-                <i class="ti ti-printer"></i>
+            @if(request('id_kelas'))
+            <a href="{{ route('list',request('id_kelas')) }}" type="button" class="btn btn-primary  me-1" data-bs-toggle="tooltip"
+                data-bs-placement="top" aria-label="Print" data-bs-original-title="Setel" >
+               <span class="ti ti-book"></span> Setel Mata Pelajaran
+            </a>
+            @else
+            <button type="button" class="btn btn-primary  me-1" data-bs-toggle="tooltip"
+            data-bs-placement="top" aria-label="Print" data-bs-original-title="Setel" disabled >
+           <span class="ti ti-book"></span> Setel Mata Pelajaran
             </button>
+            @endif
         </div>
 
     </div>
@@ -55,7 +62,7 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-body p-0 ">
-                <div class="alert alert-success overflow-hidden p-0 mb-0" role="alert">
+                <div class=" overflow-hidden p-0 mb-0" role="alert">
                     <div class="p-3 bg-success text-fixed-white d-flex justify-content-between">
                         <h4 class="alert-heading mb-0 text-fixed-white"> <span class="ti ti-filter"></span>Pengaturan
                             Mata Pelajaran</h3>
@@ -160,8 +167,8 @@
                         @endphp
                         @foreach ($mapelnotAllow as $item1)
                         <thead @if($item1->status == '1') class="bg-danger" @endif>
-                            <tr>
-                                <td>{{ $no++ }}</td>
+                            <tr >
+                                <td >{{ $no++ }}</td>
                                 <td>
                                     <a href="{{ route('pengaturanMapelDelete',$item1->id) }}"
                                         class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i
@@ -169,7 +176,7 @@
                                 </td>
                                 <td>{{ $item1->mata_pelajaran->nama }}</td>
                                 <td>
-                                    @if ($item1->id_gtk)
+                                    @if ($item1->guru)
                                     {{ $item1->guru->nama }}
                                     @else
                                     Belum disetel
@@ -190,7 +197,7 @@
                             </td>
                             <td>{{ $item->mata_pelajaran->nama }}</td>
                             <td>
-                                @if ($item->id_gtk)
+                                @if ($item->guru)
                                 {{ $item->guru->nama }}
                                 @else
                                 Belum disetel
@@ -257,6 +264,7 @@
 
                         </tbody>
                     </table>
+                    {{-- {{ $mapel->links() }} --}}
                 </div>
             </div>
         </div>

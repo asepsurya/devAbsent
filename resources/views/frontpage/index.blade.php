@@ -185,8 +185,8 @@
             <div class="col-lg-6 col-md-5 order-md-1 pt-9">
 
                 <center><h4 class="mb-3"><span class="ti ti-calendar-due"></span> {{ Carbon\Carbon::parse(now())->translatedFormat('l, d F Y') }} | <span id="jam" class="text-muted"></span> </h4></center>
-                {{-- <img class="img-fluid" src="{{ asset('landing/img/illustrations/hero.png') }}" alt=""> --}}
-                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script><dotlottie-player src="https://lottie.host/a08fe931-1e93-4930-b4b0-714be508f0fc/XZEEsrlaoz.json" background="transparent" speed="1" style="width: 600px; height: 600px" direction="-1" playMode="bounce" loop autoplay></dotlottie-player>
+                <img class="img-fluid" src="{{ asset('landing/img/illustrations/hero.png') }}" alt="">
+                {{-- <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script><dotlottie-player src="https://lottie.host/a08fe931-1e93-4930-b4b0-714be508f0fc/XZEEsrlaoz.json" background="transparent" speed="1" style="width: 600px; height: 600px" direction="-1" playMode="bounce" loop autoplay></dotlottie-player> --}}
             </div>
             <div class="col-md-7 col-lg-6 text-center text-md-start pt-md-9">
                 <h1 class="display-2 fw-bold fs-4 fs-md-5 fs-xl-6  ">Absensi Pintar,  <br>Kerja lebih Cerdas.</h1>
@@ -214,7 +214,6 @@
                                 </thead>
 
                                     <tbody id="myData"></tbody>
-
 
                             </table>
                         </div>
@@ -503,7 +502,13 @@
                     }else{
 
                         for(i=0;i<response.length;i++){
-                            content+= '<tr><td>'+response[i].date+' <span class="ti ti-clock-hour-1"></span> '+response[i].time+'</td>'
+                            // alert
+                            if(response[i].status == 'ENTRY'){
+                                $alert = 'alert alert-success';
+                            }else{
+                                $alert = 'alert alert-danger';
+                            }
+                            content+= '<tr class="'+$alert+'"><td>'+response[i].date+' <span class="ti ti-clock-hour-1"></span> '+response[i].time+'</td>'
                         if(response[i].student){
                             content += '<td>'+response[i].student.nama+ '</td>'
                         }else{

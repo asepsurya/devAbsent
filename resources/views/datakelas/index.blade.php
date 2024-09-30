@@ -25,7 +25,7 @@
         <div class="d-flex align-items-center flex-wrap">
             <div class="input-icon-start mb-3 me-2 position-relative">
                 <span class="icon-addon">
-                    <i class="ti ti-door"></i>
+                    <i class="ti ti-search"></i>
                 </span>
                 <input type="text" class="form-control " placeholder="Cari Kelas.." id="myInput" onkeyup="myFunction()">
             </div>
@@ -38,8 +38,10 @@
                     <tr>
                         <th class="bg-light-400">#</th>
 
-                        <th class="bg-light-400">Nama Kelas</th>
-                        <th class="bg-light-400">Jumlah Siswa</th>
+                        <th class="bg-light-400" width="70%">Rombongan Belajar</th>
+                        <th class="bg-light-400 border">Jumlah Siswa</th>
+                        <th class="bg-light-400">status</th>
+
 
                     </tr>
                 </thead>
@@ -52,9 +54,25 @@
                     <tr class="odd">
                         <td>{{ $no++ }}</td>
 
-                        <td><a href="{{ route('kelaslistdetail') }}" >{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</a></td>
-                        <td>{{ $item->kapasitas }}</td>
+                        <td>
+                            @if(Request::is('class/list'))
+                                <a href="{{ route('kelaslistdetail')}}" class="link-primary">{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</a>
 
+                            @else
+                                <a href="{{ route('list',$item->id) }}" class="link-primary">{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</a>
+                            @endif
+
+                        </td>
+
+                        <td class="border">
+                           <center> {{ $item->jmlRombel->count() }}</center></td>
+                        <td>
+                            @if($item->status == '1')
+                            <span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>
+                            @else
+                            <span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak Aktif</span>
+                            @endif
+                        </td>
                     </tr>
 
                     @endforeach

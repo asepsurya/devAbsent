@@ -12,7 +12,7 @@ class kelaslistController extends Controller
     public function kelaslist(){
         return view('datakelas.index',[
             'title'=> 'Data Kelas',
-            'kelas'=>Kelas::orderBy('id', 'DESC')->with('jurusanKelas')->get(),
+            'kelas'=>Kelas::orderBy('id', 'DESC')->with(['jurusanKelas','jmlRombel'])->get(),
             'jurusans'=>Jurusan::where('status','1')->get()
 
         ]);

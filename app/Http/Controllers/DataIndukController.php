@@ -52,7 +52,7 @@ class DataIndukController extends Controller
     public function dataIndukMapel(){
         return view('akdemik.datainduk.mataPelajaran',[
             'title'=>'Data Mata Pelajaran',
-            'mapel'=>Mapel::all()
+            'mapel'=>Mapel::orderBy('id', 'DESC')->paginate(20)
         ]);
     }
 

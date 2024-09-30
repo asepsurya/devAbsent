@@ -17,6 +17,8 @@
                         @php $link = route('dashboard.admin')  @endphp
                     @elseif (auth()->user()->role=="walikelas")
                         @php $link = route('dashboard.walikelas')  @endphp
+                    @elseif (auth()->user()->role=="superadmin")
+                        @php $link = route('dashboard.superadmin')  @endphp
                     @elseif (auth()->user()->role == "guru")
                         @php $link = route('dashboard.teacher')  @endphp
                     @else
@@ -165,8 +167,8 @@
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Jadwal</span></h6>
-                        <li>
-                            <a href="##"><i class="ti ti-notebook"></i><span>Pelajaran</span></a>
+                        <li class="{{ Request::is('class/leasson*') ? 'active' : ''}}">
+                            <a href="/class/leasson"><i class="ti ti-notebook"></i><span>Pelajaran</span></a>
                         </li>
                         <li  class="{{ Request::is('holidays') ? 'active' : ''}}">
                             <a href="/holidays" ><i class="ti ti-calendar-stats"></i><span>Hari Libur</span></a>

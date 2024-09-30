@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
+            $table->string('day'); // mengambil data mata pelajaran
             $table->string('id_mapel'); // mengambil data mata pelajaran
-            $table->string('id_gtk'); // mengambil data guru mata pelajaran
+            $table->string('id_gtk')->nullable(); // mengambil data guru mata pelajaran
             $table->string('id_rombel'); // mengambil data rombel
             $table->string('id_tahun_ajar'); // mengambil data tahun ajar
             $table->string('sk')->nullable(); // input nomor sk
             $table->string('tanggal_sk')->nullable(); // input tanggal sk
-            $table->string('jml_jam')->nullable(); // input jumlah jam pelajaran
+            $table->string('start')->nullable(); // input jumlah jam pelajaran
+            $table->string('end')->nullable(); // input jumlah jam pelajaran
             $table->string('status');
             $table->timestamps();
         });

@@ -9,8 +9,9 @@
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item " aria-current="page">pengguna</li>
-                <li class="breadcrumb-item active" aria-current="page">Romongan Belajar</li>
+                <li class="breadcrumb-item " aria-current="page">Akademik</li>
+                <li class="breadcrumb-item " aria-current="page">pengaturan</li>
+                <li class="breadcrumb-item active" aria-current="page">Rombongan Belajar</li>
             </ol>
         </nav>
     </div>
@@ -80,7 +81,7 @@
                                 <option value="{{ $item->id }}" {{ $item->id ==
                                     request('tahunAjarAsal') ?
                                     'selected' :
-                                    '' }}>{{ $item->tahun_pelajaran }}
+                                    '' }}>{{ $item->tahun_pelajaran }} - {{ $item->semester }}
                                 </option>
                                 @endforeach
                             </select>
@@ -154,6 +155,9 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="d-flex justify-content-end">
+                    {{ $students->links() }}
+                </div>
             </div>
         </div>
     </div>
@@ -189,7 +193,7 @@
                                         <option value="{{ $item->id }}"  {{ $item->id ==
                                             request('id_tahun_pelajaran') ?
                                             'selected' :
-                                            '' }}>{{ $item->tahun_pelajaran }}
+                                            '' }}>{{ $item->tahun_pelajaran }} - {{ $item->semester }}
                                         </option>
                                         @php
                                         if(request('id_tahun_pelajaran')){
@@ -264,7 +268,9 @@
                         @endforeach
                     </tbody>
                 </table>
-
+                <div class="d-flex justify-content-end">
+                    {{ $studentsClass->links() }}
+                </div>
             </div>
         </div>
 

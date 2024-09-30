@@ -9,4 +9,11 @@ class Lesson extends Model
 {
     use HasFactory;
     protected $guarded=['id'];
+
+    public function mata_pelajaran(){
+        return $this->belongsTo('App\Models\Mapel','id_mapel','id');
+    }
+    public function guru(){
+        return $this->belongsTo('App\Models\gtk','id_gtk','nik');
+    }
 }

@@ -67,18 +67,18 @@ class pengaturanAkademik extends Controller
 
         // jika ada request atau filter 1
         if(request('id_kelas_asal') =="all"){
-            $data = student::where(['status'=>'1'])->get();
+            $data = student::where(['status'=>'1'])->paginate(10)->appends(request()->query());
 
         }elseif(request('id_kelas_asal') == "belumDiatur"){
-            $data = student::where(['id_kelas'=>NULL,'status'=>'1'])->get();
+            $data = student::where(['id_kelas'=>NULL,'status'=>'1'])->paginate(10)->appends(request()->query());
         }
 
         else{
-            $data = student::where(['id_kelas'=> request('id_kelas_asal'),'status'=>'1'])->get();
+            $data = student::where(['id_kelas'=> request('id_kelas_asal'),'status'=>'1'])->paginate(10)->appends(request()->query());
         }
         // filter Tujuan Kelas
         if(request() ){
-            $mydata = rombel::where(['id_kelas'=>request('id_kelas_tujuan'),'id_tahun_pelajaran'=>request('id_tahun_pelajaran')])->with('rombelStudent')->get();
+            $mydata = rombel::where(['id_kelas'=>request('id_kelas_tujuan'),'id_tahun_pelajaran'=>request('id_tahun_pelajaran')])->with('rombelStudent')->paginate(10)->appends(request()->query());
         }
 
         return view('akdemik.pengaturan.rombel',[

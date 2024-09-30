@@ -49,13 +49,13 @@
             </div>
         </div>
     </div>
-    <div class="card-body p-0"> 
+    <div class="card-body p-0">
         <div class="table-responsive " >
             <table class="table table-nowrap mb-0"  id="myTable">
                 <thead>
                     <tr>
                         <th class="bg-light-400">#</th>
-                     
+
                         <th class="bg-light-400">Nama Mata Pelajaran</th>
                         <th class="bg-light-400">Jumlah Jam</th>
                         <th class="bg-light-400">Type</th>
@@ -68,8 +68,8 @@
                         $no=1;
                     @endphp
                     @foreach ($mapel as $item )
-                   
-                    <tr class="odd"> 
+
+                    <tr class="odd">
                         <td>{{ $no++ }}</td>
                         <td>{{ $item->nama }}</td>
                         <td>{{ $item->jml_jam }}</td>
@@ -77,22 +77,25 @@
                         <td>
                             @if ($item->status == 1)
                             <span class="badge badge-soft-success d-inline-flex align-items-center"><i
-                                class="ti ti-circle-filled fs-5 me-1"></i>Aktif</span>  
+                                class="ti ti-circle-filled fs-5 me-1"></i>Aktif</span>
                             @else
                             <span class="badge badge-soft-danger d-inline-flex align-items-center"><i
                                 class="ti ti-circle-filled fs-5 me-1"></i>Tidak Aktif</span>
                             @endif
-                        </td>        
-                        <td > 
+                        </td>
+                        <td >
                             <div class="hstack gap-2 fs-15">
                                 <a data-bs-toggle="modal" data-bs-target="#edit_mapel-{{ $item->id }}" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i class="ti ti-pencil-minus"></i></a>
                                 <a href="{{ route('dataIndukMapelDelete',$item->id) }}" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i class="ti ti-trash"></i></a>
                                 </div>
                         </td>
-                    </tr>         
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
+            <div class="d-flek justify-content-end m-2">
+
+            </div>
         </div>
     </div>
     {{-- modal tambah Mapel --}}
@@ -109,7 +112,7 @@
                     @csrf
                     <div class="modal-body">
                         <div class="col-md-12">
-                         
+
                             <div class="mb-3">
                                 <label class="form-label">Nama Mata Pelajaran</label>
                                 <input type="text" class="form-control" name="nama">
@@ -145,7 +148,7 @@
     </div>
     {{-- edit Mapel --}}
     @foreach ($mapel as $item)
-    
+
     <div class="modal fade" id="edit_mapel-{{ $item->id }}" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -193,7 +196,7 @@
             </div>
         </div>
     </div>
-        
+
     @endforeach
 </div>
 @section('javascript')
@@ -213,7 +216,7 @@
           } else {
             tr[i].style.display = "none";
           }
-        }       
+        }
       }
     }
     </script>

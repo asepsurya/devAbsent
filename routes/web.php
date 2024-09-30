@@ -8,6 +8,7 @@ use App\Http\Controllers\authController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\landingController;
+use App\Http\Controllers\leassonController;
 use App\Http\Controllers\lisensiController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\API\rfidController;
@@ -134,9 +135,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
     // route rfid
     Route::get('/rfid',[rfidController::class,'rfid'])->name('rfid');
-
     Route::get('/rfid/delete{id}',[rfidController::class,'rfidDelete'])->name('rfidDelete');
-
 
     Route::get('/device/lisensi',[lisensiController::class,'lisensiIndex'])->name('lisensiIndex');
     Route::get('/device/lisensiGet',[lisensiController::class,'lisensiIndexGet'])->name('lisensiIndexGet');
@@ -160,8 +159,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/verifikasiuser',[verifikasiUserController::class,'verifikasiUser']);
     Route::get('/verifikasiuserUpdate{id}',[verifikasiUserController::class,'verifikasiUpdate'])->name('verifikasiUpdate');
-
-
+    // leasson
+    Route::get('/class/leasson',[leassonController::class,'index'])->name('leasson');
+    Route::get('/class/leasson/view/{id}',[leassonController::class,'leassonView'])->name('leassonView');
+    Route::post('/class/leasson/reference',[leassonController::class,'reference'])->name('reference');
+    Route::post('/class/leasson/add',[leassonController::class,'leassonAdd'])->name('leassonAdd');
+    Route::get('/class/leasson/list/{id}',[leassonController::class,'list'])->name('list');
+    Route::get('/class/leasson/getgtk',[leassonController::class,'getgtk'])->name('getgtk');
 });
 Route::post('/logout',[authController::class,'logout'])->name('logout');
 // route Regency Administrasi

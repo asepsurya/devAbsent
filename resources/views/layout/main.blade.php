@@ -28,10 +28,11 @@
     <link rel="stylesheet" href="{{ asset('asset/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
+
     @yield('css')
 </head>
 
-<body>
+<body >
 
     <div class="main-wrapper">
         @include('partial.header')
@@ -61,7 +62,18 @@
     <script src="{{ asset('asset/js/bootstrap-datetimepicker.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <script src="{{ asset('asset/js/script.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <script>
-
+          // Setting data attributes and classes
+        //   document.documentElement.setAttribute('data-layout', 'mini');
+        //   $("#toggle_btn").click(function(){
+        //     document.body.classList.add("mini-sidebar");
+        //     document.body.classList.remove("layout-box-mode");
+        //     // Saving to localStorage
+        //     localStorage.setItem('theme', theme);
+        //     localStorage.setItem('sidebarTheme', sidebarTheme);
+        //     localStorage.setItem('color', color);
+        //     localStorage.setItem('data-layout', 'mini');
+        //     localStorage.setItem('topbar', topbar);
+        //   });
 
 
     </script>

@@ -153,9 +153,9 @@ class authController extends Controller
             'password'=>'required|min:6',
         ]);
         // validasi chaptcha
-        $request->validate([
-             'g-recaptcha-response' => 'required|captcha'
-        ]);
+        // $request->validate([
+        //      'g-recaptcha-response' => 'required|captcha'
+        // ]);
 
         $cek['status'] = '2';
         if(Auth::attempt($cek)){
