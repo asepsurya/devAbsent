@@ -18,10 +18,10 @@ class AbsensiController extends Controller
             $data =  rombel::where([
                 'id_tahun_pelajaran'=> request('tahun'),
                 'id_kelas'=>request('kelas'),
-                ])->with(['rombelStudent','rombelAbsent','notRFID'])->get();
+                ])->with(['rombelStudent','rombelAbsent','notRFID'])->paginate(10)->appends(request()->query());
          }
          if(request('kelas') == "all"){
-            $data = rombel::where('status','1')->with(['rombelStudent','rombelAbsent','notRFID'])->get();
+            $data = rombel::where('status','1')->with(['rombelStudent','rombelAbsent','notRFID'])->paginate(10)->appends(request()->query());
          }
 
         return view('absensi.student',[

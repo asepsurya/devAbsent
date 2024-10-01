@@ -30,7 +30,7 @@
             @else
             <button type="button" class="btn btn-primary  me-1" data-bs-toggle="tooltip"
             data-bs-placement="top" aria-label="Print" data-bs-original-title="Setel" disabled >
-           <span class="ti ti-book"></span> Setel Mata Pelajaran
+           <span class="ti ti-book"></span> Setel Jadwal Pelajaran
             </button>
             @endif
         </div>

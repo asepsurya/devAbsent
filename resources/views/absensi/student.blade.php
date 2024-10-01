@@ -58,7 +58,7 @@
 
                     @foreach ($tahunAjar as $item )
                     <option value="{{ $item->id }}" {{ $item->id == request('tahun') ? 'selected' : '' }}>{{
-                        $item->tahun_pelajaran }}
+                        $item->tahun_pelajaran }} - {{ $item->semester }}
                     </option>
                     @php $a = request('tahun') @endphp
                     @endforeach
@@ -212,7 +212,9 @@
                     @endif
                 </tbody>
             </table>
-
+            <div class="d-flex justify-content-end m-2">
+                {{  $rombel->links() }}
+            </div>
         </div>
     </div>
 </div>
