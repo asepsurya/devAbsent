@@ -41,7 +41,7 @@
     <div class="card-header">
         <form action="{{ route('list',$id) }}" method="get">
         <h4 class="mb-2">List Jadwal Pelajaran</h4>
-        <select name="tahun_ajar" id="tahun_ajar" class="form-control select" onchange="this.form.submit()">
+        <select name="tahun_ajar" id="tahun_ajar" class="select form-control" onchange="this.form.submit()">
             @foreach ($tahun_ajar as $item )
             <option value="{{ $item->id }}" {{ request('tahun_ajar') == $item->id ? 'selected' : '' }}>Tahun Pelajaran : {{ $item->tahun_pelajaran }} - {{ $item->semester }}
             </option>
@@ -245,7 +245,7 @@
 
 @endforeach
 {{-- modal tambah Hari Libur --}}
-<div class="modal fade" id="add_holiday" aria-modal="true" role="dialog">
+<div class="modal fade" id="add_holiday" aria-modal="true" role="dialog" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -262,7 +262,7 @@
                             <label class="col-lg-4 form-label mt-2">Tahun Pelajaran <span
                                     class="text-danger">*</span></label>
                             <div class="col-lg-8">
-                                <select name="tahun_ajar" id="tahun_ajar" class="form-control select2" required>
+                                <select name="tahun_ajar" id="tahun_ajar" class="form-control select" required>
                                     @foreach ($tahun_ajar as $item )
                                     <option value="{{ $item->id }}">{{ $item->tahun_pelajaran }} - {{ $item->semester }}
                                     </option>
@@ -274,7 +274,7 @@
                     <div class="p-3 mt-0">
                         <div class="mb-2">
                             <label class="form-label">Hari <span class="text-danger">*</span></label>
-                            <select name="day" id="day" class="form-control select2" required>
+                            <select name="day" id="day" class="form-control day" required>
                                 <option value="1">Senin</option>
                                 <option value="2">Selasa</option>
                                 <option value="3">Rabu</option>
@@ -286,32 +286,31 @@
                         </div>
                         <ul class="nav nav-tabs nav-tabs-top mb-3" role="tablist">
                             <li class="nav-item" role="presentation"><a class="nav-link active" href="#top-tab1"
-                                    data-bs-toggle="tab" aria-selected="true" role="tab" id="tab1">Referensi</a></li>
+                                    data-bs-toggle="tab" aria-selected="true" role="tab" id="tab1"><span class="ti ti-presentation-analytics"></span> Referensi</a></li>
                             <li class="nav-item" role="presentation"><a class="nav-link" href="#top-tab2"
-                                    data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab" id="tab2">Mata
+                                    data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab" id="tab2"><span class="ti ti-books"></span> Mata
                                     Pelajaran</a></li>
                         </ul>
                         <input type="text" id="type" name="type" value="ref" hidden>
                         <div class="tab-content">
                             <div class="tab-pane show active mb-2" id="top-tab1" role="tabpanel">
-                                <select name="ref" id="ref" class="form-control select2">
+                                <select name="ref" id="ref" class="form-control ref">
                                     <option value="">Pilih Referensi</option>
                                     @foreach ($ref as $a)
                                     <option value="{{ $a->ref_ID }}">{{ $a->ref }}</option>
                                     @endforeach
                                 </select>
                                 <div class="pt-2">
-
-                                    <small >Tambah Referensi <a data-bs-toggle="modal" href="#ref"
-                                            class="link-primary">tambah</a></small>
+                                   <i><small >Tambah Referensi <a data-bs-toggle="modal" href="#ref"
+                                            class="link-primary"> +tambah</a></small></i>
                                 </div>
                             </div>
                             <div class="tab-pane" id="top-tab2" role="tabpanel">
                                 <div class="mb-2">
-                                    <label class="form-label">Mata Pelajaran / <i>Ref </i><span
+                                    <label class="form-label">Mata Pelajaran<span
                                             class="text-danger">*</span>
                                     </label>
-                                    <select name="id_mapel" id="mapel" class="form-control select2">
+                                    <select name="id_mapel" id="mapel" class="form-control mapel">
 
                                         <option value="">Pilih Mata Pelajaran </option>
                                         @foreach ($mapel as $item )
@@ -401,7 +400,21 @@
     });
 </script>
 @endif
+<script>
 
+    $(".day").select2({
+        dropdownParent: "#add_holiday",
+    });
+    $(".ref").select2({
+        dropdownParent: "#add_holiday",
+        placeholder: "Pilih Referensi",
+    });
+    $(".mapel").select2({
+        dropdownParent: "#add_holiday",
+        placeholder: "Pilih Mata Pelajaran",
+    });
+
+</script>
 
 <script>
     let mapel = $('#mapel').val();
@@ -430,6 +443,7 @@
     body.classList.add("mini-sidebar");
 </script>
 <script>
+
     $("#tab1").click(function(){
         $("#type").val('ref');
     });

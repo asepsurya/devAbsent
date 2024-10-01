@@ -55,8 +55,8 @@
         <div class="row mb-3 ">
             <label class="col-lg-3 form-label mt-1">Tahun Pelajaran</label>
             <div class="col-lg-9">
-                <select name="tahunAjar" id="tahunAjar" class=" select2" onchange="copyTextValue()">
-                    <option value="" selected>-- Tahun Pelajaran --</option>
+                <select name="tahunAjar" id="tahunAjar" class="tahunAjar" onchange="copyTextValue()">
+                    <option value="" selected>-- Pilih Tahun Pelajaran --</option>
                     @foreach ($tahunAjar as $item )
                     <option value="{{ $item->id }}" {{ $item->id == request('tahun') ? 'selected' : '' }}>{{
                         $item->tahun_pelajaran }} - {{ $item->semester }}
@@ -79,7 +79,7 @@
         <div class="row mb-2">
             <label class="col-lg-3 form-label mt-2">Kelas</label>
             <div class="col-lg-9">
-                <select name="kelas" id="kelas" class=" select2" onchange="kelasValue()">
+                <select name="kelas" id="kelas" class="Kelas" onchange="kelasValue()">
                     <option value="" selected>-- Pilih Kelas --</option>
                     @foreach ($kelas as $item )
                     <option value="{{ $item->id }}" {{ $item->id == request('kelas') ? 'selected' : '' }}>{{
@@ -156,7 +156,16 @@
 </div>
 
 @section('javascript')
-
+<script>
+ $('.tahunAjar').select2({
+    placeholder: "Pilih Tahun Pelajaran",
+    allowClear: true
+    });
+ $('.Kelas').select2({
+    placeholder: "Pilih Kelas",
+    allowClear: true
+    });
+</script>
 <script>
     function copyTextValue() {
         var e = document.getElementById("tahunAjar");

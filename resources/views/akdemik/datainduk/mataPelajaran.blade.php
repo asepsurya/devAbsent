@@ -18,21 +18,8 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-        <div class="pe-1 mb-2">
-            <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh">
-                <i class="ti ti-refresh"></i>
-            </a>
-        </div>
-        <div class="pe-1 mb-2">
-            <button type="button" class="btn btn-outline-light bg-white btn-icon me-1"
-                data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Print"
-                data-bs-original-title="Print">
-                <i class="ti ti-printer"></i>
-            </button>
-        </div>
         <div class="mb-2">
-            <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-effect="effect-scale" data-bs-toggle="modal" data-bs-target="#add_mapel"><i class="ti ti-square-rounded-plus me-2"></i>Mata Pelajaran</a>
+            <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-effect="effect-scale" data-bs-toggle="modal" data-bs-target="#add_mapel"><i class="ti ti-square-rounded-plus me-2"></i>Tambah Mata Pelajaran</a>
             </div>
     </div>
 </div>
@@ -43,7 +30,7 @@
         <div class="d-flex align-items-center flex-wrap">
             <div class="input-icon-start mb-3 me-2 position-relative">
                 <span class="icon-addon">
-                    <i class="ti ti-school"></i>
+                    <i class="ti ti-search"></i>
                 </span>
                 <input type="text" class="form-control " placeholder="Cari Mata Pelajaran.." id="myInput" onkeyup="myFunction()">
             </div>
@@ -93,8 +80,8 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="d-flek justify-content-end m-2">
-
+            <div class="d-flex justify-content-end m-2">
+                {{ $mapel->links() }}
             </div>
         </div>
     </div>
@@ -103,7 +90,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah Mata Pelajaran</h4>
+                    <h4 class="modal-title"><span class="ti ti-pencil-plus"></span> Tambah Mata Pelajaran</h4>
                     <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <i class="ti ti-x"></i>
                     </button>
@@ -119,11 +106,11 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Jumlah Jam</label>
-                                <input type="text" inputmode="numeric" class="form-control" name="jml_jam">
+                                <input type="number" inputmode="numeric" class="form-control" name="jml_jam" value="1">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Tipe</label>
-                                <select class="form-control " name="type">
+                                <select class="form-control select " name="type">
                                     <option value="">Pilih</option>
                                     <option value="Umum">Umum</option>
                                     <option value="Kejuruan">Kejuruan</option>
@@ -131,7 +118,7 @@
                             </div>
                            <div class="mb-3" >
                             <label class="form-label">Status</label>
-                            <select name="status" id="status" class="form-control">
+                            <select name="status" class="form-control select">
                                 <option value="1">Aktif</option>
                                 <option value="2">Tidak Aktif</option>
                             </select>
@@ -153,7 +140,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Edit Mata Pelajaran</h4>
+                    <h4 class="modal-title"><span class="ti ti-pencil"></span> Edit Mata Pelajaran</h4>
                     <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <i class="ti ti-x"></i>
                     </button>
@@ -169,11 +156,11 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Jumlah Jam</label>
-                                <input type="text" inputmode="numeric" class="form-control" name="jml_jam" value="{{ $item->jml_jam }}">
+                                <input type="number" inputmode="numeric" class="form-control" name="jml_jam" value="{{ $item->jml_jam }}">
                             </div>
                             <div class="mb-3" data-select2-id="select2-data-20-aec1">
                                 <label class="form-label">Tipe</label>
-                                <select class="form-control " name="type">
+                                <select class="form-control select" name="type">
                                     <option value="">Pilih</option>
                                     <option value="Umum" @if($item->type == 'Umum') Selected @endif>Umum</option>
                                     <option value="Kejuruan" @if($item->type == 'Kejuruan') Selected @endif>Kejuruan</option>
@@ -181,7 +168,7 @@
                             </div>
                            <div class="mb-3" >
                             <label class="form-label">Status</label>
-                            <select name="status" id="status" class="form-control">
+                            <select name="status" class="form-control select">
                                 <option value="1" @if($item->status == '1') Selected @endif >Aktif</option>
                                 <option value="2" @if($item->status == '2') Selected @endif>Tidak Aktif</option>
                             </select>

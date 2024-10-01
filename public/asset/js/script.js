@@ -26,7 +26,12 @@ $(document).ready(function () {
         let day = document.querySelector('.days'); let hour = document.querySelector('.hours'); let minute = document.querySelector('.minutes'); let second = document.querySelector('.seconds'); function setCountdown() { let countdownDate = new Date('Sep 30, 2024 16:00:00').getTime(); let updateCount = setInterval(function () { let todayDate = new Date().getTime(); let distance = countdownDate - todayDate; let days = Math.floor(distance / (1000 * 60 * 60 * 24)); let hours = Math.floor(distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60)); let minutes = Math.floor(distance % (1000 * 60 * 60) / (1000 * 60)); let seconds = Math.floor(distance % (1000 * 60) / 1000); day.textContent = days; hour.textContent = hours; minute.textContent = minutes; second.textContent = seconds; if (distance < 0) { clearInterval(updateCount); document.querySelector(".comming-soon-pg").innerHTML = '<h1>EXPIRED</h1>' } }, 1000) }
         setCountdown()
     }
-    if ($('.select2').length > 0) { $(".select2").select2(); }
+
+    // $(document).ready(function() {
+    //     $(".select2").select2();
+    // });
+
+    if ($('.select21').length > 0) { $(".select21").select2(); }
     if ($('.select').length > 0) { $('.select').select2({ minimumResultsForSearch: -1, width: '100%' }); }
     if ($('.counter').length > 0) { $('.counter').counterUp({ delay: 20, time: 2000 }); }
     if ($('#timer-countdown').length > 0) { $('#timer-countdown').countdown({ from: 180, to: 0, movingUnit: 1000, timerEnd: undefined, outputPattern: '$day Day $hour : $minute : $second', autostart: true }); }

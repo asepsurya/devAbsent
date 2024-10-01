@@ -109,18 +109,7 @@
                                     </ul>
                                 </li>
 
-                                <li class="submenu">
-                                    <a href="javascript:void(0);"
-                                        class=" {{ Request::is('student/import') ? 'subdrop active' : ''}}"> Import Data</span><span class="menu-arrow"></span></a>
-                                    <ul class="mx-3">
-                                        <li><a href="{{ route('studentIndex') }}"
-                                                class="{{ Request::is('datainduk/student/import') ? 'active' : ''}}">Peserta Didik</a></li>
-                                        <li><a href="/import/teacher"
-                                                class="{{ Request::is('import/teacher') ? 'active' : ''}}">GTK</a></li>
-                                        <li><a href="/import/mapel"
-                                                class="{{ Request::is('import/mapel') ? 'active' : ''}}">Mata Pelajaran</a></li>
-                                    </ul>
-                                </li>
+
                             </ul>
                         </li>
                     </ul>

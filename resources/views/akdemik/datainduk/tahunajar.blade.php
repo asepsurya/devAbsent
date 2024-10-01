@@ -14,22 +14,9 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-        <div class="pe-1 mb-2">
-            <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh">
-                <i class="ti ti-refresh"></i>
-            </a>
-        </div>
-        <div class="pe-1 mb-2">
-            <button type="button" class="btn btn-outline-light bg-white btn-icon me-1"
-                data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Print"
-                data-bs-original-title="Print">
-                <i class="ti ti-printer"></i>
-            </button>
-        </div>
        <div class="mb-2">
-            <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-effect="effect-scale" data-bs-toggle="modal" data-bs-target="#add_tahunAjar"><i class="ti ti-square-rounded-plus me-2"></i>Tambah</a>
-            </div> 
+            <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-effect="effect-scale" data-bs-toggle="modal" data-bs-target="#add_tahunAjar"><i class="ti ti-square-rounded-plus me-2"></i>Tambah Tahun Pelajaran</a>
+            </div>
     </div>
 </div>
 {{-- End Header --}}
@@ -68,7 +55,7 @@
                                 Tidak Aktif
                              </span>
                             @endif
-                           
+
                         </td>
                         <td>
                             <div class="hstack gap-2 fs-15">
@@ -77,7 +64,7 @@
                             </div>
                         </td>
                     </tr>
-                        
+
                     @endforeach
                 </tbody>
             </table>
@@ -89,7 +76,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Tambah Hari Libur</h4>
+                <h4 class="modal-title"><span class="ti ti-pencil-plus"></span> Tambah Tahun Pelajaran</h4>
                 <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
@@ -97,7 +84,7 @@
             <form action="{{ route('dataIndukTahunajarAdd') }}" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label class="form-label">Tahun Pelajaran</label>
@@ -105,14 +92,14 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Semester</label>
-                                <select name="semester" id="semester" class="form-control" required>
+                                <select name="semester"  class="form-control select" required>
                                     <option value="Ganjil">Ganjil</option>
                                     <option value="Genap">Genap</option>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Status</label>
-                                <select name="status" id="status" class="form-control" required>
+                                <select name="status" class="form-control select" required>
                                     <option value="1">Aktif</option>
                                     <option value="2">Tidak Aktif</option>
                                 </select>
@@ -129,12 +116,12 @@
     </div>
 </div>
 {{-- modal Edit tahun Ajar --}}
-@foreach ($tahunAjar as $item ) 
+@foreach ($tahunAjar as $item )
 <div class="modal fade" id="edit_tahunAjar-{{ $item->id }}" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Tahun Pelajaran</h4>
+                <h4 class="modal-title"><span class="ti ti-pencil"></span>Edit Tahun Pelajaran</h4>
                 <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
@@ -142,7 +129,7 @@
             <form action="{{ route('dataIndukTahunajarUpdate') }}" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col-md-12">
                             <input type="text" name="id" value="{{ $item->id }}" hidden>
                             <div class="mb-3">
@@ -151,14 +138,14 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Semester</label>
-                                <select name="semester" id="semester" class="form-control" required >
+                                <select name="semester"  class="form-control select" required >
                                     <option value="Ganjil"@if($item->semester == 'Ganjil') Selected @endif>Ganjil</option>
                                     <option value="Genap" @if($item->semester == 'Genap') Selected @endif>Genap</option>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Status</label>
-                                <select name="status" id="status" class="form-control" required>
+                                <select name="status" class="form-control select" required>
                                     <option value="1" @if($item->status == '1') Selected @endif>Aktif</option>
                                     <option value="2" @if($item->status == '2') Selected @endif>Tidak Aktif</option>
                                 </select>

@@ -79,10 +79,10 @@
                             <input type="text" name="id_kelas" id="GetKelas" hidden>
 
                             <div>
-                                <div class="row mb-3">
+                                <div class="row mb-2">
                                     <label class="col-lg-3 form-label ">Tahun Pelajaran</label>
                                     <div class="col-lg-9">
-                                        <select name="tahunAjar" id="tahunAjar" class="form-control select2"
+                                        <select name="tahunAjar" id="tahunAjar" class="form-control tahunAjar"
                                             onchange="copyTextValue()" form="myform">
                                             <option value="" selected>-- Tahun Pelajaran --</option>
                                             @foreach ($tahunAjar as $item )
@@ -117,7 +117,7 @@
                                 <div class="row mb-2">
                                     <label class="col-lg-3 form-label mt-2">Kelas</label>
                                     <div class="col-lg-9">
-                                        <select name="kelas" id="kelas" class="form-control select2"
+                                        <select name="kelas" id="kelas" class="form-control kelas"
                                             onchange="kelasValue()" form="myform">
                                             <option value="" selected>-- Pilih Kelas --</option>
                                             @foreach ($kelas as $item )
@@ -231,7 +231,6 @@
                 </div>
             </div>
             <div class="card-body p-0 ">
-
                 <div class="table-responsive">
                     <table class="table table-nowrap mb-0" id="myTable">
                         <thead>
@@ -274,7 +273,6 @@
     </div>
 </div>
 
-
 {{-- modal tambah Hari Libur --}}
 <div class="modal fade" id="add_holiday" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
@@ -290,8 +288,6 @@
                     <div class="row">
                         <form action="" method="post">
                             <div class="col-md-12">
-
-
                                 <div class="mb-3">
                                     <label class="form-label">Kata Sandi</label>
                                     <div class="pass-group mb-3">
@@ -308,7 +304,6 @@
                                         <span class="ti toggle-password ti-eye-off"></span>
                                     </div>
                                 </div>
-
                             </div>
                     </div>
                 </div>
@@ -322,7 +317,14 @@
 </div>
 </div>
 @section('javascript')
-
+<script>
+$('.tahunAjar').select2({
+    placeholder: "Pilih Tahun Pelajaran",
+});
+$('.kelas').select2({
+    placeholder: "Pilih Kelas",
+});
+</script>
 <script>
     // set Defalult select ke dala input Box
     function copyTextValue() {

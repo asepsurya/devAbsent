@@ -76,7 +76,7 @@
 
                         <div class="col m-3">
                             <label class="form-label">Kelas Asal <span class="text-danger">*</span></label>
-                            <select name="id_kelas_asal" id="kelasAsal" class="form-control select2" onchange="this.form.submit()">
+                            <select name="id_kelas_asal" id="kelasAsal" class="form-control kelasAsal" onchange="this.form.submit()">
                                 <option value="" selected>-- Pilih Kelas --</option>
                                 <option value="belumDiatur" {{ request('id_kelas_asal')=='belumDiatur' ? 'selected' : ''
                                     }}>Belum Diatur</option>
@@ -94,7 +94,7 @@
                         @else
                         <div class="col m-3">
                             <label class="form-label ">Tahun Pelajaran <span class="text-danger">*</span></label>
-                            <select name="tahunAjarAsal" id="tahunAsal" class="form-control select2" onchange="this.form.submit()">
+                            <select name="tahunAjarAsal" id="tahunAsal" class="form-control tahunAsal" onchange="this.form.submit()">
                                 <option value="" selected>-- Tahun Pelajaran --</option>
                                 @foreach ($tahunAjar as $item )
                                 <option value="{{ $item->id }}" {{ $item->id ==
@@ -118,7 +118,7 @@
                                         </div>
                                 </th>
 
-                                <th class="bg-light-400">NIS</th>
+                                <th class="bg-light-400 border">NIS</th>
                                 <th class="bg-light-400">Nama Lengkap</th>
                                 <th class="bg-light-400" width="10%"></th>
                             </tr>
@@ -136,7 +136,7 @@
                                         </div>
                                 </td>
 
-                                <td class="text-primary">{{ $item->nis }}</td>
+                                <td class="text-primary border">{{ $item->nis }}</td>
                                 <td>
                                     @if(request('id_kelas_asal')=="belumDiatur" || request('id_kelas_asal')=="all" )
                                     {{ $item->nama }}
@@ -164,7 +164,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-end m-3">
                     {{ $students->links() }}
                 </div>
             </div>
@@ -196,7 +196,7 @@
                             <div>
                                 <div class="col mb-2">
                                     <label class=" form-label ">Tahun Pelajaran</label>
-                                    <select name="id_tahun_pelajaran" id="tahunAjar" class="form-control select2" onchange="TahunAjarValue();this.form.submit()" >
+                                    <select name="id_tahun_pelajaran" id="tahunAjar" class="form-control tahunAjarTujuan" onchange="TahunAjarValue();this.form.submit()" >
                                         <option value="" selected>-- Pilih Kelas --</option>
                                         @foreach ($tahunAjar as $item )
                                         <option value="{{ $item->id }}"  {{ $item->id ==
@@ -216,7 +216,7 @@
                                 </div>
                                 <div class="col mb-2">
                                     <label class="form-label">Pilih Kelas Tujuan</label>
-                                    <select name="id_kelas_tujuan" id="kelas" class="form-control select2" onchange="KelasValue();this.form.submit() ">
+                                    <select name="id_kelas_tujuan" id="kelas" class="form-control KelasTujuan" onchange="KelasValue();this.form.submit() ">
                                         <option value="" selected>-- Pilih Kelas --</option>
                                         @foreach ($kelas as $item )
                                         <option value="{{ $item->id }}"
@@ -245,7 +245,6 @@
                                 </p>
                             </div>
                         </form>
-
                     </div>
 
                     <input type="text" id="id_kelas_tujuan" value="{{ $c }}" hidden >
@@ -259,7 +258,7 @@
                     <thead>
                         <tr>
                             <th class="bg-light-400" width="10%">#</th>
-                            <th class="bg-light-400">NIS</th>
+                            <th class="bg-light-400 border">NIS</th>
                             <th class="bg-light-400">Nama Lengkap</th>
 
                         </tr>
@@ -271,13 +270,13 @@
                         @foreach ($studentsClass as $item)
                         <tr>
                             <td>{{ $no++ }}.</td>
-                            <td class="link-primary">{{ $item->nis}}</td>
+                            <td class="link-primary border">{{ $item->nis}}</td>
                             <td>{{ $item->rombelStudent->nama}}</td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-                <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-end m-3">
                     {{ $studentsClass->links() }}
                 </div>
             </div>
@@ -334,7 +333,20 @@
             });
     });
 </script> --}}
-
+<script>
+$('.tahunAjarTujuan').select2({
+    placeholder: "Pilih Tahun Pelajaran Tujuan",
+});
+$('.KelasTujuan').select2({
+    placeholder: "Pilih Tahun Kelas Tujuan",
+});
+$('.kelasAsal').select2({
+    placeholder: "Pilih Tahun Kelas",
+});
+$('.tahunAsal').select2({
+    placeholder: "Pilih Tahun Pelajaran",
+});
+</script>
 <script>
     function TahunAjarValue() {
         var e = document.getElementById("tahunAjar");
@@ -350,9 +362,6 @@
         $(".GetKelas").val(val);
 
     }
-
-
-
     // $(".GetKelas").val(document.getElementById("id_kelas_tujuan").value) ;
     // $(".GetTahunPelajaran").val(document.getElementById("tahun_ajaran_tujuan").value);
 

@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
     <link rel="stylesheet" href="{{ asset('asset/css/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/select2.min.css') }}">
+    <script src="{{ asset('asset/Plugins/select2/js/select2.min.js') }}"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/bootstrap-datetimepicker.min.css') }}">
@@ -115,7 +116,7 @@
                                                                 <div class="mb-2">
                                                                     <label class="form-label">Jenis Kelamin<span class="text-danger">*</span></label>
                                                                     <select name="gender" id="gender"
-                                                                        class="form-control select2 @error('gender') is-invalid @enderror">
+                                                                        class="form-control gender @error('gender') is-invalid @enderror">
                                                                         <option value="" selected>- Jenis Kelamin -
                                                                         </option>
                                                                         <option value="1" {{ old('gender')==1
@@ -164,7 +165,7 @@
                                                                 <div class="mb-2">
                                                                     <label class="form-label">Agama<span class="text-danger">*</span></label>
                                                                     <select name="agama" id="agama"
-                                                                        class="form-control select 2 @error('agama') is-invalid @enderror">
+                                                                        class="form-control agama @error('agama') is-invalid @enderror">
                                                                         <option value="" selected>- Pilih Agama -
                                                                         </option>
                                                                         <option value="Islam" {{ old('agama')=='Islam'
@@ -219,7 +220,7 @@
                                                                 <div class="mb-2">
                                                                     <label class="form-label">Provinsi<span class="text-danger">*</span></label>
                                                                     <select name="id_provinsi" id="provinsi"
-                                                                        class="form-control select2 @error('id_provinsi') is-invalid @enderror">
+                                                                        class="form-control provinsi @error('id_provinsi') is-invalid @enderror">
                                                                         <option value="">Pilih Provinsi</option>
                                                                         @foreach ($provinsi as $p)
                                                                         <option value="{{ $p->id }}" {{
@@ -236,7 +237,7 @@
                                                                 <div class="mb-2">
                                                                     <label class="form-label">Kota/Kabupaten<span class="text-danger">*</span></label>
                                                                     <select name="id_kota" id="kabupaten"
-                                                                        class="form-control select2  @error('id_kota') is-invalid @enderror"></select>
+                                                                        class="form-control kota  @error('id_kota') is-invalid @enderror"></select>
                                                                     @error('id_kota')
                                                                     <div class="invalid-feedback">
                                                                         {{ $message }}
@@ -251,7 +252,7 @@
                                                                     <label
                                                                         class="form-label  @error('id_kecamatan') is-invalid @enderror">Kecamatan<span class="text-danger">*</span></label>
                                                                     <select name="id_kecamatan" id="kecamatan"
-                                                                        class="form-control select2"></select>
+                                                                        class="form-control kecamatan"></select>
                                                                     @error('id_kecamatan')
                                                                     <div class="invalid-feedback">
                                                                         {{ $message }}
@@ -261,7 +262,7 @@
                                                                 <div class="mb-2">
                                                                     <label class="form-label">Kelurahan/Desa<span class="text-danger">*</span></label>
                                                                     <select name="id_desa" id="desa"
-                                                                        class="form-control select2 @error('id_desa') is-invalid @enderror"></select>
+                                                                        class="form-control desa @error('id_desa') is-invalid @enderror"></select>
                                                                     @error('id_desa')
                                                                     <div class="invalid-feedback">
                                                                         {{ $message }}
@@ -407,7 +408,7 @@
                                                                 <div class="mb-2">
                                                                     <label class="form-label">Jenis Kelamin <span class="text-danger">*</span></label>
                                                                     <select name="gender" id="gender2"
-                                                                        class="form-control select2 @error('gender') is-invalid @enderror">
+                                                                        class="form-control gender2 @error('gender') is-invalid @enderror">
                                                                         <option value="" selected>- Jenis Kelamin -
                                                                         </option>
                                                                         <option value="1" {{ old('gender')==1
@@ -456,7 +457,7 @@
                                                                 <div class="mb-2">
                                                                     <label class="form-label">Agama <span class="text-danger">*</span></label>
                                                                     <select name="agama" id="agama2"
-                                                                        class="form-control select 2 @error('agama') is-invalid @enderror">
+                                                                        class="form-control agama2 @error('agama') is-invalid @enderror">
                                                                         <option value="" selected>- Pilih Agama -
                                                                         </option>
                                                                         <option value="Islam" {{ old('agama')=='Islam'
@@ -526,7 +527,7 @@
                                                                 <div class="mb-2">
                                                                     <label class="form-label">Provinsi <span class="text-danger">*</span></label>
                                                                     <select name="id_provinsi" id="provinsi2"
-                                                                        class="form-control select2 @error('id_provinsi') is-invalid @enderror">
+                                                                        class="form-control provinsi2 @error('id_provinsi') is-invalid @enderror">
                                                                         <option value="">Pilih Provinsi</option>
                                                                         @foreach ($provinsi as $p)
                                                                         <option value="{{ $p->id }}" {{
@@ -543,7 +544,7 @@
                                                                 <div class="mb-2">
                                                                     <label class="form-label">Kota/Kabupaten <span class="text-danger">*</span></label>
                                                                     <select name="id_kota" id="kabupaten2"
-                                                                        class="form-control select2  @error('id_kota') is-invalid @enderror"></select>
+                                                                        class="form-control kabupaten2  @error('id_kota') is-invalid @enderror"></select>
                                                                     @error('id_kota')
                                                                     <div class="invalid-feedback">
                                                                         {{ $message }}
@@ -558,7 +559,7 @@
                                                                     <label
                                                                         class="form-label  @error('id_kecamatan') is-invalid @enderror">Kecamatan<span class="text-danger">*</span></label>
                                                                     <select name="id_kecamatan" id="kecamatan2"
-                                                                        class="form-control select2"></select>
+                                                                        class="form-control kecamatan2"></select>
                                                                     @error('id_kecamatan')
                                                                     <div class="invalid-feedback">
                                                                         {{ $message }}
@@ -568,7 +569,7 @@
                                                                 <div class="mb-2">
                                                                     <label class="form-label">Kelurahan/Desa <span class="text-danger">*</span></label>
                                                                     <select name="id_desa" id="desa2"
-                                                                        class="form-control select2 @error('id_desa') is-invalid @enderror"></select>
+                                                                        class="form-control desa2 @error('id_desa') is-invalid @enderror"></select>
                                                                     @error('id_desa')
                                                                     <div class="invalid-feedback">
                                                                         {{ $message }}
@@ -687,7 +688,6 @@
 
         <script src="{{ asset('asset/js/bootstrap.bundle.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript">
         </script>
-
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript">
         </script>
@@ -709,6 +709,51 @@
         <script src="{{ asset('asset/js/bootstrap-datetimepicker.min.js') }}"
             type="d8aa163ebe66f835399f615d-text/javascript"></script>
         <script src="{{ asset('asset/js/script.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
+
+        <script>
+            // select 2 Student
+            $(".gender").select2({
+                 placeholder: "Jenis Kelamin"
+            });
+            $(".agama").select2({
+                 placeholder: "Agama"
+            });
+            $(".provinsi").select2({
+                 placeholder: "Pilih Provinsi"
+            });
+            $(".kecamatan").select2({
+                 placeholder: "Pilih Kota/Kecamatan"
+            });
+            $(".kota").select2({
+                 placeholder: "Pilih Kota"
+            });
+            $(".desa").select2({
+                 placeholder: "Pilih Kelurahan/Desa"
+            });
+            // select2 Teacher
+            $(".gender2").select2({
+                 placeholder: "Jenis Kelamin"
+            });
+            $(".agama2").select2({
+                 placeholder: "Agama"
+            });
+            $(".provinsi2").select2({
+                 placeholder: "Pilih Provinsi"
+            });
+            $(".kabupaten2").select2({
+                 placeholder: "Pilih Kota/Kabupaten"
+            });
+            $(".kecamatan2").select2({
+                 placeholder: "Pilih kecamatan"
+            });
+            $(".kota2").select2({
+                 placeholder: "Pilih Kota"
+            });
+            $(".desa2").select2({
+                 placeholder: "Pilih Kelurahan/Desa"
+            });
+
+        </script>
         {{-- Regency --}}
         <script>
             $(function(){

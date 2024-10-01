@@ -15,21 +15,8 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-        <div class="pe-1 mb-2">
-            <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh">
-                <i class="ti ti-refresh"></i>
-            </a>
-        </div>
-        <div class="pe-1 mb-2">
-            <button type="button" class="btn btn-outline-light bg-white btn-icon me-1"
-                data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Print"
-                data-bs-original-title="Print">
-                <i class="ti ti-printer"></i>
-            </button>
-        </div>
        <div class="mb-2">
-            <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-effect="effect-scale" data-bs-toggle="modal" data-bs-target="#add_holiday"><i class="ti ti-square-rounded-plus me-2"></i>Tambah</a>
+            <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-effect="effect-scale" data-bs-toggle="modal" data-bs-target="#add_holiday"><i class="ti ti-square-rounded-plus me-2"></i>Tambah Wali Kelas</a>
             </div>
     </div>
 </div>
@@ -85,11 +72,11 @@
     </div>
 </div>
 {{-- modal tambah Hari Libur --}}
-<div class="modal fade" id="add_holiday" aria-modal="true" role="dialog">
+<div class="modal fade add_holiday" id="add_holiday" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Setelan Wali Kelas</h4>
+                <h4 class="modal-title"><span class="ti ti-pencil-plus"></span>Setelan Wali Kelas</h4>
                 <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
@@ -102,7 +89,7 @@
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label class="form-label">Tahun Pelajaran</label>
-                                <select name="tahun" class="select2" required>
+                                <select name="tahun" class="select" required>
 
                                     @foreach ($tahunAjar as $item)
                                         <option value="{{ $item->id }}" >{{ $item->tahun_pelajaran }} - {{ $item->semester }}</option>
@@ -111,7 +98,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Kelas</label>
-                                <select name="kelas" class="select2" required>
+                                <select name="kelas" class="selectkelas" required>
                                     <option value="" selected>-- Pilih Kelas --</option>
                                     @foreach ($kelas as $item)
                                         <option value="{{ $item->id }}" >{{ $item->nama_kelas }} {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</option>
@@ -120,7 +107,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Wali Kelas</label>
-                                <select name="id_gtk" class="select2" >
+                                <select name="id_gtk" class="selectwalikelas" >
                                     <option value="" selected required>-- Pilih Wali Kelas --</option>
                                     @foreach ($gtk as $item )
                                     <option value="{{ $item->nik }}">{{ $item->nik }} - {{ $item->nama }}</option>
@@ -140,11 +127,11 @@
     </div>
 </div>
 @foreach ($walikelas as $item2 )
-<div class="modal fade" id="edit-{{ $item2->id }}" aria-modal="true" role="dialog">
+<div class="modal fade edit" id="edit-{{ $item2->id }}" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Wali Kelas</h4>
+                <h4 class="modal-title"><span class="ti ti-pencil"></span> Edit Wali Kelas</h4>
                 <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
@@ -166,7 +153,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Kelas</label>
-                                <select name="kelas" class="select2" required>
+                                <select name="kelas" class="EditKelas" required>
                                     <option value="" selected>-- Pilih Kelas --</option>
                                     @foreach ($kelas as $item)
                                         <option value="{{ $item->id }}" {{ $item->id == $item2->id_kelas ? 'selected' : ''}}  >{{ $item->nama_kelas }} {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</option>
@@ -175,7 +162,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Wali Kelas</label>
-                                <select name="id_gtk" class="select2" >
+                                <select name="id_gtk" class="EditWalikelas" >
                                     <option value="" selected required>-- Pilih Wali Kelas --</option>
                                     @foreach ($gtk as $item )
                                     <option value="{{ $item->nik }}" {{ $item->nik == $item2->gtk->nik ? 'selected' : ''}}>{{ $item->nik }} - {{ $item->nama }}</option>
@@ -197,9 +184,24 @@
 @endforeach
 @section('javascript')
 <script>
-    $('.select2').select2({
-        dropdownParent: $('#add_holiday')
+    $('.selectkelas').select2({
+        dropdownParent: $('.add_holiday'),
+        placeholder: "Pilih Kelas",
+        allowClear: true
     });
+    $('.selectwalikelas').select2({
+        dropdownParent: $('.add_holiday'),
+        placeholder: "Pilih Wali Kelas",
+        allowClear: true
+    });
+    $('.EditKelas').select2({
+        dropdownParent: $('.edit'),
+    });
+    $('.EditWalikelas').select2({
+        dropdownParent: $('.edit'),
+    });
+
+
 </script>
 @endsection
 @endsection
