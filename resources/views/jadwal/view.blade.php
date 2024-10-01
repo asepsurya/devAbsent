@@ -38,7 +38,13 @@
                             @foreach ($senin as $item)
                             <tr>
                                 <td class="border"><span class="ti ti-clock-hour-1"></span> {{  $item->start }} -  {{ $item->end }}</td>
-                                <td><b>{{ $item->mata_pelajaran->nama }}</b></td>
+                                <td>
+                                    @if($item->mata_pelajaran)
+                                    <b>{{ $item->mata_pelajaran->nama }}</b>
+                                    @else
+                                    <b>{{ $item->ref->ref }}</b>
+                                    @endif
+                                </td>
                                 <td>
                                     @if($item->id_gtk == '')
                                     Belum Disetel

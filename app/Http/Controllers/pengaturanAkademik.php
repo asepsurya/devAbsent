@@ -22,7 +22,6 @@ class pengaturanAkademik extends Controller
             $data =  grupMapel::where([
                 'id_tahun_pelajaran'=> request('id_tahun_pelajaran'),
                 'id_kelas'=>request('id_kelas'),
-                'semester'=>request('id_semester'),
                 'status'=>'2'
                 ])->with('mata_pelajaran')->get();
          }
@@ -63,8 +62,32 @@ class pengaturanAkademik extends Controller
         return redirect()->back();
     }
 
-    public function PengaturaRombel(){
+    public function pengaturanWalikelasEdit(request $request){
+        // ubah dulu role ke guru
+        User::where('nomor',$request->id_gtk_default)->update(['role'=>'guru']);
+          $cekid = User::where('nomor',$request->id_gtk_default)->get();
+          foreach($cekid as $key){
+              $getid = $key->id;
+              DB::table('model_has_roles')->where('model_id','=', $getid)->update(array('role_id'=>'2'));
+          }
+        //  update ke walikelas
+        walikelas::where('id',$request->id)->update([
+            'id_tahun_pelajaran'=>$request->tahun,
+            'id_kelas'=>$request->kelas,
+            'id_gtk'=>$request->id_gtk
+        ]);
 
+          User::where('nomor',$request->id_gtk)->update(['role'=>'walikelas']);
+          $cekid = User::where('nomor',$request->id_gtk)->get();
+          foreach($cekid as $key){
+              $getid = $key->id;
+              DB::table('model_has_roles')->where('model_id','=', $getid)->update(array('role_id'=>'1'));
+          }
+        toastr()->success('Data Berhasil disimpan');
+        return redirect()->back();
+    }
+
+    public function PengaturaRombel(){
         // jika ada request atau filter 1
         if(request('id_kelas_asal') =="all"){
             $data = student::where(['status'=>'1'])->paginate(10)->appends(request()->query());
@@ -72,15 +95,13 @@ class pengaturanAkademik extends Controller
         }elseif(request('id_kelas_asal') == "belumDiatur"){
             $data = student::where(['id_kelas'=>NULL,'status'=>'1'])->paginate(10)->appends(request()->query());
         }
-
         else{
-            $data = student::where(['id_kelas'=> request('id_kelas_asal'),'status'=>'1'])->paginate(10)->appends(request()->query());
+            $data = rombel::where(['id_kelas'=>request('id_kelas_asal'),'id_tahun_pelajaran'=>request('tahunAjarAsal')])->paginate(10)->appends(request()->query());
         }
         // filter Tujuan Kelas
         if(request() ){
             $mydata = rombel::where(['id_kelas'=>request('id_kelas_tujuan'),'id_tahun_pelajaran'=>request('id_tahun_pelajaran')])->with('rombelStudent')->paginate(10)->appends(request()->query());
         }
-
         return view('akdemik.pengaturan.rombel',[
             'title'=>'Rombongan Belajar',
             'students'=>$data,
@@ -144,7 +165,7 @@ class pengaturanAkademik extends Controller
 
     public function subject_teachers(){
         if(request()){
-            $data =  grupMapel::where(['id_tahun_pelajaran'=> request('tahun'),'id_kelas'=>request('kelas'),'semester'=>request('semester')])->with('mata_pelajaran')->get();
+            $data =  grupMapel::where(['id_tahun_pelajaran'=> request('tahun'),'id_kelas'=>request('kelas')])->with('mata_pelajaran')->get();
          }
        return view('akdemik.pengaturan.gurumapel',[
         'title'=> 'Guru Mata Pelajaran',

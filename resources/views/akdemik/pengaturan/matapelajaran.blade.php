@@ -73,13 +73,13 @@
                     <div class="p-3">
                         <p class="mb-0">
                         <form action="{{ route('pengaturanMapel') }}" method="get">
-                            @csrf
+
                             <input type="text" name="id_tahun_pelajaran" id="GetTahunPelajaran" hidden>
                             <input type="text" name="id_semester" id="GetSemester" hidden>
                             <input type="text" name="id_kelas" id="GetKelas" hidden>
 
                             <div>
-                                <div class="row mb-0">
+                                <div class="row mb-3">
                                     <label class="col-lg-3 form-label ">Tahun Pelajaran</label>
                                     <div class="col-lg-9">
                                         <select name="tahunAjar" id="tahunAjar" class="form-control select2"
@@ -89,14 +89,15 @@
                                             <option value="{{ $item->id }}" {{ $item->id ==
                                                 request('id_tahun_pelajaran') ?
                                                 'selected' :
-                                                '' }}>{{ $item->tahun_pelajaran }}
+                                                '' }}>{{ $item->tahun_pelajaran }} - {{ $item->semester }}
                                             </option>
-                                            @php $a = request('id_tahun_pelajaran') @endphp
+                                            @php $a = request('id_tahun_pelajaran'); @endphp
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row mt-0 mb-2">
+
+                                {{-- <div class="row mt-0 mb-2">
                                     <label class="col-lg-3 form-label mt-2">Semester</label>
                                     <div class="col-lg-9">
                                         <select name="semester" id="semester" class="form-control select2"
@@ -111,7 +112,8 @@
                                             </option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
+
                                 <div class="row mb-2">
                                     <label class="col-lg-3 form-label mt-2">Kelas</label>
                                     <div class="col-lg-9">
@@ -358,7 +360,7 @@
       table = document.getElementById("myTable");
       tr = table.getElementsByTagName("tr");
       for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[1];
+        td = tr[i].getElementsByTagName("td")[2];
         if (td) {
           txtValue = td.textContent || td.innerText;
           if (txtValue.toUpperCase().indexOf(filter) > -1) {

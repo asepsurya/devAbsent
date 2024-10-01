@@ -46,27 +46,27 @@
     </div>
 </div>
 
-<div class="alert alert-success overflow-hidden p-0" role="alert">
-    <div class="p-3 bg-success text-fixed-white d-flex justify-content-between">
-        <h4 class="aletr-heading mb-0 text-fixed-white"><span class="ti ti-info-circle"></span> Form Pencarian</h4>
+<div class="card overflow-hidden p-0" role="alert">
+    <div class="card-header p-3  d-flex justify-content-between">
+        <h4 class="mb-0 "><span class="ti ti-search"></span> Form Pencarian</h4>
 
     </div>
-    <div class="p-3">
-        <div class="row ">
+    <div class="p-3 alert alert-primary overflow-hidden p-0 mb-0">
+        <div class="row mb-3 ">
             <label class="col-lg-3 form-label mt-1">Tahun Pelajaran</label>
             <div class="col-lg-9">
                 <select name="tahunAjar" id="tahunAjar" class=" select2" onchange="copyTextValue()">
                     <option value="" selected>-- Tahun Pelajaran --</option>
                     @foreach ($tahunAjar as $item )
                     <option value="{{ $item->id }}" {{ $item->id == request('tahun') ? 'selected' : '' }}>{{
-                        $item->tahun_pelajaran }}
+                        $item->tahun_pelajaran }} - {{ $item->semester }}
                     </option>
                     @php $a = request('tahun') @endphp
                     @endforeach
                 </select>
             </div>
         </div>
-        <div class="row my-2">
+        {{-- <div class="row my-2">
             <label class="col-lg-3 form-label mt-2">Semester</label>
             <div class="col-lg-9">
                 <select name="semester" id="semester" class=" select2" onchange="semesterValue()">
@@ -75,7 +75,7 @@
                     <option value="Genap" {{ request('semester')=="Genap" ? 'selected' :'' }}>Genap</option>
                 </select>
             </div>
-        </div>
+        </div> --}}
         <div class="row mb-2">
             <label class="col-lg-3 form-label mt-2">Kelas</label>
             <div class="col-lg-9">
@@ -103,7 +103,7 @@
                 <label class="col-lg-3 form-label mt-2"></label>
                 <div class="col-lg-9">
                     <div class="btn-group mt-3">
-                        <button class="btn btn-soft-success rounded-pill" type="submit"><span
+                        <button class="btn btn-primary w-100" type="submit"><span
                                 class="ti ti-search"></span> Cari
                             Data</button>
         </form>

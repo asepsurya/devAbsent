@@ -39,7 +39,7 @@
                         <th class="bg-light-400">#</th>
 
                         <th class="bg-light-400" width="70%">Rombongan Belajar</th>
-                        <th class="bg-light-400 border">Jumlah Siswa</th>
+                        <th class="bg-light-400 border" width="10%">Jumlah Siswa</th>
                         <th class="bg-light-400">status</th>
 
 
@@ -65,7 +65,7 @@
                         </td>
 
                         <td class="border">
-                           <center> {{ $item->jmlRombel->count() }}</center></td>
+                           <center><b> {{ $item->jmlRombel->count() }}</b> <span class="ti ti-users"></span></center></td>
                         <td>
                             @if($item->status == '1')
                             <span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>

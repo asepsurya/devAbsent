@@ -16,4 +16,7 @@ class Lesson extends Model
     public function guru(){
         return $this->belongsTo('App\Models\gtk','id_gtk','nik');
     }
+    public function ref(){
+        return $this->belongsTo('App\Models\ref_jadwal','id_mapel','ref_ID');
+    }
 }

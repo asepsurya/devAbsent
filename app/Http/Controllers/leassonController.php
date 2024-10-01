@@ -25,14 +25,22 @@ class leassonController extends Controller
         ]);
     }
     public function list($id){
+        // get data berdasarkan tahun Ajaran
+        if(request('tahun_ajar')){
+            $jadwal = Lesson::where(['id_rombel'=>$id,'id_tahun_ajar'=>request('tahun_ajar')])->orderBy('day', 'ASC')->with(['mata_pelajaran','guru','ref'])->get();
+        }else{
+            $jadwal = Lesson::where('id_rombel',$id)->orderBy('day', 'ASC')->with(['mata_pelajaran','guru','ref'])->get();
+        }
+        // get data Kelas
         $cek = Kelas::where('id',$id)->with(['jurusanKelas'])->get();
         foreach($cek as $item){
             $kelas =  $item->nama_kelas.' '.$item->jurusanKelas->nama_jurusan.' '. $item->sub_kelas;
         }
+
         return view('jadwal.index',[
             'title' => 'Jadwal Pelajaran '.$kelas,
             'tahun_ajar'=>TahunPelajaran::where('status',1)->get(),
-            'jadwal'=>Lesson::where('id_rombel',$id)->orderBy('day', 'ASC')->with(['mata_pelajaran','guru'])->get(),
+            'jadwal'=>$jadwal,
             'mapel' => grupMapel::where(['id_kelas'=> $id])->get(),
             'ref'=>ref_jadwal::where('status','1')->paginate('10')
         ],compact('id'));
@@ -72,9 +80,13 @@ class leassonController extends Controller
              return redirect()->back();
 
         }else{
+            if($request->type == "ref"){
+                $id_mapel = $request->ref;
+            }elseif($request->type == "mapel"){
+                $id_mapel = $request->id_mapel;
+            }
             Lesson::create([
                 "day" => $request->day,
-                "mapel" => $request->mapel,
                 "id_gtk" => $request->id_gtk,
                 "status" => $request->status,
                 "id_rombel" => $request->id_kelas,
@@ -83,13 +95,19 @@ class leassonController extends Controller
                 "no_sk" => $request->no_sk,
                 "tgl_sk" => $request->tgl_sk,
                 "id_tahun_ajar" => $request->tahun_ajar,
-                "id_mapel" => $request->id_mapel
+                "id_mapel" => $id_mapel
             ]);
             toastr()->success('Data Berhasil diubah');
             return redirect()->back();
         }
 
     }
+    public function leassonDelete($id){
+        Lesson::where('id',$id)->delete();
+        toastr()->success('Data Berhasil dihapus');
+            return redirect()->back();
+    }
+
     public function leassonView($id){
         $cek = Kelas::where('id',$id)->with('jurusanKelas')->get();
         foreach($cek as $item){
@@ -98,12 +116,12 @@ class leassonController extends Controller
         }
         return view('jadwal.view',[
             'title'=>'Jadwal Pelajaran '.$kelas,
-            'senin'=> Lesson::where(['day'=>'1','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru'])->get(),
-            'selasa'=> Lesson::where(['day'=>'2','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru'])->get(),
-            'rabu'=> Lesson::where(['day'=>'3','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru'])->get(),
-            'kamis'=> Lesson::where(['day'=>'4','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru'])->get(),
-            'jumat'=> Lesson::where(['day'=>'5','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru'])->get(),
-            'sabtu'=> Lesson::where(['day'=>'6','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru'])->get(),
+            'senin'=> Lesson::where(['day'=>'1','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
+            'selasa'=> Lesson::where(['day'=>'2','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
+            'rabu'=> Lesson::where(['day'=>'3','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
+            'kamis'=> Lesson::where(['day'=>'4','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
+            'jumat'=> Lesson::where(['day'=>'5','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
+            'sabtu'=> Lesson::where(['day'=>'6','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
 
         ]);
     }
@@ -114,6 +132,18 @@ class leassonController extends Controller
             'status'=>'1'
         ]);
         toastr()->success('Data Berhasil ditambah');
-        return redirect()->back();
+        return redirect()->back()->with('ref', 5)->withInput();
+    }
+    public function referenceEdit(request $request){
+        ref_jadwal::where('ref_ID',$request->ref_ID)->update([
+            'ref'=>$request->ref
+        ]);
+        toastr()->success('Data Berhasil diubah');
+        return redirect()->back()->with('ref', 5)->withInput();
+    }
+    public function referenceDelete($id){
+        ref_jadwal::where('ref_ID',$id)->delete();
+        toastr()->success('Data Berhasil dihapus');
+        return redirect()->back()->with('ref', 5)->withInput();
     }
 }

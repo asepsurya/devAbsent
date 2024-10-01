@@ -73,21 +73,9 @@
                         {{-- this.form.submit() --}}
                         <input type="text" value="{{ request('id_tahun_pelajaran') }}" name="id_tahun_pelajaran" hidden>
                         <input type="text" value="{{ request('id_tahun_pelajaran') }}" name="id_kelas_tujuan" hidden>
+
                         <div class="col m-3">
-                            <label class="form-label ">Tahun Pelajaran</label>
-                            <select name="tahunAjarAsal" id="tahunAsal" class="form-control select2" onchange="">
-                                <option value="" selected>-- Tahun Pelajaran --</option>
-                                @foreach ($tahunAjar as $item )
-                                <option value="{{ $item->id }}" {{ $item->id ==
-                                    request('tahunAjarAsal') ?
-                                    'selected' :
-                                    '' }}>{{ $item->tahun_pelajaran }} - {{ $item->semester }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col m-3">
-                            <label class="form-label">Kelas Asal</label>
+                            <label class="form-label">Kelas Asal <span class="text-danger">*</span></label>
                             <select name="id_kelas_asal" id="kelasAsal" class="form-control select2" onchange="this.form.submit()">
                                 <option value="" selected>-- Pilih Kelas --</option>
                                 <option value="belumDiatur" {{ request('id_kelas_asal')=='belumDiatur' ? 'selected' : ''
@@ -102,7 +90,22 @@
                             </select>
                         </div>
 
-
+                        @if(request('id_kelas_asal')=="belumDiatur" || request('id_kelas_asal')=="all" )
+                        @else
+                        <div class="col m-3">
+                            <label class="form-label ">Tahun Pelajaran <span class="text-danger">*</span></label>
+                            <select name="tahunAjarAsal" id="tahunAsal" class="form-control select2" onchange="this.form.submit()">
+                                <option value="" selected>-- Tahun Pelajaran --</option>
+                                @foreach ($tahunAjar as $item )
+                                <option value="{{ $item->id }}" {{ $item->id ==
+                                    request('tahunAjarAsal') ?
+                                    'selected' :
+                                    '' }}>{{ $item->tahun_pelajaran }} - {{ $item->semester }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endif
                     </form>
                 </div>
                 <div class="table-responsive">
@@ -134,7 +137,13 @@
                                 </td>
 
                                 <td class="text-primary">{{ $item->nis }}</td>
-                                <td>{{ $item->nama }}</td>
+                                <td>
+                                    @if(request('id_kelas_asal')=="belumDiatur" || request('id_kelas_asal')=="all" )
+                                    {{ $item->nama }}
+                                    @else
+                                    {{ $item->rombelStudent->nama }}
+                                    @endif
+                                </td>
                                 <th>
                                     <form action="{{ route('PengaturaRombelUpdate') }}" method="post">
                                         @csrf
@@ -187,7 +196,7 @@
                             <div>
                                 <div class="col mb-2">
                                     <label class=" form-label ">Tahun Pelajaran</label>
-                                    <select name="id_tahun_pelajaran" id="tahunAjar" class="form-control select2" onchange="TahunAjarValue();" >
+                                    <select name="id_tahun_pelajaran" id="tahunAjar" class="form-control select2" onchange="TahunAjarValue();this.form.submit()" >
                                         <option value="" selected>-- Pilih Kelas --</option>
                                         @foreach ($tahunAjar as $item )
                                         <option value="{{ $item->id }}"  {{ $item->id ==

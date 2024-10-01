@@ -123,7 +123,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/akademik/pengaturan/rombelUpdate',[PengaturanAkademik::class,'PengaturaRombelUpdate'])->name('PengaturaRombelUpdate');
     // route walikelas
     Route::get('/akademik/pengaturan/walikelas',[PengaturanAkademik::class,'PengaturanWalikelas'])->name('PengaturanWalikelas');
-    Route::post('/akademik/pengaturan/walikelas',[PengaturanAkademik::class,'pengaturanWalikelasAdd'])->name('pengaturanWalikelasAdd');
+    Route::post('/akademik/pengaturan/walikelasAdd',[PengaturanAkademik::class,'pengaturanWalikelasAdd'])->name('pengaturanWalikelasAdd');
+    Route::post('/akademik/pengaturan/walikelasEdit',[PengaturanAkademik::class,'pengaturanWalikelasEdit'])->name('pengaturanWalikelasEdit');
     // route GTK
     Route::get('/gtk/all',[GTKController::class,'GTKall'])->name('GTKall');
     Route::get('/gtk/add',[GTKController::class,'GTKaddIndex'])->name('GTKaddIndex');
@@ -163,7 +164,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/class/leasson',[leassonController::class,'index'])->name('leasson');
     Route::get('/class/leasson/view/{id}',[leassonController::class,'leassonView'])->name('leassonView');
     Route::post('/class/leasson/reference',[leassonController::class,'reference'])->name('reference');
+    Route::post('/class/leasson/reference/edit',[leassonController::class,'referenceEdit'])->name('referenceEdit');
+    Route::get('/class/leasson/reference/delete{id}',[leassonController::class,'referenceDelete'])->name('referenceDelete');
     Route::post('/class/leasson/add',[leassonController::class,'leassonAdd'])->name('leassonAdd');
+    Route::get('/class/leasson/delete{id}',[leassonController::class,'leassonDelete'])->name('leassonDelete');
     Route::get('/class/leasson/list/{id}',[leassonController::class,'list'])->name('list');
     Route::get('/class/leasson/getgtk',[leassonController::class,'getgtk'])->name('getgtk');
 });
