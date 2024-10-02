@@ -3,7 +3,7 @@
 @section('css')
 <style>
     .btn-check:checked+.btn, .btn.active, .btn.show, .btn.show:hover, .btn:first-child:active, :not(.btn-check)+.btn:active{
-        background-color: #ebebeb;
+        background-color: #cdcdcd;
     }
 </style>
 @endsection
@@ -29,7 +29,7 @@
 </div>
 {{-- End Header --}}
 <div class="bg-white p-3 border rounded-1 d-flex align-items-center justify-content-between flex-wrap mb-4 pb-0">
-    <h4 class="mb-3">Form Absensi Siswa  </h4>
+    <h4 class="mb-3">Mata pelajaran : {{ $mapel }} </h4>
     <div class="d-flex align-items-center flex-wrap">
 
         <div class="d-flex align-items-center bg-white  p-1 mb-3 me-2">
@@ -44,70 +44,6 @@
     </div>
 </div>
 
-@if(Request::is('absensi/student'))
-<div class="bg-white p-3 border rounded-1 p-4" >
-
-    <div class="card-body ">
-        <form action="{{ route('absensiStudent') }}" method="get" data-bs-display="static">
-
-        <div class="row ">
-            <label class="col-lg-3 form-label mt-1">Tahun Pelajaran</label>
-            <div class="col-lg-9">
-                {{-- this.form.submit() --}}
-                <select name="tahun" id="tahunAjar" class="form-control select2"   onchange="">
-
-                    @foreach ($tahunAjar as $item )
-                    <option value="{{ $item->id }}" {{ $item->id == request('tahun') ? 'selected' : '' }}>{{
-                        $item->tahun_pelajaran }} - {{ $item->semester }}
-                    </option>
-                    @php $a = request('tahun') @endphp
-                    @endforeach
-                </select>
-            </div>
-        </div>
-
-        <div class="row my-2">
-            <label class="col-lg-3 form-label mt-2">Kelas</label>
-            <div class="col-lg-9">
-                <select name="kelas" id="kelas" class="form-control select2"  onchange="">
-                    <option value="all" selected>Tampikan Semua</option>
-                    @foreach ($kelas as $item )
-                    <option value="{{ $item->id }}" {{ $item->id == request('kelas') ? 'selected' : '' }}>{{
-                        $item->nama_kelas }} - {{
-                        $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }} </option>
-                    {{-- get Default Value --}}
-
-                    @php $c = request('kelas');  @endphp
-                    @endforeach
-                </select>
-            </div>
-
-        </div>
-        @if(request('kelas') != "all")
-        <div class="row my-2">
-            <label class="col-lg-3 form-label mt-2">Wali Kelas</label>
-            <div class="col-lg-9">
-                <input type="text" class="form-control" id="walikelas" name="walikelas"  value="{{ request('walikelas') }}">
-            </div>
-        </div>
-        @endif
-
-        <div class="row my-2">
-            <label class="col-lg-3 form-label mt-2">Tanggal</label>
-            <div class="col-lg-9">
-                <input type="text" name="tanggal" class="form-control datetimepickerCustom" placeholder="DD/MM/YYYY"  @if(request('tanggal')) value=" {{ request('tanggal') }}" @endif  >
-            </div>
-        </div>
-
-            <div class="row mt-2">
-                <div class="col-lg-3"></div>
-                <div class="col-lg-9"> <button class="btn btn-primary "><span class="ti ti-search"></span> Cari Data</button></div>
-            </div>
-
-        </form>
-    </div>
-</div>
-@endif
 <div class="card">
     <div class="card-body p-0 ">
         <div class="table-responsive">
@@ -140,34 +76,30 @@
                         <td class="border">{{ $no++ }}.</td>
                         <td>
                                 <div class="form-check form-check-md">
-                                    <input class="form-check-input" name="data[]" value="{{ $item->id_rfid }}" type="checkbox">
+                                    <input class="form-check-input" name="data[]" value="{{ $item->nis }}" type="checkbox">
                                 </div>
                         </td>
                         <td class="text-primary">
                             {{ $item->nis }}
                         </td>
                         <td>{{ $item->rombelStudent->nama }}</td>
-                        <form action="{{ route('absensiStudentAdd') }}" method="post" >
+                        <form action="{{ route('absensiClassStudent') }}" method="post" >
                             @csrf
 
                             <td class="border">
                            <div class="form-check form-check-md">
                                 <input class="form-check-input a" value="H"  type="radio" name="status" id="{{ $item->id }}" onclick="this.form.submit()"
-                            @if($item->id_rfid != '')
-                                @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'H' ? 'Checked': '' : '' }}    @endforeach
-                            @else{
-                                @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'H' ? 'Checked': '' : '' }}    @endforeach
-                            }
+                            @if($absent->count())
+                                @foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'H' ? 'Checked': '' : '' }}    @endforeach
                             @endif >
                             </div>
+
                                 </td>
                             <td class="border">
                             <div class="form-check form-check-md">
                                 <input class="form-check-input a" value="S"  type="radio" name="status" id="{{ $item->id }}" onclick="this.form.submit()"
-                                @if($item->id_rfid != '')
-                                    @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'S' ? 'Checked': '' : '' }}    @endforeach
-                                @else
-                                    @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'S' ? 'Checked': '' : '' }}    @endforeach
+                                @if($absent->count())
+                                    @foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'S' ? 'Checked': '' : '' }}    @endforeach
                                 @endif
                                     >
                             </div>
@@ -175,10 +107,9 @@
                             <td class="border">
                             <div class="form-check form-check-md">
                                 <input class="form-check-input a" value="I" type="radio"  name="status" id="{{ $item->id }}"onclick="this.form.submit()" $cek
-                                @if($item->id_rfid != '')
-                                    @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'I' ? 'Checked': '' : '' }}    @endforeach
-                                @else
-                                    @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'I' ? 'Checked': '' : '' }}    @endforeach
+                                @if($absent->count())
+                                    @foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'I' ? 'Checked': '' : '' }}    @endforeach
+
                                 @endif
                                 >
                             </div>
@@ -186,22 +117,19 @@
                             <td class="border">
                             <div class="form-check form-check-md">
                                 <input class="form-check-input a" value="A" type="radio"  name="status" id="{{ $item->id }}"onclick="this.form.submit()"
-                                @if($item->id_rfid != '')
-                                    @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'A' ? 'Checked': '' : '' }}    @endforeach
-                                @else
-                                   @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'A' ? 'Checked': '' : '' }}    @endforeach
+                                @if($absent->count())
+                                    @foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'A' ? 'Checked': '' : '' }}    @endforeach
+
                                 @endif
                                    >
                             </div>
                                 </td>
                             <td hidden>
-                            @if ($item->id_rfid == '')
-                                <input type="text" name="id_rfid" value="{{ $item->nis }}">
-                            @else
-                                <input type="text" name="id_rfid" value="{{ $item->id_rfid }}">
-                            @endif
-                            <input type="text" name="tanggal" value="{{ request('tanggal') }}">
-                                </td>
+                                <input type="text" name="id_mapel" value="{{ request('id_mapel') }}">
+                                <input type="text" name="id_kelas" value="{{ request('kelas') }}">
+                                <input type="text" name="nis" value="{{ $item->nis }}">
+                                <input type="text" name="tanggal" value="{{ request('tanggal') }}">
+                            </td>
                         </form>
 
                         <td><button class="btn btn-outline-primary bg-white btn-sm " data-bs-toggle="modal" data-bs-target="#editAbsent-{{ $item->id }}"><span class="ti ti-eye"></span> </button></td>
@@ -231,7 +159,7 @@
                     <i class="ti ti-x"></i>
                 </button>
             </div>
-            <form action="{{ route('absensiStudentAdd') }}" method="post">
+            <form action="{{ route('absensiClassStudent') }}" method="post">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -246,6 +174,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="row">
+                                <input type="text" name="id_mapel" value="{{ request('id_mapel') }}" hidden>
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label class="form-label">Tanggal <span
@@ -256,9 +185,9 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <label class="form-label">RFID <span class="ti ti-nfc"></span></label>
-                                        <input type="text" class="form-control" name="id_rfid"
-                                            value="{{ $item->id_rfid }}" readonly required>
+                                        <label class="form-label">Nomor Induk Siswa ( NIS ) <span class="ti ti-nfc"></span></label>
+                                        <input type="text" class="form-control" name="nis"
+                                            value="{{ $item->nis }}" readonly required>
                                     </div>
                                 </div>
                             </div>
@@ -271,76 +200,44 @@
                                 <label class="form-label">Status Kehadiran</label><br>
                                 <div class="btn-group w-100 " >
                                     <input type="radio" class="btn-check " value="H"
-                                    @if($item->id_rfid != '')
-                                     @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?
-                                     $ky->status == 'H' ? 'Checked': '' : '' }} @endforeach disabled
-                                    @else
-                                    @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?
-                                     $ky->status == 'H' ? 'Checked': '' : '' }} @endforeach disabled
-                                    @endif
-                                    >
-                                    <label class="btn btn-outline-light" for="z{{ $item->id }}">Hadir</label>
+                                    @if($item->nis != '')
+                                    @foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'H' ? 'Checked': '' : '' }} @endforeach  disabled
+                                    @endif>
+                                    <label class="btn btn-outline-light" for="z{{ $item->id }}"> Hadir</label>
 
                                     <input type="radio" class="btn-check a " value="S"
-                                    @if($item->id_rfid != '')
-                                       @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?
-                                    $ky->status == 'S' ? 'Checked': '' : '' }} @endforeach  disabled
-                                    @else
-                                    @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?
-                                    $ky->status == 'S' ? 'Checked': '' : '' }} @endforeach  disabled
+                                    @if($item->nis != '')
+                                    @foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'S' ? 'Checked': '' : '' }} @endforeach  disabled
                                     @endif
                                     >
                                     <label class="btn btn btn-outline-light" for="z{{ $item->id }}">Sakit</label>
                                     <input type="radio" class="btn-check  a" value="I"
-                                    @if($item->id_rfid != '')
-                                        @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?
-                                    $ky->status == 'I' ? 'Checked': '' : '' }} @endforeach disabled
-                                    @else
-                                    @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?
-                                    $ky->status == 'I' ? 'Checked': '' : '' }} @endforeach disabled
+                                    @if($item->nis != '')
+                                    @foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'I' ? 'Checked': '' : '' }} @endforeach disabled
                                     @endif
                                     >
                                     <label class="btn btn btn-outline-light" for="z{{ $item->id }}">Izin</label>
 
                                     <input type="radio" class="btn-check a "  value="A"
-                                    @if($item->id_rfid != '')
-                                        @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?
-                                    $ky->status == 'A' ? 'Checked': '' : '' }} @endforeach disabled
-                                    @else
-                                    @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?
-                                    $ky->status == 'A' ? 'Checked': '' : '' }} @endforeach disabled
+                                    @if($item->nis != '')
+                                    @foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'A' ? 'Checked': '' : '' }} @endforeach disabled
                                     @endif
                                     >
                                     <label class="btn btn btn-outline-light" for="z{{ $item->id }}">Tidak Hadir</label>
                                 </div>
                             </div>
-                            @foreach ($item->rombelAbsent as $ky )
-                            <input type="text" name="status" hidden @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ? $ky->status ? 'value='.$ky->status.'': '' : '' }} @endforeach>
+                            @foreach ($item->rombelAbsentClass as $ky )
                             @if ($ky->tanggal == request('tanggal'))
+                            <input type="text" name="status" hidden  @foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal ==  request('tanggal') ? $ky->status ? 'value='.$ky->status.'': '' : '' }} @endforeach>
                             @if ($ky->status == 'H')
-                            <div class="row inOut">
-                                <div class="col-lg-6">
+                            <div class="inOut">
                                     <div class="mb-3">
-
                                         <label class="form-label">Entry</label>
                                         <div class="date-pic">
-                                            <input type="text" class="form-control entry timepicker" name="entry" @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ? $ky->entry  ? 'value='.$ky->entry.'' : '' : '' }} @endforeach >
+                                            <input type="text" class="form-control entry timepicker" name="entry" readonly @foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ? $ky->entry  ? 'value='.$ky->entry.'' : '' : '' }} @endforeach >
                                             <span class="cal-icon"><i class="ti ti-clock"></i></span>
                                         </div>
-
                                     </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Out</label>
-                                        <div class="date-pic">
-                                            <input type="text" class="form-control out timepicker" name="out" @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ? $ky->out  ? 'value='.$ky->out.'' : '' : '' }}  @endforeach>
-                                            <span class="cal-icon"><i class="ti ti-clock"></i></span>
-                                        </div>
-
-                                    </div>
-                                </div>
-
                             </div>
                             @endif
                             @endif
@@ -348,7 +245,7 @@
                             <div class="mb-3 ket" id="">
                                 <label class="form-label">Keterangan</label>
                                 <textarea rows="4" class="form-control keterangan" name="keterangan"
-                                    placeholder="Keterangan Sakit/izin/Tidak Hadir">@foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ? $ky->keterangan  ? $ky->keterangan : '' : '' }} @endforeach</textarea>
+                                    placeholder="Keterangan Sakit/izin/Tidak Hadir">@foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ? $ky->keterangan  ? $ky->keterangan : '' : '' }} @endforeach</textarea>
                             </div>
                             <button class="btn btn-primary w-100">Simpan</button>
                         </div>

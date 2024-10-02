@@ -10,20 +10,28 @@ use App\Models\grupMapel;
 use App\Models\walikelas;
 use App\Models\student;
 use App\Models\rombel;
+use App\Imports\MapelImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 use Alert;
 use Validator;
 use Illuminate\Http\Request;
 
 class pengaturanAkademik extends Controller
 {
-    public function pengaturanMapel(){
+    public function pengaturanMapel(request $request){
+
+        if ($request->ajax()) {
+            return DataTables::of(Mapel::orderBy('id', 'DESC'))->addIndexColumn()->toJson();
+        }
+
         if(request()){
             $data =  grupMapel::where([
                 'id_tahun_pelajaran'=> request('id_tahun_pelajaran'),
                 'id_kelas'=>request('id_kelas'),
                 'status'=>'2'
-                ])->with('mata_pelajaran')->get();
+                ])->with('mata_pelajaran')->paginate(15)->appends(request()->query());
          }
         return view('akdemik.pengaturan.matapelajaran',[
             'title'=>'Pengaturan Mata Pelajaran',
@@ -201,6 +209,24 @@ class pengaturanAkademik extends Controller
     public function pengaturanMapelDelete($id){
         grupMapel::where('id',$id)->delete();
         toastr()->success('Data Berhasil dihapus');
+        return redirect()->back();
+    }
+
+    public function pengaturanMapelImport(request $request){
+        $request->validate([
+            'file' => 'required|mimes:csv,xls,xlsx'
+        ]);
+        // menangkap file excel
+        $file = $request->file('file');
+        // membuat nama file unik
+        $nama_file = rand().$file->getClientOriginalName();
+                 // upload ke folder file_siswa di dalam folder public
+        $file->move('file_mapel',$nama_file);
+             // import data
+        Excel::import(new MapelImport, public_path('/file_mapel/'.$nama_file));
+        // notifikasi dengan session
+        toastr()->success('Data Berhasil diImport');
+        // alihkan halaman kembali
         return redirect()->back();
     }
 

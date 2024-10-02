@@ -7,6 +7,7 @@ use App\Models\Kelas;
 use App\Models\absent;
 use App\Models\rombel;
 use App\Models\student;
+use App\Models\absentMapel;
 use Illuminate\Http\Request;
 use App\Models\TahunPelajaran;
 
@@ -82,5 +83,54 @@ class AbsensiController extends Controller
         }
     }
 
+    // absensi Kelas
+    public function absensiClassStudent(request $request){
+        $cek =  absentMapel::where([
+            'tanggal'=>$request->tanggal,
+            'nis'=>$request->nis,
+            'id_mapel'=>$request->id_mapel,
+            'id_kelas'=>$request->id_kelas,
+            ])->get();
+
+        if($cek->count()){
+            if($request->nis == ''){
+                Alert::error('RFID belum diatur, Mohon atur terlebih dahulu RFID' );
+                return redirect()->back();
+            }else{
+                absentMapel::where(['tanggal'=>$request->tanggal,'nis'=>$request->nis,'id_mapel'=>$request->id_mapel,'id_kelas'=>$request->id_kelas])->update([
+                    "tanggal" => $request->tanggal,
+                    "nis" => $request->nis,
+                    "id_gtk" => auth()->user()->nomor,
+                    "id_kelas" => $request->id_kelas,
+                    "entry" => date('H:i'),
+                    "id_mapel" => $request->id_mapel,
+                    "status" => $request->status,
+                    "keterangan" => $request->keterangan
+                ]);
+                // gtk::where('id_rfid',$request->id_rfid)->update(['last_absent'=>request('tanggal')]);
+                toastr()->success('Berhasil Disimpan');
+                return redirect()->back();
+            }
+        }else{
+            if($request->nis == ''){
+                Alert::error('RFID belum diatur, Mohon atur terlebih dahulu RFID' );
+                return redirect()->back();
+            }else{
+                absentMapel::create([
+                    "tanggal" => $request->tanggal,
+                    "nis" => $request->nis,
+                    "id_gtk" => auth()->user()->nomor,
+                    "id_kelas" => $request->id_kelas,
+                    "entry" => date('H:i'),
+                    "id_mapel" => $request->id_mapel,
+                    "status" => $request->status,
+                    "keterangan" => $request->keterangan
+                ]);
+                // gtk::where('id_rfid',$request->id_rfid)->update(['last_absent'=>request('tanggal')]);
+                toastr()->success('Berhasil Disimpan');
+                return redirect()->back();
+            }
+        }
+    }
 
 }

@@ -6,7 +6,9 @@ use App\Models\Kelas;
 use App\Models\absent;
 use App\Models\rombel;
 use App\Models\Jurusan;
+use App\Models\Mapel;
 use App\Models\grupMapel;
+use App\Models\absentMapel;
 use Illuminate\Http\Request;
 use App\Models\TahunPelajaran;
 use Illuminate\Routing\Controller;
@@ -18,7 +20,6 @@ class kelaslistController extends Controller
         return view('datakelas.index',[
             'title'=> 'Data Kelas',
             'kelas'=>Kelas::orderBy('id', 'DESC')->with(['jurusanKelas','jmlRombel'])->get(),
-
         ]);
     }
 
@@ -39,19 +40,22 @@ class kelaslistController extends Controller
     public function absentClassStudent(){
         $data =  rombel::where([
             'id_kelas'=>request('kelas'),
-            ])->with(['rombelStudent','rombelAbsent','notRFID'])->paginate(10)->appends(request()->query());
+            ])->with(['rombelStudent','rombelAbsentClass'])->paginate(10)->appends(request()->query());
         //  Get Nama Rombel
          $cek = Kelas::where('id',request('kelas'))->with('jurusanKelas')->get();
          foreach($cek as $item){
              $kelas =  $item->nama_kelas.' '.$item->jurusanKelas->nama_jurusan.' '. $item->sub_kelas;
          }
 
-        return view('absensi.student',[
+         $mapel = Mapel::where('id',request('id_mapel'))->get('nama');
+         foreach($mapel as $i){$getmapel = $i->nama;}
+        return view('absensi.studentAbsent',[
             'title'=>'Absensi Siswa '.$kelas,
             'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'DESC')->get(),
             'kelas'=>Kelas::where('status','1')->with('jurusanKelas')->get(),
             'rombel'=>$data,
-            'absent'=>absent::where(['tanggal'=>request('tanggal')])->get(),
+            'mapel'=>$getmapel,
+            'absent'=>absentMapel::where(['tanggal'=>request('tanggal'),'id_mapel'=>request('id_mapel'),'id_kelas'=>request('kelas')])->get(),
 
         ]);
     }

@@ -165,6 +165,12 @@
     placeholder: "Pilih Kelas",
     allowClear: true
     });
+ $('.gtk').select2({
+    placeholder: "Belum disetel",
+    allowClear: true
+    });
+
+
 </script>
 <script>
     function copyTextValue() {

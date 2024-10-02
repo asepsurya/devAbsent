@@ -1,5 +1,8 @@
 @extends('layout.main')
 @section('container')
+@section('css')
+<link rel="stylesheet" href="{{ asset('asset/css/DataTables.css') }}">
+@endsection
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
@@ -188,8 +191,6 @@
                         </thead>
                         @endforeach
                         @foreach ($grupMapel as $item)
-
-
                         <tr>
                             <td>{{ $no++ }}</td>
                             <td>
@@ -206,11 +207,12 @@
                                 @endif
                             </td>
                         </tr>
-
                         @endforeach
-
                     </tbody>
                 </table>
+            </div>
+            <div class="d-flex justify-content-end m-3">
+                {{ $grupMapel->links() }}
             </div>
         </div>
         </div>
@@ -220,19 +222,10 @@
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between">
                 <h3><span class="ti ti-settings"></span> Pilih Mata Pelajaran</h3>
-                <div>
-                    <div class="input-icon-start me-2 position-relative">
-                        <span class="icon-addon">
-                            <i class="ti ti-search"></i>
-                        </span>
-                        <input type="text" class="form-control " placeholder="Search" id="myInput"
-                            onkeyup="myFunction()">
-                    </div>
-                </div>
             </div>
             <div class="card-body p-0 ">
                 <div class="table-responsive">
-                    <table class="table table-nowrap mb-0" id="myTable">
+                    <table class="table table-nowrap mb-0" id="myTable" >
                         <thead>
                             <tr>
                                 <th class="bg-light-400" width="10%"></th>
@@ -241,7 +234,7 @@
 
                             </tr>
                         </thead>
-                        <tbody>
+                        {{-- <tbody>
 
                             @php
                             $no=1;
@@ -263,7 +256,7 @@
                             </tr>
                             @endforeach
 
-                        </tbody>
+                        </tbody> --}}
                     </table>
                     {{-- {{ $mapel->links() }} --}}
                 </div>
@@ -317,6 +310,57 @@
 </div>
 </div>
 @section('javascript')
+<script src="{{ asset('asset/js/DataTables.js') }}"></script>
+<script>
+
+    $(function() {
+        var table = new DataTable('#myTable', {
+            layout:{
+                topEnd:{
+                    search:{
+                        placeholder:'Search',
+                        text:'<span class="ti ti-search"></span> _INPUT_'
+                    }
+                }
+            },
+            processing: true,
+            order: [[1, 'desc']],
+            serverSide: true,
+            ajax: '{!! route('pengaturanMapel') !!}', // memanggil route yang menampilkan data json
+            columns: [
+                { // mengambil & menampilkan kolom sesuai tabel database
+                    data: 'DT_RowIndex',
+                    sortable: false,
+                    target:[1],
+                    searchable:false,
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'id',
+                    sortable: false,
+                    render: function(data, type, row, meta){
+                       data = '<form action="{{ route('pengaturanMapelAdd') }}" method="post">'+
+                                    '@csrf'+
+                                    '<input type="text" name="id_mapel" id="MapelVal" value="'+data+'" hidden>'+
+                                    '<button type="submit" class="btn btn-icon btn-sm btn-soft-success rounded-pill"><i class="ti ti-arrows-left"></i></button>'+
+                                '</form>'
+                        return data;
+                    },
+                    targets: -1
+                 },
+                {
+                    data: 'nama',
+                    name: 'nama'
+                },
+
+
+
+            ]
+        });
+
+
+    });
+</script>
 <script>
 $('.tahunAjar').select2({
     placeholder: "Pilih Tahun Pelajaran",
@@ -354,25 +398,6 @@ $('.kelas').select2({
         document.getElementById("GetMapel").value = document.getElementById("MapelVal").value;
     });
 </script>
-<script>
-    function myFunction() {
-      var input, filter, table, tr, td, i, txtValue;
-      input = document.getElementById("myInput");
-      filter = input.value.toUpperCase();
-      table = document.getElementById("myTable");
-      tr = table.getElementsByTagName("tr");
-      for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[2];
-        if (td) {
-          txtValue = td.textContent || td.innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-          } else {
-            tr[i].style.display = "none";
-          }
-        }
-      }
-    }
-</script>
+
 @endsection
 @endsection

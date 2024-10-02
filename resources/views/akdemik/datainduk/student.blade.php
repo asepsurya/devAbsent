@@ -2,7 +2,6 @@
 @section('container')
 @section('css')
 <link rel="stylesheet" href="{{ asset('asset/css/DataTables.css') }}">
-
 @endsection
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
@@ -269,10 +268,6 @@
                     return data;
                    }
                 },
-
-
-
-
             ]
         });
 

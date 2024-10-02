@@ -23,6 +23,9 @@ class rombel extends Model
     public function rombelAbsent(){
         return $this->hasMany('App\Models\absent','id_rfid','id_rfid');
     }
+    public function rombelAbsentClass(){
+        return $this->hasMany('App\Models\absentMapel','nis','nis');
+    }
     public function getkelas(){
         return $this->belongsTo('App\Models\Kelas','id_kelas','id');
     }

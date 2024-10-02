@@ -77,10 +77,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/class/list',[kelaslistController::class,'kelaslist'])->name('kelaslist');
     Route::get('/class/list/detail',[kelaslistController::class,'kelaslistdetail'])->name('kelaslistdetail');
     Route::get('/holidays',[HolidaysController::class,'index']);
-    // route Absensi
+    // route Absensi RFID
     Route::get('/absensi/student',[AbsensiController::class,'absensiStudent'])->name('absensiStudent');
     Route::post('/absensi/student/add',[AbsensiController::class,'absensiStudentAdd'])->name('absensiStudentAdd');
     Route::get('/absensi/teacher',[AbsensiController::class,'absensiTeacher'])->name('absensiTeacher');
+    // Route Absensi Kelas
+    Route::post('/absensi/class/student',[AbsensiController::class,'absensiClassStudent'])->name('absensiClassStudent');
     // route Data Induk
     Route::get('/akademik/datainduk/student',[DataIndukController::class,'dataIndukStudent'])->name('dataIndukStudent');
     Route::get('/akademik/datainduk/student/add',[DataIndukController::class,'dataIndukStudentAddIndex'])->name('dataIndukStudentAddIndex');
@@ -113,6 +115,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/akademik/datainduk/tahunajarDelete{id}',[DataIndukController::class,'dataIndukTahunajarDelete'])->name('dataIndukTahunajarDelete');
 
     Route::get('/akademik/pengaturan/mapel',[PengaturanAkademik::class,'pengaturanMapel'])->name('pengaturanMapel');
+    Route::post('/akademik/pengaturan/mapel/import',[PengaturanAkademik::class,'pengaturanMapelImport'])->name('pengaturanMapelImport');
     Route::post('/akademik/pengaturan/mapelAdd',[PengaturanAkademik::class,'pengaturanMapelAdd'])->name('pengaturanMapelAdd');
     Route::post('/akademik/pengaturan/mapelUpdate',[PengaturanAkademik::class,'pengaturanMapelUpdate'])->name('pengaturanMapelUpdate');
     Route::get('/akademik/pengaturan/mapelDelete{id}',[PengaturanAkademik::class,'pengaturanMapelDelete'])->name('pengaturanMapelDelete');

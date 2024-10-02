@@ -56,7 +56,7 @@
                         <td>{{ $no++ }}</td>
 
                         <td>
-                            <a href='/absent/class/student?tahun={{ $item->id_tahun_pelajaran }}&kelas={{ $item->id_kelas }}&tanggal={{ date('d/m/Y') }}' class="link-primary">
+                            <a href='/absent/class/student?id_mapel={{ $item->mata_pelajaran->id }}&tahun={{ $item->id_tahun_pelajaran }}&kelas={{ $item->id_kelas }}&tanggal={{ date('d/m/Y') }}' class="link-primary">
                                 {{ $item->kelas->nama_kelas }} - {{ $item->kelas->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}
                             </a>
                         </td>

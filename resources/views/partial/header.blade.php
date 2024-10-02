@@ -23,7 +23,7 @@
     <div class="header-user">
         <div class="nav user-menu">
             <div class="nav-item nav-search-inputs me-auto">
-               <div class="top-nav-search">
+               {{-- <div class="top-nav-search">
                 <a href="javascript:void(0);" class="responsive-search">
                     <i class="fa fa-search"></i>
                 </a>
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                 </form>
-            </div>
+            </div> --}}
             </div>
             {{-- Night Mode --}}
             <div class="pe-1">

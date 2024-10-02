@@ -18,6 +18,11 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
+        <div class="pe-1 mb-2">
+            <a href="#" class="btn btn-outline-light bg-white  me-1" data-bs-toggle="modal" data-bs-target="#import">
+                <i class="ti ti-file-arrow-left "></i> Import
+            </a>
+        </div>
         <div class="mb-2">
             <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-effect="effect-scale" data-bs-toggle="modal" data-bs-target="#add_mapel"><i class="ti ti-square-rounded-plus me-2"></i>Tambah Mata Pelajaran</a>
             </div>
@@ -82,6 +87,41 @@
             </table>
             <div class="d-flex justify-content-end m-2">
                 {{ $mapel->links() }}
+            </div>
+        </div>
+    </div>
+    {{-- import Data --}}
+    <div class="modal fade effect-sign " id="import" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered text-center" role="document">
+            <div class="modal-content modal-content-demo">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Import data mata Pelajaran</h4><button aria-label="Close" class="btn-close"
+                        data-bs-dismiss="modal"></button>
+                </div>
+                <div class="alert alert-primary overflow-hidden p-0 m-2" role="alert">
+                    <div class="p-3 bg-primary text-fixed-white d-flex justify-content-between">
+                        <h6 class="aletr-heading mb-0 text-fixed-white">Informasi Singkat</h6>
+
+                    </div>
+                    <div class="p-2" align="left">
+                        <p class="my-1">Berikut ini informasi yang harus diperhatikan :</p>
+                        <p class="my-1 mx-2">1. Untuk Contoh Format Dokumen anda bisa download di link ini. <a href="{{ asset('asset/import_sample/matapelajaran.xlsx') }}" target="_blank" rel="noopener noreferrer"> Download </a> </p>
+                        <p class="my-1 mx-2">2. File yang di Import Harus bertype .xlsx atau type file Excel</p>
+
+                    </div>
+                </div>
+                <form id="fileUploadForm" action="{{ route('pengaturanMapelImport') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body text-start">
+                        <input type="file" name="file" class="form-control" required>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary w-100"><span class="ti ti-cloud-upload"></span> Import Data</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -162,8 +202,8 @@
                                 <label class="form-label">Tipe</label>
                                 <select class="form-control select" name="type">
                                     <option value="">Pilih</option>
-                                    <option value="Umum" @if($item->type == 'Umum') Selected @endif>Umum</option>
-                                    <option value="Kejuruan" @if($item->type == 'Kejuruan') Selected @endif>Kejuruan</option>
+                                    <option value="Umum" @if(ucwords($item->type) == 'Umum') Selected @endif>Umum</option>
+                                    <option value="Kejuruan" @if(ucwords($item->type) == 'Kejuruan') Selected @endif>Kejuruan</option>
                                 </select>
                             </div>
                            <div class="mb-3" >
@@ -195,7 +235,7 @@
       table = document.getElementById("myTable");
       tr = table.getElementsByTagName("tr");
       for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[2];
+        td = tr[i].getElementsByTagName("td")[1];
         if (td) {
           txtValue = td.textContent || td.innerText;
           if (txtValue.toUpperCase().indexOf(filter) > -1) {

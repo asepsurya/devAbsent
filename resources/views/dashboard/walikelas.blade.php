@@ -15,9 +15,9 @@
                         <div class="card-body">
                             <h1 class="text-white mb-1">Selamat Datang, {{ auth()->user()->nama }}</h1>
                             <p class="text-white mb-3">Have a Good day at work</p>
-                            <p class="text-light">Notice : There is a staff meeting at 9AM today, Dont forget to
+                            {{-- <p class="text-light">Notice : There is a staff meeting at 9AM today, Dont forget to
                                 Attend!!!
-                            </p>
+                            </p> --}}
                         </div>
                     </div>
                 </div>
@@ -34,18 +34,28 @@
                                         <div class="d-flex align-items-center overflow-hidden mb-3">
                                             <div
                                                 class="avatar avatar-xxl rounded flex-shrink-0 border border-2 border-white me-3">
-                                                <img src="/storage/"
-                                                    alt="Img">
+                                                @if( auth()->user()->role == "walikelas")
+                                                    @if(Auth::user()->gtk == NULL)
+                                                        <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                                    @else
+                                                    @if(Auth::user()->gtk->gambar == "" )
+                                                        <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                                    @else
+                                                        <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                                    @endif
+                                                @endif
+                                                @endif
+
                                             </div>
                                             <div class="overflow-hidden">
                                                 <span
-                                                    class="badge bg-transparent-primary text-primary mb-1">#T594651</span>
-                                                <h3 class="text-white mb-1 text-truncate">Henriques Morgan </h3>
+                                                    class="badge bg-transparent-primary text-primary mb-1">{{ auth()->user()->nomor }}</span>
+                                                <h3 class="text-white mb-1 text-truncate">{{ Auth::user()->gtk->nama }} </h3>
                                                 <div
                                                     class="d-flex align-items-center flex-wrap text-light row-gap-2">
-                                                    <span class="me-2">Classes : I-A, V-B</span>
-                                                    <span class="d-flex align-items-center"><i
-                                                            class="ti ti-circle-filled text-warning fs-7 me-1"></i>Physics</span>
+                                                    <span class="me-2"><b>{{ Auth::user()->gtk->tempat_lahir }}</b>, {{ Auth::user()->gtk->tanggal_lahir }}</span>
+                                                    {{-- <span class="d-flex align-items-center"><i
+                                                            class="ti ti-circle-filled text-warning fs-7 me-1"></i>Physics</span> --}}
                                                 </div>
                                             </div>
                                         </div>

@@ -201,6 +201,7 @@
     @endforeach
     @section('javascript')
     <script>
+        $('.select2').select2();
        document.getElementById("submitfoto").hidden = true;
        document.getElementById("form-input").hidden = true;
        document.getElementById("alamat").disabled = true;
