@@ -35,11 +35,13 @@
                 <li>
                 {{-- @can('menu') --}}
                     <h6 class="submenu-hdr"><span>Management</span></h6>
+
                     <ul>
+
                         <li class="submenu">
                             <a href="javascript:void(0);"
                                 class=" {{ Request::is('absensi*') ? 'subdrop active' : ''}}"><i
-                                    class="ti ti-checklist"></i><span>Absensi</span><span class="menu-arrow"></span></a>
+                                    class="ti ti-checklist"></i><span>Absensi RFID</span><span class="menu-arrow"></span></a>
                             <ul>
                                 <li>
                                     <a href="/absensi/student?kelas=all&tanggal={{ date('d/m/Y') }}"
@@ -55,8 +57,13 @@
                                 </li>
                             </ul>
                         </li>
+
+                        <li  class="{{ Request::is('absent/class*') ? 'active' : ''}}">
+                            <a href="/absent/class" ><i
+                                class="ti ti-checklist"></i><span>Absensi Kelas</span></a>
+                        </li>
                         <li  class="{{ Request::is('class/list*') ? 'active' : ''}}">
-                            <a href="/class/list" ><i class="ti ti-list-details"></i><span>Data Kelas</span></a>
+                            <a href="/class/list" ><i class="ti ti-list-details"></i><span>Presensi Absensi</span></a>
                         </li>
                     </ul>
                     {{-- @endcan --}}

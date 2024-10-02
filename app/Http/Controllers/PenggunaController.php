@@ -5,8 +5,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\Permission\Models\Permission;
+use Yajra\DataTables\Facades\DataTables;
 
 class PenggunaController extends Controller
 {
@@ -21,10 +24,14 @@ class PenggunaController extends Controller
             'students'=>User::where('role','siswa')->with('student')->paginate(15)
         ]);
     }
-    public function useremployeesIndex(){
+    public function useremployeesIndex(request $request){
+        if ($request->ajax()) {
+            return DataTables::of(user::where(['role'=>'guru'])->orderBy('id', 'DESC'))->addIndexColumn()->toJson();
+        }
+
         return view('pengguna.GTK',[
             'title' => 'Guru dan Tenaga Kependidikan',
-            'gtks'=>User::where('role','guru')->with('gtk')->paginate(15)
+            'gtks'=>User::where('role','guru')->get(['id','role'])
         ]);
     }
     public function usermodulesIndex(){

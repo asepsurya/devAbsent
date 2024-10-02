@@ -44,7 +44,7 @@
     </div>
 </div>
 
-
+@if(Request::is('absensi/student'))
 <div class="bg-white p-3 border rounded-1 p-4" >
 
     <div class="card-body ">
@@ -107,7 +107,7 @@
         </form>
     </div>
 </div>
-
+@endif
 <div class="card">
     <div class="card-body p-0 ">
         <div class="table-responsive">

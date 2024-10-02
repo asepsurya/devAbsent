@@ -187,7 +187,6 @@ class authController extends Controller
 
         }
 
-
     }
 
     public function profileIndex($id){

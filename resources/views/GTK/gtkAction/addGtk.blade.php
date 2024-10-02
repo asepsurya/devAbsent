@@ -282,6 +282,7 @@
 </form>
 @section('javascript')
 <script>
+
     $(function(){
       //2. Получить элемент, к которому необходимо добавить маску
       $("#telp").val('+62');
@@ -368,6 +369,7 @@
         });
 </script>
 <script>
+    $(".select2").select2();
     function onlyNumberKey(evt) {
 
         // Only ASCII character in that range allowed

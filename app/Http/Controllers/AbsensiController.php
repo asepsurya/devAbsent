@@ -7,7 +7,6 @@ use App\Models\Kelas;
 use App\Models\absent;
 use App\Models\rombel;
 use App\Models\student;
-;
 use Illuminate\Http\Request;
 use App\Models\TahunPelajaran;
 
@@ -81,8 +80,7 @@ class AbsensiController extends Controller
                 return redirect()->back();
             }
         }
-
-
-
     }
+
+
 }

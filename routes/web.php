@@ -71,6 +71,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/student/dashboard',[DashboardController::class,'Studentindex'])->name('dashboard.student');
     });
 
+    Route::get('/absent/class',[kelaslistController::class,'absentclass'])->name('absentclass');
+    Route::get('/absent/class/student',[kelaslistController::class,'absentClassStudent'])->name('absentClassStudent');
 
     Route::get('/class/list',[kelaslistController::class,'kelaslist'])->name('kelaslist');
     Route::get('/class/list/detail',[kelaslistController::class,'kelaslistdetail'])->name('kelaslistdetail');
@@ -153,7 +155,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/administrator',[penggunaController::class,'userAdministratorIndex'])->name('userAdministratorIndex');
     Route::post('/user/administratorAdd',[penggunaController::class,'userAdministratorAdd'])->name('userAdministratorAdd');
     Route::get('/user/students',[penggunaController::class,'userStudentsIndex']);
-    Route::get('/user/employees',[penggunaController::class,'useremployeesIndex']);
+    Route::get('/user/employees',[penggunaController::class,'useremployeesIndex'])->name('useremployeesIndex');
     Route::get('/user/modules',[penggunaController::class,'usermodulesIndex']);
     Route::get('/user/permission',[penggunaController::class,'usermodulesPermission'])->name('usermodulesPermission');
     Route::get('/user/user_privileges',[penggunaController::class,'user_privilegesIndex']);

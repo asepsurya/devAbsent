@@ -18,7 +18,7 @@ class MyRolesStudentImport implements ToModel, WithHeadingRow
         $cek = User::where('nomor',$row['nis'])->get();
         foreach($cek as $i){
             return new model_has_roles([
-                'role_id'=> '2',
+                'role_id'=> '3',
                 'model_type'=>'App\Models\User',
                 'model_id'=>$i->id
             ]);

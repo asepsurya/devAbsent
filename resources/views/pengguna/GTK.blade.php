@@ -1,5 +1,8 @@
 @extends('layout.main')
 @section('container')
+@section('css')
+<link rel="stylesheet" href="{{ asset('asset/css/DataTables.css') }}">
+@endsection
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
@@ -37,54 +40,21 @@
     </div>
     <div class="card-body p-0 ">
         <div class="table-responsive">
-            <table class="table table-nowrap mb-0">
+            <table class="table table-nowrap mb-0" id="myTable">
                 <thead>
                     <tr>
                         <th class="bg-light-400">#</th>
                         <th class="bg-light-400">NIK</th>
                         <th class="bg-light-400">Nama Lengkap</th>
-                        <th class="bg-light-400">Telp</th>
-                        <th class="bg-light-400">gender</th>
-                        <th class="bg-light-400">Email</th>
+                        <th class="bg-light-400">Status</th>
                         <th class="bg-light-400">Action</th>
-
                     </tr>
                 </thead>
-                <tbody>
-                    @php $no=1 @endphp
-                    @foreach ($gtks as $item )
-                    @if($item->gtk)
-                    <tr>
-                        <td>{{ $no++ }}</td>
-                        <td>
-                          <a class="text-primary">{{ $item->gtk->nik }}</a>
-                        </td>
-                        <td> {{ $item->gtk->nama }}</td>
-                        <td> {{ $item->gtk->telp }}</td>
-                        <td>
-                            @if ($item->gtk->gender == 'L')
-                            L
-                        @else
-                            P
-                        @endif
-                        </td>
-                        <td>{{ $item->email }}</td>
-                        <td>
-                            <div class="hstack gap-2 fs-15">
-                                <a data-bs-toggle="modal" data-bs-target="#add_holiday" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i
-                                        class="ti ti-pencil-minus"></i></a>
-
-                            </div>
-                        </td>
-                    </tr>
-                    @endif
-                    @endforeach
-                </tbody>
             </table>
-            {{ $gtks->links() }}
         </div>
     </div>
 </div>
+
 {{-- modal tambah Hari Libur --}}
 <div class="modal fade" id="add_holiday" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
@@ -122,11 +92,120 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary w-100"><span class="ti ti-pencil-plus"></span> Ubah</button>
-            </form>
+                </div>
+                </form>
         </div>
 
     </div>
 </div>
+@foreach ($gtks as $item )
+{{-- modal tambah Hari Libur --}}
+<div class="modal fade" id="edit_role-{{ $item->id }}" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span class="ti ti-pencil-plus"></span> Ubah Kata Sandi</h4>
+                <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+            <form action="holidays.html">
+                <div class="modal-body">
+                    <div class="row">
+                        <form action="" method="post">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Role Pengguna Aplikasi</label>
+                                    <select name="role"  class="select">
+                                        <option value="admin" {{ $item->role == 'admin' ?'selected': '' }}>Administrator</option>
+                                        <option value="walikelas" {{ $item->role == 'walikelas' ?'selected': '' }}>Walikelas</option>
+                                        <option value="guru"{{ $item->role == 'guru' ?'selected': '' }}>Guru Pengajar</option>
+                                        <option value="siswa"{{ $item->role == 'siswa' ?'selected': '' }}>Siswa</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary w-100"><span class="ti ti-pencil-plus"></span> Ubah</button>
+                </div>
+                </form>
+        </div>
+    </div>
 </div>
 
+@endforeach
+
+@section('javascript')
+<script src="{{ asset('asset/js/DataTables.js') }}"></script>
+<script>
+    $(function() {
+        var table = new DataTable('#myTable', {
+            layout:{
+                topEnd:{
+                    search:{
+                        placeholder:'Search',
+                        text:'<span class="ti ti-search"></span> _INPUT_'
+                    }
+                }
+            },
+            processing: true,
+            order: [[1, 'desc']],
+            serverSide: true,
+            ajax: '{!! route('useremployeesIndex') !!}', // memanggil route yang menampilkan data json
+            columns: [
+
+                { // mengambil & menampilkan kolom sesuai tabel database
+                    data: 'DT_RowIndex',
+                    sortable: false,
+                    target:[1],
+                    searchable:false,
+                    name: 'DT_RowIndex'
+                },
+
+                {
+                    data: 'nomor',
+                    name: 'nomor'
+                },
+                {
+                    data: 'nama',
+                    name: 'nama'
+                },
+
+                {
+                    data: 'status',
+                    render:function(data){
+                    if(data === '2'){
+                        data = '<span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>'
+                    }else{
+                        data = '<span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak Aktif</span>'
+                    }
+                    return data;
+                   }
+                },
+                {
+                    data: 'id',
+                    sortable: false,
+                    render: function(data, type, row, meta){
+                        if(type === 'display'){
+                            data =
+                            '<div class="d-flex align-items-center">'+
+                            '<a data-bs-toggle="modal" data-bs-target="#add_holiday" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2" data-bs-toggle="modal" data-bs-target="#edit_role"><i class="ti ti-edit-circle text-primary"></i></a>'+
+                            '<a data-bs-toggle="modal" data-bs-target="#edit_role-'+ data +'" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="ti ti-shield text-skyblue"></i></a>'+
+                             '</div>'
+                        }
+                        return data;
+                    },
+                    targets: -1
+                 },
+
+
+            ]
+        });
+
+
+    });
+</script>
+@endsection
 @endsection

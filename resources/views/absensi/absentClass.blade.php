@@ -39,6 +39,7 @@
                         <th class="bg-light-400">#</th>
 
                         <th class="bg-light-400" width="70%">Rombongan Belajar</th>
+                        <th class="bg-light-400" width="70%">Mata Pelajaran</th>
                         <th class="bg-light-400 border" width="10%">Jumlah Siswa</th>
                         <th class="bg-light-400">status</th>
 
@@ -55,19 +56,15 @@
                         <td>{{ $no++ }}</td>
 
                         <td>
-                            @if(Request::is('class/list'))
-                                <a href="{{ route('kelaslistdetail')}}" class="link-primary">{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</a>
-
-                            @else
-                                <a href="{{ route('list',$item->id) }}" class="link-primary">{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</a>
-                            @endif
-
+                            <a href='/absent/class/student?tahun={{ $item->id_tahun_pelajaran }}&kelas={{ $item->id_kelas }}&tanggal={{ date('d/m/Y') }}' class="link-primary">
+                                {{ $item->kelas->nama_kelas }} - {{ $item->kelas->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}
+                            </a>
                         </td>
-
+                        <td>{{ $item->mata_pelajaran->nama }}</td>
                         <td class="border">
-                           <center><b> {{ $item->jmlRombel->count() }}</b> <span class="ti ti-users"></span></center></td>
+                           <center><b> {{ $item->kelas->jmlRombel->count() }}</b> <span class="ti ti-users"></span></center></td>
                         <td>
-                            @if($item->status == '1')
+                            @if($item->status == '2')
                             <span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>
                             @else
                             <span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak Aktif</span>

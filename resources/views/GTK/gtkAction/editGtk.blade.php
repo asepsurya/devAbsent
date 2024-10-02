@@ -376,6 +376,7 @@
 @section('javascript')
 <script>
     $(function(){
+        $(".select2").select2();
       //2. Получить элемент, к которому необходимо добавить маску
       $("#telp").val('+62');
 
