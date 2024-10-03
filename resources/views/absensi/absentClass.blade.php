@@ -10,7 +10,7 @@
                     <a href="/dashboard">Beranda</a>
                 </li>
 
-                <li class="breadcrumb-item active" aria-current="page">Data Kelas</li>
+                <li class="breadcrumb-item active" aria-current="page">Data Absensi Kelas</li>
             </ol>
         </nav>
     </div>
@@ -21,7 +21,7 @@
 {{-- End Header --}}
 <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-        <h4 class="mb-3">Daftar Kelas</h4>
+        <h4 class="mb-3">Daftar Kelas ({{ $kelas->count() }})</h4>
         <div class="d-flex align-items-center flex-wrap">
             <div class="input-icon-start mb-3 me-2 position-relative">
                 <span class="icon-addon">
@@ -37,15 +37,13 @@
                 <thead>
                     <tr>
                         <th class="bg-light-400">#</th>
-
                         <th class="bg-light-400" width="70%">Rombongan Belajar</th>
                         <th class="bg-light-400" width="70%">Mata Pelajaran</th>
                         <th class="bg-light-400 border" width="10%">Jumlah Siswa</th>
                         <th class="bg-light-400">status</th>
-
-
                     </tr>
                 </thead>
+                @if($kelas->count())
                 <tbody>
                     @php
                         $no=1;
@@ -54,7 +52,6 @@
 
                     <tr class="odd">
                         <td>{{ $no++ }}</td>
-
                         <td>
                             <a href='/absent/class/student?id_mapel={{ $item->mata_pelajaran->id }}&tahun={{ $item->id_tahun_pelajaran }}&kelas={{ $item->id_kelas }}&tanggal={{ date('d/m/Y') }}' class="link-primary">
                                 {{ $item->kelas->nama_kelas }} - {{ $item->kelas->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}
@@ -74,6 +71,13 @@
 
                     @endforeach
                 </tbody>
+                @else
+                <tbody>
+                    <tr>
+                        <td colspan="5"><center><i>Belum ada kelas yang diajar</i></center></td>
+                    </tr>
+                </tbody>
+                @endif
             </table>
         </div>
     </div>

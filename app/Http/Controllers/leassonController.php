@@ -26,7 +26,7 @@ class leassonController extends Controller
     }
     public function list($id){
         // get data berdasarkan tahun Ajaran
-        if(request('tahun_ajar')){
+        if(request('tahun_ajar2')){
             $jadwal = Lesson::where(['id_rombel'=>$id,'id_tahun_ajar'=>request('tahun_ajar')])->orderBy('day', 'ASC')->with(['mata_pelajaran','guru','ref'])->get();
         }else{
             $jadwal = Lesson::where('id_rombel',$id)->orderBy('day', 'ASC')->with(['mata_pelajaran','guru','ref'])->get();

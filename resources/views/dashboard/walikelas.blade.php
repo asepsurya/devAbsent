@@ -14,7 +14,7 @@
                     <div class="card flex-fill bg-info bg-03">
                         <div class="card-body">
                             <h1 class="text-white mb-1">Selamat Datang, {{ auth()->user()->nama }}</h1>
-                            <p class="text-white mb-3">Have a Good day at work</p>
+                            <p class="text-white mb-3"><i>"Mendidik adalah seni, dan setiap guru adalah seniman yang membentuk masa depan!"</i></p>
                             {{-- <p class="text-light">Notice : There is a staff meeting at 9AM today, Dont forget to
                                 Attend!!!
                             </p> --}}

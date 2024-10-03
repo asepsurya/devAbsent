@@ -18,6 +18,7 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataIndukController;
 use App\Http\Controllers\kelaslistController;
+use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\verifikasiUserController;
 
 Route::get('/',[landingController::class,'index'])->name('index');
@@ -182,3 +183,7 @@ Route::post('/getkabupaten',[RegionController::class,'getkabupaten'])->name('get
 Route::post('/getkecamatan',[RegionController::class,'getkecamatan'])->name('getkecamatan');
 Route::post('/getdesa',[RegionController::class,'getdesa'])->name('getdesa');
 Route::post('/getwalikelas',[RegionController::class,'getwalikelas'])->name('getwalikelas');
+
+Route::get('/fullcalender',[FullCalenderController::class,'index']);
+Route::post('/fullcalenderAjax',[FullCalenderController::class,'ajax']);
+Route::post('/addEventModal',[FullCalenderController::class,'addEventModal']);

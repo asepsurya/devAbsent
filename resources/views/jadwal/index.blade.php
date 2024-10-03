@@ -41,7 +41,8 @@
     <div class="card-header">
         <form action="{{ route('list',$id) }}" method="get">
         <h4 class="mb-2">List Jadwal Pelajaran</h4>
-        <select name="tahun_ajar" id="tahun_ajar" class="select form-control" onchange="this.form.submit()">
+
+        <select name="tahun_ajar2" class="tahun_ajar" onchange="this.form.submit()">
             @foreach ($tahun_ajar as $item )
             <option value="{{ $item->id }}" {{ request('tahun_ajar') == $item->id ? 'selected' : '' }}>Tahun Pelajaran : {{ $item->tahun_pelajaran }} - {{ $item->semester }}
             </option>
@@ -401,7 +402,9 @@
 </script>
 @endif
 <script>
-
+     $(".tahun_ajar").select2({
+        placeholder: "Pilih Mata Pelajaran",
+    });
     $(".day").select2({
         dropdownParent: "#add_holiday",
     });
@@ -413,6 +416,7 @@
         dropdownParent: "#add_holiday",
         placeholder: "Pilih Mata Pelajaran",
     });
+
 
 </script>
 

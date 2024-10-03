@@ -121,7 +121,7 @@
             <div class="mb-2">
                 <label class="form-label">Nama Lengkap</label>
                 <input type="text" value="{{ $item->nama }}" class="form-control @error('nama') is-invalid @enderror"
-                    placeholder="Nama Lengkap Siswa" name="nama" id="nama">
+                    placeholder="Nama Lengkap Siswa" name="nama" id="nama" required>
                 @error('nama')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -136,7 +136,7 @@
                     </span>
                     <input type="text" placeholder="Tanggal Lahir"
                         class="form-control datetimepicker @error('tanggal_lahir') is-invalid @enderror"
-                        value="{{ $item->tanggal_lahir }}" name="tanggal_lahir">
+                        value="{{ $item->tanggal_lahir }}" name="tanggal_lahir" required>
                     @error('tanggal_lahir')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -146,7 +146,7 @@
             </div>
             <div class="mb-2">
                 <label class="form-label">Agama</label>
-                <select name="agama" id="agama" class="form-control select 2 @error('agama') is-invalid @enderror">
+                <select name="agama" id="agama" class="form-control select 2 @error('agama') is-invalid @enderror" required>
                     <option value="" selected>- Pilih Agama -
                     </option>
                     <option value="Islam" {{ $item->agama =='Islam' ? 'selected' : '' }}>Islam
@@ -251,7 +251,7 @@
             <label class="form-label">Status</label>
             <select name="status" class="form-control select2 @error('status') is-invalid @enderror">
                 <option value="1" {{ $item->status =='1' ? 'selected' : '' }}>Aktif</option>
-                <option value="2" {{ $item->agama =='2' ? 'selected' : '' }}>Tidak Aktif</option>
+                <option value="2" {{ $item->status =='2' ? 'selected' : '' }}>Tidak Aktif</option>
             </select>
             @error('id_desa')
             <div class="invalid-feedback">

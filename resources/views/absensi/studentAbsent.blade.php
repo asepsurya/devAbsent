@@ -93,7 +93,6 @@
                                 @foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'H' ? 'Checked': '' : '' }}    @endforeach
                             @endif >
                             </div>
-
                                 </td>
                             <td class="border">
                             <div class="form-check form-check-md">

@@ -35,7 +35,7 @@
                                 class="avatar avatar-sm img-rounded bg-gray-800 dark-hover"><i
                                     class="ti ti-edit text-white"></i></a>
                         </div>
-                        <p class="text-white">Semoga Gajimu Naik Bro</p>
+                        <p class="text-white"><i>"Jadilah cahaya yang menerangi jalan, karena setiap usaha yang tulus akan berbuah hasil!"</i></p>
                     </div>
                     <p class="text-white"><i class="ti ti-refresh me-1"></i><i>Updated at {{ date("D d M Y, h:m:s")
                             }}</i>
