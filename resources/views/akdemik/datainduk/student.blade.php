@@ -32,7 +32,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3 " style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 41px);" data-popper-placement="bottom-end">
                 <li>
-                    <a href="javascript:void(0);" class="dropdown-item rounded-1"><i class="ti ti-file me-2"></i>Export
+                    <a href="{{ route('export.students') }}" class="dropdown-item rounded-1"><i class="ti ti-file me-2"></i>Export
                         as PDF</a>
                 </li>
                 <li>

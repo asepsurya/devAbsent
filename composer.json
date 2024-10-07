@@ -8,6 +8,7 @@
         "php": "^8.2",
         "anhskohbo/no-captcha": "^3.6",
         "azishapidin/indoregion": "^3.0",
+        "barryvdh/laravel-dompdf": "^3.0",
         "irfa/php-sn-generator": "^1.1",
         "itsgoingd/clockwork": "^5.2",
         "laravel/framework": "^11.9",

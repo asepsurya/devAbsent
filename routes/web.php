@@ -20,6 +20,7 @@ use App\Http\Controllers\DataIndukController;
 use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\verifikasiUserController;
+use App\Http\Controllers\PDFController;
 
 Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
@@ -148,7 +149,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/device/lisensiGet',[lisensiController::class,'lisensiIndexGet'])->name('lisensiIndexGet');
     Route::get('/device/checkLicense', [LisensiController::class, 'checkExpired']);
 
-    Route::post('/subcribe/payment', [PaymentController::class, 'createCharge']);
+    //Route::post('/subcribe/payment', [PaymentController::class, 'createCharge']);
 
     Route::get('/gtk/employment_types',[GTKController::class,'employmenttypesIndex']);
     Route::post('/gtk/employment_typesAdd',[GTKController::class,'employmenttypesIndexAdd'])->name('employmenttypesIndexAdd');
@@ -187,3 +188,14 @@ Route::post('/getwalikelas',[RegionController::class,'getwalikelas'])->name('get
 Route::get('/fullcalender',[FullCalenderController::class,'index']);
 Route::post('/fullcalenderAjax',[FullCalenderController::class,'ajax']);
 Route::post('/addEventModal',[FullCalenderController::class,'addEventModal']);
+
+// route export
+Route::get('/export/users', [PDFController::class, 'generatePDFUserAll'])->name('export.users');
+Route::get('/export/users/admin', [PDFController::class, 'generatePDFUserAdmin'])->name('export.userAdmin');
+Route::get('/export/users/walikelas', [PDFController::class, 'generatePDFUserWalikelas'])->name('export.userWalikelas');
+Route::get('/export/users/guru', [PDFController::class, 'generatePDFUserGuru'])->name('export.userGuru');
+Route::get('/export/users/siswa', [PDFController::class, 'generatePDFUserSiswa'])->name('export.userSiswa');
+
+Route::get('/export/gtks', [PDFController::class, 'generatePDFGTKAll'])->name('export.gtks');
+Route::get('/export/students', [PDFController::class, 'generatePDFSiswaAll'])->name('export.students');
+

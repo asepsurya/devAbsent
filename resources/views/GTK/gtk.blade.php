@@ -42,7 +42,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3" style="">
                 <li>
-                    <a href="javascript:void(0);" class="dropdown-item rounded-1"><i class="ti ti-file-type-pdf me-2"></i>Export
+                    <a href="{{ route('export.gtks') }}" class="dropdown-item rounded-1"><i class="ti ti-file-type-pdf me-2"></i>Export
                         as PDF</a>
                 </li>
                 <li>
