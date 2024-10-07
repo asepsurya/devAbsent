@@ -89,7 +89,6 @@ class authController extends Controller
         $validator = $request->validate([
             'nik' => 'required|min:10|unique:gtks',
             'nip' => '',
-            'nip' => 'min:10|unique:gtks',
             'nama' => 'required',
             'tempat_lahir' => 'required',
             'gender' => 'required',

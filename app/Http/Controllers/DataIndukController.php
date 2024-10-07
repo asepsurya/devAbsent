@@ -142,8 +142,7 @@ class DataIndukController extends Controller
             'id_rfid' => '',
             'id_kelas' => '',
             'id_rombel' => '',
-            'foto' => '',
-            'id_rfid'=>''
+            'foto' => ''
         ]);
 
         if($request->file('foto')){

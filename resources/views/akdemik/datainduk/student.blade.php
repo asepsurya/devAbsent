@@ -32,7 +32,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3 " style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 41px);" data-popper-placement="bottom-end">
                 <li>
-                    <a href="{{ route('export.students') }}" class="dropdown-item rounded-1"><i class="ti ti-file me-2"></i>Export
+                    <a href="javascript:void(0)" onclick="exportPDF()" class="dropdown-item rounded-1"><i class="ti ti-file me-2"></i>Export
                         as PDF</a>
                 </li>
                 <li>
@@ -175,6 +175,11 @@
 @section('javascript')
 <script src="{{ asset('asset/js/DataTables.js') }}"></script>
 
+<script>
+    function exportPDF() {
+        window.open("{{ route('export.students') }}", '_blank');
+    }
+</script>
 
 <script>
     $(function() {
@@ -274,6 +279,7 @@
 
     });
 </script>
+
 {{-- <script>
     function myFunction() {
       var input, filter, table, tr, td, i, txtValue;

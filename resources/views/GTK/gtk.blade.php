@@ -42,7 +42,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3" style="">
                 <li>
-                    <a href="{{ route('export.gtks') }}" class="dropdown-item rounded-1"><i class="ti ti-file-type-pdf me-2"></i>Export
+                    <a href="javascript:void(0)" onclick="exportPDF()" class="dropdown-item rounded-1"><i class="ti ti-file-type-pdf me-2"></i>Export
                         as PDF</a>
                 </li>
                 <li>
@@ -193,6 +193,13 @@
 @section('javascript')
 
 <script src="{{ asset('asset/js/DataTables.js') }}"></script>
+
+<script>
+    function exportPDF() {
+        window.open("{{ route('export.gtks') }}", '_blank');
+    }
+</script>
+
 <script>
     $(function() {
         var table = new DataTable('#myTable', {
