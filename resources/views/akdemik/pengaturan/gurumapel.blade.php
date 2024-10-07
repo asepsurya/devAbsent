@@ -51,7 +51,7 @@
         <h4 class="mb-0 "><span class="ti ti-search"></span> Form Pencarian</h4>
 
     </div>
-    <div class="p-3 alert alert-primary overflow-hidden p-0 mb-0">
+    <div class="p-3 alert alert-primary overflow-hidden mb-0">
         <div class="row mb-3 ">
             <label class="col-lg-3 form-label mt-1">Tahun Pelajaran</label>
             <div class="col-lg-9">

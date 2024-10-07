@@ -9,7 +9,7 @@
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Tahun Pekajaran</li>
+                <li class="breadcrumb-item active" aria-current="page">Tahun Pelajaran</li>
             </ol>
         </nav>
     </div>

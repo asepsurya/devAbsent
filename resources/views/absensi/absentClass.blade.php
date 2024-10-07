@@ -40,7 +40,7 @@
                         <th class="bg-light-400" width="70%">Rombongan Belajar</th>
                         <th class="bg-light-400" width="70%">Mata Pelajaran</th>
                         <th class="bg-light-400 border" width="10%">Jumlah Siswa</th>
-                        <th class="bg-light-400">status</th>
+                        <th class="bg-light-400">Status</th>
                     </tr>
                 </thead>
                 @if($kelas->count())
