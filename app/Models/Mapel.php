@@ -13,4 +13,7 @@ class Mapel extends Model
     public function grupMapel(){
         return $this->belongsTo('App\Models\grupMapel','id','id_mapel');
     }
+    public function jadwal(){
+        return $this->belongsTo('App\Models\Lesson','id','id_mapel');
+    }
 }

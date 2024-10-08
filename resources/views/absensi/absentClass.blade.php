@@ -38,7 +38,10 @@
                     <tr>
                         <th class="bg-light-400">#</th>
                         <th class="bg-light-400" width="70%">Rombongan Belajar</th>
-                        <th class="bg-light-400" width="70%">Mata Pelajaran</th>
+                        <th class="bg-light-400" width="60%">Mata Pelajaran</th>
+                        <th class="bg-light-400">Hari</th>
+                        <th class="bg-light-400" width="70%">Start</th>
+                        <th class="bg-light-400" width="70%">End</th>
                         <th class="bg-light-400 border" width="10%">Jumlah Siswa</th>
                         <th class="bg-light-400">Status</th>
                     </tr>
@@ -54,12 +57,51 @@
                         <td>{{ $no++ }}</td>
                         <td>
                             <a href='/absent/class/student?id_mapel={{ $item->mata_pelajaran->id }}&tahun={{ $item->id_tahun_pelajaran }}&kelas={{ $item->id_kelas }}&tanggal={{ date('d/m/Y') }}' class="link-primary">
-                                {{ $item->kelas->nama_kelas }} - {{ $item->kelas->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}
+                                {{ $item->kelas->nama_kelas }} - {{ $item->kelas->jurusanKelas->nama_jurusan }} {{ $item->kelas->sub_kelas }}
                             </a>
                         </td>
                         <td>{{ $item->mata_pelajaran->nama }}</td>
+                        <td>
+
+                            @if( $item->mata_pelajaran->jadwal)
+                            @if($item->mata_pelajaran->jadwal->day == 1)
+                            Senin
+                            @elseif ($item->mata_pelajaran->jadwal->day == 2)
+                            Selasa
+                            @elseif ($item->mata_pelajaran->jadwal->day == 3)
+                            Rabu
+                            @elseif ($item->mata_pelajaran->jadwal->day == 4)
+                            Kamis
+                            @elseif ($item->mata_pelajaran->jadwal->day == 5)
+                            Jum'at
+                            @elseif ($item->mata_pelajaran->jadwal->day == 6)
+                            Sabtu
+                            @elseif ($item->mata_pelajaran->jadwal->day == 7)
+                            Minggu
+                            @endif
+                              {{-- {{ $item->mata_pelajaran->jadwal->day }} --}}
+                            @else
+                            -
+                            @endif
+                        </td>
+                        <td>
+                            @if( $item->mata_pelajaran->jadwal)
+
+                            {{ $item->mata_pelajaran->jadwal->start }}
+                            @else
+                            -
+                            @endif
+                        </td>
+                        <td>
+                            @if( $item->mata_pelajaran->jadwal)
+                            {{ $item->mata_pelajaran->jadwal->end }}
+                            @else
+                            -
+                            @endif
+                        </td>
                         <td class="border">
                            <center><b> {{ $item->kelas->jmlRombel->count() }}</b> <span class="ti ti-users"></span></center></td>
+
                         <td>
                             @if($item->status == '2')
                             <span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>

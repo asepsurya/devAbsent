@@ -113,9 +113,9 @@
                         <th scope="col">#</th>
                         <th scope="col">NIS</th>
                         <th scope="col">Nama Peserta Didik</th>
-                        <th scope="col">Jenis Kelamin</th>
+                        <th scope="col">JK</th>
                         <th scope="col">Tempat Lahir</th>
-                        <th scope="col">Tanggal Lahir</th>
+                        <th scope="col" width="12%">Tanggal Lahir</th>
                         <th scope="col">Rombongan Belajar</th>
                         <th scope="col">Status</th>
                         <th scope="col">Tanggal Masuk</th>
@@ -128,14 +128,20 @@
                         <td>{{ $item->nis }}</td>
                         <td>{{ $item->nama }}</td>
                         <td>
-                            {{ $item->gender == 'L' ? 'Laki - Laki' : 'Perempuan' }}
+                            {{ $item->gender }}
+                            {{-- {{ $item->gender == 'L' ? 'Laki - Laki' : 'Perempuan' }} --}}
                         </td>
                         <td>{{ $item->tempat_lahir }}</td>
                         <td class="status-cell">
-                            {{ $item->tanggal_lahir }}
+                            {{ Carbon\Carbon::parse($item->tanggal_lahir)->format('d M Y') }}
                         </td>
                         <td>
-                            {{ $item->rombelstudent->getkelas->nama_kelas }} - {{ $item->rombelstudent->getkelas->jurusanKelas->namajurusan }} {{ $item->rombelstudent->getkelas->jurusanKelas->sub_kelas }}
+                            @if ($item->rombelstudent)
+                                {{ $item->rombelstudent->getkelas->nama_kelas }} - {{ $item->rombelstudent->getkelas->jurusanKelas->nama_jurusan }} {{ $item->rombelstudent->getkelas->sub_kelas }}
+                            @else
+                                -
+                            @endif
+
                         </td>
                         <td class="status-cell">
                             {{ $item->status == 1 ? 'Aktif' : 'Tidak Aktif' }}
