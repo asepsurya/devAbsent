@@ -27,32 +27,32 @@ class DataIndukController extends Controller
 {
     public function dataIndukStudent(request $request) {
         if ($request->ajax()) {
-            return DataTables::of(student::orderBy('id', 'DESC'))->addIndexColumn()->toJson();
+            return DataTables::of(student::orderBy('nama', 'ASC'))->addIndexColumn()->toJson();
         }
         return view('akdemik.datainduk.student',[
-            'title'=>'Data Peserta Didik',
-            'students'=>student::orderBy('id', 'DESC')->get(['id','nis']),
+            'title'=>'Peserta Didik',
+            'students'=>student::orderBy('nama', 'ASC')->get(['id','nis']),
             'provinsi'=>Province::all()
         ]);
     }
     public function dataIndukJurusan(){
         return view('akdemik.datainduk.jurusan',[
-            'title'=>'Data Jurusan',
+            'title'=>'Jurusan',
             'jurusans'=>Jurusan::all(),
 
         ]);
     }
     public function dataIndukkelas(){
         return view('akdemik.datainduk.kelas',[
-            'title'=>'Data Kelas',
-            'kelas'=>Kelas::orderBy('id', 'DESC')->with('jurusanKelas')->get(),
+            'title'=>'Kelas',
+            'kelas'=>Kelas::orderBy('id', 'ASC')->with('jurusanKelas')->get(),
             'jurusans'=>Jurusan::where('status','1')->get()
         ]);
     }
     public function dataIndukMapel(){
         return view('akdemik.datainduk.mataPelajaran',[
-            'title'=>'Data Mata Pelajaran',
-            'mapel'=>Mapel::orderBy('id', 'DESC')->paginate(20)
+            'title'=>'Mata Pelajaran',
+            'mapel'=>Mapel::orderBy('id', 'ASC')->paginate(20)
         ]);
     }
 
@@ -95,7 +95,7 @@ class DataIndukController extends Controller
         User::create([
             'nomor'=>$request->nis,
             'nama'=>$request->nama,
-            'email'=>$request->nis,
+            'email'=>$request->nis . '@saktiproject.my.id',
             'password'=>Hash::make($request->nis),
             'role'=>'4',
             'status'=>'2'
@@ -225,6 +225,7 @@ class DataIndukController extends Controller
     public function dataIndukJurusanAdd(request $request){
         Jurusan::create([
             'nama_jurusan'=>$request->nama,
+            'kurikulum'=>$request->kurikulum,
             'status'=>$request->status,
 
         ]);
@@ -235,6 +236,7 @@ class DataIndukController extends Controller
     public function dataIndukJurusanUpdate(request $request){
         Jurusan::where('id',$request->id)->update([
             'nama_jurusan'=>$request->nama,
+            'kurikulum'=>$request->kurikulum,
             'status'=>$request->status,
         ]);
         toastr()->success('Data Berhasil diubah');

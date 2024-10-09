@@ -17,9 +17,9 @@
                     <a href="/dashboard">Dashboard</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="javascript:void(0);">Absensi</a>
+                    <a href="javascript:void(0);">Absensi RFID</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Guru dan Tenaga Kependidikan</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>
@@ -30,7 +30,7 @@
 </div>
 {{-- End Header --}}
 <div class="bg-white p-3 border rounded-1 d-flex align-items-center justify-content-between flex-wrap mb-4 pb-0">
-    <h4 class="mb-3">Form Absensi Guru </h4>
+    <h4 class="mb-3">Form {{ $title }}</h4>
     <div class="d-flex align-items-center flex-wrap">
 
         <div class="d-flex align-items-center bg-white  p-1 mb-3 me-2">

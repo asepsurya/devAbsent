@@ -13,7 +13,7 @@
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Guru dan Tenaga Kependidikan</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>
@@ -168,7 +168,7 @@
     </div>
 </div>
 
-@foreach ($gtk as $item )
+@foreach ($gtk as $item)
 
 <div class="modal fade" id="delete-modal-{{ $item->nik }}" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">

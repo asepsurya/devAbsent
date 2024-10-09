@@ -37,7 +37,31 @@ class AppSeeder extends Seeder
         // ----------------------------------------------------------------
 
         Mapel::create([
-            'nama' =>'Matematika',
+            'nama' =>'Pendidikan Agama Islam dan Budi Pekerti',
+            'jml_jam' =>'2',
+            'type'=>'Umum',
+            'status'=>'1',
+        ]);
+        Mapel::create([
+            'nama' =>'Pendidikan Pancasila dan Kewarganegaraan',
+            'jml_jam' =>'2',
+            'type'=>'Umum',
+            'status'=>'1',
+        ]);
+        Mapel::create([
+            'nama' =>'Pendidikan Jasmani, Olahraga, dan Kesehatan',
+            'jml_jam' =>'2',
+            'type'=>'Umum',
+            'status'=>'1',
+        ]);
+        Mapel::create([
+            'nama' =>'Bahasa Sunda',
+            'jml_jam' =>'2',
+            'type'=>'Umum',
+            'status'=>'1',
+        ]);
+        Mapel::create([
+            'nama' =>'Sejarah',
             'jml_jam' =>'2',
             'type'=>'Umum',
             'status'=>'1',
@@ -49,15 +73,32 @@ class AppSeeder extends Seeder
             'status'=>'1',
         ]);
         Mapel::create([
-            'nama' =>'Bahasa Indonesia',
-            'jml_jam' =>'2',
+            'nama' =>'Matematika',
             'jml_jam' =>'2',
             'type'=>'Umum',
             'status'=>'1',
         ]);
+        Mapel::create([
+            'nama' =>'Informatika',
+            'jml_jam' =>'2',
+            'type'=>'Umum',
+            'status'=>'1',
+        ]);
+        Mapel::create([
+            'nama' =>'Project IPAS',
+            'jml_jam' =>'2',
+            'type'=>'Kejuruan',
+            'status'=>'1',
+        ]);
+        Mapel::create([
+            'nama' =>'Dasar-Dasar Layanan Kesehatan',
+            'jml_jam' =>'2',
+            'type'=>'Kejuruan',
+            'status'=>'1',
+        ]);
 
         //-----------------------------------------------------------------
-        // SEEDER UNTUK TAHUN PELAJARAN PELAJARAN
+        // SEEDER UNTUK TAHUN PELAJARAN
         // ----------------------------------------------------------------
 
         TahunPelajaran::create([
@@ -76,15 +117,23 @@ class AppSeeder extends Seeder
         // ----------------------------------------------------------------
 
         Jurusan::create([
-            'nama_jurusan'=>'REKAYASA PERANGKAT LUNAK',
+            'nama_jurusan'=>'Farmasi Klinis dan Komunitas',
+            'kurikulum'=>'K13',
             'status'=>'1'
         ]);
         Jurusan::create([
-            'nama_jurusan'=>'SENI PERTUNJUKAN',
+            'nama_jurusan'=>'Asisten Keperawatan',
+            'kurikulum'=>'K13',
             'status'=>'1'
         ]);
         Jurusan::create([
-            'nama_jurusan'=>'FARMASI KLINIS & KOMUNITAS',
+            'nama_jurusan'=>'Teknologi Farmasi',
+            'kurikulum'=>'Kurikulum Merdeka',
+            'status'=>'1'
+        ]);
+        Jurusan::create([
+            'nama_jurusan'=>'Layanan Kesehatan',
+            'kurikulum'=>'Kurikulum Merdeka',
             'status'=>'1'
         ]);
 
@@ -94,7 +143,14 @@ class AppSeeder extends Seeder
 
         Kelas::create([
             'nama_kelas'=>'X',
-            'id_jurusan'=>'1',
+            'id_jurusan'=>'3',
+            'sub_kelas'=>'',
+            'kapasitas'=>'30',
+            'status'=>'1'
+        ]);
+        Kelas::create([
+            'nama_kelas'=>'X',
+            'id_jurusan'=>'4',
             'sub_kelas'=>'',
             'kapasitas'=>'30',
             'status'=>'1'
@@ -108,7 +164,7 @@ class AppSeeder extends Seeder
         ]);
         Kelas::create([
             'nama_kelas'=>'XI',
-            'id_jurusan'=>'1',
+            'id_jurusan'=>'2',
             'sub_kelas'=>'',
             'kapasitas'=>'30',
             'status'=>'1'
@@ -116,6 +172,13 @@ class AppSeeder extends Seeder
         Kelas::create([
             'nama_kelas'=>'XII',
             'id_jurusan'=>'1',
+            'sub_kelas'=>'',
+            'kapasitas'=>'30',
+            'status'=>'1'
+        ]);
+        Kelas::create([
+            'nama_kelas'=>'XII',
+            'id_jurusan'=>'2',
             'sub_kelas'=>'',
             'kapasitas'=>'30',
             'status'=>'1'
@@ -185,12 +248,12 @@ class AppSeeder extends Seeder
        $role2->givePermissionTo('update');
 
         // FOR SISWA
-       $role3 = Role::create(['name' => 'siswa']);
+        $role3 = Role::create(['name' => 'siswa']);
         // give Permission
-       $role3->givePermissionTo('read');
+        $role3->givePermissionTo('read');
 
         // FOR ADMIN
-       $role4 = Role::create(['name' => 'admin']);
+        $role4 = Role::create(['name' => 'admin']);
         // give Permisson
         $role4->givePermissionTo('create');
         $role4->givePermissionTo('read');
@@ -204,7 +267,7 @@ class AppSeeder extends Seeder
         // ----------------------------------------------------------------
         student::create([
             'nis'=>'24257001',
-            'nama'=> 'Sample Student',
+            'nama'=> 'Sample Student 1',
             'gender'=>'L',
             'tempat_lahir'=>'Tasikmalaya',
             'tanggal_lahir'=>'07-05-2003',
@@ -223,7 +286,7 @@ class AppSeeder extends Seeder
 
         student::create([
             'nis'=>'24257002',
-            'nama'=> 'Sample Student 1',
+            'nama'=> 'Sample Student 2',
             'gender'=>'P',
             'tempat_lahir'=>'Tasikmalaya',
             'tanggal_lahir'=>'07-05-2003',
@@ -236,7 +299,7 @@ class AppSeeder extends Seeder
             'status' => '1',
             'tanggal_masuk' => '07-05-2013',
             'id_rfid' => 'RFID002',
-            'id_kelas' => '1',
+            'id_kelas' => '2',
             'id_tahun_ajar' => '1',
         ]);
 
@@ -246,21 +309,20 @@ class AppSeeder extends Seeder
 
         $user = User::create([
             'nomor'=>'24257001',
-            'nama'=>'Sample Student',
-            'email'=>'siswa.sakti@gmail.com',
+            'nama'=>'Sample Student 1',
+            'email'=>'24257001@saktiproject.my.id',
             'role'=>'4',
             'status'=>'2',
             'email_verified_at' => now(),
             'password' =>'tasik2024',
             'remember_token' => 'KmQZvcFoiceUiz2mAm7owajYSkkeCMUOpPeknIEuroZOiZJmgFBa3l0p5YGz',
         ]);
-
         $user->assignRole($role3);
 
         $user = User::create([
             'nomor'=>'24257002',
-            'nama'=>'Sample Student 1',
-            'email'=>'siswa1.sakti@gmail.com',
+            'nama'=>'Sample Student 2',
+            'email'=>'24257002@saktiproject.my.id',
             'role'=>'4',
             'status'=>'2',
             'email_verified_at' => now(),
@@ -274,66 +336,63 @@ class AppSeeder extends Seeder
         // ----------------------------------------------------------------
 
         gtk::create([
-            'nik'=>'8992453671234567',
-            'nip'=>'100129379',
-            'nama'=>'CUCU SUTIRAH S.Pd',
-            'gender'=>'P',
+            'nik'=>'6376372635140006',
+            'nip'=>'',
+            'nama'=>'SAMPLE WALIKELAS',
+            'gender'=>'L',
             'tempat_lahir'=>'TASIKMALAYA',
-            'tanggal_lahir'=>'20-04-1950',
+            'tanggal_lahir'=>'09-09-2009',
             'agama'=>'Islam',
-            'alamat'=>'PERUM BUMI ASRI',
-            'telp'=>'+6285331002523',
+            'alamat'=>'CIBEUREUM',
+            'telp'=>'+6285123432546',
             'id_provinsi' => '32',
             'id_kota' => '3278',
-            'id_kecamatan' => '3278070',
-            'id_desa' => '3278070012',
-            'id_jenis_gtk' => '3',
+            'id_kecamatan' => '3278020',
+            'id_desa' => '3278020008',
+            'id_jenis_gtk' => '1',
             'status' => '1',
-            'tanggal_masuk' =>'08-09-2005',
+            'tanggal_masuk' =>'11-11-2019',
             'id_rfid' =>'RFID003',
-
         ]);
 
         gtk::create([
-            'nik'=>'8992453671234891',
-            'nip'=>'100129380',
-            'nama'=>'ABDUL MUJAHIDIN S.Kom',
+            'nik'=>'6376372635140008',
+            'nip'=>'',
+            'nama'=>'SAMPLE GURU',
             'gender'=>'L',
             'tempat_lahir'=>'TASIKMALAYA',
-            'tanggal_lahir'=>'20-04-1950',
+            'tanggal_lahir'=>'09-09-2009',
             'agama'=>'Islam',
-            'alamat'=>'JL.BURUJUL No.40',
-            'telp'=>'+6285331002524',
+            'alamat'=>'Jl. Mugarsari',
+            'telp'=>'+6285123432456',
             'id_provinsi' => '32',
             'id_kota' => '3278',
-            'id_kecamatan' => '3278070',
-            'id_desa' => '3278070012',
+            'id_kecamatan' => '3278020',
+            'id_desa' => '3278020008',
             'id_jenis_gtk' => '1',
             'status' => '1',
-            'tanggal_masuk' =>'08-09-2005',
+            'tanggal_masuk' =>'11-11-2019',
             'id_rfid' =>'RFID004',
-
         ]);
 
         gtk::create([
-            'nik'=>'8992453671234892',
-            'nip'=>'100129381',
-            'nama'=>'ADE FAUIZI S.Kom M.Kom',
+            'nik'=>'6376372635140009',
+            'nip'=>'',
+            'nama'=>'SAMPLE TENDIK',
             'gender'=>'L',
             'tempat_lahir'=>'TASIKMALAYA',
-            'tanggal_lahir'=>'20-04-1950',
+            'tanggal_lahir'=>'09-09-2009',
             'agama'=>'Islam',
-            'alamat'=>'JL. CIBAREGBEG',
-            'telp'=>'+6285331002525',
+            'alamat'=>'Jl. Depok I',
+            'telp'=>'+6285123432654',
             'id_provinsi' => '32',
             'id_kota' => '3278',
-            'id_kecamatan' => '3278070',
-            'id_desa' => '3278070012',
-            'id_jenis_gtk' => '1',
+            'id_kecamatan' => '3278020',
+            'id_desa' => '3278020008',
+            'id_jenis_gtk' => '2',
             'status' => '1',
-            'tanggal_masuk' =>'08-09-2005',
+            'tanggal_masuk' =>'11-11-2019',
             'id_rfid' =>'RFID005',
-
         ]);
 
         //-----------------------------------------------------------------
@@ -341,35 +400,33 @@ class AppSeeder extends Seeder
         // ----------------------------------------------------------------
 
         $user = User::create([
-            'nomor'=>'8992453671234567',
-            'nama'=>'CUCU SUTIRAH S.Pd',
-            'email'=>'walikelas.sakti@gmail.com',
+            'nomor'=>'6376372635140006',
+            'nama'=>'SAMPLE WALIKELAS',
+            'email'=>'walikelas@saktiproject.my.id',
             'role'=>'2',
             'status'=>'2',
             'email_verified_at' => now(),
             'password' =>'tasik2024',
             'remember_token' => 'KmQZvcFoiceUiz2mAm7owajYSkkeCMUOpPeknIEuroZOiZJmgFBa3l0p5YGz',
         ]);
-
         $user->assignRole($role1);
 
         $user = User::create([
-            'nomor'=>'8992453671234891',
-            'nama'=>'ABDUL MUJAHIDIN S.Kom',
-            'email'=>'guru.sakti@gmail.com',
+            'nomor'=>'6376372635140008',
+            'nama'=>'SAMPLE GURU',
+            'email'=>'guru@saktiproject.my.id',
             'role'=>'3',
             'status'=>'2',
             'email_verified_at' => now(),
             'password' =>'tasik2024',
             'remember_token' => 'KmQZvcFoiceUiz2mAm7owajYSkkeCMUOpPeknIEuroZOiZJmgFBa3l0p5YGz',
         ]);
-
         $user->assignRole($role2);
 
         $user = User::create([
-            'nomor'=>'8992453671234892',
-            'nama'=>'ADE FAUIZI S.Kom M.Kom',
-            'email'=>'admin@gmail.com',
+            'nomor'=>'20271907',
+            'nama'=>'Admin',
+            'email'=>'admin@saktiproject.my.id',
             'role'=>'1',
             'status'=>'2',
             'email_verified_at' => now(),
@@ -379,7 +436,7 @@ class AppSeeder extends Seeder
         $user->assignRole($role4);
 
         $user = User::create([
-            'nomor'=>'99876776229',
+            'nomor'=>'20271907',
             'nama'=>'Administrator',
             'email'=>'superAdmin.sakti@gmail.com',
             'role'=>'5',
@@ -388,7 +445,6 @@ class AppSeeder extends Seeder
             'password' =>'tasik2024',
             'remember_token' => 'KmQZvcFoiceUiz2mAm7owajYSkkeCMUOpPeknIEuroZOiZJmgFBa3l0p5YGz',
         ]);
-
         $user->assignRole($role5);
 
         //-----------------------------------------------------------------
@@ -396,19 +452,10 @@ class AppSeeder extends Seeder
         // ----------------------------------------------------------------
 
         JenisGTK::create([
-            'nama'=>'GURU PENGAJAR'
+            'nama'=>'Guru'
         ]);
         JenisGTK::create([
-            'nama'=>'KEPALA SEKOLAH'
-        ]);
-        JenisGTK::create([
-            'nama'=>'WALI KELAS'
-        ]);
-        JenisGTK::create([
-            'nama'=>'GURU BIMBINGAN KONSELING'
-        ]);
-        JenisGTK::create([
-            'nama'=>'STAF TU'
+            'nama'=>'Tenaga Kependidikan'
         ]);
 
         //-----------------------------------------------------------------
@@ -441,23 +488,7 @@ class AppSeeder extends Seeder
             'id_kelas'=>'1',
             'id_mapel'=>'1',
             'semester'=>'Ganjil',
-            'id_gtk'=>'8992453671234567',
-            'status'=>'2',
-        ]);
-        grupMapel::create([
-            'id_tahun_pelajaran'=>'1',
-            'id_kelas'=>'1',
-            'id_mapel'=>'2',
-            'semester'=>'Ganjil',
-            'id_gtk'=>'8992453671234891',
-            'status'=>'2',
-        ]);
-        grupMapel::create([
-            'id_tahun_pelajaran'=>'1',
-            'id_kelas'=>'1',
-            'id_mapel'=>'3',
-            'semester'=>'Ganjil',
-            'id_gtk'=>'8992453671234892',
+            'id_gtk'=>'3278071906970005',
             'status'=>'2',
         ]);
 
@@ -467,7 +498,7 @@ class AppSeeder extends Seeder
         walikelas::create([
             'id_tahun_pelajaran'=>'1',
             'id_kelas'=>'1',
-            'id_gtk'=>'8992453671234567',
+            'id_gtk'=>'6376372635140006',
         ]);
     }
         //-----------------------------------------------------------------

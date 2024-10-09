@@ -9,8 +9,8 @@
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item " aria-current="page">pengguna</li>
-                <li class="breadcrumb-item active" aria-current="page">Jenis Guru dan Tenaga Kependidikan</li>
+                <li class="breadcrumb-item " aria-current="page">GTK</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>

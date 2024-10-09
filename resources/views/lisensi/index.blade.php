@@ -3,13 +3,13 @@
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
-        <h3 class="page-title mb-1">{{ $title }}</h3>
+        <h3 class="page-title mb-1">Data {{ $title }}</h3>
         <nav>
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Lisensi</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>

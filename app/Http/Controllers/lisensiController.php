@@ -38,6 +38,7 @@ class lisensiController extends Controller
                  'subscription_type'=>'2',
                  'expired'=>$nextYear,
                  'status'=>'1',
+                 'logo'=>'asset/img/smk.png',
              ]);
          }
          return redirect()->back();

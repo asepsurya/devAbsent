@@ -3,16 +3,15 @@
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
-        <h3 class="page-title mb-1">{{ $title }}</h3>
+        <h3 class="page-title mb-1">Data {{ $title }}</h3>
         <nav>
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item">
-                    <a href="javascript:void(0);">Data Induk</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">Jurusan</li>
+                <li class="breadcrumb-item " aria-current="page">Akademik</li>
+                <li class="breadcrumb-item " aria-current="page">Data Induk</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>
@@ -26,7 +25,7 @@
 {{-- End Header --}}
 <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-        <h4 class="mb-3">Daftar Jurusan</h4>
+        <h4 class="mb-3">Daftar {{ $title }}</h4>
         <div class="d-flex align-items-center flex-wrap">
             <div class="input-icon-start mb-3 me-2 position-relative">
                 <span class="icon-addon">
@@ -44,6 +43,7 @@
                         <th class="bg-light-400">#</th>
 
                         <th class="bg-light-400">Nama Jurusan</th>
+                        <th class="bg-light-400">Kurikulum</th>
                         <th class="bg-light-400">Status</th>
                         <th class="bg-light-400">Action</th>
                     </tr>
@@ -58,6 +58,7 @@
                         <td>{{ $no++ }}</td>
 
                         <td>{{ $item->nama_jurusan }}</td>
+                        <td>{{ $item->kurikulum }}</td>
                         <td>
                             @if($item->status == 1)
                             <span class="badge badge-soft-success d-inline-flex align-items-center"><i
@@ -102,6 +103,10 @@
                                     <input type="text" class="form-control" name="nama" required placeholder="Nama Jurusan" value="{{ $item->nama_jurusan }}">
                                 </div>
                                 <div class="mb-3">
+                                    <label class="form-label">Kurikulum</label>
+                                    <input type="text" class="form-control" name="nama" required placeholder="Nama Jurusan" value="{{ $item->kurikulum }}">
+                                </div>
+                                <div class="mb-3">
                                     <label class="form-label">Status</label>
                                     <select name="status"  class="form-control select">
                                         <option value="1" @if($item->status== 1) selected  @endif>Aktif</option>
@@ -141,6 +146,10 @@
                                 <div class="mb-3">
                                     <label class="form-label">Nama Jurusan</label>
                                     <input type="text" class="form-control" name="nama" required placeholder="Nama Jurusan">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Kurikulum</label>
+                                    <input type="text" class="form-control" name="kurikulum" required placeholder="Kurikulum">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Status</label>

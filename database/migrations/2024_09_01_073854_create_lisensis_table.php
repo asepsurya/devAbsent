@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('subscription_type', ['Lifetime', 'Yearly', 'Monthly']);
             $table->string('expired'); //  Tanggal Expired
             $table->enum('status', ['Active', 'Pending', 'Expired']);
+            $table->string('logo');
             $table->timestamps();
         });
     }

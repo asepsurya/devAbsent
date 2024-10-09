@@ -3,14 +3,14 @@
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
-        <h3 class="page-title mb-1">{{ $title }}</h3>
+        <h3 class="page-title mb-1">Data {{ $title }}</h3>
         <nav>
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item " aria-current="page">pengguna</li>
-                <li class="breadcrumb-item active" aria-current="page">Hak Akses</li>
+                <li class="breadcrumb-item " aria-current="page">Pengguna</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>
@@ -37,7 +37,7 @@
 {{-- End Header --}}
 <div class="card">
     <div class="card-header">
-        <h4>Hak Akses</h4>
+        <h4>Daftar {{ $title }}</h4>
         <p>Hak akses modul untuk administrator</p>
     </div>
     <div class="card-body p-0 ">
@@ -57,7 +57,7 @@
                     <tr>
                         <td>1.</td>
                         <td>
-                           Guru dan Tenaga Kependidikan 
+                           Guru dan Tenaga Kependidikan
                         </td>
                         <td>Guru dan Tenaga Kependidikan</td>
                         <td>https://seller.shopee.co.id/portal/settings/shop/profile</td>
@@ -92,8 +92,8 @@
                     <div class="row">
                         <form action="" method="post">
                             <div class="col-md-12">
-                                
-        
+
+
                                 <div class="mb-3">
                                     <label class="form-label">Modul</label>
                                     <div class="pass-group mb-3">
@@ -108,7 +108,7 @@
                                         <span class="ti toggle-password ti-eye-off"></span>
                                     </div>
                                 </div>
-                            
+
                             </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
                     <button type="submit" class="btn btn-primary w-100"><span class="ti ti-pencil-plus"></span> Ubah</button>
             </form>
         </div>
-     
+
     </div>
 </div>
 </div>

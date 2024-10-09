@@ -9,7 +9,7 @@
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Hari Libur</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>
@@ -35,7 +35,7 @@
 {{-- End Header --}}
 <div class="card">
     <div class="card-header">
-        <h4>Daftar Hari Libur</h4>
+        <h4>Daftar {{ $title }}</h4>
     </div>
     <div class="card-body p-0 ">
         <div class="table-responsive">

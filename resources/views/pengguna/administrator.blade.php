@@ -3,14 +3,14 @@
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
-        <h3 class="page-title mb-1">{{ $title }}</h3>
+        <h3 class="page-title mb-1">Data {{ $title }}</h3>
         <nav>
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item " aria-current="page">pengguna</li>
-                <li class="breadcrumb-item active" aria-current="page">Administrator</li>
+                <li class="breadcrumb-item " aria-current="page">Pengguna</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>
@@ -37,7 +37,7 @@
 {{-- End Header --}}
 <div class="card">
     <div class="card-header">
-        <h4>Daftar Pengguna Administrator</h4>
+        <h4>Daftar {{ $title }}</h4>
     </div>
     <div class="card-body p-0 ">
         <div class="table-responsive">
@@ -90,7 +90,7 @@
                 @csrf
                 <div class="modal-body">
                     <div class="row">
-                        
+
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label">Nama Lengkap</label>
@@ -125,11 +125,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                 
+
                     <button type="submit" class="btn btn-primary w-100">Tambah</button>
             </form>
         </div>
-     
+
     </div>
 </div>
 </div>

@@ -9,10 +9,7 @@
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item">
-                    <a href="javascript:void(0);">Data Induk</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">Kelas</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>

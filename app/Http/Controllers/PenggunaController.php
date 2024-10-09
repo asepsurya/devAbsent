@@ -15,7 +15,7 @@ class PenggunaController extends Controller
 {
     Public function userAdministratorIndex(){
         return view('pengguna.administrator',[
-            'title' => 'Pengguna Administrator'
+            'title' => 'Administrator'
         ]);
     }
     public function userStudentsIndex(){
@@ -37,7 +37,7 @@ class PenggunaController extends Controller
     public function usermodulesIndex(){
         $roles = DB::table('roles')->get();
         return view('pengguna.modul',[
-            'title' => 'Daftar Modul',
+            'title' => 'Modul',
             'roles' => $roles
         ]);
     }

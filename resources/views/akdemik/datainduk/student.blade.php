@@ -6,16 +6,15 @@
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
-        <h3 class="page-title mb-1"><span class="ti ti-user"></span> {{ $title }}</h3>
+        <h3 class="page-title mb-1"><span class="ti ti-user"></span> Data {{ $title }}</h3>
         <nav>
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item">
-                    <a href="javascript:void(0);">Data Induk</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">Peserta Didik</li>
+                <li class="breadcrumb-item " aria-current="page">Akademik</li>
+                <li class="breadcrumb-item " aria-current="page">Data Induk</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>
@@ -83,7 +82,7 @@
 
 <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-        <h4 class="mb-3"><span class="ti ti-user"></span> Daftar Peserta Didik</h4>
+        <h4 class="mb-3"><span class="ti ti-user"></span> Daftar {{ $title }}</h4>
         <div class="d-flex align-items-center flex-wrap">
 
         </div>

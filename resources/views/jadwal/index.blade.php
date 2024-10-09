@@ -9,7 +9,7 @@
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Jadwal Pelajaran</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>
@@ -40,7 +40,7 @@
 <div class="card">
     <div class="card-header">
         <form action="{{ route('list',$id) }}" method="get">
-        <h4 class="mb-2">List Jadwal Pelajaran</h4>
+        <h4 class="mb-2">Daftar {{ $title }}</h4>
 
         <select name="tahun_ajar2" class="tahun_ajar" onchange="this.form.submit()">
             @foreach ($tahun_ajar as $item )

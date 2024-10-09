@@ -3,14 +3,14 @@
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
-        <h3 class="page-title mb-1">{{ $title }}</h3>
+        <h3 class="page-title mb-1">Data {{ $title }}</h3>
         <nav>
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
                     <a href="/dashboard">Beranda</a>
                 </li>
-                <li class="breadcrumb-item " aria-current="page">pengguna</li>
-                <li class="breadcrumb-item active" aria-current="page">Administrator</li>
+                <li class="breadcrumb-item " aria-current="page">Pengguna</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
     </div>
@@ -33,7 +33,7 @@
 {{-- End Header --}}
 <div class="card">
     <div class="card-header">
-        <h4><span class="ti ti-key"></span>Daftar Verifikasi Pengguna</h4>
+        <h4><span class="ti ti-key"></span> Daftar {{ $title }}</h4>
     </div>
     <div class="card-body p-0 ">
         <div class="table-responsive">
