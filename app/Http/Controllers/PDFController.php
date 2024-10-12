@@ -40,7 +40,7 @@ class PDFController extends Controller
 
         App::setLocale('id');
         $data = [
-            'title' => 'Data Users Administrator',
+            'title' => 'Data Users Admin',
             'date'  => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
             'users' => $users
         ];
@@ -68,7 +68,7 @@ class PDFController extends Controller
         ];
 
         $pdf = PDF::loadView('exportPDF.users', $data)->setPaper('a4', 'landscape');
-        return $pdf->download('users-walikelas-' . Carbon::now()->format('YmdHis') . '.pdf');
+        return $pdf->stream('users-walikelas-' . Carbon::now()->format('YmdHis') . '.pdf');
     }
 
     public function generatePDFUserGuru() {

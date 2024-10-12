@@ -175,7 +175,7 @@
                     <ul>
                         <h6 class="submenu-hdr"><span>Report</span></h6>
                         <li>
-                            <a href="##"><i class="ti ti-file-text"></i><span>Laporan</span></a>
+                            <a href="{{ route('report.absents') }}"><i class="ti ti-file-text"></i><span>Laporan</span></a>
                         </li>
                     </ul>
                 </li>
@@ -204,7 +204,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="##"><i class="ti ti-settings"></i><span>Pengaturan</span></a>
+                            <a href="#"><i class="ti ti-settings"></i><span>Pengaturan</span></a>
                         </li>
                     </ul>
                 </li>

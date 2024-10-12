@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\reportController;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
@@ -193,9 +194,11 @@ Route::post('/addEventModal',[FullCalenderController::class,'addEventModal']);
 Route::get('/export/users', [PDFController::class, 'generatePDFUserAll'])->name('export.users');
 Route::get('/export/users/admin', [PDFController::class, 'generatePDFUserAdmin'])->name('export.userAdmin');
 Route::get('/export/users/walikelas', [PDFController::class, 'generatePDFUserWalikelas'])->name('export.userWalikelas');
-Route::get('/export/users/guru', [PDFController::class, 'generatePDFUserGuru'])->name('export.userGuru');
-Route::get('/export/users/siswa', [PDFController::class, 'generatePDFUserSiswa'])->name('export.userSiswa');
+Route::get('/export/users/gtks', [PDFController::class, 'generatePDFUserGuru'])->name('export.userGuru');
+Route::get('/export/users/students', [PDFController::class, 'generatePDFUserSiswa'])->name('export.userSiswa');
 
 Route::get('/export/gtks', [PDFController::class, 'generatePDFGTKAll'])->name('export.gtks');
 Route::get('/export/students', [PDFController::class, 'generatePDFSiswaAll'])->name('export.students');
+
+Route::get('/report/absent', [reportController::class, 'reportAbsensiAll'])->name('report.absents');
 
