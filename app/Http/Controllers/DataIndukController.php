@@ -7,6 +7,7 @@ use App\Models\student;
 use App\Models\Province;
 use App\Models\Kelas;
 use App\Models\Jurusan;
+use App\Models\rombel;
 use App\Models\Mapel;
 use App\Models\User;
 use App\Models\rfid;
@@ -165,6 +166,9 @@ class DataIndukController extends Controller
         }
         // hapus data tabel student
         student::where('nis',$id)->delete();
+        // hapus data rombel student
+        rombel::where('nis', $id)->delete();
+
         // Hapus data Table model_has_roles
         $cekid = User::where('nomor',$id)->get();
         foreach($cekid as $key){
