@@ -34,30 +34,108 @@
 
 <div class="tab-content">
     <div class="tab-pane active show" id="orders" role="tabpanel">
+        <div class="d-flex justify-content-end">
+            @php
+               $today = Carbon\Carbon::today();
+                // Format the dates
+                $todayFormatted = $today->format('d/m/Y');
+                $startOfWeekFormatted = $today->startOfWeek()->format('d/m/Y');
+                $startOfMonthFormatted = $today->startOfMonth()->format('d/m/Y');
+
+            @endphp
+            <nav class="nav justify-content-center mb-4">
+                <a class="nav-link {{ $todayFormatted == request('start') ?'active':''  }}" href="{{ route('kelaslistdetail',$id) }}?start={{ $todayFormatted }}&end={{ $todayFormatted }}">Hari Ini</a>
+                <a class="nav-link {{ $startOfWeekFormatted == request('start') ?'active':''  }}" href="{{ route('kelaslistdetail',$id) }}?start={{ $startOfWeekFormatted }}&end={{ $todayFormatted }}">Minggu Ini</a>
+                <a class="nav-link {{ $startOfMonthFormatted == request('start') ?'active':''  }}" href="{{ route('kelaslistdetail',$id) }}?start={{ $startOfMonthFormatted }}&end={{ $todayFormatted }}">Bulan Ini</a>
+            </nav>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-nowrap mb-0">
+
                 <thead>
+
                     <tr>
-                        <th class="bg-light-400">#</th>
-                        <th class="bg-light-400">NIS</th>
-                        <th class="bg-light-400">Nama Lengkap</th>
-                        <th class="bg-light-400">Jenis Kelamin</th>
+                        <th class="bg-light-400 border" width="5%">#</th>
+                        <th class="bg-light-400" width="10%">NIS</th>
+                        <th class="bg-light-400" width="20%">Nama Lengkap</th>
+                        <th class="bg-light-400" width="10%">Jenis Kelamin</th>
+
+                        <th class="bg-light-400 border" width="5%">H</th>
+                        <th class="bg-light-400 border" width="5%">I</th>
+                        <th class="bg-light-400 border" width="5%">S</th>
+                        <th class="bg-light-400 border" width="5%">A</th>
 
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                    $no =1;
+                    @endphp
+                    @foreach ($students as $item )
                     <tr>
-                        <td><a href="#">1</a></td>
-                        <td><a href="#" class="link-primary">H752762</a></td>
-                        <td>
-                            Hari meperingati ulang tahun Asep
+                        <td class="border">{{ $no++ }}</td>
+                        <td>{{ $item->nis }}</a></td>
+                        <td> {{ $item->rombelStudent->nama }}
                         </td>
-                        <td>01 Jan 2024</td>
+                        <td>{{ $item->rombelStudent->gender }}</td>
+
+                        <td class="border">
+                            @php
+                            $jumlahHadir = 0; // Inisialisasi variabel untuk menghitung jumlah hadir
+                            @endphp
+
+                            @foreach ($item->rombelAbsentClass as $key)
+                              @if($key->status == 'H')
+                                @php $jumlahHadir++; @endphp
+                              @endif
+                            @endforeach
+                            <!-- Menampilkan jumlah siswa yang hadir -->
+                           {{ $jumlahHadir }}
+
+                        </td>
+                        <td class="border">
+                            @php
+                            $jumlahHadir = 0; // Inisialisasi variabel untuk menghitung jumlah hadir
+                            @endphp
+                            @foreach ($item->rombelAbsentClass as $key)
+                              @if($key->status == 'I' )
+                                @php $jumlahHadir++; @endphp
+                              @endif
+                            @endforeach
+                            <!-- Menampilkan jumlah siswa yang hadir -->
+                           {{ $jumlahHadir }}
+                        </td>
+                        <td class="border">
+                            @php
+                            $jumlahHadir = 0; // Inisialisasi variabel untuk menghitung jumlah hadir
+                            @endphp
+                            @foreach ($item->rombelAbsentClass as $key)
+                              @if($key->status == 'S')
+                                @php $jumlahHadir++; @endphp
+                              @endif
+                            @endforeach
+                            <!-- Menampilkan jumlah siswa yang hadir -->
+                           {{ $jumlahHadir }}
+                        </td>
+                        <td class="border">
+                             @php
+                            $jumlahHadir = 0; // Inisialisasi variabel untuk menghitung jumlah hadir
+                            @endphp
+                            @foreach ($item->rombelAbsentClass as $key)
+                              @if($key->status == 'I')
+                                @php $jumlahHadir++; @endphp
+                              @endif
+                            @endforeach
+                            <!-- Menampilkan jumlah siswa yang hadir -->
+                           {{ $jumlahHadir }}
+                        </td>
 
                     </tr>
-
+                    @endforeach
                 </tbody>
             </table>
+
         </div>
     </div>
     <div class="tab-pane " id="accepted" role="tabpanel">
@@ -87,23 +165,25 @@
             </div>
         </div>
         <div class="d-flex justify-content-end">
-      <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded mb-3 " role="tablist">
-            <li class="nav-item" role="presentation">
-                <a class="nav-link active" data-bs-toggle="tab" role="tab" href="#home1" aria-selected="false" tabindex="-1">Hari Ini</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link " data-bs-toggle="tab" role="tab" href="#about1" aria-selected="true">Minggu ini</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" data-bs-toggle="tab" role="tab" href="#service1" aria-selected="false"
-                    tabindex="-1">Bulan ini</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" data-bs-toggle="tab" role="tab" href="#license1" aria-selected="false"
-                    tabindex="-1">License</a>
-            </li>
-        </ul>
-    </div>
+            <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded mb-3 " role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" data-bs-toggle="tab" role="tab" href="#home1" aria-selected="false"
+                        tabindex="-1">Hari Ini</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link " data-bs-toggle="tab" role="tab" href="#about1" aria-selected="true">Minggu
+                        ini</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" role="tab" href="#service1" aria-selected="false"
+                        tabindex="-1">Bulan ini</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" role="tab" href="#license1" aria-selected="false"
+                        tabindex="-1">License</a>
+                </li>
+            </ul>
+        </div>
         <div class="border rounded p-3 bg-white">
             <div class="row">
                 <div class="col text-center border-end">
@@ -125,7 +205,7 @@
             </div>
         </div>
 
-      <div class="tab-content mt-3">
+        <div class="tab-content mt-3">
             <div class="tab-pane  active show" id="home1" role="tabpanel">
                 <div class="table-responsive">
                     <table class="table table-nowrap mb-0">

@@ -55,7 +55,7 @@
 
                         <td>
                             @if(Request::is('class/list'))
-                                <a href="{{ route('kelaslistdetail')}}" class="link-primary">{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</a>
+                                <a href="{{ route('kelaslistdetail',$item->id)}}" class="link-primary">{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</a>
 
                             @else
                                 <a href="{{ route('list',$item->id) }}" class="link-primary">{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</a>

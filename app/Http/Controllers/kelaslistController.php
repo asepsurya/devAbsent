@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\gtk;
 use App\Models\Kelas;
+use App\Models\Mapel;
 use App\Models\absent;
 use App\Models\rombel;
 use App\Models\Jurusan;
-use App\Models\Mapel;
+use App\Models\student;
 use App\Models\grupMapel;
 use App\Models\absentMapel;
 use Illuminate\Http\Request;
@@ -23,10 +26,44 @@ class kelaslistController extends Controller
         ]);
     }
 
-    public function kelaslistdetail(){
-        return view('datakelas.detail',[
-            'title'=>'Detail Kelas'
-        ]);
+    public function kelaslistdetail(request $request,$id){
+        $startDate = request('start');
+        $endDate = request('end');
+
+        if ($startDate && $endDate) {
+            // Fetching the rombel with related data
+            $cek = rombel::where('id_kelas', $id)
+                ->with(['rombelStudent', 'rombelAbsentClass'])
+                ->get();
+
+            $nisList = []; // Store NIS numbers
+
+            // Collect NIS numbers from absent class data
+            foreach ($cek as $a) {
+                foreach ($a->rombelAbsentClass as $absentClass) {
+                    $nisList[] = $absentClass->nis;
+                }
+            }
+
+            // Ensure NIS list is unique
+            $nisList = array_unique($nisList);
+
+            // Fetching absent data for the specified NIS within the date range
+            $data = AbsentMapel::whereIn('nis', $nisList)
+                ->whereBetween('tanggal', [$startDate, $endDate])
+                ->get();
+        } else {
+            // If no date range is provided, fetch all students and their absences
+            $data = rombel::where('id_kelas', $id)->where('id_kelas',$id)
+                ->with(['rombelStudent', 'rombelAbsentClass'])
+                ->get();
+        }
+
+        return view('datakelas.detail', [
+            'title' => 'Detail Kelas',
+            'students' => $data, // Ensure to return the right variable here
+            'id' => $id
+        ],compact('id'));
     }
 
     public function absentclass(){
@@ -59,4 +96,6 @@ class kelaslistController extends Controller
 
         ]);
     }
+
+
 }

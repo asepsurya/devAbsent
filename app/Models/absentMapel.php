@@ -19,4 +19,10 @@ class absentMapel extends Model
     public function gtk(){
         return $this->belongsTo('App\Models\gtk','id_rfid','id_rfid');
     }
+    public function rombelStudent(){
+        return $this->belongsTo('App\Models\student','nis','nis');
+    }
+    public function rombelAbsentClass(){
+        return $this->hasMany('App\Models\absentMapel','nis','nis');
+    }
 }

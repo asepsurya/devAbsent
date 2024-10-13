@@ -78,7 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/absent/class/student',[kelaslistController::class,'absentClassStudent'])->name('absentClassStudent');
 
     Route::get('/class/list',[kelaslistController::class,'kelaslist'])->name('kelaslist');
-    Route::get('/class/list/detail',[kelaslistController::class,'kelaslistdetail'])->name('kelaslistdetail');
+    Route::get('/class/list/detail/{id}',[kelaslistController::class,'kelaslistdetail'])->name('kelaslistdetail');
     Route::get('/holidays',[HolidaysController::class,'index']);
     // route Absensi RFID
     Route::get('/absensi/student',[AbsensiController::class,'absensiStudent'])->name('absensiStudent');
