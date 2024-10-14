@@ -27,42 +27,14 @@ class kelaslistController extends Controller
     }
 
     public function kelaslistdetail(request $request,$id){
-        $startDate = request('start');
-        $endDate = request('end');
 
-        if ($startDate && $endDate) {
-            // Fetching the rombel with related data
-            $cek = rombel::where('id_kelas', $id)
+        $data = rombel::where('id_kelas', $id)
                 ->with(['rombelStudent', 'rombelAbsentClass'])
                 ->get();
-
-            $nisList = []; // Store NIS numbers
-
-            // Collect NIS numbers from absent class data
-            foreach ($cek as $a) {
-                foreach ($a->rombelAbsentClass as $absentClass) {
-                    $nisList[] = $absentClass->nis;
-                }
-            }
-
-            // Ensure NIS list is unique
-            $nisList = array_unique($nisList);
-
-            // Fetching absent data for the specified NIS within the date range
-            $data = AbsentMapel::whereIn('nis', $nisList)
-                ->whereBetween('tanggal', [$startDate, $endDate])
-                ->get();
-        } else {
-            // If no date range is provided, fetch all students and their absences
-            $data = rombel::where('id_kelas', $id)->where('id_kelas',$id)
-                ->with(['rombelStudent', 'rombelAbsentClass'])
-                ->get();
-        }
 
         return view('datakelas.detail', [
             'title' => 'Detail Kelas',
-            'students' => $data, // Ensure to return the right variable here
-            'id' => $id
+            'students' => $data,
         ],compact('id'));
     }
 

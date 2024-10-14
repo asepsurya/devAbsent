@@ -34,37 +34,43 @@
 
 <div class="tab-content">
     <div class="tab-pane active show" id="orders" role="tabpanel">
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-between">
             @php
-               $today = Carbon\Carbon::today();
-                // Format the dates
-                $todayFormatted = $today->format('d/m/Y');
-                $startOfWeekFormatted = $today->startOfWeek()->format('d/m/Y');
-                $startOfMonthFormatted = $today->startOfMonth()->format('d/m/Y');
+            $today = Carbon\Carbon::today();
+            // Format the dates
+            $todayFormatted = $today->format('d/m/Y');
+            $startOfWeekFormatted = $today->startOfWeek()->format('d/m/Y');
+            $startOfMonthFormatted = $today->startOfMonth()->format('d/m/Y');
 
             @endphp
+            <div class="col-lg-8">
+                <input type="text" class="form-control" placeholder="Search..." id="myInput" onkeyup="myFunction()">
+            </div>
             <nav class="nav justify-content-center mb-4">
-                <a class="nav-link {{ $todayFormatted == request('start') ?'active':''  }}" href="{{ route('kelaslistdetail',$id) }}?start={{ $todayFormatted }}&end={{ $todayFormatted }}">Hari Ini</a>
-                <a class="nav-link {{ $startOfWeekFormatted == request('start') ?'active':''  }}" href="{{ route('kelaslistdetail',$id) }}?start={{ $startOfWeekFormatted }}&end={{ $todayFormatted }}">Minggu Ini</a>
-                <a class="nav-link {{ $startOfMonthFormatted == request('start') ?'active':''  }}" href="{{ route('kelaslistdetail',$id) }}?start={{ $startOfMonthFormatted }}&end={{ $todayFormatted }}">Bulan Ini</a>
+                <a class="nav-link {{  request('filter') =='today' ?'active':''  }}"
+                    href="{{ route('kelaslistdetail',$id) }}?filter=today">Hari Ini</a>
+                <a class="nav-link {{ request('filter') =='week' ?'active':''  }}"
+                    href="{{ route('kelaslistdetail',$id) }}?filter=week">Minggu Ini</a>
+                <a class="nav-link {{ request('filter') == 'month' ?'active':''  }}"
+                    href="{{ route('kelaslistdetail',$id) }}?filter=month">Bulan Ini</a>
             </nav>
         </div>
 
         <div class="table-responsive">
-            <table class="table table-nowrap mb-0">
+            <table class="table table-nowrap mb-0" id="myTable">
 
                 <thead>
 
                     <tr>
                         <th class="bg-light-400 border" width="5%">#</th>
-                        <th class="bg-light-400" width="10%">NIS</th>
-                        <th class="bg-light-400" width="20%">Nama Lengkap</th>
-                        <th class="bg-light-400" width="10%">Jenis Kelamin</th>
-
-                        <th class="bg-light-400 border" width="5%">H</th>
-                        <th class="bg-light-400 border" width="5%">I</th>
-                        <th class="bg-light-400 border" width="5%">S</th>
-                        <th class="bg-light-400 border" width="5%">A</th>
+                        <th class="bg-light-400 border" width="10%">NIS</th>
+                        <th class="bg-light-400 border" width="20%">Nama Lengkap</th>
+                        <th class="bg-light-400 border" width="10%">Jenis Kelamin</th>
+                        <th class="bg-light-400 border" width="10%">Tanggal Lahir</th>
+                        <th class="bg-light-400 border text-center" width="5%">H</th>
+                        <th class="bg-light-400 border text-center" width="5%">I</th>
+                        <th class="bg-light-400 border text-center" width="5%">S</th>
+                        <th class="bg-light-400 border text-center" width="5%">A</th>
 
                     </tr>
                 </thead>
@@ -75,60 +81,188 @@
                     @foreach ($students as $item )
                     <tr>
                         <td class="border">{{ $no++ }}</td>
-                        <td>{{ $item->nis }}</a></td>
-                        <td> {{ $item->rombelStudent->nama }}
-                        </td>
-                        <td>{{ $item->rombelStudent->gender }}</td>
-
-                        <td class="border">
+                        <td class="text-primary">{{ $item->nis }}</a></td>
+                        <td class="border"> {{ $item->rombelStudent->nama }} </td>
+                        <td class="border">{{ $item->rombelStudent->gender == 'L' ? 'Laki - Laki' : 'Perempuan' }}</td>
+                        <td class="border"> {{ $item->rombelStudent->tanggal_lahir }} </td>
+                        <td class="border text-center">
                             @php
-                            $jumlahHadir = 0; // Inisialisasi variabel untuk menghitung jumlah hadir
+                            $jumlahHadirHariIni = 0;
+                            $jumlahHadirMingguIni = 0;
+                            $jumlahHadirBulanIni = 0;
+                            $hariIni = \Carbon\Carbon::today();
+                            $mingguIni = $hariIni->copy()->startOfWeek();
+                            $bulanIni = $hariIni->copy()->startOfMonth();
                             @endphp
 
                             @foreach ($item->rombelAbsentClass as $key)
-                              @if($key->status == 'H')
-                                @php $jumlahHadir++; @endphp
-                              @endif
+                            @if($key->status == 'H')
+                            @php
+                            // Mengonversi tanggal dari format 'DD/MM/YYYY' menjadi objek Carbon
+                            $tanggalAbsen = \Carbon\Carbon::createFromFormat('d/m/Y', $key->tanggal);
+                            @endphp
+
+                            @if($tanggalAbsen->isToday())
+                            @php $jumlahHadirHariIni++; @endphp
+                            @endif
+
+                            @if($tanggalAbsen->between($mingguIni, $hariIni))
+                            @php $jumlahHadirMingguIni++; @endphp
+                            @endif
+
+                            @if($tanggalAbsen->isSameMonth($hariIni))
+                            @php $jumlahHadirBulanIni++; @endphp
+                            @endif
+                            @endif
                             @endforeach
-                            <!-- Menampilkan jumlah siswa yang hadir -->
-                           {{ $jumlahHadir }}
+
+                            {{-- hari ini --}}
+                            @if(request('filter')=="today")
+                            <p>{{ $jumlahHadirHariIni }}</p>
+                            @endif
+                            {{-- minggu ini --}}
+                            @if(request('filter')=="week")
+                            <p>{{ $jumlahHadirMingguIni }}</p>
+                            @endif
+                            {{-- bulan ini --}}
+                            @if(request('filter')=="month")
+                            <p>{{ $jumlahHadirBulanIni }}</p>
+                            @endif
 
                         </td>
-                        <td class="border">
+                        <td class="border text-center">
                             @php
-                            $jumlahHadir = 0; // Inisialisasi variabel untuk menghitung jumlah hadir
+                            $jumlahHadirHariIni = 0;
+                            $jumlahHadirMingguIni = 0;
+                            $jumlahHadirBulanIni = 0;
+                            $hariIni = \Carbon\Carbon::today();
+                            $mingguIni = $hariIni->copy()->startOfWeek();
+                            $bulanIni = $hariIni->copy()->startOfMonth();
                             @endphp
+
                             @foreach ($item->rombelAbsentClass as $key)
-                              @if($key->status == 'I' )
-                                @php $jumlahHadir++; @endphp
-                              @endif
-                            @endforeach
-                            <!-- Menampilkan jumlah siswa yang hadir -->
-                           {{ $jumlahHadir }}
-                        </td>
-                        <td class="border">
+                            @if($key->status == 'I')
                             @php
-                            $jumlahHadir = 0; // Inisialisasi variabel untuk menghitung jumlah hadir
+                            // Mengonversi tanggal dari format 'DD/MM/YYYY' menjadi objek Carbon
+                            $tanggalAbsen = \Carbon\Carbon::createFromFormat('d/m/Y', $key->tanggal);
                             @endphp
-                            @foreach ($item->rombelAbsentClass as $key)
-                              @if($key->status == 'S')
-                                @php $jumlahHadir++; @endphp
-                              @endif
+
+                            @if($tanggalAbsen->isToday())
+                            @php $jumlahHadirHariIni++; @endphp
+                            @endif
+
+                            @if($tanggalAbsen->between($mingguIni, $hariIni))
+                            @php $jumlahHadirMingguIni++; @endphp
+                            @endif
+
+                            @if($tanggalAbsen->isSameMonth($hariIni))
+                            @php $jumlahHadirBulanIni++; @endphp
+                            @endif
+                            @endif
                             @endforeach
-                            <!-- Menampilkan jumlah siswa yang hadir -->
-                           {{ $jumlahHadir }}
+
+                            {{-- hari ini --}}
+                            @if(request('filter')=="today")
+                            <p>{{ $jumlahHadirHariIni }}</p>
+                            @endif
+                            {{-- minggu ini --}}
+                            @if(request('filter')=="week")
+                            <p>{{ $jumlahHadirMingguIni }}</p>
+                            @endif
+                            {{-- bulan ini --}}
+                            @if(request('filter')=="month")
+                            <p>{{ $jumlahHadirBulanIni }}</p>
+                            @endif
                         </td>
-                        <td class="border">
-                             @php
-                            $jumlahHadir = 0; // Inisialisasi variabel untuk menghitung jumlah hadir
+
+                        <td class="border text-center">
+                            @php
+                            $jumlahHadirHariIni = 0;
+                            $jumlahHadirMingguIni = 0;
+                            $jumlahHadirBulanIni = 0;
+                            $hariIni = \Carbon\Carbon::today();
+                            $mingguIni = $hariIni->copy()->startOfWeek();
+                            $bulanIni = $hariIni->copy()->startOfMonth();
                             @endphp
+
                             @foreach ($item->rombelAbsentClass as $key)
-                              @if($key->status == 'I')
-                                @php $jumlahHadir++; @endphp
-                              @endif
+                            @if($key->status == 'S')
+                            @php
+                            // Mengonversi tanggal dari format 'DD/MM/YYYY' menjadi objek Carbon
+                            $tanggalAbsen = \Carbon\Carbon::createFromFormat('d/m/Y', $key->tanggal);
+                            @endphp
+
+                            @if($tanggalAbsen->isToday())
+                            @php $jumlahHadirHariIni++; @endphp
+                            @endif
+
+                            @if($tanggalAbsen->between($mingguIni, $hariIni))
+                            @php $jumlahHadirMingguIni++; @endphp
+                            @endif
+
+                            @if($tanggalAbsen->isSameMonth($hariIni))
+                            @php $jumlahHadirBulanIni++; @endphp
+                            @endif
+                            @endif
                             @endforeach
-                            <!-- Menampilkan jumlah siswa yang hadir -->
-                           {{ $jumlahHadir }}
+
+                            {{-- hari ini --}}
+                            @if(request('filter')=="today")
+                            <p>{{ $jumlahHadirHariIni }}</p>
+                            @endif
+                            {{-- minggu ini --}}
+                            @if(request('filter')=="week")
+                            <p>{{ $jumlahHadirMingguIni }}</p>
+                            @endif
+                            {{-- bulan ini --}}
+                            @if(request('filter')=="month")
+                            <p>{{ $jumlahHadirBulanIni }}</p>
+                            @endif
+
+                        </td>
+                        <td class="border text-center">
+                            @php
+                            $jumlahHadirHariIni = 0;
+                            $jumlahHadirMingguIni = 0;
+                            $jumlahHadirBulanIni = 0;
+                            $hariIni = \Carbon\Carbon::today();
+                            $mingguIni = $hariIni->copy()->startOfWeek();
+                            $bulanIni = $hariIni->copy()->startOfMonth();
+                            @endphp
+
+                            @foreach ($item->rombelAbsentClass as $key)
+                            @if($key->status == 'A')
+                            @php
+                            // Mengonversi tanggal dari format 'DD/MM/YYYY' menjadi objek Carbon
+                            $tanggalAbsen = \Carbon\Carbon::createFromFormat('d/m/Y', $key->tanggal);
+                            @endphp
+
+                            @if($tanggalAbsen->isToday())
+                            @php $jumlahHadirHariIni++; @endphp
+                            @endif
+
+                            @if($tanggalAbsen->between($mingguIni, $hariIni))
+                            @php $jumlahHadirMingguIni++; @endphp
+                            @endif
+
+                            @if($tanggalAbsen->isSameMonth($hariIni))
+                            @php $jumlahHadirBulanIni++; @endphp
+                            @endif
+                            @endif
+                            @endforeach
+
+                            {{-- hari ini --}}
+                            @if(request('filter')=="today")
+                            <p>{{ $jumlahHadirHariIni }}</p>
+                            @endif
+                            {{-- minggu ini --}}
+                            @if(request('filter')=="week")
+                            <p>{{ $jumlahHadirMingguIni }}</p>
+                            @endif
+                            {{-- bulan ini --}}
+                            @if(request('filter')=="month")
+                            <p>{{ $jumlahHadirBulanIni }}</p>
+                            @endif
                         </td>
 
                     </tr>
@@ -262,4 +396,27 @@
         </div>
     </div>
 </div>
+
+@section('javascript')
+<script>
+    function myFunction() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[2];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+    </script>
+@endsection
 @endsection
