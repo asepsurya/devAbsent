@@ -9,7 +9,7 @@ use App\Models\lisensi;
 class deviceController extends Controller
 {
     public function cekLisensi(request $request){
-        $data = lisensi::where('status','1')->get();
+        $data = lisensi::where('status','Active')->get();
         foreach($data as $item){
             if($item->lisensi == $request->license){
                 return response()->json([
