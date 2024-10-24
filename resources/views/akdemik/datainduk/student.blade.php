@@ -3,6 +3,7 @@
 @section('css')
 <link rel="stylesheet" href="{{ asset('asset/css/DataTables.css') }}">
 @endsection
+
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
@@ -247,8 +248,15 @@
                     name: 'tanggal_lahir'
                 },
                 {
-                    data: 'tempat_lahir',
-                    name: 'tempat_lahir'
+                    data: 'rombel',
+                    render:function(data){
+                    if(data){
+                        data = data
+                    }else{
+                        data = 'belum disetel'
+                    }
+                    return data;
+                    }
                 },
                 {
                     data: 'status',

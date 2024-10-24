@@ -273,13 +273,12 @@
                                 <a class="dropdown-item d-inline-flex align-items-center p-2" href="{{ route('profileIndex',auth()->user()->nomor) }}">
                                 <i class="ti ti-user-circle me-2"></i>Profile Saya</a>
                             @endif
-                            <a class="dropdown-item d-inline-flex align-items-center p-2"
-                                href="profile-settings.html"><i class="ti ti-settings me-2"></i>Setelan</a>
+
                             <hr class="m-0">
                             <form action="{{ route('logout') }}" method="post">
                                 @csrf
                                 <button type="sumbit" class="dropdown-item d-inline-flex align-items-center p-2"> <i
-                                    class="ti ti-login me-2"></i> Keluar</button>
+                                    class="ti ti-login me-2"></i> Keluar Aplikasi</button>
                             </form>
                         </div>
                     </div>

@@ -225,6 +225,8 @@ class AppSeeder extends Seeder
         Permission::create(['name' => 'laporan']);
         Permission::create(['name' => 'pengguna']);
         Permission::create(['name' => 'setelan']);
+        Permission::create(['name' => 'management_absent']);
+        Permission::create(['name' => 'absensi_kelas']);
         // PERMISSION CRUD
         Permission::create(['name' => 'create']);
         Permission::create(['name' => 'delete']);
@@ -337,7 +339,7 @@ class AppSeeder extends Seeder
 
         gtk::create([
             'nik'=>'6376372635140006',
-            'nip'=>'',
+            'nip'=>'1',
             'nama'=>'SAMPLE WALIKELAS',
             'gender'=>'L',
             'tempat_lahir'=>'TASIKMALAYA',
@@ -357,7 +359,7 @@ class AppSeeder extends Seeder
 
         gtk::create([
             'nik'=>'6376372635140008',
-            'nip'=>'',
+            'nip'=>'2',
             'nama'=>'SAMPLE GURU',
             'gender'=>'L',
             'tempat_lahir'=>'TASIKMALAYA',
@@ -377,7 +379,7 @@ class AppSeeder extends Seeder
 
         gtk::create([
             'nik'=>'6376372635140009',
-            'nip'=>'',
+            'nip'=>'3',
             'nama'=>'SAMPLE TENDIK',
             'gender'=>'L',
             'tempat_lahir'=>'TASIKMALAYA',
@@ -500,8 +502,13 @@ class AppSeeder extends Seeder
             'id_kelas'=>'1',
             'id_gtk'=>'6376372635140006',
         ]);
+        //-----------------------------------------------------------------
+        // SEEDER SETELAN DEFAULT
+        // ----------------------------------------------------------------
+        $this->call([SettingSeeder::class]);
     }
         //-----------------------------------------------------------------
         // *********************** END SEEDER ***********************
         // ----------------------------------------------------------------
+
 }

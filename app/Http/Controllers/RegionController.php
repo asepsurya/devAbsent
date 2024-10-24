@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Lesson;
 use App\Models\rombel;
 use App\Models\Regency;
 use App\Models\Village;
 use App\Models\District;
 use App\Models\Province;
+use App\Models\grupMapel;
 use App\Models\walikelas;
 use Illuminate\Http\Request;
 
@@ -49,6 +51,20 @@ class RegionController extends Controller
           echo $kelas->gtk->nama;
         }
 
+    }
+    public function getgtk(request $request){
+        $id_mapel = $request->id_mapel;
+        $id_kelas = $request->id_kelas;
+        $cek = grupMapel::where(['id_mapel'=>$id_mapel,'id_kelas'=>$id_kelas])->with('guru')->get();
+        foreach ($cek as $data){
+             $nik = $data->guru->nik ;
+             $nama = $data->guru->nama ;
+             $option = "<option value='$nik' > $nik </option>";
+        }
+        return [
+            'a' => $option,
+            'b' => $nama
+        ];
     }
 
 }

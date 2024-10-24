@@ -115,102 +115,125 @@
                 <thead>
                     <tr >
                         <th width="1%" class="border">#</th>
-                        <th width="1%" >
-                            <div class="form-check form-check-md">
-                            <input class="form-check-input" type="checkbox" id="select-all">
-                            </div></th>
+                        <th width="1%"></th>
                         <th width="3%">NIS</th>
                         <th width="50%">Nama Lengkap</th>
-                        <th class="border" >H</th>
-                        <th class="border">S</th>
-                        <th class="border">I</th>
-                        <th class="border">A</th>
+                        <th class="border text-center" >H</th>
+                        <th class="border text-center">S</th>
+                        <th class="border text-center">I</th>
+                        <th class="border text-center">A</th>
                         <th></th>
 
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- <form action="{{ route('absensiStudentAdd') }}" method="post" id="2" >
-                        @csrf --}}
                     @if(request('tanggal'))
-                    @php $no=1; @endphp
-                    @foreach ($rombel as $item )
-
-                     <tr>
-                        <td class="border">{{ $no++ }}.</td>
-                        <td>
-                                <div class="form-check form-check-md">
-                                    <input class="form-check-input" name="data[]" value="{{ $item->id_rfid }}" type="checkbox">
-                                </div>
-                        </td>
-                        <td class="text-primary">
-                            {{ $item->nis }}
-                        </td>
-                        <td>{{ $item->rombelStudent->nama }}</td>
-                        <form action="{{ route('absensiStudentAdd') }}" method="post" >
+                        @php $no = 1; @endphp
+                        <form action="{{ route('absensiStudentAdd') }}" method="post">
                             @csrf
-
-                            <td class="border">
-                           <div class="form-check form-check-md">
-                                <input class="form-check-input a" value="H"  type="radio" name="status" id="{{ $item->id }}" onclick="this.form.submit()"
-                            @if($item->id_rfid != '')
-                                @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'H' ? 'Checked': '' : '' }}    @endforeach
-                            @else{
-                                @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'H' ? 'Checked': '' : '' }}    @endforeach
-                            }
-                            @endif >
-                            </div>
+                            @foreach ($rombel as $item)
+                                <tr>
+                                    <td class="border">{{ $no++ }}.</td>
+                                    <td class="border">
+                                        <div class="form-check form-check-md">
+                                            <input class="form-check-input mydata" name="data[]" value="{{ $item->id_rfid ?: $item->nis }}" type="checkbox">
+                                        </div>
+                                    </td>
+                                    <td class="text-primary">{{ $item->nis }}</td>
+                                    <td>{{ $item->rombelStudent->nama }}</td>
+                                    <td class="border">
+                                        <div class="form-check form-check-md">
+                                            <input class="form-check-input a" value="H" type="radio" name="status[{{ $item->id }}]" id="h-{{ $item->id }}"
+                                            @if($item->id_rfid != '')
+                                                @foreach ($item->rombelAbsent as $ky)
+                                                    {{ $ky->tanggal == request('tanggal') && $ky->status == 'H' ? 'checked' : '' }}
+                                                @endforeach
+                                            @else
+                                                @foreach ($item->notRFID as $ky)
+                                                    {{ $ky->tanggal == request('tanggal') && $ky->status == 'H' ? 'checked' : '' }}
+                                                @endforeach
+                                            @endif>
+                                        </div>
+                                    </td>
+                                    <td class="border">
+                                        <div class="form-check form-check-md">
+                                            <input class="form-check-input a" value="S" type="radio" name="status[{{ $item->id }}]" id="s-{{ $item->id }}"
+                                            @if($item->id_rfid != '')
+                                                @foreach ($item->rombelAbsent as $ky)
+                                                    {{ $ky->tanggal == request('tanggal') && $ky->status == 'S' ? 'checked' : '' }}
+                                                @endforeach
+                                            @else
+                                                @foreach ($item->notRFID as $ky)
+                                                    {{ $ky->tanggal == request('tanggal') && $ky->status == 'S' ? 'checked' : '' }}
+                                                @endforeach
+                                            @endif>
+                                        </div>
+                                    </td>
+                                    <td class="border">
+                                        <div class="form-check form-check-md">
+                                            <input class="form-check-input a" value="I" type="radio" name="status[{{ $item->id }}]" id="i-{{ $item->id }}"
+                                            @if($item->id_rfid != '')
+                                                @foreach ($item->rombelAbsent as $ky)
+                                                    {{ $ky->tanggal == request('tanggal') && $ky->status == 'I' ? 'checked' : '' }}
+                                                @endforeach
+                                            @else
+                                                @foreach ($item->notRFID as $ky)
+                                                    {{ $ky->tanggal == request('tanggal') && $ky->status == 'I' ? 'checked' : '' }}
+                                                @endforeach
+                                            @endif>
+                                        </div>
+                                    </td>
+                                    <td class="border">
+                                        <div class="form-check form-check-md">
+                                            <input class="form-check-input a" value="A" type="radio" name="status[{{ $item->id }}]" id="a-{{ $item->id }}"
+                                            @if($item->id_rfid != '')
+                                                @foreach ($item->rombelAbsent as $ky)
+                                                    {{ $ky->tanggal == request('tanggal') && $ky->status == 'A' ? 'checked' : '' }}
+                                                @endforeach
+                                            @else
+                                                @foreach ($item->notRFID as $ky)
+                                                    {{ $ky->tanggal == request('tanggal') && $ky->status == 'A' ? 'checked' : '' }}
+                                                @endforeach
+                                            @endif>
+                                        </div>
+                                    </td>
+                                    <td hidden>
+                                        <input type="text" name="id_rfid[{{ $item->id }}]" value="{{ $item->id_rfid ?: $item->nis }}">
+                                        <input type="text" name="tanggal" value="{{ request('tanggal') }}">
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-primary bg-white btn-sm" data-bs-toggle="modal" data-bs-target="#editAbsent-{{ $item->id }}">
+                                            <span class="ti ti-eye"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                                <td class="border"></td>
+                                <input type="text" name="type" value="single" class="type" hidden>
+                                <td>
+                                    <div class="form-check form-check-md">
+                                        <input class="form-check-input mydata" type="checkbox" id="select-all">
+                                    </div>
                                 </td>
-                            <td class="border">
-                            <div class="form-check form-check-md">
-                                <input class="form-check-input a" value="S"  type="radio" name="status" id="{{ $item->id }}" onclick="this.form.submit()"
-                                @if($item->id_rfid != '')
-                                    @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'S' ? 'Checked': '' : '' }}    @endforeach
-                                @else
-                                    @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'S' ? 'Checked': '' : '' }}    @endforeach
-                                @endif
-                                    >
-                            </div>
+                                <td colspan="2" class="border">
+                                    <div class="d-flex">
+                                            <select name="Mstatus" id="Mstatus" class="form-control select" >
+                                                <option value="H">Hadir</option>
+                                                <option value="S">Sakit</option>
+                                                <option value="I">Izin</option>
+                                                <option value="A">Alfa</option>
+                                            </select>
+                                    </div>
                                 </td>
-                            <td class="border">
-                            <div class="form-check form-check-md">
-                                <input class="form-check-input a" value="I" type="radio"  name="status" id="{{ $item->id }}"onclick="this.form.submit()" $cek
-                                @if($item->id_rfid != '')
-                                    @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'I' ? 'Checked': '' : '' }}    @endforeach
-                                @else
-                                    @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'I' ? 'Checked': '' : '' }}    @endforeach
-                                @endif
-                                >
-                            </div>
+                                <td colspan="7">
+                                    <button type="submit" class="btn btn-primary mx-2 w-100">Simpan</button>
                                 </td>
-                            <td class="border">
-                            <div class="form-check form-check-md">
-                                <input class="form-check-input a" value="A" type="radio"  name="status" id="{{ $item->id }}"onclick="this.form.submit()"
-                                @if($item->id_rfid != '')
-                                    @foreach ($item->rombelAbsent as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'A' ? 'Checked': '' : '' }}    @endforeach
-                                @else
-                                   @foreach ($item->notRFID as $ky ){{ $ky->tanggal == request('tanggal') ?  $ky->status == 'A' ? 'Checked': '' : '' }}    @endforeach
-                                @endif
-                                   >
-                            </div>
-                                </td>
-                            <td hidden>
-                            @if ($item->id_rfid == '')
-                                <input type="text" name="id_rfid" value="{{ $item->nis }}">
-                            @else
-                                <input type="text" name="id_rfid" value="{{ $item->id_rfid }}">
-                            @endif
-                            <input type="text" name="tanggal" value="{{ request('tanggal') }}">
-                                </td>
+                            </tr>
                         </form>
-
-                        <td><button class="btn btn-outline-primary bg-white btn-sm " data-bs-toggle="modal" data-bs-target="#editAbsent-{{ $item->id }}"><span class="ti ti-eye"></span> </button></td>
-                    </tr>
-                        @endforeach
-                        {{-- <button type="submit" formaction="{{ route('absensiStudentAdd') }}">Simpan</button>
-                    </form> --}}
                     @endif
                 </tbody>
+
             </table>
             <div class="d-flex justify-content-end m-2">
                 {{  $rombel->links() }}
@@ -246,6 +269,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="row">
+                                <input type="text" name="type" value="ubahKeterangan" class="type" hidden>
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label class="form-label">Tanggal <span
@@ -258,7 +282,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">RFID <span class="ti ti-nfc"></span></label>
                                         <input type="text" class="form-control" name="id_rfid"
-                                            value="{{ $item->id_rfid }}" readonly required>
+                                            value="{{ $item->id_rfid ?: $item->nis }}" readonly required>
                                     </div>
                                 </div>
                             </div>
@@ -363,11 +387,27 @@
 
 @endforeach
 @section('javascript')
+
+<script>
+    $(".a").click(function(){
+        $(".type").val('single');
+    });
+
+   $(".mydata").click(function() {
+    if ($(this).is(":checked")) {
+        $(".type").val('multiple'); // Set to 'multiple' if checked
+    }
+    });
+
+</script>
+
+
 <script>
     $(document).ready(function() {
          $('.select2').select2();
     });
 </script>
+
 <script>
     $(function(){
         $.ajaxSetup({

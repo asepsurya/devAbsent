@@ -20,4 +20,6 @@ class absent extends Model
         return $this->belongsTo('App\Models\gtk','id_rfid','id_rfid');
     }
 
+
+
 }

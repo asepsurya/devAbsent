@@ -22978,6 +22978,9 @@ body.layout-mode-rtl .header .search-addon button {
 [data-topbar=primary] .header .dark-logo {
     display: block
 }
+[data-topbar=primary] .mylogo .dark-logo{
+    display: block
+}
 
 [data-topbar=primary] .header .logo-normal {
     display: none

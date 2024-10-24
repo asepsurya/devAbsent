@@ -19,7 +19,33 @@
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap"></div>
 </div>
 {{-- End Header --}}
+<div class="card" role="alert">
+    <div class="card-body p-3 bg-primary text-fixed-white rounded">
+        <div class="row g-3">
+            <h4 class="aletr-heading mb-0 text-fixed-white">Filter Data</h4>
+            <div class="col-lg-3">
+                <select name="" id="" class="select">
+                    <option value="">Tahun Pelajaran</option>
+                </select>
+            </div>
+            <div class="col-lg-3">
+                <select name="" id="" class="select">
+                    <option value="">Pilih Kelas</option>
+                </select>
+            </div>
+            <div class="col-lg-4">
 
+                <select name="" id="" class="select">
+                    <option value="">Bulan</option>
+                </select>
+            </div>
+            <div class="col-lg-2">
+               <button class="btn btn-primary"><span class="ti ti-search"></span> Tampilkan Data</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
         <h4 class="mb-3">Daftar Absensi</h4>
@@ -30,16 +56,21 @@
                 </span>
                 <input type="text" class="form-control" placeholder="Cari Absensi.." id="myInput" onkeyup="myFunction()">
             </div>
+            <button class="btn btn-outline-light bg-white mb-3 mx-1"><span class="ti ti-printer"></span> Cetak</button>
+            <button class="btn btn-outline-light bg-white mb-3">Exsport PDF</button>
         </div>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-bordered table-striped mb-0" id="myTable">
                 <thead>
+                    <tr>
+                        <td rowspan="2">#</td>
+                        <td rowspan="2" class="text-center"><p>NIS</p></td>
+                        <td rowspan="2" class="text-center"><p>NAMA</p></td>
+                        <td colspan="31"><p>Bulan Januari</p></tdh>
+                    </tr>
                     <tr class="text-center">
-                        <th scope="col" width="30">#</th>
-                        <th scope="col" width="80">ID</th>
-                        <th scope="col" width="170">NAMA</th>
                         @foreach ($allDates as $date)
                             @php
                                 $formattedDate = \Carbon\Carbon::createFromFormat('d/m/Y', $date)->format('d');
@@ -94,6 +125,10 @@
 </div>
 
 @section('javascript')
+<script>
+    var body = document.body;
+    body.classList.add("mini-sidebar");
+</script>
 <script>
     function myFunction() {
         var input, filter, table, tr, td, i, txtValue;

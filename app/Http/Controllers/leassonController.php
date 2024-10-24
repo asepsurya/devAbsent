@@ -98,14 +98,14 @@ class leassonController extends Controller
                 "id_mapel" => $id_mapel
             ]);
             toastr()->success('Data Berhasil diubah');
-            return redirect()->back();
+            return redirect()->back()->with('refresh', 'Action was successful!');
         }
 
     }
     public function leassonDelete($id){
         Lesson::where('id',$id)->delete();
         toastr()->success('Data Berhasil dihapus');
-            return redirect()->back();
+            return redirect()->back()->with('refresh', 'Action was successful!');;
     }
 
     public function leassonView($id){

@@ -31,8 +31,8 @@
         </div>
     </div>
     <div class="card-body p-0">
-        <div class="table-responsive " >
-            <table class="table table-nowrap mb-0" id="myTable" >
+        <div class="table-responsive ">
+            <table class="table table-nowrap mb-0" id="myTable">
                 <thead>
                     <tr>
                         <th class="bg-light-400">#</th>
@@ -48,15 +48,18 @@
                 @if($kelas->count())
                 <tbody>
                     @php
-                        $no=1;
+                    $no=1;
                     @endphp
                     @foreach ($kelas as $item)
 
                     <tr class="odd">
                         <td>{{ $no++ }}</td>
                         <td>
-                            <a href='/absent/class/student?id_mapel={{ $item->mata_pelajaran->id }}&tahun={{ $item->id_tahun_pelajaran }}&kelas={{ $item->id_kelas }}&tanggal={{ date('d/m/Y') }}' class="link-primary">
-                                {{ $item->kelas->nama_kelas }} - {{ $item->kelas->jurusanKelas->nama_jurusan }} {{ $item->kelas->sub_kelas }}
+                            <a href='/absent/class/student?id_mapel={{ $item->mata_pelajaran->id
+                                }}&tahun={{ $item->id_tahun_pelajaran }}&kelas={{ $item->id_kelas }}&tanggal={{
+                                date('d/m/Y') }}' class="link-primary">
+                                {{ $item->kelas->nama_kelas }} - {{ $item->kelas->jurusanKelas->nama_jurusan }} {{
+                                $item->kelas->sub_kelas }}
                             </a>
                         </td>
                         <td>{{ $item->mata_pelajaran->nama }}</td>
@@ -78,7 +81,7 @@
                             @elseif ($item->mata_pelajaran->jadwal->day == 7)
                             Minggu
                             @endif
-                              {{-- {{ $item->mata_pelajaran->jadwal->day }} --}}
+                            {{-- {{ $item->mata_pelajaran->jadwal->day }} --}}
                             @else
                             -
                             @endif
@@ -99,7 +102,9 @@
                             @endif
                         </td>
                         <td class="border">
-                           <center><b> {{ $item->kelas->jmlRombel->count() }}</b> <span class="ti ti-users"></span></center></td>
+                            <center><b> {{ $item->kelas->jmlRombel->count() }}</b> <span class="ti ti-users"></span>
+                            </center>
+                        </td>
 
                         <td>
                             @if($item->status == '2')
@@ -115,7 +120,9 @@
                 @else
                 <tbody>
                     <tr>
-                        <td colspan="5"><center><i>Belum ada kelas yang diajar</i></center></td>
+                        <td colspan="5">
+                            <center><i>Belum ada kelas yang diajar</i></center>
+                        </td>
                     </tr>
                 </tbody>
                 @endif
@@ -144,6 +151,6 @@
         }
       }
     }
-    </script>
+</script>
 @endsection
 @endsection

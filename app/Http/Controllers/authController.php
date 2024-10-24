@@ -1,16 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Province;
-use App\Models\student;
+use Validator;
 use App\Models\gtk;
 use App\Models\User;
+use App\Models\student;
+use App\Models\Province;
 use Illuminate\Http\Request;
-use Validator;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 
 class authController extends Controller

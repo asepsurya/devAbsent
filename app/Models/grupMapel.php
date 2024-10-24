@@ -19,5 +19,9 @@ class grupMapel extends Model
     public function kelas(){
         return $this->belongsTo('App\Models\Kelas','id_kelas','id');
     }
+    public function absent(){
+        return $this->belongsTo('App\Models\absentMapel','id_mapel','id_mapel');
+    }
+
 
 }

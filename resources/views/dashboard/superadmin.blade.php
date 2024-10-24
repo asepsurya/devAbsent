@@ -26,7 +26,11 @@
                 <div class="d-flex align-items-xl-center justify-content-xl-between flex-xl-row flex-column">
                     <div class="mb-3 mb-xl-0">
                         <div class="d-flex align-items-center flex-wrap mb-2">
-                            <h1 class="text-white me-2">Selamat Datang, {{ auth()->user()->nama }}</h1>
+                           @php
+                            $hour = date('H');
+                            if ($hour < 12) { $ucapan = "Selamat Pagi!" ; } elseif ($hour < 18) { $ucapan = "Selamat Siang!" ; } else { $ucapan= "Selamat Malam!"
+                                ; } @endphp
+                            <h1 class="text-white me-2">{{ $ucapan }}, {{ auth()->user()->nama }}</h1>
                             <a href="https://preskool.dreamstechnologies.com/html/template/profile.html"
                                 class="avatar avatar-sm img-rounded bg-gray-800 dark-hover"><i
                                     class="ti ti-edit text-white"></i></a>

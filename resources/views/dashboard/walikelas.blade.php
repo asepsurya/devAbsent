@@ -13,7 +13,11 @@
                 <div class="col-md-12 d-flex">
                     <div class="card flex-fill bg-info bg-03">
                         <div class="card-body">
-                            <h1 class="text-white mb-1">Selamat Datang, {{ auth()->user()->nama }}</h1>
+                            @php
+                            $hour = date('H');
+                            if ($hour < 12) { $ucapan = "Selamat Pagi!" ; } elseif ($hour < 18) { $ucapan = "Selamat Siang!" ; } else { $ucapan= "Selamat Malam!"
+                                ; } @endphp
+                            <h1 class="text-white mb-1">{{ $ucapan }}, {{ auth()->user()->nama }}</h1>
                             <p class="text-white mb-3"><i>"Mendidik adalah seni, dan setiap guru adalah seniman yang membentuk masa depan!"</i></p>
                             {{-- <p class="text-light">Notice : There is a staff meeting at 9AM today, Dont forget to
                                 Attend!!!

@@ -39,7 +39,7 @@
                             <div class="card">
                                 <div class="card-body p-4">
                                     <div class=" mb-3">
-                                        <center class="mb-3"><img src="{{ asset('asset/img/smk.png') }}" class="img-fluid" alt="Logo" width="50px"></center>
+                                        <center class="mb-3"><img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" class="img-fluid" alt="Logo" width="50px"></center>
                                         <h2 class="mb-2 text-center">Horee.. Akun anda berhasil di buat</h2><hr>
                                         <p class="mb-0 text-center">
                                             <p>Terima kasih telah mendaftarkan akun Anda . Kami sudah menerima pendaftaran Anda dan saat ini sedang memprosesnya. Harap bersabar, karena proses verifikasi ini biasanya memerlukan waktu hingga 1x24 jam.</p>

@@ -9,8 +9,8 @@
     <meta name="keywords" content="admin, estimates, bootstrap, business, html5, responsive, Projects">
     <meta name="author" content="Dreams technologies - Bootstrap Admin Template">
     <meta name="robots" content="noindex, nofollow">
-    <title>Absensi Sakti | {{ $title }}</title>
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('asset/img/logo-icon.png') }}">
+    <title>{{ app('settings')['site_name'] }} | {{ $title }}</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}">
     <script src="{{ asset('asset/js/lightDark.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <link rel="stylesheet" href="{{ asset('asset/css/boostrap.min.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.2/feather.min.js"
@@ -41,7 +41,14 @@
                         </div>
                         <div class="card">
                             <div class="card-body p-4">
-                                <img src="{{ asset('asset/img/logo.png') }}" class="img-fluid" alt="Logo" width="100">
+                                <div class="mylogo">
+                                <div class="dark-logo">
+                                    <img src="{{ asset('asset/img/logo-white.png') }}" class="img-fluid" alt="Logo" width="100">
+                                </div>
+                                <div class="logo-normal">
+                                    <img src="{{ asset('asset/img/logo.png') }}" class="img-fluid" alt="Logo" width="100">
+                                </div>
+                            </div>
                                 <div class=" mb-4">
                                     <h2 class="mb-2">Selamat Datang</h2>
                                     <p class="mb-0">Masukan detail akunmu untuk login </p>

@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\reportController;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GTKController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\reportController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\landingController;
 use App\Http\Controllers\leassonController;
@@ -19,9 +20,9 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataIndukController;
 use App\Http\Controllers\kelaslistController;
+use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\verifikasiUserController;
-use App\Http\Controllers\PDFController;
 
 Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
@@ -31,7 +32,7 @@ Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDat
 route::get('sss',function(){
     // memberikan Permission
     $user= User::FindorFail(413);
-    // $user->givePermissionTo('menu');
+    // $user->class/leasson/view;
     // hapus Permission
     // $user->revokePermissionTo('delete student');
 
@@ -39,12 +40,15 @@ route::get('sss',function(){
 Route::get('/role',[authController::class,'role'])->name('role');
 Route::get('/role/create',[authController::class,'create'])->middleware('role:walikelas');
 
+// register Route
+Route::middleware(['statusRegister'])->group(function () {
+    Route::get('/register',[authController::class,'registerIndex']);
+});
 
 Route::middleware('guest')->group(function () {
     // route Auth
     Route::get('/login',[authController::class,'loginIndex'])->middleware('guest')->name('login');
     Route::post('/loginAction',[authController::class,'loginAction'])->name('loginAction');
-    Route::get('/register',[authController::class,'registerIndex']);
     Route::post('/registerInput',[authController::class,'registerInput'])->name('registerInput');
     Route::post('/registerInput/teacher',[authController::class,'registerInputTeacher'])->name('registerInputTeacher');
     Route::get('/register/info',[authController::class,'registerinfo'])->name('registerinfo');
@@ -74,8 +78,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/student/dashboard',[DashboardController::class,'Studentindex'])->name('dashboard.student');
     });
 
+    Route::get('/absent/list/{id_kelas}/{nis}',[kelaslistController::class,'absent_list'])->name('absent_list');
+
     Route::get('/absent/class',[kelaslistController::class,'absentclass'])->name('absentclass');
     Route::get('/absent/class/student',[kelaslistController::class,'absentClassStudent'])->name('absentClassStudent');
+    Route::get('/absent/class/presensi/{id}',[kelaslistController::class,'presensiClassStudent'])->name('presensiClassStudent');
 
     Route::get('/class/list',[kelaslistController::class,'kelaslist'])->name('kelaslist');
     Route::get('/class/list/detail/{id}',[kelaslistController::class,'kelaslistdetail'])->name('kelaslistdetail');
@@ -83,9 +90,11 @@ Route::middleware('auth')->group(function () {
     // route Absensi RFID
     Route::get('/absensi/student',[AbsensiController::class,'absensiStudent'])->name('absensiStudent');
     Route::post('/absensi/student/add',[AbsensiController::class,'absensiStudentAdd'])->name('absensiStudentAdd');
+    Route::post('/absensi/teacher/add',[AbsensiController::class,'absensiTeacherAdd'])->name('absensiTeacherAdd');
     Route::get('/absensi/teacher',[AbsensiController::class,'absensiTeacher'])->name('absensiTeacher');
     // Route Absensi Kelas
     Route::post('/absensi/class/student',[AbsensiController::class,'absensiClassStudent'])->name('absensiClassStudent');
+    Route::get('/class/absensi/management',[AbsensiController::class,'absensiClassManagement'])->name('absensiClassManagement');
     // route Data Induk
     Route::get('/akademik/datainduk/student',[DataIndukController::class,'dataIndukStudent'])->name('dataIndukStudent');
     Route::get('/akademik/datainduk/student/add',[DataIndukController::class,'dataIndukStudentAddIndex'])->name('dataIndukStudentAddIndex');
@@ -163,7 +172,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/students',[penggunaController::class,'userStudentsIndex']);
     Route::get('/user/employees',[penggunaController::class,'useremployeesIndex'])->name('useremployeesIndex');
     Route::get('/user/modules',[penggunaController::class,'usermodulesIndex']);
-    Route::get('/user/permission',[penggunaController::class,'usermodulesPermission'])->name('usermodulesPermission');
+    Route::get('/user/permission/{id}',[penggunaController::class,'usermodulesPermission'])->name('usermodulesPermission');
+    Route::post('/user/permission/change',[penggunaController::class,'usermodulesPermissionChange'])->name('usermodulesPermissionChange');
     Route::get('/user/user_privileges',[penggunaController::class,'user_privilegesIndex']);
 
     Route::get('/verifikasiuser',[verifikasiUserController::class,'verifikasiUser']);
@@ -178,6 +188,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/class/leasson/delete{id}',[leassonController::class,'leassonDelete'])->name('leassonDelete');
     Route::get('/class/leasson/list/{id}',[leassonController::class,'list'])->name('list');
     Route::get('/class/leasson/getgtk',[leassonController::class,'getgtk'])->name('getgtk');
+    // Apps Config Controller
+    Route::get('/setelan/aplikasi', [AppsConfigController::class, 'app'])->name('setelan.app');
+    Route::get('/setelan/customize', [AppsConfigController::class, 'customize'])->name('setelan.customize');
+    Route::post('/setelan/aplikasi/change', [AppsConfigController::class, 'appChange'])->name('setelan.appChange');
 });
 Route::post('/logout',[authController::class,'logout'])->name('logout');
 // route Regency Administrasi
@@ -185,6 +199,7 @@ Route::post('/getkabupaten',[RegionController::class,'getkabupaten'])->name('get
 Route::post('/getkecamatan',[RegionController::class,'getkecamatan'])->name('getkecamatan');
 Route::post('/getdesa',[RegionController::class,'getdesa'])->name('getdesa');
 Route::post('/getwalikelas',[RegionController::class,'getwalikelas'])->name('getwalikelas');
+Route::post('/getgtk',[RegionController::class,'getgtk'])->name('getgtk');
 
 Route::get('/fullcalender',[FullCalenderController::class,'index']);
 Route::post('/fullcalenderAjax',[FullCalenderController::class,'ajax']);
@@ -201,4 +216,5 @@ Route::get('/export/gtks', [PDFController::class, 'generatePDFGTKAll'])->name('e
 Route::get('/export/students', [PDFController::class, 'generatePDFSiswaAll'])->name('export.students');
 
 Route::get('/report/absent', [reportController::class, 'reportAbsensiAll'])->name('report.absents');
+
 

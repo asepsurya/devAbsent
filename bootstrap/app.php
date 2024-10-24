@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'SN' => Irfa\SerialNumber\Facades\SerialNumber::class,
             'Excel' => Maatwebsite\Excel\Facades\Excel::class,
             'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
+            'statusRegister' => \App\Http\Middleware\RegisterCheck::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

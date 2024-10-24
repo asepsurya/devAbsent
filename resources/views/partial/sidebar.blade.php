@@ -4,40 +4,59 @@
             <ul>
                 <li>
                     <a href="javascript:void(0);" class="d-flex align-items-center border bg-white rounded p-2 mb-4">
-                        <img src="{{ asset('asset/img/smk.png') }}"
+                        <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}"
                             class="avatar avatar-md img-fluid rounded" alt="Profile">
-                        <span class="text-dark ms-2 fw-normal">SMKS SATYA BHAKTI</span>
+                        <span class="text-dark ms-2 fw-normal">{{ app('settings')['site_name'] }}</span>
                     </a>
                 </li>
             </ul>
 
             <ul>
                 <li>
-                    @if(auth()->user()->role =="admin")
-                        @php $link = route('dashboard.admin')  @endphp
-                    @elseif (auth()->user()->role=="walikelas")
-                        @php $link = route('dashboard.walikelas')  @endphp
-                    @elseif (auth()->user()->role=="superadmin")
-                        @php $link = route('dashboard.superadmin')  @endphp
-                    @elseif (auth()->user()->role == "guru")
-                        @php $link = route('dashboard.teacher')  @endphp
-                    @else
-                        @php $link = route('dashboard.student')  @endphp
-                    @endif
-                    <ul>
-                        <li>
-                            <a href="{{ $link }}"><i class="ti ti-layout-dashboard"></i><span>Beranda  </span></a>
-                        </li>
 
+                    <ul>
+                        @if(auth()->user()->role =="superadmin")
+                        <li class="{{ Request::is('dashboard') ? 'active' : ''}}">
+                            <a href="{{ route('dashboard.superadmin') }}"><i class="ti ti-layout-dashboard"></i><span>Beranda  </span></a>
+                        </li>
+                        @elseif (auth()->user()->role =="admin")
+                        <li class="{{ Request::is('admin/dashboard') ? 'active' : ''}}">
+                            <a href="{{ route('dashboard.admin') }}"><i class="ti ti-layout-dashboard"></i><span>Beranda  </span></a>
+                        </li>
+                        @elseif (auth()->user()->role=="walikelas")
+                        <li class="{{ Request::is('walikelas/dashboard') ? 'active' : ''}}">
+                            <a href="{{ route('dashboard.walikelas') }}"><i class="ti ti-layout-dashboard"></i><span>Beranda  </span></a>
+                        </li>
+                        @elseif (auth()->user()->role == "guru")
+                        <li class="{{ Request::is('teacher/dashboard') ? 'active' : ''}}">
+                            <a href="{{ route('dashboard.teacher') }}"><i class="ti ti-layout-dashboard"></i><span>Beranda  </span></a>
+                        </li>
+                        @else
+                        <li class="{{ Request::is('student/dashboard') ? 'active' : ''}}">
+                            <a href="{{ route('dashboard.student') }}"><i class="ti ti-layout-dashboard"></i><span>Beranda  </span></a>
+                        </li>
+                        @endif
                     </ul>
                 </li>
-
+                @if(auth()->user()->role == 'siswa')
                 <li>
-                {{-- @can('menu') --}}
-                    <h6 class="submenu-hdr"><span>Management</span></h6>
-
+                    <h6 class="submenu-hdr"><span>Menu Saya</span></h6>
                     <ul>
-
+                        <li class="{{ Request::is('class/leasson/view*') ? 'active' : ''}}">
+                            <a href="{{ route('leassonView',auth()->user()->rombelstudent->id_kelas) }}"><i class="ti ti-list"></i><span>Jadwal Pelajaran</span></a>
+                        </li>
+                        <li class="{{ Request::is('absent/list*') ? 'active' : ''}}">
+                            <a href="{{ route('absent_list',[auth()->user()->rombelstudent->id_kelas,auth()->user()->rombelstudent->nis]) }}"><i class="ti ti-key"></i><span>Daftar Hadir Kelas</span></a>
+                        </li>
+                    </ul>
+                </li>
+                @endif
+                <li>
+                    @can('absensi_kelas','absent','management_absent')
+                        <h6 class="submenu-hdr"><span>Management</span></h6>
+                    @endcan
+                    <ul>
+                        @can('absent')
                         <li class="submenu">
                             <a href="javascript:void(0);"
                                 class=" {{ Request::is('absensi*') ? 'subdrop active' : ''}}"><i
@@ -57,20 +76,27 @@
                                 </li>
                             </ul>
                         </li>
-
+                        @endcan
+                        @can('absensi_kelas')
                         <li  class="{{ Request::is('absent/class*') ? 'active' : ''}}">
                             <a href="/absent/class" ><i
                                 class="ti ti-checklist"></i><span>Absensi Kelas</span></a>
                         </li>
-                        <li  class="{{ Request::is('class/list*') ? 'active' : ''}}">
-                            <a href="/class/list" ><i class="ti ti-list-details"></i><span>Presensi Absensi</span></a>
+                        @endcan
+                        @can('management_absent')
+                        <li  class="{{ Request::is('class*') ? 'active' : ''}}">
+                            <a href="/class/list" ><i class="ti ti-list-details"></i><span>Management Absensi</span></a>
                         </li>
+                        @endcan
                     </ul>
-                    {{-- @endcan --}}
+
                 </li>
                 <li>
                     <ul>
-                        <h6 class="submenu-hdr"><span>Master Data</span></h6>
+                        @can('akademik','lisensi','gtk','rfid','verifikasi_pengguna')
+                            <h6 class="submenu-hdr"><span>Master Data</span></h6>
+                        @endcan
+                        @can('akademik')
                         <li class="submenu">
                             <a href="javascript:void(0);"
                                 class=" {{ Request::is('akademik*') ? 'subdrop active' : ''}}"><i
@@ -119,10 +145,11 @@
 
                             </ul>
                         </li>
+                        @endcan
                     </ul>
                     <ul>
                 </li>
-
+                @can('gtk')
                 <li>
                     <ul>
                         <li class="submenu">
@@ -138,6 +165,8 @@
                         </li>
                     </ul>
                 </li>
+                @endcan
+                @can('lisensi')
                 <li>
                     <ul>
                         <li class="{{ Request::is('device/lisensi*') ? 'active' : ''}}">
@@ -145,21 +174,28 @@
                         </li>
                     </ul>
                 </li>
+                @endcan
+                @can('rfid')
                 <li>
                     <ul>
                         <li class="{{ Request::is('rfid') ? 'active' : ''}}">
                             <a href="{{ route('rfid') }}"><i class="ti ti-nfc"></i><span>Registrasi RFID</span></a>
                         </li>
                     </ul>
+
                 </li>
+                @endcan
+                @can('verifikasi_pengguna')
                 <li>
                     <ul>
                         <li class="{{ Request::is('verifikasiuser') ? 'active' : ''}}">
-                            <a href="/verifikasiuser"><i class="ti ti-user"></i><span>Verifikasi Pengguna </a>
+                            <a href="/verifikasiuser"><i class="ti ti-user"></i><span>Verifikasi Pengguna
+                                <span class="notification-status-dot"></span></a>
                         </li>
                     </ul>
                 </li>
-
+                @endcan
+                @can('pelajaran')
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Jadwal</span></h6>
@@ -171,6 +207,8 @@
                         </li>
                     </ul>
                 </li>
+                @endcan
+                @can('laporan')
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Report</span></h6>
@@ -179,9 +217,12 @@
                         </li>
                     </ul>
                 </li>
+                @endcan
+
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Setelan Aplikasi</span></h6>
+                        @can('setelan')
                         <li>
                             <ul>
                                 <li class="submenu">
@@ -203,8 +244,14 @@
                                 </li>
                             </ul>
                         </li>
+                        @endcan
                         <li>
-                            <a href="#"><i class="ti ti-settings"></i><span>Pengaturan</span></a>
+                            <ul>
+                                <li  class="{{ Request::is('setelan*') ? 'active' : ''}}">
+                                    <a href="{{ route('setelan.app') }}"><i class="ti ti-settings"></i><span>Pengaturan Aplikasi</span></a>
+                                </li>
+                            </ul>
+
                         </li>
                     </ul>
                 </li>
@@ -212,4 +259,5 @@
             </ul>
         </div>
     </div>
+
 </div>

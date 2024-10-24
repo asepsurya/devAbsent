@@ -9,14 +9,14 @@
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
-    <title>AbsensiSAKTI</title>
+    <title>{{ app('settings')['site_name'] }} - {{ app('settings')['slogan'] }}</title>
     <!-- ===============================================-->
     <!--    Favicons-->
     <!-- ===============================================-->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('asset/img/logo-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('asset/img/logo-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('asset/img/logo-icon.png') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('asset/img/logo-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}">
     <link rel="manifest" href="{{ asset('landing/img/favicons/manifest.json') }}">
     <meta name="msapplication-TileImage" content="{{ asset('landing/img/favicons/mstile-150x150.png') }}">
     <meta name="theme-color" content="#ffffff">
@@ -34,7 +34,11 @@
     <!-- ===============================================-->
     <main class="main" id="top">
       <nav class="navbar navbar-expand-lg navbar-light fixed-top nav user-menu" data-navbar-on-scroll="data-navbar-on-scroll">
-        <div class="container-fluid"><a class="navbar-brand" href="#"><img src="{{ asset('asset/img/logo.png') }}" alt="" width="169" /></a>
+        <div class="container-fluid">
+            <div class="d-flex ">
+            <a class="navbar-brand" href="/"><img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" alt=""  width="50px"/></a>
+            <h5 class=" mt-3">{{ app('settings')['site_name'] }}</h5>
+            </div>
           <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto ms-lg-5 ms-xl-8 border-bottom border-lg-bottom-0 ">
@@ -147,7 +151,7 @@
                              @endif
                           <span class="ti ti-dashboard"></span><a href="{{ $link }}" class="mx-2"> Dashboard</a>
                         </li>
-                        @if (auth()->user()->role != 'admin')
+                        @if (auth()->user()->role != 'superadmin')
                         <li>
                             <span class="ti ti-user"></span><a href="{{ route('profileIndex',auth()->user()->nomor) }}" class="mx-2"> Profile</a>
                         </li>
@@ -300,6 +304,7 @@
 
       <!-- ============================================-->
       <!-- <section> begin ============================-->
+
       <section class="bg-info pt-0 pb-0">
         <div class="container">
           <div class="row justify-content-sm-between py-6">
@@ -329,85 +334,20 @@
               </div>
             </div>
           </div>
-          <div class="row flex-center">
-            <div class="col-auto py-4"><a href="#"><img class="img-fluid" src="{{ asset('landing/img/icons/f-logo.png') }}" alt="" /></a></div>
-          </div>
+          {{-- <div class="row flex-center">
+            <div class="col-auto py-4"><a href="#"><img class="img-fluid" src="{{ asset('asset/img/logo-white.png') }}" alt="" width="200" /></a></div>
+          </div> --}}
           <hr class="opacity-25" />
-          <div class="row justify-content-lg-around">
-            <div class="col-6 col-sm-4 col-lg-auto mb-3 order-0">
-              <h6 class="text-light lh-lg text-uppercase">Who we Are</h6>
-              <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">About</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Team</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Work With Us</a></li>
-              </ul>
-            </div>
-            <div class="col-6 col-sm-4 col-lg-auto mb-3 order-4 order-lg-1">
-              <h6 class="text-light lh-lg text-uppercase"> Woocommerce </h6>
-              <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Features</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Payments </a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Marketing</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Shipping</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Extension</a></li>
-
-              </ul>
-            </div>
-            <div class="col-6 col-sm-4 col-lg-auto mb-3 order-1 order-lg-2">
-              <h6 class="text-light lh-lg text-uppercase">Other products </h6>
-              <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Storefront</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">WooSlider</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Sensei</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Sensei Extensions</a></li>
-              </ul>
-            </div>
-            <div class="col-6 col-sm-4 col-lg-auto mb-3 order-3 order-lg-3">
-              <h6 class="text-light lh-lg text-uppercase">Support</h6>
-              <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Documentation</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Customizations</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Support Policy</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Contact </a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">COVID-19 Resources</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Privacy Notice for </a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">California Users</a></li>
-              </ul>
-            </div>
-            <div class="col-6 col-sm-4 col-lg-auto mb-3 order-2 order-lg-4">
-              <h6 class="text-light lh-lg text-uppercase">We recommend</h6>
-              <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">WooExperts</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Hosting Solutions</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Pre-sales FAQ</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Success Stories</a></li>
-                <li class="lh-lg"><a class="text-light fs--1 text-decoration-none" href="#!">Design Feedback Group</a></li>
-              </ul>
-            </div>
-          </div>
+         <div class="row justify-content-lg-around pb-3 text-white">
+            Copyright 2024 | Absensi Sakti
+         </div>
         </div><!-- end of .container-->
 
       </section>
       <!-- <section> close ============================-->
       <!-- ============================================-->
 
-<!-- Modal -->
-<div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Hallo Selamat Selamat Datang
-        </div>
 
-      </div>
-    </div>
-  </div>
 
 
       <!-- ============================================-->

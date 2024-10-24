@@ -393,6 +393,11 @@
 @section('javascript')
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+@if (session('refresh'))
+    <script>
+        window.location.reload();
+    </script>
+@endif
 
 @if (!empty(Session::get('ref')) && Session::get('ref') == 5)
 <script type="text/javascript">
@@ -421,26 +426,33 @@
 </script>
 
 <script>
-    let mapel = $('#mapel').val();
-    let id_kelas = $('#id_kelas').val();
-        var e = document.getElementById("mapel");
-            function onChange() {
-            var value = e.value;
+    $(function(){
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+                });
+
+        $('#mapel').on('change',function(){
+            let mapel = $('#mapel').val();
+            let id_kelas = $('#id_kelas').val();
+            // var value = e.value;
             $.ajax({
+
+                method:"POST",
                 url:"{{ route('getgtk') }}",
-                method:"GET",
                 cache:false,
-                data : {mapel:value,id_kelas:id_kelas},
+                data : {
+                    id_mapel:mapel,
+                    id_kelas:id_kelas
+                },
                 success: function(data){
                     $('#id_gtk').html(data.a);
                     $('#name_gtk').val(data.b);
                 }
             });
 
-            }
-            e.onchange = onChange;
-            onChange();
-
+        })
+    })
 </script>
 <script>
     var body = document.body;

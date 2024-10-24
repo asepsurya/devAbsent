@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Artisan;
 use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
@@ -50,11 +52,26 @@ class PenggunaController extends Controller
         toastr()->error('An error has occurred please try again later.');
         return redirect()->back();
     }
-    public function usermodulesPermission(){
-
+    public function usermodulesPermission($id){
+        $cek = DB::table('role_has_permissions')->where([
+            'role_id' => $id
+        ])->get();
         return view('pengguna.permission',[
             'title'=>'Roles Permission',
-            'modules'=>Permission::all()
-        ]);
+            'modules'=>Permission::whereNotIn('name', ['create', 'delete','update','read'])->get(),
+            'cekmodul'=>$cek
+        ],compact('id'));
+    }
+    public function usermodulesPermissionChange(request $request){
+        $role = $request->role;
+        DB::table('role_has_permissions')->where('role_id', $role)->delete();
+        foreach($request->permission as $data => $key){
+            DB::table('role_has_permissions')->insert([
+                'permission_id'=> $data,
+                'role_id' => $role
+            ]);
+        }
+       Artisan::call('cache:clear');
+       return redirect()->back();
     }
 }

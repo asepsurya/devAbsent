@@ -28,7 +28,19 @@ class DataIndukController extends Controller
 {
     public function dataIndukStudent(request $request) {
         if ($request->ajax()) {
-            return DataTables::of(student::orderBy('nama', 'ASC'))->addIndexColumn()->toJson();
+            $model = student::orderBy('id', 'DESC')->with(['rombelstudent','getKelas']);
+            return DataTables::eloquent($model)
+            ->addColumn('rombel', function (student $item) {
+                if($item->getKelas == NULL){
+                    return 'Belum Disetel';
+                }else{
+                    $a = $item->getKelas->nama_kelas;
+                    $b = $item->getKelas->jurusanKelas->nama_jurusan;
+                    $c =  $item->getKelas->sub_kelas;
+                    return $a.' '.$b.' '.$c;
+                }
+           })->addIndexColumn()->toJson();
+
         }
         return view('akdemik.datainduk.student',[
             'title'=>'Peserta Didik',

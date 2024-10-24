@@ -27,6 +27,11 @@ class student extends Model
         return $this->belongsTo('App\Models\rombel','nis','nis');
     }
 
+    public function getKelas(){
+        return $this->belongsTo('App\Models\Kelas','id_kelas','id');
+    }
+
+
     public function studentUser(){
         return $this->belongsTo('App\Models\User','nis','nomor');
     }

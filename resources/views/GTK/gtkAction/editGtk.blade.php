@@ -69,6 +69,8 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <button class="btn btn-outline-light bg-white"><span class="ti ti-nfc"></span> Scan RFID</button>
                 </div>
 
             </div>
@@ -371,6 +373,9 @@
         </div>
     </div>
 </div>
+
+
+
 @endforeach
 </form>
 @section('javascript')
