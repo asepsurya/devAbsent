@@ -40,7 +40,7 @@ class authController extends Controller
             'id_kota' =>'required',
             'id_kecamatan' =>'required',
             'id_desa' => 'required',
-            'email'=>'required|email|unique:Users',
+            'email' => 'required|email|unique:users',
             'password'=>'required|same:Cpassword|min:6',
         ]);
 
@@ -56,7 +56,7 @@ class authController extends Controller
         student::create($validator);
         $validatedData = $request->validate([
             'nama'=>'required',
-            'email'=>'required|email|unique:Users',
+            'email' => 'required|email|unique:users',
             'password'=>'required|same:Cpassword|min:6',
 
         ]);
@@ -100,7 +100,7 @@ class authController extends Controller
             'id_kota' =>'required',
             'id_kecamatan' =>'required',
             'id_desa' => 'required',
-            'email'=>'required|email|unique:Users',
+            'email' => 'required|email|unique:users',
             'password'=>'required|same:Cpassword|min:6',
             'telp'=>'required',
         ]);
@@ -116,7 +116,7 @@ class authController extends Controller
         gtk::create($validator);
         $validatedData = $request->validate([
             'nama'=>'required',
-            'email'=>'required|email|unique:Users',
+            'email' => 'required|email|unique:users',
             'password'=>'required|same:Cpassword|min:6',
 
         ]);
