@@ -153,6 +153,7 @@
                                     <option value="">Pilih</option>
                                     <option value="Umum">Umum</option>
                                     <option value="Kejuruan">Kejuruan</option>
+                                    <option value="Pilihan">Pilihan</option>
                                 </select>
                             </div>
                            <div class="mb-3" >
@@ -203,6 +204,7 @@
                                     <option value="">Pilih</option>
                                     <option value="Umum" @if(ucwords($item->type) == 'Umum') Selected @endif>Umum</option>
                                     <option value="Kejuruan" @if(ucwords($item->type) == 'Kejuruan') Selected @endif>Kejuruan</option>
+                                    <option value="Pilihan" @if(ucwords($item->type) == 'Pilihan') Selected @endif>Pilihan</option>
                                 </select>
                             </div>
                            <div class="mb-3" >

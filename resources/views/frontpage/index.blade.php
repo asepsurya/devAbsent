@@ -197,13 +197,13 @@
                 <h5 class=" typewrite pb-3 text-muted" data-period="2000" data-type='[ "Selamat Datang di Absensi Pintar","Hallo apa kabar..? ","Apakah anda sudah Absen Hari ini..?" ]'></h5>
                 <div class=" mb-2 mt-2">
                         <div id="info"></div>
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label class="form-label">UID :</label>
                             <select name="id_rfid" id="id_rfid" class="form-control" disabled></select>
                             <label class="form-label my-3">Nama Lengkap :</label>
                             <input type="text" class="form-control " id="nama"  disabled>
 
-                        </div>
+                        </div> --}}
 
                         <center><label><span class="ti ti-history"></span> Riwayat Absensi</label></center>
                         <div class="table-responsive bg-white scrollme">
