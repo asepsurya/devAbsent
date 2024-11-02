@@ -24,12 +24,12 @@ class GTKController extends Controller
 {
     public function GTKall(request $request){
         if ($request->ajax()) {
-            return DataTables::of(gtk::orderBy('id', 'DESC'))->addIndexColumn()->toJson();
+            return DataTables::of(gtk::orderBy('nama', 'ASC'))->addIndexColumn()->toJson();
         }
         return view('GTK.gtk',[
             'title'=>'Guru dan Tenaga Kependidikan',
             'provinsi'=>Province::all(),
-            'gtk'=>gtk::orderBy('id', 'DESC')->get(['id','nik']),
+            'gtk'=>gtk::orderBy('nama', 'ASC')->get(['id','nik']),
 
         ]);
     }

@@ -17,7 +17,8 @@ class PenggunaController extends Controller
 {
     Public function userAdministratorIndex(){
         return view('pengguna.administrator',[
-            'title' => 'Administrator'
+            'title' => 'Administrator',
+            'userAdmin'=>User::where('role','admin')->paginate(15)
         ]);
     }
     public function userStudentsIndex(){

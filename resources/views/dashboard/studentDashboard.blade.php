@@ -496,7 +496,7 @@
         <div class="row flex-fill">
             <div class="col-sm-6 col-xl-3 d-flex">
                 <a href="student-fees.html"
-                    class="card border-0 border-bottom border-primary border-2 flex-fill animate-card">
+                    class="card border-0 border-bottom border-primary flex-fill animate-card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <span class="avatar avatar-md rounded bg-primary me-2"><i
@@ -531,7 +531,7 @@
             </div>
             <div class="col-sm-6 col-xl-3 d-flex">
                 <a href="student-leaves.html"
-                    class="card border-0 border-bottom border-dark border-2 flex-fill animate-card">
+                    class="card border-0 border-bottom border-dark flex-fill animate-card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <span class="avatar avatar-md rounded bg-dark me-2"><i
