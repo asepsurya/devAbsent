@@ -112,30 +112,24 @@
                             <td>{{ $id_rfid }}</td>
                             <td>{{ $absentData[0]['nama'] ?? '-' }}</td>
                             @foreach ($allDates as $date)
-                                <td class="text-center"
-                                    @php
-                                        // Mencari absensi berdasarkan tanggal dalam $absentData
-                                        $absent = collect($absentData)->firstWhere('tanggal', $date);
-                                        // Menentukan warna berdasarkan status
-                                        $status = $absent['status'] ?? '-';
-                                        $bgColor = '';
-                                        $datang = '';
-                                        $pulang = '';
-                                        if ($status == 'H') {
-                                            $bgColor = 'background-color: green; color: white;';
-                                            $datang = $absent['entry'] ?? '-';
-                                            $pulang = $absent['out'] ?? '-';
-                                        } elseif ($status == 'S') {
-                                            $bgColor = 'background-color: blue; color: white;';
-                                        } elseif ($status == 'I') {
-                                            $bgColor = 'background-color: yellow; color: black;';
-                                        } elseif ($status == 'A') {
-                                            $bgColor = 'background-color: red; color: white;';
-                                        }
-                                    @endphp
-                                    style="{{ $bgColor }}"
-                                >
-                                    {{ $status }}
+                                @php
+                                    $absent = collect($absentData)->firstWhere('tanggal', $date);
+                                    $status = $absent['status'] ?? '-';
+                                    $bgColor = match($status) {
+                                        'H' => 'background-color: green; color: white;',
+                                        'S' => 'background-color: blue; color: white;',
+                                        'I' => 'background-color: yellow; color: black;',
+                                        'A' => 'background-color: red; color: white;',
+                                        default => ''
+                                    };
+                                @endphp
+                                <td class="text-center" style="{{ $bgColor }}">
+                                    @if ($status == 'H')
+                                        <span class="badge badge-success d-block mt-1">{{ $absent['entry'] ?? '-' }}</span>
+                                        <span class="badge badge-danger d-block mt-1">{{ $absent['out'] ?? '-' }}</span>
+                                    @else
+                                        <span class="d-block font-weight-bold">{{ $status }}</span>
+                                    @endif
                                 </td>
                             @endforeach
                             <td class="text-center">{{ $absentData['counts']['H'] ?? 0 }}</td>
