@@ -75,9 +75,9 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold">{{ $studentActive }}</span></p>
+                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold counter">{{ $studentActive }}</span></p>
                     <span class="text-light">|</span>
-                    <p>Tidak Aktif : <span class="text-dark fw-semibold">{{ $studentDeactive }}</span></p>
+                    <p>Tidak Aktif : <span class="text-dark fw-semibold counter">{{ $studentDeactive }}</span></p>
                 </div>
             </div>
         </div>
@@ -97,9 +97,9 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold">{{ $gtkActive }}</span></p>
+                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold counter">{{ $gtkActive }}</span></p>
                     <span class="text-light">|</span>
-                    <p>Tidak Aktif : <span class="text-dark fw-semibold">{{ $gtkDeactive }}</span></p>
+                    <p>Tidak Aktif : <span class="text-dark fw-semibold counter">{{ $gtkDeactive }}</span></p>
                 </div>
             </div>
         </div>
@@ -119,9 +119,9 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold">{{ $rombelActive }}</span></p>
+                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold counter">{{ $rombelActive }}</span></p>
                     <span class="text-light">|</span>
-                    <p>Tidak Aktif : <span class="text-dark fw-semibold">{{ $rombelDeactive }}</span></p>
+                    <p>Tidak Aktif : <span class="text-dark fw-semibold counter">{{ $rombelDeactive }}</span></p>
                 </div>
             </div>
         </div>
@@ -142,9 +142,9 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold">{{ $kelasActive }}</span></p>
+                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold counter">{{ $kelasActive }}</span></p>
                     <span class="text-light">|</span>
-                    <p>Tidak Aktif : <span class="text-dark fw-semibold">{{ $kelasDeactive }}</span></p>
+                    <p>Tidak Aktif : <span class="text-dark fw-semibold counter">{{ $kelasDeactive }}</span></p>
                 </div>
             </div>
         </div>
@@ -158,16 +158,16 @@
                     </div>
                     <div class="overflow-hidden flex-fill">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h2 class="counter">0</h2>
+                            <h2 class="counter">{{ $absenEntryCount }}</h2>
                             {{-- <span class="badge bg-success">1.2%</span> --}}
                         </div>
                         <p>Absen Masuk</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                    <p class="mb-0">Sudah : <span class="text-dark fw-semibold">0</span></p>
-                    <span class="text-light">|</span>
-                    <p>Belum : <span class="text-dark fw-semibold">0</span></p>
+                    <p class="mb-0"></p>
+                    <span class="text-light"></span>
+                    <p class="mb-0">Belum : <span class="text-dark fw-semibold counter">{{ $studentActive + $gtkActive - $absenEntryCount }}</span></p>
                 </div>
             </div>
         </div>
@@ -181,16 +181,16 @@
                     </div>
                     <div class="overflow-hidden flex-fill">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h2 class="counter">0</h2>
+                            <h2 class="counter">{{ $absenOutCount }}</h2>
                             {{-- <span class="badge bg-success">1.2%</span> --}}
                         </div>
                         <p>Absen Pulang</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                    <p class="mb-0">Sudah : <span class="text-dark fw-semibold">0</span></p>
-                    <span class="text-light">|</span>
-                    <p>Belum : <span class="text-dark fw-semibold">0</span></p>
+                    <p class="mb-0"></p>
+                    <span class="text-light"></span>
+                    <p class="mb-0">Belum : <span class="text-dark fw-semibold counter">{{ $studentActive + $gtkActive - $absenOutCount }}</span></p>
                 </div>
             </div>
         </div>
