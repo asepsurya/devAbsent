@@ -219,7 +219,11 @@
                                 class="border border-dashed p-3 rounded d-flex align-items-center justify-content-between mb-1">
                                 <p class="mb-0 me-2"><i class="ti ti-arrow-badge-down-filled me-2 text-primary"></i>
                                     {{ $item->nama_kelas }} {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</p>
-                                <h5>{{ $item->jmlRombel->count() }} siswa</h5>
+                                <h5>
+                                    <span class="badge badge-soft-success d-inline-flex align-items-center">
+                                        {{ $item->jmlRombel->count() }} Siswa
+                                    </span>
+                                </h5>
                             </div>
                             @endforeach
                         </div>

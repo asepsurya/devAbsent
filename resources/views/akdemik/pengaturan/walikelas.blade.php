@@ -35,7 +35,7 @@
                         <th class="bg-light-400">Tahun Pelajaran</th>
                         <th class="bg-light-400">Kelas</th>
                         <th class="bg-light-400">Wali Kelas</th>
-                        <th class="bg-light-400">Jumlah Rombel</th>
+                        <th class="bg-light-400">Jumlah</th>
                         <th class="bg-light-400">Action</th>
 
                     </tr>
