@@ -119,9 +119,9 @@
                                                                         class="form-control gender @error('gender') is-invalid @enderror">
                                                                         <option value="" selected>- Jenis Kelamin -
                                                                         </option>
-                                                                        <option value="1" {{ old('gender')==1
+                                                                        <option value="L" {{ old('gender')== "L"
                                                                             ? 'selected' : '' }}>Laki - Laki</option>
-                                                                        <option value="2" {{ old('gender')==2
+                                                                        <option value="P" {{ old('gender')== "P"
                                                                             ? 'selected' : '' }}>Perempuan</option>
                                                                     </select>
                                                                     @error('gender')
@@ -411,9 +411,9 @@
                                                                         class="form-control gender2 @error('gender') is-invalid @enderror">
                                                                         <option value="" selected>- Jenis Kelamin -
                                                                         </option>
-                                                                        <option value="1" {{ old('gender')==1
+                                                                        <option value="L" {{ old('gender')== 'L'
                                                                             ? 'selected' : '' }}>Laki - Laki</option>
-                                                                        <option value="2" {{ old('gender')==2
+                                                                        <option value="P" {{ old('gender')== 'P'
                                                                             ? 'selected' : '' }}>Perempuan</option>
                                                                     </select>
                                                                     @error('gender')

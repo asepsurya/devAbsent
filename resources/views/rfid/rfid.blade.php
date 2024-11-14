@@ -85,7 +85,7 @@
                                         @endif
                                         @if($item->rfidGTK)
                                             {{ $item->rfidGTK->nama }}
-                                            @php $gender = $item->rfidGTK->gender;  $role = $item->rfidGTK->Usergtk->role; @endphp
+                                            @php $gender = $item->rfidGTK->gender;  $role = 'Guru dan Tenaga Kependidikan' @endphp
                                         @endif
                                 </h5>
                             </div>

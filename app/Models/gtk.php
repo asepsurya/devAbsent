@@ -11,7 +11,7 @@ class gtk extends Model
     protected $guarded=['id'];
 
     public function Usergtk(){
-        return $this->belongsTo('App\Models\user','nik','nomor');
+        return $this->belongsTo('App\Models\User','nik','nomor');
     }
     public function kota(){
         return $this->belongsTo('App\Models\Regency','id_kota','id');

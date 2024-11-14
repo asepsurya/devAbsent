@@ -39,14 +39,23 @@
                     </ul>
                 </li>
                 @if(auth()->user()->role == 'siswa')
+
                 <li>
                     <h6 class="submenu-hdr"><span>Menu Saya</span></h6>
                     <ul>
                         <li class="{{ Request::is('class/leasson/view*') ? 'active' : ''}}">
+                            @if (auth()->user()->rombelstudent)
                             <a href="{{ route('leassonView',auth()->user()->rombelstudent->id_kelas) }}"><i class="ti ti-list"></i><span>Jadwal Pelajaran</span></a>
+                            @else
+                            <a class="notif"><i class="ti ti-list"></i><span>Jadwal Pelajaran</span></a>
+                            @endif
+
                         </li>
                         <li class="{{ Request::is('absent/list*') ? 'active' : ''}}">
+                            @if (auth()->user()->rombelstudent)
                             <a href="{{ route('absent_list',[auth()->user()->rombelstudent->id_kelas,auth()->user()->rombelstudent->nis]) }}"><i class="ti ti-key"></i><span>Daftar Hadir Kelas</span></a>
+                            @endif
+
                         </li>
                     </ul>
                 </li>
@@ -261,3 +270,6 @@
     </div>
 
 </div>
+@section('javascript')
+
+@endsection
