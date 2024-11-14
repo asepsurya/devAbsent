@@ -41,36 +41,31 @@
     </div>
     <div class="card-body p-0 ">
         <div class="table-responsive">
-            <table class="table table-nowrap mb-0">
+            <table class="table table-nowrap mb-0" id="myTable">
                 <thead>
                     <tr>
                         <th class="bg-light-400">#</th>
-                        <th class="bg-light-400">Nama Lengkap</th>
-                        <th class="bg-light-400">Email</th>
-                        <th class="bg-light-400">Grup</th>
+                        <th class="bg-light-400">Nama</th>
+                        <th class="bg-light-400">Username</th>
                         <th class="bg-light-400">Action</th>
 
                     </tr>
                 </thead>
                 <tbody>
+                    @php $no = 1; @endphp
+                    @foreach ($userAdmin as $item )
                     <tr>
-                        <td>1.</td>
-                        <td>
-                            Abdul
-                        </td>
-                        <td>abdul@gmail.com</td>
-                        <td>GRUP 1</td>
+                        <td>{{ $no++ }}</td>
+                        <td>{{ $item->nama }}</td>
+                        <td>{{ $item->email}}</td>
                         <td>
                             <div class="hstack gap-2 fs-15">
-                                <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i
+                                <a data-bs-toggle="modal" data-bs-target="#changePassword-{{ $item->id }}" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i
                                         class="ti ti-pencil-minus"></i></a>
-                                <a href="javascript:void(0);"
-                                    class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i
-                                        class="ti ti-trash"></i></a>
                             </div>
                         </td>
                     </tr>
-
+                    @endforeach
                 </tbody>
             </table>
         </div>

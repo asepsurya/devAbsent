@@ -23,7 +23,7 @@ class pengaturanAkademik extends Controller
     public function pengaturanMapel(request $request){
 
         if ($request->ajax()) {
-            return DataTables::of(Mapel::orderBy('id', 'ASC'))->addIndexColumn()->toJson();
+            return DataTables::of(Mapel::orderBy('nama', 'ASC'))->addIndexColumn()->toJson();
         }
 
         if(request()){
@@ -36,7 +36,7 @@ class pengaturanAkademik extends Controller
         return view('akdemik.pengaturan.matapelajaran',[
             'title'=>'Mata Pelajaran',
             'mapel'=>Mapel::where('status','1')->get(),
-            'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'ASC')->get(),
+            'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'DESC')->get(),
             'kelas'=>Kelas::where('status','1')->with('jurusanKelas')->get(),
             'grupMapel'=>$data,
             'mapelnotAllow'=>grupMapel::where(['status'=>'1'])->get()
@@ -46,10 +46,10 @@ class pengaturanAkademik extends Controller
     public function PengaturanWalikelas(){
         return view('akdemik.pengaturan.walikelas',[
             'title'=> 'Wali Kelas',
-            'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'ASC')->get(),
+            'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'DESC')->get(),
             'kelas'=>Kelas::where('status','1')->with(['jurusanKelas','jmlRombel'])->get(),
             'gtk'=>gtk::where('status','1')->get(),
-            'walikelas'=>walikelas::orderBy('id', 'ASC')->with(['gtk','tahun_ajar'])->get(),
+            'walikelas'=>walikelas::orderBy('id', 'DESC')->with(['gtk','tahun_ajar'])->get(),
         ]);
     }
 
@@ -114,7 +114,7 @@ class pengaturanAkademik extends Controller
             'title'=>'Rombongan Belajar',
             'students'=>$data,
             'studentsClass'=>$mydata,
-            'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'ASC')->get(),
+            'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'DESC')->get(),
             'kelas'=>Kelas::where('status','1')->with('jurusanKelas')->get(),
         ]);
     }
@@ -178,7 +178,7 @@ class pengaturanAkademik extends Controller
        return view('akdemik.pengaturan.gurumapel',[
         'title'=> 'Guru Mata Pelajaran',
         'mapel'=>Mapel::where('status','1')->get(),
-        'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'ASC')->get(),
+        'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'DESC')->get(),
         'kelas'=>Kelas::where('status','1')->with('jurusanKelas')->get(),
         'gtk'=>gtk::where('status','1')->get(),
         'grupMapel'=>$data,

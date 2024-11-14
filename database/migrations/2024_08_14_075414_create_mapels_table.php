@@ -16,7 +16,7 @@ return new class extends Migration
             $table->String('nama');
             $table->String('kode_mapel')->nullable(); // input kode mapel
             $table->String('jml_jam'); // dijadikan patokan max jam pelajaran
-            $table->enum('type', ['umum', 'kejuruan']); // kelompok mapel
+            $table->enum('type', ['umum', 'kejuruan', 'pilihan']); // kelompok mapel
             $table->String('status');
             $table->timestamps();
         });

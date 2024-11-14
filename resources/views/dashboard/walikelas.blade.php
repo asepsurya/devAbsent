@@ -37,7 +37,7 @@
                                     <div class="d-sm-flex align-items-center justify-content-between row-gap-3">
                                         <div class="d-flex align-items-center overflow-hidden mb-3">
                                             <div
-                                                class="avatar avatar-xxl rounded flex-shrink-0 border border-2 border-white me-3">
+                                                class="avatar avatar-xxl rounded flex-shrink-0 border-0 border-white me-3">
                                                 @if( auth()->user()->role == "walikelas")
                                                     @if(Auth::user()->gtk == NULL)
                                                         <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>

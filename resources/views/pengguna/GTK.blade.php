@@ -44,7 +44,7 @@
                 <thead>
                     <tr>
                         <th class="bg-light-400">#</th>
-                        <th class="bg-light-400">NIK</th>
+                        <th class="bg-light-400">NIK / No. KITAS (Untuk WNA)</th>
                         <th class="bg-light-400">Nama Lengkap</th>
                         <th class="bg-light-400">Status</th>
                         <th class="bg-light-400">Action</th>

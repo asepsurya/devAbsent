@@ -6,7 +6,9 @@ use App\Models\gtk;
 use App\Models\Kelas;
 use App\Models\rombel;
 use App\Models\student;
+use App\Models\absentsHistory;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -50,6 +52,9 @@ class DashboardController extends Controller
             'kelasCount'=>Kelas::count(),
             'kelasActive'=>Kelas::where('status','1')->count(),
             'kelasDeactive'=>Kelas::where('status','2')->count(),
+            // absen
+            'absenEntryCount'=>AbsentsHistory::where('status', 'ENTRY')->whereDate('created_at', Carbon::today())->count(),
+            'absenOutCount'=>absentsHistory::where('status', 'EXIT')->whereDate('created_at', Carbon::today())->count(),
         ]);
     }
 }

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\absent;
 use App\Models\gtk;
 use App\Models\student;
+use App\Models\TahunPelajaran;
+use App\Models\Kelas;
 
 class reportController extends Controller
 {
@@ -77,6 +79,8 @@ class reportController extends Controller
         return view('report.absents', [
         //return response()->json([
             'title' => 'Laporan Absensi',
+            'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'DESC')->get(),
+            'kelas'=>Kelas::where('status','1')->with('jurusanKelas')->get(),
             'created' => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
             'absents' => $formattedAbsents,
             'allDates' => $allDates,

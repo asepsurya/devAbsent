@@ -24,19 +24,38 @@
         <div class="row g-3">
             <h4 class="aletr-heading mb-0 text-fixed-white">Filter Data</h4>
             <div class="col-lg-3">
-                <select name="" id="" class="select">
-                    <option value="">Tahun Pelajaran</option>
+                <select name="tahun" id="tahunAjar" class="form-control select2" onchange="">
+                    <option value="" selected>Tahun Pelajaran</option>
+                    @foreach ($tahunAjar as $item )
+                    <option value="{{ $item->id }}" {{ $item->id == request('tahun') ? 'selected' : '' }}>{{
+                        $item->tahun_pelajaran }} - {{ $item->semester }}
+                    </option>
+                    @php $a = request('tahun') @endphp
+                    @endforeach
                 </select>
             </div>
             <div class="col-lg-3">
-                <select name="" id="" class="select">
-                    <option value="">Pilih Kelas</option>
+                <select name="kelas" id="kelas" class="form-control select2"  onchange="">
+                    <option value="all" selected>Semua Kelas</option>
+                    @foreach ($kelas as $item )
+                    <option value="{{ $item->id }}" {{ $item->id == request('kelas') ? 'selected' : '' }}>{{
+                        $item->nama_kelas }} - {{
+                        $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }} </option>
+                    {{-- get Default Value --}}
+
+                    @php $c = request('kelas');  @endphp
+                    @endforeach
                 </select>
             </div>
-            <div class="col-lg-4">
-
-                <select name="" id="" class="select">
-                    <option value="">Bulan</option>
+            <div class="col-lg-3">
+                <select name="bulan" id="bulan" class="form-control select2" onchange="">
+                    <option value="all" selected>Semua Bulan</option>
+                    @php
+                        for ($month = 1; $month <= 12; $month++) {
+                            $monthName = \Carbon\Carbon::create(null, $month, 1, 0, 0, 0, 'Asia/Jakarta')->format('F');
+                            printf('<option value="%02d">%s</option>', $month, $monthName);
+                        }
+                    @endphp
                 </select>
             </div>
             <div class="col-lg-2">
@@ -64,11 +83,14 @@
         <div class="table-responsive">
             <table class="table table-bordered table-striped mb-0" id="myTable">
                 <thead>
-                    <tr>
+                    <tr class="text-center">
                         <td rowspan="2">#</td>
-                        <td rowspan="2" class="text-center"><p>NIS</p></td>
+                        <td rowspan="2" class="text-center"><p>RFID</p></td>
                         <td rowspan="2" class="text-center"><p>NAMA</p></td>
-                        <td colspan="31"><p>Bulan Januari</p></tdh>
+                        @php
+                            $thisMonth = \Carbon\Carbon::now()->format('F'); // ganti dengan seleted bulan/hasil filter
+                        @endphp
+                        <td colspan="31"><p>Bulan {{ $thisMonth }}</p></td>
                     </tr>
                     <tr class="text-center">
                         @foreach ($allDates as $date)
@@ -90,26 +112,24 @@
                             <td>{{ $id_rfid }}</td>
                             <td>{{ $absentData[0]['nama'] ?? '-' }}</td>
                             @foreach ($allDates as $date)
-                                <td class="text-center"
-                                    @php
-                                        // Mencari absensi berdasarkan tanggal dalam $absentData
-                                        $absent = collect($absentData)->firstWhere('tanggal', $date);
-                                        // Menentukan warna berdasarkan status
-                                        $status = $absent['status'] ?? '-';
-                                        $bgColor = '';
-                                        if ($status == 'H') {
-                                            $bgColor = 'background-color: green; color: white;';
-                                        } elseif ($status == 'S') {
-                                            $bgColor = 'background-color: blue; color: white;';
-                                        } elseif ($status == 'I') {
-                                            $bgColor = 'background-color: yellow; color: black;';
-                                        } elseif ($status == 'A') {
-                                            $bgColor = 'background-color: red; color: white;';
-                                        }
-                                    @endphp
-                                    style="{{ $bgColor }}"
-                                >
-                                    {{ $status }}
+                                @php
+                                    $absent = collect($absentData)->firstWhere('tanggal', $date);
+                                    $status = $absent['status'] ?? '-';
+                                    $bgColor = match($status) {
+                                        'H' => 'background-color: green; color: white;',
+                                        'S' => 'background-color: blue; color: white;',
+                                        'I' => 'background-color: yellow; color: black;',
+                                        'A' => 'background-color: red; color: white;',
+                                        default => ''
+                                    };
+                                @endphp
+                                <td class="text-center" style="{{ $bgColor }}">
+                                    @if ($status == 'H')
+                                        <span class="badge badge-success d-block mt-1">{{ $absent['entry'] ?? '-' }}</span>
+                                        <span class="badge badge-danger d-block mt-1">{{ $absent['out'] ?? '-' }}</span>
+                                    @else
+                                        <span class="d-block font-weight-bold">{{ $status }}</span>
+                                    @endif
                                 </td>
                             @endforeach
                             <td class="text-center">{{ $absentData['counts']['H'] ?? 0 }}</td>
