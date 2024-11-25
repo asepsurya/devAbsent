@@ -83,7 +83,7 @@
                 <label class="form-label">Nomor Induk Siswa</label>
                 <input type="text" class="form-control @error('nis') is-invalid @enderror"
                     placeholder="Nomor Induk Siswa" name="nis" value="{{ $item->nis }}" id="nis" maxlength="10"
-                    onkeypress="return onlyNumberKey(event)">
+                    onkeypress="return onlyNumberKey(event)" readonly>
                 @error('nis')
                 <div class="invalid-feedback">
                     {{ $message }}

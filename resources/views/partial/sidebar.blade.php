@@ -246,14 +246,15 @@
                                         <li><a href="/user/employees"
                                                 class="{{ Request::is('user/employees') ? 'active' : ''}}">GTK</a></li>
                                         <li><a href="/user/modules"
-                                                class="{{ Request::is('user/modules') ? 'active' : ''}}">Daftar Modul</a></li>
-                                        <li><a href="/user/user_privileges"
-                                                class="{{ Request::is('user/user_privileges') ? 'active' : ''}}">Hak Akses</a></li>
+                                                class="{{ Request::is('user/modules') ? 'active' : ''}}">Role Permission</a></li>
+                                        {{-- <li><a href="/user/user_privileges"
+                                                class="{{ Request::is('user/user_privileges') ? 'active' : ''}}">Hak Akses</a></li> --}}
                                     </ul>
                                 </li>
                             </ul>
                         </li>
                         @endcan
+                        @can('setelan_aplikasi')
                         <li>
                             <ul>
                                 <li  class="{{ Request::is('setelan*') ? 'active' : ''}}">
@@ -262,6 +263,7 @@
                             </ul>
 
                         </li>
+                        @endcan
                     </ul>
                 </li>
 

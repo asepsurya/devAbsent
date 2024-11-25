@@ -227,6 +227,7 @@ class AppSeeder extends Seeder
         Permission::create(['name' => 'setelan']);
         Permission::create(['name' => 'management_absent']);
         Permission::create(['name' => 'absensi_kelas']);
+        Permission::create(['name' => 'setelan_aplikasi']);
         // PERMISSION CRUD
         Permission::create(['name' => 'create']);
         Permission::create(['name' => 'delete']);

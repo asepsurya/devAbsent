@@ -23,7 +23,6 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-
                     <td class="border text-center" width="30%"><p>Nama Mata Pelajaran</p></td>
                     <td class="border text-center"  width="50%"><p>Guru Ajar</p></td>
                     <th class="border text-center">H</th>
@@ -31,14 +30,13 @@
                     <th class="border text-center">I</th>
                     <th class="border text-center">A</th>
                 </tr>
-
             </thead>
             <tbody>
 
                 @foreach ($mapel as $item )
 
                         <td class="border">{{ $item->mata_pelajaran->nama }}</td>
-                        <td class="border">{{ $item->guru->nama }}</td>
+                        <td class="border">@if($item->guru){{ $item->guru->nama }}@endif</td>
                         <td class="border text-center">
                         @php
                             $hadirCount = $hadir->where('id_mapel', $item->id_mapel)->where('status', 'H')->count();

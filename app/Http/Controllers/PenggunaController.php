@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-
+use App\Models\student;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -21,7 +22,10 @@ class PenggunaController extends Controller
             'userAdmin'=>User::where('role','admin')->paginate(15)
         ]);
     }
-    public function userStudentsIndex(){
+    public function userStudentsIndex(request $request){
+        if ($request->ajax()) {
+            return DataTables::of(User::where(['role'=>'siswa'])->orderBy('id', 'DESC'))->addIndexColumn()->toJson();
+        }
         return view('pengguna.pesertadidik',[
             'title' => 'Peserta Didik',
             'students'=>User::where('role','siswa')->with('student')->paginate(15)
@@ -74,5 +78,15 @@ class PenggunaController extends Controller
         }
        Artisan::call('cache:clear');
        return redirect()->back();
+    }
+
+    public function changePassword(request $request){
+        $validasi = $request->validate([
+            'password'=>'required|same:cpassword|min:6'
+        ]);
+        $validasi['password'] = Hash::make($validasi['password']);
+        User::where('id',$request->id)->update($validasi);
+        toastr()->success('Password berhasi diubah');
+        return redirect()->back();
     }
 }

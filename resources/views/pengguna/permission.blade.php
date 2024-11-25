@@ -15,19 +15,12 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-        <div class="pe-1 mb-2">
-            <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh">
-                <i class="ti ti-refresh"></i>
-            </a>
-        </div>
-
 
     </div>
 </div>
 <form action="{{ route('usermodulesPermissionChange') }}" method="post">
     @csrf
-    <input type="text" name="role" value="{{ $id }}">
+    <input type="text" name="role" value="{{ $id }}" hidden>
     <div class="table-responsive">
         <div class="card">
             <div class="card-header">

@@ -169,12 +169,14 @@ Route::middleware('auth')->group(function () {
     // route Pengguna
     Route::get('/user/administrator',[penggunaController::class,'userAdministratorIndex'])->name('userAdministratorIndex');
     Route::post('/user/administratorAdd',[penggunaController::class,'userAdministratorAdd'])->name('userAdministratorAdd');
-    Route::get('/user/students',[penggunaController::class,'userStudentsIndex']);
+    Route::get('/user/students',[penggunaController::class,'userStudentsIndex'])->name('userStudentsIndex');
     Route::get('/user/employees',[penggunaController::class,'useremployeesIndex'])->name('useremployeesIndex');
     Route::get('/user/modules',[penggunaController::class,'usermodulesIndex']);
     Route::get('/user/permission/{id}',[penggunaController::class,'usermodulesPermission'])->name('usermodulesPermission');
     Route::post('/user/permission/change',[penggunaController::class,'usermodulesPermissionChange'])->name('usermodulesPermissionChange');
     Route::get('/user/user_privileges',[penggunaController::class,'user_privilegesIndex']);
+    Route::post('/user/changePassword',[penggunaController::class,'changePassword'])->name('changePassword');
+
 
     Route::get('/verifikasiuser',[verifikasiUserController::class,'verifikasiUser']);
     Route::get('/verifikasiuserUpdate{id}',[verifikasiUserController::class,'verifikasiUpdate'])->name('verifikasiUpdate');
