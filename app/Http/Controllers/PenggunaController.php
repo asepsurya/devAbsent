@@ -81,6 +81,7 @@ class PenggunaController extends Controller
     }
 
     public function changePassword(request $request){
+
         $validasi = $request->validate([
             'password'=>'required|same:cpassword|min:6'
         ]);

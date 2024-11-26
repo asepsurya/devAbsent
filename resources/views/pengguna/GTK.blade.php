@@ -39,6 +39,15 @@
         <h4>Daftar {{ $title }}</h4>
     </div>
     <div class="card-body p-0 ">
+        <div class="p-2">
+            @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show custom-alert-icon shadow-sm d-flex align-items-centers m-3" role="alert">
+                        <i class="feather-alert-octagon flex-shrink-0 me-2"></i>
+                        {!! implode('', $errors->all('<div>:message</div>')) !!}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><i class="fas fa-xmark"></i></button>
+                    </div>
+            @endif
+        </div>
         <div class="table-responsive">
             <table class="table table-nowrap mb-0" id="myTable">
                 <thead>
@@ -54,9 +63,9 @@
         </div>
     </div>
 </div>
-
+@foreach ($gtks as $item )
 {{-- modal tambah Hari Libur --}}
-<div class="modal fade" id="add_holiday" aria-modal="true" role="dialog">
+<div class="modal fade" id="add_holiday-{{ $item->id }}" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -65,30 +74,31 @@
                     <i class="ti ti-x"></i>
                 </button>
             </div>
-            <form action="holidays.html">
+            <form action="{{ route('changePassword') }}" method="POST">
+                @csrf
                 <div class="modal-body">
+
                     <div class="row">
-                        <form action="" method="post">
-                            <div class="col-md-12">
+                        <div class="col-md-12">
+                            <input type="text" name="id" value="{{ $item->id }}" hidden>
 
-
-                                <div class="mb-3">
-                                    <label class="form-label">Kata Sandi</label>
-                                    <div class="pass-group mb-3">
-                                        <input type="password" class="pass-input form-control" placeholder="Masukan Kata Sandi">
-                                        <span class="ti toggle-password ti-eye-off"></span>
-                                    </div>
+                            <div class="mb-3">
+                                <label class="form-label">Kata Sandi</label>
+                                <div class="pass-group mb-3">
+                                    <input type="password" class="pass-input form-control" placeholder="Masukan Kata Sandi" name="password">
+                                    <span class="ti toggle-password ti-eye-off"></span>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Ulangi Kata Sandi</label>
-                                    <div class="pass-group mb-3">
-                                        <input type="password" class="pass-input form-control" placeholder="Masukan Kata Sandi">
-                                        <span class="ti toggle-password ti-eye-off"></span>
-                                    </div>
-                                </div>
-
                             </div>
-                    </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ulangi Kata Sandi</label>
+                                <div class="pass-group mb-3">
+                                    <input type="password" class="pass-input form-control" placeholder="Masukan Kata Sandi" name="cpassword">
+                                    <span class="ti toggle-password ti-eye-off"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary w-100"><span class="ti ti-pencil-plus"></span> Ubah</button>
@@ -98,18 +108,20 @@
 
     </div>
 </div>
+@endforeach
 @foreach ($gtks as $item )
 {{-- modal tambah Hari Libur --}}
 <div class="modal fade" id="edit_role-{{ $item->id }}" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><span class="ti ti-pencil-plus"></span> Ubah Kata Sandi</h4>
+                <h4 class="modal-title"><span class="ti ti-pencil-plus"></span> Ubah Role Pengguna</h4>
                 <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>
-            <form action="holidays.html">
+            <form action="{{ route('changePassword') }}" action="POST">
+                @csrf
                 <div class="modal-body">
                     <div class="row">
                         <form action="" method="post">
@@ -121,7 +133,6 @@
                                         <option value="walikelas" {{ $item->role == 'walikelas' ?'selected': '' }}>Walikelas</option>
                                         <option value="guru"{{ $item->role == 'guru' ?'selected': '' }}>Guru Pengajar</option>
                                         <option value="siswa"{{ $item->role == 'siswa' ?'selected': '' }}>Siswa</option>
-
                                     </select>
                                 </div>
                             </div>
@@ -191,7 +202,7 @@
                         if(type === 'display'){
                             data =
                             '<div class="d-flex align-items-center">'+
-                            '<a data-bs-toggle="modal" data-bs-target="#add_holiday" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2" data-bs-toggle="modal" data-bs-target="#edit_role"><i class="ti ti-edit-circle text-primary"></i></a>'+
+                            '<a data-bs-toggle="modal" data-bs-target="#add_holiday-'+ data +'" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2" data-bs-toggle="modal" data-bs-target="#edit_role"><i class="ti ti-edit-circle text-primary"></i></a>'+
                             '<a data-bs-toggle="modal" data-bs-target="#edit_role-'+ data +'" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="ti ti-shield text-skyblue"></i></a>'+
                              '</div>'
                         }
