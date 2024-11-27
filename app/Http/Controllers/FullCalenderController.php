@@ -42,6 +42,7 @@ class FullCalenderController extends Controller
                   'title' => $request->title,
                   'start' => $request->start,
                   'end' => $request->end,
+                  'type' => 'event',
               ]);
 
               return response()->json($event);
@@ -52,6 +53,7 @@ class FullCalenderController extends Controller
                   'title' => $request->title,
                   'start' => $request->start,
                   'end' => $request->end,
+                  'type' => 'event',
               ]);
 
               return response()->json($event);
@@ -73,6 +75,7 @@ class FullCalenderController extends Controller
             'title' => $request->title,
             'start' => $request->start,
             'end' => $request->end,
+            'type' => 'holiday',
         ]);
         toastr()->success('Event Berhasil disimpan');
         return redirect()->back();

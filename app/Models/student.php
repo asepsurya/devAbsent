@@ -31,6 +31,9 @@ class student extends Model
         return $this->belongsTo('App\Models\Kelas','id_kelas','id');
     }
 
+    public function absentRFID(){
+        return $this->Hasmany('App\Models\absent','id_rfid','nis');
+    }
 
     public function studentUser(){
         return $this->belongsTo('App\Models\User','nis','nomor');

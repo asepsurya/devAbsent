@@ -221,9 +221,34 @@
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Report</span></h6>
+                        @can('setelan')
                         <li>
-                            <a href="{{ route('report.absents') }}"><i class="ti ti-file-text"></i><span>Laporan</span></a>
+                            <ul>
+                                <li class="submenu">
+                                    <a href="javascript:void(0);"
+                                        class=" {{ Request::is('report*') ? 'subdrop active' : ''}}"><i
+                                            class="ti ti-lock"></i><span>Laporan Absensi</span><span class="menu-arrow"></span></a>
+                                    <ul>
+                                        <li><a href="/report/absent"
+                                                class="{{ Request::is('report/absent') ? 'active' : ''}}">Laporan RFID</a></li>
+                                        <li><a href="/report/absent"
+                                                class="{{ Request::is('report/absent1') ? 'active' : ''}}">Laporan Absensi Kelas</a></li>
+
+                                    </ul>
+                                </li>
+                            </ul>
                         </li>
+                        @endcan
+                        @can('setelan_aplikasi')
+                        <li>
+                            <ul>
+                                <li  class="{{ Request::is('setelan*') ? 'active' : ''}}">
+                                    <a href="{{ route('setelan.app') }}"><i class="ti ti-settings"></i><span>Pengaturan Aplikasi</span></a>
+                                </li>
+                            </ul>
+
+                        </li>
+                        @endcan
                     </ul>
                 </li>
                 @endcan

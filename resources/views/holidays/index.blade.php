@@ -44,25 +44,24 @@
                     <tr >
                         <th class="bg-light-400">#</th>
                         <th class="bg-light-400">Keterangan</th>
-                        <th class="bg-light-400">Tanggal</th>
-                        <th class="bg-light-400">Deskripsi</th>
-                        <th class="bg-light-400">Status</th>
+                        <th class="bg-light-400">Start</th>
+                        <th class="bg-light-400">End</th>
+
                         <th class="bg-light-400">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @php $no=1 @endphp
+                    @foreach ($holidays as $key )
+
                     <tr>
-                        <td><a href="#" class="link-primary">H752762</a></td>
+                        <td><a href="#" class="link-primary">{{ $no++ }}</a></td>
                         <td>
-                            Hari meperingati ulang tahun Asep
+                           {{ $key->title }}
                         </td>
-                        <td>01 Jan 2024</td>
-                        <td>First day of the new year</td>
-                        <td>
-                            <span class="badge badge-soft-danger d-inline-flex align-items-center"><i class="ti ti-circle-filled fs-5 me-1"></i>
-                                6 hari lagi
-                            </span>
-                        </td>
+                        <td>{{ $key->start }}</td>
+                        <td>{{ $key->end }}</td>
+
                         <td>
                             <div class="hstack gap-2 fs-15">
                                 <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i class="ti ti-pencil-minus"></i></a>
@@ -70,25 +69,8 @@
                             </div>
                         </td>
                     </tr>
-                    <tr>
-                        <td><a href="#" class="link-primary">H752762</a></td>
-                        <td>
-                            New Year
-                        </td>
-                        <td>01 Jan 2024</td>
-                        <td>First day of the new year</td>
-                        <td>
-                            <span class="badge badge-soft-success d-inline-flex align-items-center"><i class="ti ti-circle-filled fs-5 me-1"></i>
-                                selesai
-                            </span>
-                        </td>
-                        <td>
-                            <div class="hstack gap-2 fs-15">
-                                <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i class="ti ti-pencil-minus"></i></a>
-                                <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i class="ti ti-trash"></i></a>
-                            </div>
-                        </td>
-                    </tr>
+
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -104,30 +86,30 @@
                     <i class="ti ti-x"></i>
                 </button>
             </div>
-            <form action="holidays.html">
-                <div class="modal-body">
-                    <div class="row">
-                        <form action="" method="post">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="form-label">Keterangan</label>
-                                <input type="text" class="form-control" name="title" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Tanggal</label>
-                                <input type="date" class="form-control" name="date" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Deskripsi</label>
-                                <textarea rows="4" class="form-control" required name="description"></textarea>
-                            </div>
+            <form action="/addEventModal" method="POST">
+                @csrf
+                <div class="modal-body pb-0">
+                    <div class="mb-3">
+                        <label class="form-label">Event Title <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Start<span class="text-danger">*</span></label>
+                        <div class="cal-icon">
+                            <input class="form-control " type="date" name="start" required>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">End<span class="text-danger">*</span></label>
+                        <div class="cal-icon">
+                            <input class="form-control" type="date" name="end" required>
+                        </div>
+                    </div>
+                    <input type="text" name="type" value="holiday" hidden>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-light me-2" data-bs-dismiss="modal">Batal</a>
-                    <button type="submit" class="btn btn-primary">Tambah</button>
-                </form>
+                    <a href="#" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Add Event</button>
                 </div>
             </form>
         </div>
