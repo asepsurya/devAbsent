@@ -32,8 +32,11 @@ class student extends Model
     }
 
     public function absentRFID(){
-        return $this->Hasmany('App\Models\absent','id_rfid','nis');
+        return $this->Hasmany('App\Models\absent','id_rfid','id_rfid');
     }
+    // public function absentNIS(){
+    //     return $this->Hasmany('App\Models\absent','id_rfid','nis');
+    // }
 
     public function studentUser(){
         return $this->belongsTo('App\Models\User','nis','nomor');

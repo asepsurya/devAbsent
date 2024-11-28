@@ -166,6 +166,11 @@ class DataIndukController extends Controller
         }
         student::where('id',$request->id)->update($validator);
         rfid::where('id_rfid',$request->id_rfid)->update(['status'=>'2']);
+
+        $cek = rombel::where('nis',$request->nis)->get();
+        if($cek->count()){
+            rombel::where('nis',$request->nis)->update(['id_rfid'=>$request->id_rfid]);
+        }
         toastr()->success('Data Berhasil disimpan');
         return redirect()->back();
 

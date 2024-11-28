@@ -116,7 +116,7 @@
                     <tr >
                         <th width="1%" class="border">#</th>
                         <th width="1%"></th>
-                        <th width="3%">NIS</th>
+                        <th width="3%">RFID</th>
                         <th width="50%">Nama Lengkap</th>
                         <th class="border text-center" >H</th>
                         <th class="border text-center">S</th>
@@ -139,10 +139,10 @@
                                             <input class="form-check-input mydata" name="data[]" value="{{ $item->id_rfid ?: $item->nis }}" type="checkbox">
                                         </div>
                                     </td>
-                                    <td class="text-primary">{{ $item->nis }}</td>
+                                    <td class="text-primary">{{ $item->id_rfid }}</td>
                                     <td>{{ $item->rombelStudent->nama }}</td>
-                                    <td class="border">
-                                        <div class="form-check form-check-md">
+                                    <td class="border" >
+                                        <div class="form-check form-check-md d-flex justify-content-center">
                                             <input class="form-check-input a" value="H" type="radio" name="status[{{ $item->id }}]" id="h-{{ $item->id }}"
                                             @if($item->id_rfid != '')
                                                 @foreach ($item->rombelAbsent as $ky)
@@ -156,7 +156,7 @@
                                         </div>
                                     </td>
                                     <td class="border">
-                                        <div class="form-check form-check-md">
+                                        <div class="form-check form-check-md  d-flex justify-content-center">
                                             <input class="form-check-input a" value="S" type="radio" name="status[{{ $item->id }}]" id="s-{{ $item->id }}"
                                             @if($item->id_rfid != '')
                                                 @foreach ($item->rombelAbsent as $ky)
@@ -170,7 +170,7 @@
                                         </div>
                                     </td>
                                     <td class="border">
-                                        <div class="form-check form-check-md">
+                                        <div class="form-check form-check-md  d-flex justify-content-center">
                                             <input class="form-check-input a" value="I" type="radio" name="status[{{ $item->id }}]" id="i-{{ $item->id }}"
                                             @if($item->id_rfid != '')
                                                 @foreach ($item->rombelAbsent as $ky)
@@ -184,7 +184,7 @@
                                         </div>
                                     </td>
                                     <td class="border">
-                                        <div class="form-check form-check-md">
+                                        <div class="form-check form-check-md  d-flex justify-content-center">
                                             <input class="form-check-input a" value="A" type="radio" name="status[{{ $item->id }}]" id="a-{{ $item->id }}"
                                             @if($item->id_rfid != '')
                                                 @foreach ($item->rombelAbsent as $ky)
@@ -197,8 +197,8 @@
                                             @endif>
                                         </div>
                                     </td>
-                                    <td hidden>
-                                        <input type="text" name="id_rfid[{{ $item->id }}]" value="{{ $item->id_rfid ?: $item->nis }}">
+                                    <td hidden >
+                                        <input type="text" name="id_rfid[{{ $item->id }}]" value="{{ $item->id_rfid }}">
                                         <input type="text" name="tanggal" value="{{ request('tanggal') }}">
                                     </td>
                                     <td>

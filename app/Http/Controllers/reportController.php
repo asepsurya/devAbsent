@@ -13,18 +13,30 @@ use App\Models\TahunPelajaran;
 
 class reportController extends Controller
 {
-    public function reportAbsensiAll(Request $request)
+    public function reportRFIDStudent(Request $request)
     {
-
-        return view('report.absents', [
-
+        return view('report.RFIDstudent', [
             'title' => 'Laporan Absensi',
-            'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'DESC')->get(),
-            'kelas'=>Kelas::where('status','1')->with('jurusanKelas')->get(),
             'created' => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
-            'students' => student::all(),
+            'students' => student::with('absentRFID')->get(),
             'holiday'=>Event::all()
+        ]);
+    }
 
+    public function reportRFIDTeacher(request $request){
+        return view('report.RFIDTeacher', [
+            'title' => 'Laporan Absensi',
+            'created' => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
+            'students' => gtk::with('absentRFID')->get(),
+            'holiday'=>Event::all()
+        ]);
+    }
+    public function reportAbsentStudent(){
+        return view('report.studentAbsent', [
+            'title' => 'Laporan Absensi',
+            'tahunpelajaran' => TahunPelajaran::all(),
+            'students' => gtk::with('absentRFID')->get(),
+            'holiday'=>Event::all()
         ]);
     }
 }

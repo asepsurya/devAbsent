@@ -229,17 +229,17 @@
                                         class=" {{ Request::is('report*') ? 'subdrop active' : ''}}"><i
                                             class="ti ti-lock"></i><span>Laporan Absensi</span><span class="menu-arrow"></span></a>
                                     <ul>
-                                        <li><a href="/report/absent"
-                                                class="{{ Request::is('report/absent') ? 'active' : ''}}">Laporan RFID</a></li>
-                                        <li><a href="/report/absent"
-                                                class="{{ Request::is('report/absent1') ? 'active' : ''}}">Laporan Absensi Kelas</a></li>
+                                        <li><a href="/report/absentrfid/student?month={{ \Carbon\Carbon::now()->format('m') }}&year={{ \Carbon\Carbon::now()->format('Y') }}"
+                                                class="{{ Request::is('report/absentrfid*') ? 'active' : ''}}">Laporan RFID</a></li>
+                                        <li><a href="/report/absent/students?month={{ \Carbon\Carbon::now()->format('m') }}&year={{ \Carbon\Carbon::now()->format('Y') }}"
+                                                class="{{ Request::is('report/absent/students') ? 'active' : ''}}">Laporan Absensi Kelas</a></li>
 
                                     </ul>
                                 </li>
                             </ul>
                         </li>
                         @endcan
-                        @can('setelan_aplikasi')
+                        {{-- @can('setelan_aplikasi')
                         <li>
                             <ul>
                                 <li  class="{{ Request::is('setelan*') ? 'active' : ''}}">
@@ -248,7 +248,7 @@
                             </ul>
 
                         </li>
-                        @endcan
+                        @endcan --}}
                     </ul>
                 </li>
                 @endcan

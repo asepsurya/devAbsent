@@ -103,7 +103,7 @@
                                     <td>{{ $item->nama }}</td>
 
                                     <td class="border">
-                                        <div class="form-check form-check-md">
+                                        <div class="form-check form-check-md d-flex justify-content-center">
                                             <input class="form-check-input a" value="H" type="radio" name="status[{{ $item->id_rfid }}]" id="h-{{ $item->id }}"
                                             @if($item->absent)
                                                 @foreach ($item->rombelAbsent as $ky)
@@ -113,7 +113,7 @@
                                         </div>
                                     </td>
                                     <td class="border">
-                                        <div class="form-check form-check-md">
+                                        <div class="form-check form-check-md d-flex justify-content-center">
                                             <input class="form-check-input a" value="S" type="radio" name="status[{{ $item->id_rfid }}]" id="s-{{ $item->id }}"
                                             @if($item->absent)
                                                 @foreach ($item->rombelAbsent as $ky)
@@ -123,7 +123,7 @@
                                         </div>
                                     </td>
                                     <td class="border">
-                                        <div class="form-check form-check-md">
+                                        <div class="form-check form-check-md d-flex justify-content-center">
                                             <input class="form-check-input a" value="I" type="radio" name="status[{{ $item->id_rfid }}]" id="i-{{ $item->id }}"
                                             @if($item->absent)
                                                 @foreach ($item->rombelAbsent as $ky)
@@ -133,7 +133,7 @@
                                         </div>
                                     </td>
                                     <td class="border">
-                                        <div class="form-check form-check-md">
+                                        <div class="form-check form-check-md d-flex justify-content-center">
                                             <input class="form-check-input a" value="A" type="radio" name="status[{{ $item->id_rfid }}]" id="a-{{ $item->id }}"
                                             @if($item->absent)
                                                 @foreach ($item->rombelAbsent as $ky)

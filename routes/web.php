@@ -217,6 +217,8 @@ Route::get('/export/users/students', [PDFController::class, 'generatePDFUserSisw
 Route::get('/export/gtks', [PDFController::class, 'generatePDFGTKAll'])->name('export.gtks');
 Route::get('/export/students', [PDFController::class, 'generatePDFSiswaAll'])->name('export.students');
 
-Route::get('/report/absent', [reportController::class, 'reportAbsensiAll'])->name('report.absents');
+Route::get('/report/absentrfid/student', [reportController::class, 'reportRFIDStudent']);
+Route::get('/report/absentrfid/teacher', [reportController::class, 'reportRFIDTeacher']);
+Route::get('/report/absent/students', [reportController::class, 'reportAbsentStudent']);
 
 

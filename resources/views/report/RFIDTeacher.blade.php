@@ -20,29 +20,45 @@
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap"></div>
 </div>
+
 {{-- End Header --}}
+<ul class="nav nav-tabs tab-style-1 d-sm-flex d-block" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link " href="/report/absentrfid/student?month={{ \Carbon\Carbon::now()->format('m') }}&year={{ \Carbon\Carbon::now()->format('Y') }}"><span class="ti ti-users"></span> Peserta Didik</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active " href="/report/absentrfid/teacher?month={{ \Carbon\Carbon::now()->format('m') }}&year={{ \Carbon\Carbon::now()->format('Y') }}" aria-selected="false" role="tab" tabindex="-1"><span class="ti ti-list"></span> Guru Tenaga Kependidikan </a>
+    </li>
+</ul>
 <div class="card" role="alert">
    <div class="card-body p-3 bg-primary text-fixed-white rounded">
     <form action="" method="get">
         <div class="d-flex row g-3 justify-content-center">
                 <div class="col-lg-3">
-                    <h4 class=" mb-0 text-fixed-white mt-2">Filter Data</h4>
+                    <h4 class=" mb-0 text-fixed-white mt-2"><span class="ti ti-filter"></span> Filter Data</h4>
                 </div>
                 <div class="col-lg-3">
                     <select name="month" id="bulan" class="form-control select" onchange="">
-                        <option value="all" selected>Semua Bulan</option>
-                        @php
-                        for ($month = 1; $month <= 12; $month++) { $monthName=\Carbon\Carbon::create(null, $month, 1, 0, 0,
-                            0, 'Asia/Jakarta' )->format('F');
-                            printf('<option value="%02d">%s</option>', $month, $monthName);
-                            }
-                            @endphp
+
+                        @foreach (range(1, 12) as $monthNumber)
+                        <option value="{{ str_pad($monthNumber, 2, '0', STR_PAD_LEFT) }}" {{ request('month') == str_pad($monthNumber, 2, '0', STR_PAD_LEFT) ?'selected' :'' }}>
+                            {{ \Carbon\Carbon::create()->month($monthNumber)->format('F') }}
+                        </option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-lg-3">
-                    <select id="yearSelect" name="year" class="form-control select">
+                    <select  name="year" class="form-control select">
                         <!-- Options will be added here by JavaScript -->
-                        <option value="">Pilih Tahun</option>
+
+                        @php
+                        $currentYear = date('Y'); // Get the current year
+                        $startYear = 2000; // Define the starting year
+                    @endphp
+
+                    @for ($year = $startYear; $year <= $currentYear; $year++)
+                        <option value="{{ $year }}"{{ request('year') ==  $year ? 'selected' : '' }}>{{ $year }}</option>
+                    @endfor
                     </select>
                 </div>
                 <div class="col-lg-2">
@@ -54,6 +70,8 @@
     </div>
 </form>
 </div>
+
+
 <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
         <h4 class="mb-3">Laporan Absensi RFID</h4>
@@ -79,14 +97,16 @@
                         <td rowspan="2" class="text-center"><p>NAMA</p></td>
                         @php
                             $thisMonth = \Carbon\Carbon::now()->format('F'); // Current month name
+
                         @endphp
-                        <td colspan="31"><p>Bulan : {{ $thisMonth }}</p></td>
+                        <td colspan="31"><p class="d-flex justify-content-start" >Bulan: {{ \Carbon\Carbon::create()->month((int) (request('month') ?: \Carbon\Carbon::now()->month))->format('F') }} {{ request('year') ?: \Carbon\Carbon::now()->format('Y') }}
+                        </p></td>
                     </tr>
                     <tr class="text-center">
                         @php
                             // Get current month and year
-                            $year = \Carbon\Carbon::now()->year;
-                            $month = 11; // Set to the desired month, e.g., November
+                            $year = request('year');
+                            $month = request('month')  ; // Set to the desired month, e.g., November
 
                             $holidayRecord = $holiday->firstWhere('type', 'holiday');
                             $hariLibur = $holidayRecord ? $holidayRecord->pluck('start')->toArray() : [];
@@ -163,17 +183,33 @@
 
                             {{-- Attendance Summary Columns (H, S, I, A counts) --}}
                             <td class="text-center">
-                                {{ $absentData->absentRFID->where('status', 'H')->count() }}
+                                {{ $absentData->absentRFID->filter(function($item) {
+                                    return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
+                                        ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'H';
+                                })->count() }}
                             </td>
+
                             <td class="text-center">
-                                {{ $absentData->absentRFID->where('status', 'S')->count() }}
+                                {{ $absentData->absentRFID->filter(function($item) {
+                                    return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
+                                        ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'S';
+                                })->count() }}
                             </td>
+
                             <td class="text-center">
-                                {{ $absentData->absentRFID->where('status', 'I')->count() }}
+                                {{ $absentData->absentRFID->filter(function($item) {
+                                    return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
+                                        ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'I';
+                                })->count() }}
                             </td>
+
                             <td class="text-center">
-                                {{ $absentData->absentRFID->where('status', 'A')->count() }}
+                                {{ $absentData->absentRFID->filter(function($item) {
+                                    return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
+                                        ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'A';
+                                })->count() }}
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>
