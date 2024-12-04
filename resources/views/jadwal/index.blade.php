@@ -28,30 +28,99 @@
             <a data-bs-toggle="modal" href="#ref" class=" btn btn-outline-light me-1"><span class="ti ti-settings"></span>
                 Referensi</a>
         </div>
-        <div class="mb-2">
-            <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-effect="effect-scale"
-                data-bs-toggle="modal" data-bs-target="#add_holiday"><i
-                    class="ti ti-square-rounded-plus me-2"></i>Tambah Mata Pelajaran</a>
-        </div>
+     
 
     </div>
 </div>
 {{-- End Header --}}
-<div class="card">
-    <div class="card-header">
-        <form action="{{ route('list',$id) }}" method="get">
-        <h4 class="mb-2">Daftar {{ $title }}</h4>
+<form action="{{ route('leassonAdd') }}" method="POST">
+    @csrf
+    <div class="card">
+        <div class="card-header">
+            <form action="{{ route('list',$id) }}" method="get">
+                <h4 class="mb-2">Daftar {{ $title }}</h4>
+                <select name="tahun_ajar" class="tahun_ajar">
+                    @foreach ($tahun_ajar as $item )
+                    <option value="{{ $item->id }}" {{ request('tahun_ajar') == $item->id ? 'selected' : '' }}>Tahun Pelajaran : {{ $item->tahun_pelajaran }} - {{ $item->semester }}
+                    </option>
+                    @endforeach
+                </select>
+            </form>
+        </div>
+        <div class="card-body p-0 m-0">
+            <div class="m-3">
+                <a id="addRowBtn" class="btn btn-success mb-3 btn-sm mx-1">+ Tambah Jadwal</a>
+                <a id="addRowRef" class="btn btn-primary mb-3 btn-sm">+ Tambah Referensi</a>
+            </div>
+            <input class="id_kelas" value="{{ $id }}" name="id_kelas" hidden>
+            <table class="table  input-table" id="draggable-table">
+                <thead>
+                    <tr>
+                        <th class="bg-light-400">#</th>
+                        <th class="bg-light-400 border">Hari</th>
+                        <th class="bg-light-400 border">Mata Pelajaran</th>
+                        <th class="bg-light-400 border">Guru Pengajar</th>
+                        <th class="bg-light-400 border"><span class="ti ti-clock"></span> Start</th>
+                        <th class="bg-light-400 border"><span class="ti ti-clock"></span> End</th>
+                        <th class="bg-light-400 border"><span class="ti ti-certificate"></span> SK</th>
+                        <th class="bg-light-400 border"><span class="ti ti-calendar-due"></span> Tanggal SK</th>
+                        <th class="bg-light-400 border">Action</th> <!-- Column for the Delete Button -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                    $no =1;
+                    @endphp
+                    @foreach($jadwal as $key)
 
-        <select name="tahun_ajar2" class="tahun_ajar" onchange="this.form.submit()">
-            @foreach ($tahun_ajar as $item )
-            <option value="{{ $item->id }}" {{ request('tahun_ajar') == $item->id ? 'selected' : '' }}>Tahun Pelajaran : {{ $item->tahun_pelajaran }} - {{ $item->semester }}
-            </option>
-            @endforeach
-        </select>
-        </form>
-    </div>
-    <div class="card-body p-0 ">
-        <div class="table-responsive">
+                    @if($jadwal->count())
+                    <tr>
+                        <td class="border">{{ $no++ }}</td>
+                        <td class="border" style="width: 200px;"><select name="day[]" class="form-control hari" required>
+                                <option value="1" {{ $key->day == '1' ?'selected':'' }}>Senin</option>
+                                <option value="2" {{ $key->day == '2' ?'selected':'' }}>Selasa</option>
+                                <option value="3" {{ $key->day == '3' ?'selected':'' }}>Rabu</option>
+                                <option value="4" {{ $key->day == '4' ?'selected':'' }}>Kamis</option>
+                                <option value="5" {{ $key->day == '5' ?'selected':'' }}>Jumat</option>
+                                <option value="6" {{ $key->day == '6' ?'selected':'' }}>Sabtu</option>
+                                <option value="7" {{ $key->day == '7' ?'selected':'' }}>Minggu</option>
+                            </select></td>
+
+                        <td class="border" style="width: 300px;">
+                            <select name="id_mapel[]" class="form-control pelajaran" required>
+                                <option value="">Pilih Mata Pelajaran</option>
+                                @if($key->mata_pelajaran)
+                                <option selected value="{{ $key->id_mapel }}">{{ $key->mata_pelajaran->nama }}</option>
+                                @foreach($mapel as $a)
+                                <option value="{{ $a->id_mapel }}">{{ $a->mata_pelajaran->nama }}</option>
+                                @endforeach
+                                @else
+                                <option selected value="{{ $key->id_mapel  }}"">{{ $key->ref->ref ?? '' }}</option>
+                                 @foreach($ref2 as $b)
+                                    <option value="{{ $b->ref_ID }} ">{{ $b->ref }}</option>
+                                @endforeach
+                            @endif
+                        </select></td>  
+                    <td class=" border" style="width: 350px;">
+                                    <select name="id_gtk[]" class="form-control guru">
+                                        <option>-Pilih Guru Pengajar-</option>
+                                        @foreach ($gtk as $item )
+                                        <option value="{{ $item->nik }}" {{ $item->nik == $key->id_gtk ? 'selected' :''}}>{{ $item->nama }}</option>
+                                        @endforeach
+                                    </select>
+                        </td>
+                        <td class="border"><input type="time" name="start[]" class="form-control" value="{{ $key->start }}"></td>
+                        <td class="border"><input type="time" name="end[]" class="form-control" value="{{ $key->end }}"></td>
+                        <td class="border"><input type="text" name="sk[]" class="form-control" value="{{ $key->sk }}"></td>
+                        <td class="border"><input type="date" name="tanggal_sk[]" class="form-control" value="{{ $key->tanggal_sk }}"></td>
+                        <td class="border"><a href="{{ route('leassonDelete',$key->id) }}" type="button" class="btn btn-small btn-danger" >X</button></td>
+                    </tr>
+                    @endif
+
+                    @endforeach
+            </table>
+
+            {{-- <div class="table-responsive">
             <table class="table table-nowrap mb-0">
                 <thead>
                     <tr>
@@ -76,68 +145,79 @@
                     @foreach ($jadwal as $item )
                     <tr>
                         <td><a href="#">{{ $no++ }}</a></td>
-                        <td>
-                            <div class="hstack ">
-                                <a href="{{ route('leassonDelete',$item->id) }}" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><span class="ti ti-trash"></span></a>
-                        </td>
-                        <td class="border">
-                            @if($item->day == 1)
-                            Senin
-                            @elseif ($item->day == 2)
-                            Selasa
-                            @elseif ($item->day == 3)
-                            Rabu
-                            @elseif ($item->day == 4)
-                            Kamis
-                            @elseif ($item->day == 5)
-                            Jum'at
-                            @elseif ($item->day == 6)
-                            Sabtu
-                            @elseif ($item->day == 7)
-                            Minggu
-                            @endif
-                        </td>
-                        <td>
-                            @if($item->mata_pelajaran)
-                            <b>{{ $item->mata_pelajaran->nama }}</b>
-                            @else
-                            <b>{{ $item->ref->ref }}</b>
-                            @endif
-                        </td>
-                        <td>
-                            @if($item->id_gtk == '')
-                            Belum Disetel
-                            @else
-                            {{ $item->guru->nama }}
-                            @endif
-                        </td>
-                        <td>
-                            {{ $item->start }}
-                        </td>
-                        <td>
-                            {{ $item->end }}
-                        </td>
-                        <td>
-                            @if($item->status == 1)
-                            <span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>
-                            @else
-                            <span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak AKtif</span>
-                            @endif
-                        </td>
-                        <td>{{ $item->sk == '' ? '-' : $item->sk }}</td>
-                        <td>{{ $item->tanggal_sk == '' ? '-' : $item->tanggal_sk }}</td>
-                    </tr>
-                    @endforeach
-                    @else
-                    <tr>
-                        <td colspan="10"> <center class="m-5"> <span class="ti ti-mood-confuzed"></span> Data masih kosong</center></td>
-                    </tr>
-                    @endif
-                </tbody>
+            <td>
+                <div class="hstack ">
+                    <a href="{{ route('leassonDelete',$item->id) }}" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><span class="ti ti-trash"></span></a>
+            </td>
+            <td class="border">
+                @if($item->day == 1)
+                Senin
+                @elseif ($item->day == 2)
+                Selasa
+                @elseif ($item->day == 3)
+                Rabu
+                @elseif ($item->day == 4)
+                Kamis
+                @elseif ($item->day == 5)
+                Jum'at
+                @elseif ($item->day == 6)
+                Sabtu
+                @elseif ($item->day == 7)
+                Minggu
+                @endif
+            </td>
+            <td>
+                @if($item->mata_pelajaran)
+                <b>{{ $item->mata_pelajaran->nama }}</b>
+                @else
+                <b>{{ $item->ref->ref }}</b>
+                @endif
+            </td>
+            <td>
+                @if($item->id_gtk == '')
+                Belum Disetel
+                @else
+                {{ $item->guru->nama }}
+                @endif
+            </td>
+            <td>
+                {{ $item->start }}
+            </td>
+            <td>
+                {{ $item->end }}
+            </td>
+            <td>
+                @if($item->status == 1)
+                <span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>
+                @else
+                <span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak AKtif</span>
+                @endif
+            </td>
+            <td>{{ $item->sk == '' ? '-' : $item->sk }}</td>
+            <td>{{ $item->tanggal_sk == '' ? '-' : $item->tanggal_sk }}</td>
+            </tr>
+            @endforeach
+            @else
+            <tr>
+                <td colspan="10">
+                    <center class="m-5"> <span class="ti ti-mood-confuzed"></span> Data masih kosong</center>
+                </td>
+            </tr>
+            @endif
+            </tbody>
             </table>
-        </div>
+        </div> --}}
     </div>
-</div>
+
+    <div class="d-flex justify-content-end m-4">
+        <button class="btn btn-primary" type="submit">Simpan Data </button>
+    </div>
+    
+
+</form>
+
+
+
 {{-- referensi --}}
 <div class="modal fade " id="ref" aria-labelledby="exampleModalToggleLabel" tabindex="-1" aria-modal="true"
     role="dialog">
@@ -245,150 +325,7 @@
 </div>
 
 @endforeach
-{{-- modal tambah Hari Libur --}}
-<div class="modal fade" id="add_holiday" aria-modal="true" role="dialog" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title"><span class="ti ti-book"></span> Tambah Mata Pelajaran</h4>
-                <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <i class="ti ti-x"></i>
-                </button>
-            </div>
-            <form action="{{ route('leassonAdd') }}" method="post">
-                <div class="modal-body m-0 p-0">
-                    @csrf
-                    <div class="mb-3 bg-light p-3">
-                        <div class="row">
-                            <label class="col-lg-4 form-label mt-2">Tahun Pelajaran <span
-                                    class="text-danger">*</span></label>
-                            <div class="col-lg-8">
-                                <select name="tahun_ajar" id="tahun_ajar" class="form-control select" required>
-                                    @foreach ($tahun_ajar as $item )
-                                    <option value="{{ $item->id }}">{{ $item->tahun_pelajaran }} - {{ $item->semester }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-3 mt-0">
-                        <div class="mb-2">
-                            <label class="form-label">Hari <span class="text-danger">*</span></label>
-                            <select name="day" id="day" class="form-control day" required>
-                                <option value="1">Senin</option>
-                                <option value="2">Selasa</option>
-                                <option value="3">Rabu</option>
-                                <option value="4">Kamis</option>
-                                <option value="5">Jum'at</option>
-                                <option value="6">Sabtu</option>
-                                <option value="7">Minggu</option>
-                            </select>
-                        </div>
-                        <ul class="nav nav-tabs nav-tabs-top mb-3" role="tablist">
-                            <li class="nav-item" role="presentation"><a class="nav-link active" href="#top-tab1"
-                                    data-bs-toggle="tab" aria-selected="true" role="tab" id="tab1"><span class="ti ti-presentation-analytics"></span> Referensi</a></li>
-                            <li class="nav-item" role="presentation"><a class="nav-link" href="#top-tab2"
-                                    data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab" id="tab2"><span class="ti ti-books"></span> Mata
-                                    Pelajaran</a></li>
-                        </ul>
-                        <input type="text" id="type" name="type" value="ref" hidden>
-                        <div class="tab-content">
-                            <div class="tab-pane show active mb-2" id="top-tab1" role="tabpanel">
-                                <select name="ref" id="ref" class="form-control ref">
-                                    <option value="">Pilih Referensi</option>
-                                    @foreach ($ref as $a)
-                                    <option value="{{ $a->ref_ID }}">{{ $a->ref }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="pt-2">
-                                   <i><small >Tambah Referensi <a data-bs-toggle="modal" href="#ref"
-                                            class="link-primary"> +tambah</a></small></i>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="top-tab2" role="tabpanel">
-                                <div class="mb-2">
-                                    <label class="form-label">Mata Pelajaran<span
-                                            class="text-danger">*</span>
-                                    </label>
-                                    <select name="id_mapel" id="mapel" class="form-control mapel">
 
-                                        <option value="">Pilih Mata Pelajaran </option>
-                                        @foreach ($mapel as $item )
-                                        <option value="{{ $item->id_mapel }}">{{ $item->mata_pelajaran->nama }}</option>
-                                        @endforeach
-
-                                    </select>
-
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Guru Pengajar <small><i class="text-muted">Otomatis
-                                                terisi</i></small></label>
-                                    <select name="id_gtk" id="id_gtk" hidden></select>
-                                    <input type="text" name="status" id="status" class="form-control" value="1" hidden>
-                                    <input type="text" name="id_kelas" id="id_kelas" class="form-control"
-                                        value="{{ $id }}" hidden>
-                                    <input type="text" name="name" id="name_gtk" class="form-control" disabled>
-                                    <small>Guru pengajar belum diatur? <a href="{{ route('subject_teachers') }}"
-                                            class="link-primary">setel</a></small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-2">
-                            <div class="col-lg-6">
-                                <label class="form-label">Start <span class="text-danger">*</span></label>
-                                <div class="date-pic">
-                                    <input type="text" class="form-control entry timepicker" name="start" value=""
-                                        required>
-                                    <span class="cal-icon"><i class="ti ti-clock"></i></span>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <label class="form-label">End <span class="text-danger">*</span></label>
-                                <div class="date-pic">
-                                    <input type="text" class="form-control entry timepicker" name="end" value=""
-                                        required>
-                                    <span class="cal-icon"><i class="ti ti-clock"></i></span>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="accordions-items-seperate">
-                            <div class="accordion-item mt-4">
-                                <h2 class="accordion-header" id="headingSpacingThree">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#SpacingThree" aria-expanded="false"
-                                        aria-controls="SpacingThree">
-                                        <i>Optional <span class="ti ti-certificate"></span></i>
-                                    </button>
-                                </h2>
-                                <div id="SpacingThree" class="accordion-collapse collapse"
-                                    aria-labelledby="headingSpacingThree" data-bs-parent="#accordionSpacingExample"
-                                    style="">
-                                    <div class="accordion-body">
-                                        <div class="mb-2">
-                                            <label class="form-label">Nomor SK</label>
-                                            <input type="text" class="form-control" name="no_sk">
-                                        </div>
-                                        <div class="mb-2">
-                                            <label class="form-label">Tanggal SK</label>
-                                            <input type="text" class="form-control datetimepicker" name="tgl_sk">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary w-100">Tambah</button>
-            </form>
-        </div>
-
-    </div>
-</div>
-</div>
 
 @section('javascript')
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -398,6 +335,208 @@
         window.location.reload();
     </script>
 @endif
+<script>
+   // Function to populate the GTK (id_gtk) dropdown dynamically using $gtk data
+function populateGtkDropdown(row) {
+    const gtkData = @json($gtk); 
+    const gtkDropdown = row.querySelector('.id_gtk'); // Get the select element for id_gtk
+
+    // Clear existing options
+    gtkDropdown.innerHTML = '<option value="">Pilih GTK</option>';
+
+    // Loop through the gtkData and add options
+    gtkData.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.nik;  // Use 'nik' as the value
+        option.textContent = `${item.nik} - ${item.nama}`;  // Display 'nik' and 'nama' in the option text
+        gtkDropdown.appendChild(option);
+    });
+}
+
+// Function to add a new row dynamically
+function addRow(source) {
+    let rowCount = 1;
+    // Get the table body
+    const tbody = document.querySelector('#draggable-table tbody');
+    
+    // Create a new row element
+    const newRow = document.createElement('tr');
+    newRow.setAttribute('draggable', 'true');
+    newRow.classList.add('drag-item');
+
+    // Define the data for the row (inputs for each column)
+    const rowData = [
+        // Automatically add row number
+        `<td class=" border"><span class="ti ti-grip-vertical"></span></td>`, // Row number (not an input)
+        
+        // Dropdown for Hari (Day of the week)
+        `<td class=" border" style="width: 150px;"><select name="day[]" class="form-control hari" required>
+                <option value="1">Senin</option>
+                <option value="2">Selasa</option>
+                <option value="3">Rabu</option>
+                <option value="4">Kamis</option>
+                <option value="5">Jumat</option>
+                <option value="6">Sabtu</option>
+                <option value="7">Minggu</option>
+            </select></td>`,
+
+        // Dropdown for Mata Pelajaran (Mapel)
+        `<td class=" border" style="width: 300px;"><select name="id_mapel[]" class="form-control mapel" required>
+                <option value="">Pilih Mata Pelajaran</option>
+                <!-- Dynamic options for Mata Pelajaran will be inserted here -->
+            </select></td>`,
+
+        // GTK Dropdown
+        `<td class=" border" style="width: 350px;"><select name="id_gtk[]" class="form-control id_gtk"></select></td>`,
+    
+        '<td class=" border"><input type="time" name="start[]" class="form-control"></td>',
+        '<td class=" border"><input type="time" name="end[]" class="form-control"></td>',
+        '<td class=" border"><input type="text" name="sk[]" class="form-control"></td>',
+        '<td class=" border"><input type="date" name="tanggal_sk[]" class="form-control"></td>',
+        
+        // Action Column with Delete Button
+        `<td class=" border"><button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button></td>`
+    ];
+
+    // Insert each <td> into the new row
+    rowData.forEach(data => {
+        newRow.innerHTML += data;
+    });
+
+    // Append the new row to the table body
+    tbody.appendChild(newRow);
+
+    // Populate the dropdown based on the selected data source
+    if (source === 'mapel') {
+        populateMapelDropdown(newRow); // Use $mapel data
+    } else if (source === 'ref') {
+        populateRefDropdown(newRow); // Use $ref data
+    }
+
+    // Populate the GTK dropdown with the data from $gtk
+    populateGtkDropdown(newRow); // Populate GTK (id_gtk)
+
+    // Initialize Select2 on the newly added selects
+    initializeSelect2();
+
+    // Increment the rowCount for the next row
+    rowCount++;
+
+    // Reapply the drag-and-drop functionality (in case the table is updated)
+    addDragAndDropFunctionality();
+}
+
+// Function to populate the Mata Pelajaran (Mapel) dropdown dynamically using $mapel data
+function populateMapelDropdown(row) {
+    const mapelData = @json($mapel);
+    const mapelDropdown = row.querySelector('.mapel'); // Get the select element for mapel
+
+    // Clear existing options
+    mapelDropdown.innerHTML = '<option value="">Pilih Mata Pelajaran</option>';
+
+    // Loop through the mapelData and add options
+    mapelData.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.id_mapel;
+        option.textContent = item.mata_pelajaran.nama;
+        mapelDropdown.appendChild(option);
+    });
+}
+
+// Function to populate the Mata Pelajaran (Mapel) dropdown dynamically using $ref data
+function populateRefDropdown(row) {
+    const refData = @json($ref2);
+    const mapelDropdown = row.querySelector('.mapel'); // Get the select element for mapel
+
+    // Clear existing options
+    mapelDropdown.innerHTML = '<option value="">Pilih Referensi</option>';
+
+    // Loop through the refData and add options
+    refData.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.ref_ID;
+        option.textContent = item.ref;
+        mapelDropdown.appendChild(option);
+    });
+}
+
+// Function to initialize Select2 on dynamically added select elements
+function initializeSelect2() {
+    $('#draggable-table select').select2({
+        width: '100%' // Ensures Select2 width adapts to the table cell
+    });
+}
+
+// Function to delete a row
+function deleteRow(button) {
+    const row = button.closest('tr');
+    row.remove();
+    rowCount--; // Decrease the row count after deletion
+}
+
+// Function to add drag-and-drop functionality to rows
+function addDragAndDropFunctionality() {
+    const rows = document.querySelectorAll('.drag-item');
+    let draggedRow = null;
+
+    rows.forEach(row => {
+        row.addEventListener('dragstart', (e) => {
+            draggedRow = row;
+            setTimeout(() => {
+                row.classList.add('dragging');
+            }, 0);
+        });
+
+        row.addEventListener('dragend', () => {
+            setTimeout(() => {
+                draggedRow.classList.remove('dragging');
+                draggedRow = null;
+            }, 0);
+        });
+
+        row.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const draggedOverRow = e.target.closest('tr');
+            if (draggedOverRow && draggedOverRow !== draggedRow) {
+                draggedOverRow.classList.add('drag-placeholder');
+            }
+        });
+
+        row.addEventListener('dragleave', () => {
+            const draggedOverRow = row.closest('tr');
+            if (draggedOverRow) {
+                draggedOverRow.classList.remove('drag-placeholder');
+            }
+        });
+
+        row.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const draggedOverRow = e.target.closest('tr');
+            if (draggedOverRow && draggedOverRow !== draggedRow) {
+                document.querySelector('tbody').insertBefore(draggedRow, draggedOverRow);
+            }
+            const allRows = document.querySelectorAll('.drag-item');
+            allRows.forEach(row => {
+                row.classList.remove('drag-placeholder');
+            });
+        });
+    });
+}
+
+// Add event listener to the "Add Row" button for $mapel
+document.getElementById('addRowBtn').addEventListener('click', function() {
+    addRow('mapel'); // Trigger the addRow function with $mapel data
+});
+
+// Add event listener to the "Add Row" button for $ref
+document.getElementById('addRowRef').addEventListener('click', function() {
+    addRow('ref'); // Trigger the addRow function with $ref data
+});
+
+</script>
+
+
+
 
 @if (!empty(Session::get('ref')) && Session::get('ref') == 5)
 <script type="text/javascript">
@@ -413,14 +552,16 @@
     $(".day").select2({
         dropdownParent: "#add_holiday",
     });
-    $(".ref").select2({
-        dropdownParent: "#add_holiday",
-        placeholder: "Pilih Referensi",
+    $(".guru").select2({
+         placeholder: "Pilih Referensi",
     });
-    $(".mapel").select2({
-        dropdownParent: "#add_holiday",
-        placeholder: "Pilih Mata Pelajaran",
+    $(".hari").select2({
+         placeholder: "Pilih Referensi",
     });
+    $(".pelajaran").select2({
+         placeholder: "Pilih Referensi",
+    });
+
 
 
 </script>
@@ -433,8 +574,8 @@
                 });
 
         $('#mapel').on('change',function(){
-            let mapel = $('#mapel').val();
-            let id_kelas = $('#id_kelas').val();
+            let mapel = $('.mapel').val();
+            let id_kelas = $('.id_kelas').val();
             // var value = e.value;
             $.ajax({
 
@@ -446,8 +587,8 @@
                     id_kelas:id_kelas
                 },
                 success: function(data){
-                    $('#id_gtk').html(data.a);
-                    $('#name_gtk').val(data.b);
+                    $('.id_gtk').html(data.a);
+                    $('.name_gtk').val(data.b);
                 }
             });
 

@@ -221,7 +221,7 @@
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Report</span></h6>
-                        @can('setelan')
+                        
                         <li>
                             <ul>
                                 <li class="submenu">
@@ -238,7 +238,7 @@
                                 </li>
                             </ul>
                         </li>
-                        @endcan
+                        
                         {{-- @can('setelan_aplikasi')
                         <li>
                             <ul>

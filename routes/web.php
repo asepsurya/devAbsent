@@ -190,6 +190,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/class/leasson/delete{id}',[leassonController::class,'leassonDelete'])->name('leassonDelete');
     Route::get('/class/leasson/list/{id}',[leassonController::class,'list'])->name('list');
     Route::get('/class/leasson/getgtk',[leassonController::class,'getgtk'])->name('getgtk');
+ 
     // Apps Config Controller
     Route::get('/setelan/aplikasi', [AppsConfigController::class, 'app'])->name('setelan.app');
     Route::get('/setelan/customize', [AppsConfigController::class, 'customize'])->name('setelan.customize');
@@ -216,6 +217,7 @@ Route::get('/export/users/students', [PDFController::class, 'generatePDFUserSisw
 
 Route::get('/export/gtks', [PDFController::class, 'generatePDFGTKAll'])->name('export.gtks');
 Route::get('/export/students', [PDFController::class, 'generatePDFSiswaAll'])->name('export.students');
+Route::get('/export/RFIDstudents', [PDFController::class, 'generatePDFRFIDstudents'])->name('export.RFIDstudents');
 
 Route::get('/report/absentrfid/student', [reportController::class, 'reportRFIDStudent']);
 Route::get('/report/absentrfid/teacher', [reportController::class, 'reportRFIDTeacher']);

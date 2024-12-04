@@ -6,10 +6,15 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
+use PDF;
+use Dompdf\Options;
 use Illuminate\Support\Facades\App;
 use App\Models\gtk;
 use App\Models\student;
+use App\Models\Event;
+use App\Models\Kelas;
+use App\Models\absent;
+
 
 class PDFController extends Controller
 {
@@ -153,35 +158,36 @@ class PDFController extends Controller
         return $pdf->stream('export-students-' . Carbon::now()->format('YmdHis') . '.pdf');
         //return $pdf->download('export-students-' . Carbon::now()->format('YmdHis') . '.pdf');
     }
+    public function generatePDFRFIDstudents(){
+        if(request('type') == "cetak"){
+            return view('exportPDF.ReportAbsesiRfid',[
+            'created' => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
+            'students' => student::with('absentRFID')->get(),
+            'holiday'=>Event::all()
+            ]);
+        }else{
 
-    /*public function generatePDFSiswaAll() {
-        $students = student::orderBy('nama', 'asc')
-        ->get();
-
-        App::setLocale('id');
+        
         $data = [
-            'title' => 'Data Siswa',
-            'date'  => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
-            'students' => $students
+            'created' => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
+            'students' => student::with('absentRFID')->get(),
+            'holiday'=>Event::all()
         ];
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true);
+        $options->set('image-cache', true); // Enable caching for images
+        $options->set('image-dpi', 150); // Change DPI (dots per inch)
 
-        $pdf = PDF::loadView('exportPDF.datasiswa', $data)
-        ->setPaper('a4', 'landscape')
-        ->setWarnings(false);
+        $pdf = PDF::loadView('exportPDF.ReportAbsesiRfid', $data);
+        $pdf->setPaper('A4', 'landscape');
+        $pdf->render();
+        // Tampilkan di browser
+        return $pdf->stream('Laporan-AbsensiRDIFSiswa'.  Carbon::now()->format('YmdHis') .'-'.rand().'.pdf');
 
-        $fileName = 'export-students-' . Carbon::now()->format('YmdHis') . '.pdf';
-        $folderpath = public_path('download');
-
-        if (!File::exists($folderpath)) {
-            File::makeDirectory($folderpath, 0755, true); // Buat folder dengan permission 0755
         }
 
-        $filePath = $folderpath . '/' . $fileName;
-
-        $pdf->save($filePath);
-
-        toastr()->success('Export (' . $fileName . ') berhasil.');
-        return redirect()->back();
-    }*/
+    }
 
 }
+

@@ -22,6 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'Excel' => Maatwebsite\Excel\Facades\Excel::class,
             'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
             'statusRegister' => \App\Http\Middleware\RegisterCheck::class,
+            'PDF' => Barryvdh\DomPDF\Facade::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

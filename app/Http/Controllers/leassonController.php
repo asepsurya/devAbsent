@@ -27,9 +27,9 @@ class leassonController extends Controller
     public function list($id){
         // get data berdasarkan tahun Ajaran
         if(request('tahun_ajar2')){
-            $jadwal = Lesson::where(['id_rombel'=>$id,'id_tahun_ajar'=>request('tahun_ajar')])->orderBy('day', 'ASC')->with(['mata_pelajaran','guru','ref'])->get();
+            $jadwal = Lesson::where(['id_rombel'=>$id,'id_tahun_ajar'=>request('tahun_ajar')])->orderBy('day', 'asc')->orderBy('start', 'asc')->with(['mata_pelajaran','guru','ref'])->get();
         }else{
-            $jadwal = Lesson::where('id_rombel',$id)->orderBy('day', 'ASC')->with(['mata_pelajaran','guru','ref'])->get();
+            $jadwal = Lesson::where('id_rombel',$id)->orderBy('day', 'asc')->orderBy('start', 'asc')->with(['mata_pelajaran','guru','ref'])->get();
         }
         // get data Kelas
         $cek = Kelas::where('id',$id)->with(['jurusanKelas'])->get();
@@ -41,8 +41,10 @@ class leassonController extends Controller
             'title' => 'Jadwal Pelajaran '.$kelas,
             'tahun_ajar'=>TahunPelajaran::where('status',1)->get(),
             'jadwal'=>$jadwal,
-            'mapel' => grupMapel::where(['id_kelas'=> $id])->get(),
-            'ref'=>ref_jadwal::where('status','1')->paginate('10')
+            'gtk'=>gtk::where('status','1')->get(),
+            'mapel' => grupMapel::where(['id_kelas'=> $id])->with(['mata_pelajaran'])->get(),
+            'ref'=>ref_jadwal::where('status','1')->paginate('10'),
+            'ref2'=>ref_jadwal::where('status','1')->get()
         ],compact('id'));
     }
 
@@ -60,52 +62,77 @@ class leassonController extends Controller
         }
     }
     public function leassonAdd(request $request){
-        $cek = Lesson::where([
-            'day'=> $request->day,
-            'id_mapel'=>$request->id_mapel,
-            'id_gtk'=>$request->id_gtk,
-            'id_tahun_ajar'=>$request->tahun_ajar])->get();
-        if($cek->count() != 0){
-            foreach($cek as $item){
-                if($item->day == 1) {$hari = 'Senin';}
-                elseif ($item->day == 2){ $hari ='Selasa';}
-                elseif ($item->day == 3){ $hari ='Rabu';}
-                elseif ($item->day == 4){ $hari ='Kamis';}
-                elseif ($item->day == 5){ $hari ='Jumat';}
-                elseif ($item->day == 6){ $hari ='Sabtu';}
-                elseif ($item->day == 7){ $hari ='Minggu';}
-            }
-
-             Alert::info('Mata Pelajaranan Pada hari '.$hari.' Sudah terdaftar' );
-             return redirect()->back();
-
-        }else{
-            if($request->type == "ref"){
-                $id_mapel = $request->ref;
-            }elseif($request->type == "mapel"){
-                $id_mapel = $request->id_mapel;
-            }
-            Lesson::create([
-                "day" => $request->day,
-                "id_gtk" => $request->id_gtk,
-                "status" => $request->status,
-                "id_rombel" => $request->id_kelas,
-                "start" => $request->start,
-                "end" => $request->end,
-                "no_sk" => $request->no_sk,
-                "tgl_sk" => $request->tgl_sk,
-                "id_tahun_ajar" => $request->tahun_ajar,
-                "id_mapel" => $id_mapel
-            ]);
-            toastr()->success('Data Berhasil diubah');
-            return redirect()->back()->with('refresh', 'Action was successful!');
-        }
+     // Get all the submitted data
+     $days = $request->input('day');  // Array of days
+     $mapelIds = $request->input('id_mapel');  // Array of mapel IDs
+     $gtkIds = $request->input('id_gtk');  // Array of GTK IDs
+     $starts = $request->input('start');  // Array of start times
+     $ends = $request->input('end');  // Array of end times
+     $sk = $request->input('sk');  // Array of SK values
+     $tanggalSk = $request->input('tanggal_sk');  // Array of SK dates
+ 
+     // Define an array for day names
+     $daysNames = [
+         1 => 'Senin',
+         2 => 'Selasa',
+         3 => 'Rabu',
+         4 => 'Kamis',
+         5 => 'Jumat',
+         6 => 'Sabtu',
+         7 => 'Minggu'
+     ];
+ 
+     // Loop through the arrays and store the data
+     for ($i = 0; $i < count($days); $i++) {
+         // Check if the lesson already exists for the given day, mapel, gtk, and tahun_ajar
+         $cek = Lesson::where([
+             'day' => $days[$i],
+             'id_mapel' => $mapelIds[$i],
+            
+             'id_tahun_ajar' => $request->tahun_ajar
+         ])->first();  // Use `first()` to get the first match or null
+ 
+         // If the lesson exists, update the existing record
+         if ($cek) {
+             $cek->update([
+                 'id_rombel' => $request->input('id_kelas'),  // Assuming id_kelas is hidden in your form
+                 'start' => $starts[$i],
+                 'end' => $ends[$i],
+                 'sk' => $sk[$i] ?? null,
+                 'tanggal_sk' => $tanggalSk[$i] ?? null,
+                 'status' => '1',
+             ]);
+ 
+             $hari = $daysNames[$days[$i]] ?? 'Unknown';  // Get the day name or 'Unknown' if not found
+             toastr()->success("Mata Pelajaran pada hari $hari telah diperbarui.");
+         } else {
+             // If no such lesson exists, create a new lesson
+             Lesson::create([
+                 'id_rombel' => $request->input('id_kelas'),  // Assuming id_kelas is hidden in your form
+                 'day' => $days[$i],
+                 'id_mapel' => $mapelIds[$i],
+                 'id_gtk' => $gtkIds[$i] ?? null,  // GTK is nullable
+                 'start' => $starts[$i],
+                 'end' => $ends[$i],
+                 'sk' => $sk[$i] ?? null,
+                 'tanggal_sk' => $tanggalSk[$i] ?? null,
+                 'id_tahun_ajar' => $request->tahun_ajar,
+                 'status' => '1',
+             ]);
+             $hari = $daysNames[$days[$i]] ?? 'Unknown';  // Get the day name or 'Unknown' if not found
+             toastr()->success("Mata Pelajaran pada hari $hari telah ditambahkan.");
+         }
+     }
+ 
+     // Redirect back with a success message
+     return redirect()->back()->with('refresh', 'Action was successful!');
 
     }
+    
     public function leassonDelete($id){
         Lesson::where('id',$id)->delete();
         toastr()->success('Data Berhasil dihapus');
-            return redirect()->back()->with('refresh', 'Action was successful!');;
+        return redirect()->back()->with('refresh', 'Action was successful!');;
     }
 
     public function leassonView($id){

@@ -124,12 +124,12 @@ class pengaturanAkademik extends Controller
         if($cek->count() != 0){
             foreach($cek as $item){
                     if($item->id_kelas == $request->id_kelas){
-                        Alert::warning('Data Sudah Terdaftar Dikelas ini' );
+                        toastr()->warning('Sudah terdaftar dikelas ini');
                         return redirect()->back()->withInput();
                     }
                     else{
                         if($request->id_tahun_pelajaran == "" || $request->id_kelas=='' ){
-                            Alert::error('Mohon Periksa Kembali Kelas Tujuan terlebih dahulu' );
+                            toastr()->error('Mohon Periksa Kembali Kelas Tujuan terlebih dahulu');
                             return redirect()->back()->withInput();
                         }else{
                             rombel::where('nis',$request->nis)->update([
@@ -149,7 +149,7 @@ class pengaturanAkademik extends Controller
              }
         }else{
             if($request->id_kelas == "" || $request->id_tahun_pelajaran == "" ){
-                        Alert::error('Mohon Periksa Kembali Kelas Tujuan terlebih dahulu' );
+                        toastr()->success('Mohon Periksa Kembali Kelas Tujuan terlebih dahulu');
                         return redirect()->back()->withInput();
             }else{
                         rombel::create([
