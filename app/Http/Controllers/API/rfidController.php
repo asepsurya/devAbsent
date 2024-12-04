@@ -126,9 +126,17 @@ class rfidController extends Controller
         $data = absentsHistory::where('uid',$request->id_rfid)->get();
         foreach($data as $item){
             if($item->gtk){
-                return $item->gtk->nama;
+                return [
+                    'nama'=>$item->gtk->nama,
+                    'id' =>$item->gtk->id_rfid,
+                    
+                ];
             }else{
-                return $item->student->nama;
+                return [
+                    'nama'=>$item->student->nama,
+                    'id' =>$item->student->id_rfid,
+                    
+                ];
             }
 
         }

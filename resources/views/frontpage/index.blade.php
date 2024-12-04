@@ -170,14 +170,13 @@
               </div>
             </div>
             @else
-            <form class="d-flex py-3 py-lg-0"><a class="btn btn-lg btn-info rounded-pill me-2" href="/login" role="button"><span class="ti ti-login"></span> Masuk Aplikasi</a>
+            <form class="d-flex py-3 py-lg-0"><a class="btn btn-sm p-2 px-2 btn-info rounded-pill me-2" href="/login" role="button"><span class="ti ti-login"></span> Masuk Aplikasi</a>
             </form>
                 @endif
           </div>
         </div>
       </nav>
       <section class="py-0 bg-light-gradient" id="section1">
-
         <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:contain;">
         </div>
         <!--/.bg-holder-->
@@ -197,13 +196,13 @@
                 <h5 class=" typewrite pb-3 text-muted" data-period="2000" data-type='[ "Selamat Datang di Absensi Pintar","Hallo apa kabar..? ","Apakah anda sudah Absen Hari ini..?" ]'></h5>
                 <div class=" mb-2 mt-2">
                         <div id="info"></div>
-                        {{-- <div class="mb-3">
+                        <div class="mb-3" hidden>
                             <label class="form-label">UID :</label>
                             <select name="id_rfid" id="id_rfid" class="form-control" disabled></select>
                             <label class="form-label my-3">Nama Lengkap :</label>
                             <input type="text" class="form-control " id="nama"  disabled>
 
-                        </div> --}}
+                        </div>
 
                         <center><label><span class="ti ti-history"></span> Riwayat Absensi</label></center>
                         <div class="table-responsive bg-white scrollme">
@@ -308,31 +307,7 @@
       <section class="bg-info pt-0 pb-0">
         <div class="container">
           <div class="row justify-content-sm-between py-6">
-            <div class="col-auto mb-2">
-              <div class="d-flex">
-                <svg class="bi bi-check-circle" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#ffffff" viewBox="0 0 16 16">
-                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                  <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"></path>
-                </svg>
-                <p class="mb-0 text-light ms-2">30 day money back guarantee</p>
-              </div>
-            </div>
-            <div class="col-auto mb-2">
-              <div class="d-flex">
-                <svg class="bi bi-gear-wide-connected" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#ffffff" viewBox="0 0 16 16">
-                  <path d="M7.068.727c.243-.97 1.62-.97 1.864 0l.071.286a.96.96 0 0 0 1.622.434l.205-.211c.695-.719 1.888-.03 1.613.931l-.08.284a.96.96 0 0 0 1.187 1.187l.283-.081c.96-.275 1.65.918.931 1.613l-.211.205a.96.96 0 0 0 .434 1.622l.286.071c.97.243.97 1.62 0 1.864l-.286.071a.96.96 0 0 0-.434 1.622l.211.205c.719.695.03 1.888-.931 1.613l-.284-.08a.96.96 0 0 0-1.187 1.187l.081.283c.275.96-.918 1.65-1.613.931l-.205-.211a.96.96 0 0 0-1.622.434l-.071.286c-.243.97-1.62.97-1.864 0l-.071-.286a.96.96 0 0 0-1.622-.434l-.205.211c-.695.719-1.888.03-1.613-.931l.08-.284a.96.96 0 0 0-1.186-1.187l-.284.081c-.96.275-1.65-.918-.931-1.613l.211-.205a.96.96 0 0 0-.434-1.622l-.286-.071c-.97-.243-.97-1.62 0-1.864l.286-.071a.96.96 0 0 0 .434-1.622l-.211-.205c-.719-.695-.03-1.888.931-1.613l.284.08a.96.96 0 0 0 1.187-1.186l-.081-.284c-.275-.96.918-1.65 1.613-.931l.205.211a.96.96 0 0 0 1.622-.434l.071-.286zM12.973 8.5H8.25l-2.834 3.779A4.998 4.998 0 0 0 12.973 8.5zm0-1a4.998 4.998 0 0 0-7.557-3.779l2.834 3.78h4.723zM5.048 3.967c-.03.021-.058.043-.087.065l.087-.065zm-.431.355A4.984 4.984 0 0 0 3.002 8c0 1.455.622 2.765 1.615 3.678L7.375 8 4.617 4.322zm.344 7.646l.087.065-.087-.065z"></path>
-                </svg>
-                <p class="mb-0 text-light ms-2">Support teams across the world</p>
-              </div>
-            </div>
-            <div class="col-auto">
-              <div class="d-flex">
-                <svg class="bi bi-shield-lock-fill" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#ffffff" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.777 11.777 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7.159 7.159 0 0 0 1.048-.625 11.775 11.775 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.541 1.541 0 0 0-1.044-1.263 62.467 62.467 0 0 0-2.887-.87C9.843.266 8.69 0 8 0zm0 5a1.5 1.5 0 0 1 .5 2.915l.385 1.99a.5.5 0 0 1-.491.595h-.788a.5.5 0 0 1-.49-.595l.384-1.99A1.5 1.5 0 0 1 8 5z"></path>
-                </svg>
-                <p class="mb-0 text-light ms-2">Safe &amp; Secure online payment</p>
-              </div>
-            </div>
+           
           </div>
           {{-- <div class="row flex-center">
             <div class="col-auto py-4"><a href="#"><img class="img-fluid" src="{{ asset('asset/img/logo-white.png') }}" alt="" width="200" /></a></div>
@@ -349,7 +324,6 @@
 
 
 
-
       <!-- ============================================-->
       <!-- <section> begin ============================-->
 
@@ -361,7 +335,25 @@
     <!--    End of Main Content-->
     <!-- ===============================================-->
 
-
+  <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      {{-- <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div> --}}
+      <div class="modal-body" id="modalBody">
+        ...
+      </div>
+      {{-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> --}}
+    </div>
+  </div>
+</div>
     <!-- ===============================================-->
     <!--    JavaScripts-->
     <!-- ===============================================-->
@@ -373,54 +365,112 @@
      <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
 
     <script>
+       
         function menuToggle() {
           const toggleMenu = document.querySelector(".menu");
           toggleMenu.classList.toggle("active");
         }
       </script>
 
-</script>
+
    <script>
-        function refreshdata(){
-            $.ajax({
-                url:"{{ route('rfidDataGET') }}",
-                method:"GET",
-                cache:false,
-                success: function(data){
-                    $('#id_rfid').html(data);
-                }
-            });
+let modalOpen = false;  // Flag to track if the modal is open
+let lastData = null; // To track the last data to compare with new data
 
+function refreshdata() {
+    // Fetch updated RFID data
+    $.ajax({
+        url: "{{ route('rfidDataGET') }}",
+        method: "GET",
+        cache: false,
+        success: function (data) {
+            $('#id_rfid').html(data);
+        }
+    });
 
-        let id_rfid = $('#id_rfid').val();
-        var e = document.getElementById("id_rfid");
-            function onChange() {
-            var value = e.value;
-            $.ajax({
-                url:"{{ route('rfidData') }}",
-                method:"GET",
-                cache:false,
-                data : {id_rfid:id_rfid},
-                success: function(data){
-                    $('#nama').val(data);
-                    if(data){
-                    $('#info').html(
-                        '<div class="alert alert-primary" role="alert">'+
-                        'Halo '+data+',<br>Terimakasih telah mengisi absen hari ini. Semoga harimu menyenangkan dan tetap semangat belajar! '+
-                        '</div>'
-                    );
-                    }else{
-                        $('#info').html('');
+    let id_rfid = $('#id_rfid').val();
+    var e = document.getElementById("id_rfid");
+
+    function onChange() {
+        var value = e.value;
+
+        // Fetch data based on the RFID value
+        $.ajax({
+            url: "{{ route('rfidData') }}",
+            method: "GET",
+            cache: false,
+            data: { id_rfid: id_rfid },
+            success: function (data) {
+                // Update name field with the received data
+                $('#nama').val(data.nama);
+
+                // Check if the new data is different from the last data
+                if (data && JSON.stringify(data) !== JSON.stringify(lastData)) {
+                    // Only open the modal if it's not already open
+                    if (!modalOpen) {
+                        // Play text-to-voice message before showing the modal
+                        playTextToVoice(`Selamat datang, ${data.nama}. Terimakasih sudah absen hari ini.`);
+
+                        // Show the modal after the voice message is played
+                        setTimeout(() => {
+                            $('#successModal').modal('show');
+                            modalOpen = true; // Set flag to true since the modal is shown
+
+                            // Dynamically insert data into modal body
+                            $('#modalBody').html(
+                                '<div class="alert alert-success m-2 mb-2" role="alert">' +
+                                'Halo ' + data.nama + ',<br>Terimakasih telah mengisi absen hari ini. Semoga harimu menyenangkan dan tetap semangat belajar! ' +
+                                '</div>' +
+                                '<div class="d-flex justify-content-center mb-3">' +
+                                '<img src="{{ asset("asset/img/user-default.jpg") }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto"></div>' +
+                                '<div class="p-3">' +
+                                '<div class="mb-3"><label>ID</label><input class="form-control" value="' + data.id + '" disabled></div>' +
+                                '<div class="mb-3"><label>Nama Lengkap</label><input class="form-control" value="' + data.nama + '" disabled></div>' +
+                                '</div>'
+                            );
+
+                            // Update the lastData to the new data
+                            lastData = data;
+
+                            // Hide modal after 10 seconds
+                            setTimeout(function () {
+                                $('#successModal').modal('hide');
+                                modalOpen = false; // Reset the flag as the modal is hidden
+                            }, 10000); // 10000 milliseconds = 10 seconds
+                        }, 2000); // Wait for the voice to start before showing the modal
+                    }
+                } else {
+                    // If data is the same or no data, hide the modal if it's open
+                    if (modalOpen) {
+                        $('#successModal').modal('hide');
+                        modalOpen = false; // Reset the flag as the modal is hidden
                     }
                 }
-            });
+            }
+        });
+    }
 
-            }
-            e.onchange = onChange;
-            onChange();
-            }
-            setInterval(refreshdata,2000);
-    </script>
+    e.onchange = onChange;
+    onChange();
+}
+
+// Play Text-to-Voice Function
+function playTextToVoice(message) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(message);
+        utterance.lang = 'id-ID'; // Indonesian language
+        utterance.pitch = 1; // Normal pitch
+        utterance.rate = 1; // Normal speed
+        window.speechSynthesis.speak(utterance);
+    } else {
+        console.warn("Speech synthesis not supported in this browser.");
+    }
+}
+
+// Refresh data every 2 seconds
+setInterval(refreshdata, 3000);
+
+
     </script>
 
         <script>
@@ -463,7 +513,7 @@
                 }
             });
         }
-            setInterval(refreshdata2,2000);
+            setInterval(refreshdata2,5000);
 
         </script>
 
