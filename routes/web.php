@@ -224,3 +224,5 @@ Route::get('/report/absentrfid/teacher', [reportController::class, 'reportRFIDTe
 Route::get('/report/absent/students', [reportController::class, 'reportAbsentStudent']);
 
 
+
+

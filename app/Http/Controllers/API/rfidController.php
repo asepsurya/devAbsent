@@ -142,6 +142,7 @@ class rfidController extends Controller
         }
 
     }
+    
     public function rfidDataGET(request $request){
 
         $data = absentsHistory::where('date',date('d/m/Y'))->orderBy('id','DESC')->get();
@@ -150,8 +151,8 @@ class rfidController extends Controller
              return $option;
          }
 
-
     }
+
     public function rfidDelete($id){
         $data = rfid::where('id',$id)->get();
         foreach($data as $key){
@@ -166,5 +167,16 @@ class rfidController extends Controller
             }
         }
 
+    }
+
+    public function processRfid(request $request){
+
+
+         $data = rfid::where('status','1')->orderBy('id','DESC')->get();
+         foreach($data as $item){
+            return $item->id_rfid;
+         }
+         // For demonstration, return the RFID value (or process it as needed)
+        
     }
 }

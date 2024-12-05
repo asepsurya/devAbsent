@@ -109,15 +109,14 @@
                     </form>
                 </div>
                 <div class="table-responsive">
+                  <form action="{{ route('PengaturaRombelUpdate') }}" method="post">
+                     @csrf
                     <table class="table table-nowrap mb-0" id="myTable">
                         <thead>
                             <tr>
                                 <th class="bg-light-400" width="3%">
-                                    <div class="form-check form-check-md">
-                                        <input class="form-check-input" type="checkbox" id="select-all">
-                                        </div>
+                                  Select
                                 </th>
-
                                 <th class="bg-light-400 border">NIS</th>
                                 <th class="bg-light-400">Nama Lengkap</th>
                                 <th class="bg-light-400" width="10%"></th>
@@ -132,10 +131,9 @@
                             <tr>
                                 <td>
                                     <div class="form-check form-check-md">
-                                        <input class="form-check-input" type="checkbox">
-                                        </div>
+                                        <input class="form-check-input" type="checkbox" name="nis[]" value="{{ $item->nis }}">
+                                    </div>
                                 </td>
-
                                 <td class="text-primary border">{{ $item->nis }}</td>
                                 <td>
                                     @if(request('id_kelas_asal')=="belumDiatur" || request('id_kelas_asal')=="all" )
@@ -144,25 +142,33 @@
                                     {{ $item->rombelStudent->nama }}
                                     @endif
                                 </td>
-                                <th>
-                                    <form action="{{ route('PengaturaRombelUpdate') }}" method="post">
-                                        @csrf
+                                <td>
                                         <input type="text" name="id_kelas_asal" value="{{ request('id_kelas_asal') }}"  hidden>
                                         <input type="text" name="tahunAjarAsal" value="{{ request('tahunAjarAsal') }}" hidden>
-                                        <input type="text" name="id_rfid"  value="{{ $item->id_rfid }}" hidden >
-                                        <input type="text" name="nis" value="{{ $item->nis }}" value="{{ old('nis') }}" hidden>
+                                        <input type="text" name="id_rfid[]"  value="{{ $item->id_rfid }}" hidden >
                                         <input type="text" name="id_kelas" class="GetKelas" value="{{ request('id_kelas_tujuan') }}" hidden >
                                         <input type="text" name="id_tahun_pelajaran" class="GetTahunPelajaran" value="{{ request('id_tahun_pelajaran') }}" hidden >
-                                        <button type="submit" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                            title="Pindah" class="btn btn-icon btn-sm btn-soft-success rounded-pill"><i
-                                                class="ti ti-arrows-right"></i></button>
-                                        {{-- old --}}
-
-                                    </form>
+                                </td>
                             </tr>
                             @endforeach
+                             <tr>
+                              
+                                <input type="text" name="type" value="single" class="type" hidden>
+                                <td>
+                                    <div class="form-check form-check-md">
+                                        <input class="form-check-input mydata" type="checkbox" id="select-all">
+                                    </div>
+                                </td>
+                                <td colspan="1" class="border">
+                                  Select All
+                                </td>
+                                <td colspan="7">
+                                    <button type="submit" class="btn btn-primary mx-2 w-100">Simpan</button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
+                </form>
                 </div>
                 <div class="d-flex justify-content-end m-3">
                     {{ $students->links() }}

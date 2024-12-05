@@ -222,6 +222,8 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between">
+                
+                <div> <button type="button" id="save-selected" class="btn btn-primary"><span class="ti ti-arrow-left"></span> Tambahkan </button></div>
                 <h3><span class="ti ti-settings"></span> Pilih Mata Pelajaran</h3>
             </div>
             <div class="card-body p-0 ">
@@ -229,38 +231,13 @@
                     <table class="table table-nowrap mb-0" id="myTable" >
                         <thead>
                             <tr>
-                                <th class="bg-light-400" width="10%"></th>
-                                <th class="bg-light-400" width="10%">#</th>
+                                <th width="1%"><div class="form-check form-check-md"><input type="checkbox" class=" form-check-input" id="select-all"></div></th>
                                 <th class="bg-light-400">Mata Pelajaran</th>
 
                             </tr>
                         </thead>
-                        {{-- <tbody>
-
-                            @php
-                            $no=1;
-                            @endphp
-                            @foreach ($mapel as $item)
-                            <tr><td>
-                                <form action="{{ route('pengaturanMapelAdd') }}" method="post">
-                                    @csrf
-                                    <input type="text" name="id_mapel" id="MapelVal" value="{{ $item->id }}" hidden>
-                                    <button type="submit"
-                                        class="btn btn-icon btn-sm btn-soft-success rounded-pill"><i
-                                            class="ti ti-arrows-left"></i></button>
-
-                                </form>
-                            </td>
-                                <td>{{ $no++ }}</td>
-                                <td>{{ $item->nama }}</td>
-
-                            </tr>
-                            @endforeach
-
-                        </tbody> --}}
-                    </table>
-                    {{-- {{ $mapel->links() }} --}}
-                </div>
+                    </table>     
+                </div>      
             </div>
         </div>
 
@@ -312,56 +289,131 @@
 </div>
 @section('javascript')
 <script src="{{ asset('asset/js/DataTables.js') }}"></script>
-<script>
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script>
     $(function() {
         var table = new DataTable('#myTable', {
-            layout:{
-                topEnd:{
-                    search:{
-                        placeholder:'Search',
-                        text:'<span class="ti ti-search"></span> _INPUT_'
+            layout: {
+                topEnd: {
+                    search: {
+                        placeholder: 'Search',
+                        text: '<span class="ti ti-search"></span> _INPUT_'
                     }
                 }
             },
             processing: true,
             order: [[1, 'desc']],
             serverSide: true,
-            ajax: '{!! route('pengaturanMapel') !!}', // memanggil route yang menampilkan data json
+            ajax: '{!! route('pengaturanMapel') !!}', // Route that returns JSON data
             columns: [
-                { // mengambil & menampilkan kolom sesuai tabel database
+                { // Checkbox column to select rows
                     data: 'DT_RowIndex',
                     sortable: false,
-                    target:[1],
-                    searchable:false,
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'id',
-                    sortable: false,
-                    render: function(data, type, row, meta){
-                       data = '<form action="{{ route('pengaturanMapelAdd') }}" method="post">'+
-                                    '@csrf'+
-                                    '<input type="text" name="id_mapel" id="MapelVal" value="'+data+'" hidden>'+
-                                    '<button type="submit" class="btn btn-icon btn-sm btn-soft-success rounded-pill"><i class="ti ti-arrows-left"></i></button>'+
-                                '</form>'
-                        return data;
+                    searchable: false,
+                    render: function(data, type, row, meta) {
+                        return '<div class="form-check form-check-md"><input type="checkbox" name="id_mapel[]" class="select-row form-check-input" value="'+ row.id +'"></div>';
                     },
-                    targets: -1
-                 },
+                    targets: 0
+                },
                 {
                     data: 'nama',
                     name: 'nama'
                 },
-
-
-
             ]
         });
 
+        // Add a 'Select All' checkbox to the table header
+        $('#select-all').on('click', function() {
+            var isChecked = this.checked;
+            $('.select-row').each(function() {
+                this.checked = isChecked;
+            });
+        });
 
+        $('#save-selected').on('click', function() {
+            var selectedIds = [];
+            
+            // Collect selected row ids
+            $('.select-row:checked').each(function() {
+                selectedIds.push($(this).val());  // Collect checked IDs
+            });
+
+            // Check if id_kelas exists in the request (you can add this validation based on your condition)
+            var idKelas = '{{ request('id_kelas') }}';  // Assuming you're getting the id_kelas from the request
+            
+            // Validate if id_kelas is missing
+            if (!idKelas) {
+                // Show SweetAlert warning for missing id_kelas
+                Swal.fire({
+                    title: 'Warning!',
+                    text: 'Please select a class first.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return;  // Stop the function execution if id_kelas is missing
+            }
+
+            // Check if any rows are selected
+            if (selectedIds.length > 0) {
+                // Send selectedIds via AJAX
+                $.ajax({
+                    url: '{{ route('pengaturanMapelAdd') }}',  // Define the route to handle selected data
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',  // CSRF token for security
+                        selectedIds: selectedIds,  // Send the array of selected IDs
+                        id_kelas: idKelas  // Include id_kelas in the request if needed
+                    },
+                    success: function(response) {
+                        if (response.message) {
+                            // Show success message using SweetAlert
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                table.ajax.reload();  // Reload the table data
+                                location.reload();  // Optionally reload the page
+                            });
+                        } else {
+                            // Show error message if no message is received
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'No message received from the server.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function() {
+                        // Show error message if AJAX request fails
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Error saving selected data.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            } else {
+                // Show warning if no row is selected
+                Swal.fire({
+                    title: 'Warning!',
+                    text: 'Please select at least one row.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
     });
 </script>
+
+
+
+
 <script>
 $('.tahunAjar').select2({
     placeholder: "Pilih Tahun Pelajaran",

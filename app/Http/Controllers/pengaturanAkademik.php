@@ -120,54 +120,70 @@ class pengaturanAkademik extends Controller
     }
 
     public function PengaturaRombelUpdate(request $request){
-        $cek = rombel::where(['nis'=>$request->nis])->get();
-        if($cek->count() != 0){
-            foreach($cek as $item){
-                    if($item->id_kelas == $request->id_kelas){
-                        toastr()->warning('Sudah terdaftar dikelas ini');
-                        return redirect()->back()->withInput();
-                    }
-                    else{
-                        if($request->id_tahun_pelajaran == "" || $request->id_kelas=='' ){
-                            toastr()->error('Mohon Periksa Kembali Kelas Tujuan terlebih dahulu');
-                            return redirect()->back()->withInput();
-                        }else{
-                            rombel::where('nis',$request->nis)->update([
-                                // 'id_rfid'=>$request->id_rfid,
-                                'id_kelas'=>$request->id_kelas,
-                                'id_tahun_pelajaran'=>$request->id_tahun_pelajaran,
-                            ]);
-                            student::where('nis',$request->nis)->update([
-                                'id_kelas'=>$request->id_kelas,
-                                // 'id_rfid'=>$request->id_rfid,
-                            ]);
-                            toastr()->success('Data Berhasil dipindahkan');
-                            return redirect(route('PengaturaRombel','id_kelas_asal='.$request->id_kelas_asal.'&tahunAjarAsal='.$request->tahunAjarAsal.'&id_kelas_tujuan='.$request->id_kelas.'&id_tahun_pelajaran='.$request->id_tahun_pelajaran))->withInput();
-                        }
+            // Validate that the input is an array
+    $request->validate([
+        'nis' => 'required|array', // Ensure nis is an array
+        'nis.*' => 'required|string', // Each nis must be a string
+       
+    ]);
 
-                    }
-             }
-        }else{
-            if($request->id_kelas == "" || $request->id_tahun_pelajaran == "" ){
-                        toastr()->success('Mohon Periksa Kembali Kelas Tujuan terlebih dahulu');
-                        return redirect()->back()->withInput();
-            }else{
-                        rombel::create([
-                            // 'id_rfid'=>$request->id_rfid,
-                            'nis'=>$request->nis,
-                            'id_kelas'=>$request->id_kelas,
-                            'id_tahun_pelajaran'=>$request->id_tahun_pelajaran,
-                            'status'=>'1',
-                           ]);
-                        student::where('nis',$request->nis)->update([
-                            'id_kelas'=>$request->id_kelas,
-                            // 'id_rfid'=>$request->id_rfid,
-                           ]);
+    // Loop through each nis (student)
+    foreach ($request->nis as $key => $nis) {
+        // Check if the student is already in the class
+        $cek = rombel::where('nis', $nis)->get();
 
-                        toastr()->success('Data Berhasil disubmit');
-                        return redirect(route('PengaturaRombel','id_kelas_asal='.$request->id_kelas_asal.'&tahunAjarAsal='.$request->tahunAjarAsal.'&id_kelas_tujuan='.$request->id_kelas.'&id_tahun_pelajaran='.$request->id_tahun_pelajaran))->withInput();
+        if ($cek->count() != 0) {
+            // Loop through each record found
+            foreach ($cek as $item) {
+                // If the student is already in the same class
+                if ($item->id_kelas == $request->id_kelas) {
+                    toastr()->warning('Sudah terdaftar dikelas ini untuk NIS ' . $nis);
+                    return redirect()->back()->withInput();
+                } else {
+                    // If the class or year is missing, show an error
+                    if ($request->id_tahun_pelajaran == "" || $request->id_kelas == '') {
+                        toastr()->error('Mohon Periksa Kembali Kelas Tujuan untuk NIS ' . $nis);
+                        return redirect()->back()->withInput();
+                    } else {
+                        // Update the rombel and student records
+                        rombel::where('nis', $nis)->update([
+                            'id_kelas' => $request->id_kelas,
+                            'id_tahun_pelajaran' => $request->id_tahun_pelajaran,
+                        ]);
+                        student::where('nis', $nis)->update([
+                            'id_kelas' => $request->id_kelas,
+                        ]);
+                        toastr()->success('Data untuk NIS ' . $nis . ' berhasil dipindahkan');
+                    }
+                }
+            }
+        } else {
+            // If the student is not found, create a new record
+            if ($request->id_kelas == "" || $request->id_tahun_pelajaran == "") {
+                toastr()->error('Mohon Periksa Kembali Kelas Tujuan untuk NIS ' . $nis);
+                return redirect()->back()->withInput();
+            } else {
+                // Create a new rombel record for the student
+                rombel::create([
+                    'nis' => $nis,
+                    'id_kelas' => $request->id_kelas,
+                    'id_tahun_pelajaran' => $request->id_tahun_pelajaran,
+                    'status' => '1',
+                    'id_rfid'=>$request->id_rfid[$key]
+                ]);
+
+                student::where('nis', $nis)->update([
+                    'id_kelas' => $request->id_kelas,
+                ]);
+
+                toastr()->success('Data untuk NIS ' . $nis . ' berhasil disubmit');
             }
         }
+    }
+
+    // Redirect back with success message
+    toastr()->success('Data Berhasil disubmit');
+    return redirect(route('PengaturaRombel','id_kelas_asal='.$request->id_kelas_asal.'&tahunAjarAsal='.$request->tahunAjarAsal.'&id_kelas_tujuan='.$request->id_kelas.'&id_tahun_pelajaran='.$request->id_tahun_pelajaran))->withInput();
 
     }
 
@@ -185,13 +201,30 @@ class pengaturanAkademik extends Controller
        ]);
     }
     public function pengaturanMapelAdd(request $request){
-        if(request()){
-            grupMapel::create([
-                'id_mapel'=>$request->id_mapel,
-                'status'=>'1'
-            ]);
-            return redirect()->back();
-        }
+    
+     // Example logic: Insert selected mapel into the database
+     $selectedIds = $request->selectedIds;
+    
+     // Check if selectedIds is not empty and handle accordingly
+     if (!empty($selectedIds)) {
+         // Assuming you are saving the selected mapel to a table like grup_mapel
+         foreach ($selectedIds as $id) {
+             grupMapel::create([
+                 'id_mapel' => $id,
+                 'status' => '1',  // Assuming '1' means active or selected
+             ]);
+         }
+ 
+         // Return a success message
+         return response()->json([
+             'message' => 'Selected data has been saved successfully.',
+         ]);
+     }
+ 
+     // Return an error message if no IDs were selected
+     return response()->json([
+         'message' => 'Please select at least one mapel.',
+     ]);
 
     }
     public function pengaturanMapelUpdate(request $request){

@@ -468,7 +468,7 @@ function playTextToVoice(message) {
 }
 
 // Refresh data every 2 seconds
-setInterval(refreshdata, 3000);
+setInterval(refreshdata, 5000);
 
 
     </script>

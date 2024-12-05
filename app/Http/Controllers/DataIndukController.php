@@ -2,27 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\rfid;
+use App\Models\User;
+use App\Models\Kelas;
+use App\Models\Mapel;
+use App\Models\absent;
+use App\Models\rombel;
+use App\Models\Jurusan;
 use App\Models\student;
 use App\Models\Province;
-use App\Models\Kelas;
-use App\Models\Jurusan;
-use App\Models\rombel;
-use App\Models\Mapel;
-use App\Models\User;
-use App\Models\rfid;
+use Illuminate\View\View;
+use App\Models\absentMapel;
+use Illuminate\Http\Request;
+use App\Models\absentsHistory;
+use App\Models\TahunPelajaran;
+use App\Exports\StudentsExport;
+use App\Imports\StudentsImport;
 use App\Models\model_has_roles;
+use App\Imports\UserStudentImport;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\MyRolesStudentImport;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
-use App\Imports\UserStudentImport;
-use App\Imports\MyRolesStudentImport;
-use App\Imports\StudentsImport;
-use App\Exports\StudentsExport;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Models\TahunPelajaran;
-use Illuminate\View\View;
 
 class DataIndukController extends Controller
 {
@@ -135,7 +138,7 @@ class DataIndukController extends Controller
             'students'=>student::where('id',$id)->get(),
             'provinsi'=>Province::all(),
             'rfid'=>rfid::where('status','1')->get(),
-        ]);
+        ],compact('id'));
     }
     public function dataIndukStudentEdit(request $request){
         $validator = $request->validate([
@@ -166,15 +169,34 @@ class DataIndukController extends Controller
         }
         student::where('id',$request->id)->update($validator);
         rfid::where('id_rfid',$request->id_rfid)->update(['status'=>'2']);
-
+        // Method ubah rfid ketika  RFID Berubah
+        $cekrfid = absent::where('id_rfid',$request->old_rfid)->get();
+        if($cekrfid->count()){
+            if($cekrfid->where('id_rfid',$request->old_rfid) !== $request->id_rfid ){
+                rfid::where('id_rfid',$request->old_rfid)->update(['status'=>'1']);
+                absent::where('id_rfid',$request->old_rfid)->update(['id_rfid'=>$request->id_rfid]);      
+                absentsHistory::where('uid',$request->old_rfid)->update(['uid'=>$request->id_rfid]);      
+            }  
+        }
+        // Method jika NIS di rubah
+        $cekNIS = student::where('nis',$request->nis)->get();
+        if($cekNIS->count()){
+            if($cekNIS->where('nis',$request->old_nis) !== $request->nis ){
+                rombel::where('nis',$request->old_nis)->update(['nis'=> $request->nis]);
+                user::where('nomor',$request->old_nis)->update(['nomor'=>$request->nis,'email'=>$request->nis,'password'=>Hash::make($request->nis)]);      
+                absentMapel::where('nis',$request->old_nis)->update(['nis'=>$request->nis]);      
+            }  
+        }
+        
         $cek = rombel::where('nis',$request->nis)->get();
         if($cek->count()){
             rombel::where('nis',$request->nis)->update(['id_rfid'=>$request->id_rfid]);
         }
         toastr()->success('Data Berhasil disimpan');
-        return redirect()->back();
+        return redirect()->route('studentEditIndex', $request->id);
 
     }
+    
     public function studentDelete ($id){
         // cek table siswa untuk menghapus rfid
         $cekstudentrfid =  student::where('nis',$id)->get();
