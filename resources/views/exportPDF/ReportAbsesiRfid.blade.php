@@ -144,9 +144,9 @@
     </style>
 </head>
 <body>
+    
     <div class="kop-surat">
-        <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}"
-        class="avatar avatar-md img-fluid rounded" alt="Profile" >
+        <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo']) }}" />
         <div class="text">
             <h1>{{ app('settings')['site_name'] }}</h1>
             <h2>{{ app('settings')['address'] }}</h2>

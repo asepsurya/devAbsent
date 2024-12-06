@@ -41,7 +41,7 @@
 {{-- End Header --}}
 @foreach ($students as $item )
 <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-9">
         <div  id="sectionOne">
             <div class="row">
                 <div class="col-lg-6">
@@ -245,10 +245,8 @@
                 </div>
             </div>
         </div>
-        </form>
-
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <div class="alert alert-primary overflow-hidden p-0" role="alert">
             <div class="p-3 bg-primary text-fixed-white d-flex justify-content-between">
                 <h6 class="aletr-heading mb-0 text-fixed-white">Foto Siswa
@@ -268,7 +266,7 @@
 
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button class="btn btn-outline-light bg-white mt-3 " data-toggle="modal" data-target="#fileUploadModal"><span class="ti ti-upload"></span>Change Image</button>
+                        <a class="btn btn-outline-light bg-white mt-3 " data-toggle="modal" data-target="#fileUploadModal"><span class="ti ti-upload"></span>Change Image</a>
                         {{-- <label for="form-label">Foto</label> --}}
                         {{-- <input type="file" class="form-control" name="foto2"> --}}
                         <input type="text" name="oldImage" value="{{ $item->foto }}" hidden>
@@ -310,7 +308,29 @@
                 </div>
             </div>
         </div>
+            <div class="alert alert-primary overflow-hidden p-0" role="alert">
+                <div class="p-3 bg-primary text-fixed-white d-flex justify-content-between">
+                    <h6 class="aletr-heading mb-0 text-fixed-white">Barcode for Absent
+                    </h6>
+
+                </div>
+                <hr class="my-0">
+                <div class="p-3 d-flex justify-content-center">
+                    {!! QrCode::size(150)->generate($item->nis) !!}
+                </div>
+                <div class="d-flex justify-content-center">
+                    {{-- <a href="{{ route('qr.download', ['code' => $item->nis]) }}" class="btn btn-primary">
+                        Download QR Code
+                    </a> --}}
+                    {{-- <a type="button" href="{{ route('barcode.download', ['code' => $item->nis]) }}" class="btn btn-outline-light bg-white mt-3">
+                        <span class="ti ti-download"></span> Download Code
+                    </a> --}}
+                </div>
+            </div>
+
+
     </div>
+</form>
 
 <!-- Modal for Image Upload -->
 <div class="modal fade" id="fileUploadModal" tabindex="-1" aria-labelledby="fileUploadModalLabel" aria-hidden="true">

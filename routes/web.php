@@ -9,6 +9,7 @@ use App\Http\Controllers\authController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\reportController;
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\barcodeController;
 use App\Http\Controllers\landingController;
 use App\Http\Controllers\leassonController;
 use App\Http\Controllers\lisensiController;
@@ -152,6 +153,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/gtk/deleteAction{id}',[GTKController::class,'GTKdelete'])->name('GTKdelete');
     Route::post('/gtk/import/index',[GTKController::class,'GTKimportIndex'])->name('GTKimportIndex');
     Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
+    Route::post('/gtk/dataIndukGTKfoto',[GTKController::class,'GTKfoto'])->name('GTKfoto');
     // route rfid
     Route::get('/rfid',[rfidController::class,'rfid'])->name('rfid');
     Route::get('/rfid/delete{id}',[rfidController::class,'rfidDelete'])->name('rfidDelete');
@@ -224,6 +226,8 @@ Route::get('/report/absentrfid/student', [reportController::class, 'reportRFIDSt
 Route::get('/report/absentrfid/teacher', [reportController::class, 'reportRFIDTeacher']);
 Route::get('/report/absent/students', [reportController::class, 'reportAbsentStudent']);
 
+Route::get('/qr/{code}', [barcodeController::class, 'generateQRCode'])->name('qr.generate');
+Route::get('/card', [barcodeController::class, 'card'])->name('card');
 
 
 

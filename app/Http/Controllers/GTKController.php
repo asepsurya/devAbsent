@@ -217,4 +217,43 @@ class GTKController extends Controller
             toastr()->success('Data Berhasil dihapus');
             return redirect()->back();
         }
+
+    public function GTKfoto(request $request){
+        // Validate inputs
+        $request->validate([
+            'id' => 'required|exists:gtks,id',
+            'croppedFoto' => 'required|string', // Base64 string
+        ]);
+
+    try {
+        // Extract the Base64 string
+        $base64Image = $request->input('croppedFoto');
+
+        // Decode and process the image
+        $imageParts = explode(';base64,', $base64Image);
+        $imageType = explode('image/', $imageParts[0])[1]; // Get extension (e.g., jpeg, png)
+        $imageBase64 = base64_decode($imageParts[1]);
+
+        // Generate unique file name
+        $fileName = 'FotoProfile/' . uniqid() . '.' . $imageType;
+
+        // Save to storage
+        Storage::put($fileName, $imageBase64);
+
+        // Delete old image if it exists
+        if ($request->oldImage) {
+            Storage::delete($request->oldImage); // Deletes from `storage/app`
+        }
+
+        // Update database with new image path
+        gtk::where('id', $request->id)->update(['gambar' => $fileName]);
+
+        toastr()->success('Profile photo updated successfully.');
+        return redirect()->back();
+
+    } catch (\Exception $e) {
+        toastr()->error('An error occurred: ' . $e->getMessage());
+        return redirect()->back();
+    }
+        }
 }

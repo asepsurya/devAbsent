@@ -336,21 +336,20 @@
     <!-- ===============================================-->
 
   <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
     <div class="modal-content">
-      {{-- <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+      <div class="modal-header  ">
+        <h5 class="modal-title" id="exampleModalLabel">Absensi Berhasil</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div> --}}
+      </div>
       <div class="modal-body" id="modalBody">
         ...
+         
       </div>
-      {{-- <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> --}}
+      <div class="modal-footer"> 
+      </div>
     </div>
   </div>
 </div>
@@ -418,16 +417,20 @@ function refreshdata() {
 
                             // Dynamically insert data into modal body
                             $('#modalBody').html(
-                                '<div class="alert alert-success m-2 mb-2" role="alert">' +
-                                'Halo ' + data.nama + ',<br>Terimakasih telah mengisi absen hari ini. Semoga harimu menyenangkan dan tetap semangat belajar! ' +
-                                '</div>' +
-                                '<div class="d-flex justify-content-center mb-3">' +
-                                '<img src="{{ asset("asset/img/user-default.jpg") }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto"></div>' +
-                                '<div class="p-3">' +
-                                '<div class="mb-3"><label>ID</label><input class="form-control" value="' + data.id + '" disabled></div>' +
-                                '<div class="mb-3"><label>Nama Lengkap</label><input class="form-control" value="' + data.nama + '" disabled></div>' +
-                                '</div>'
-                            );
+    '<div class="d-flex justify-content-center mb-3">' +
+        // Check if 'data.foto' is not null or undefined
+        (data.foto ? 
+            '<img src="/storage/' + data.foto + '" class="avatar me-4 avatar-rounded" style="width: 150px; height: 150px;" alt="foto">' : 
+            '<img src="{{ asset("asset/img/user-default.jpg") }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto">'
+        ) +
+    '</div>' +
+    '<div class="p-3">' +
+        '<div class="mb-3"><label>NIS</label><input class="form-control" value="' + data.id + '" disabled></div>' +
+        '<div class="mb-3"><label>Nama Lengkap</label><input class="form-control" value="' + data.nama + '" disabled></div>' +
+        '<div class="mb-3"><label>Sudah Absen pada Pukul</label><input class="form-control" value="' + data.jam + '" disabled></div>' +
+    '</div>'
+);
+
 
                             // Update the lastData to the new data
                             lastData = data;
@@ -468,7 +471,7 @@ function playTextToVoice(message) {
 }
 
 // Refresh data every 2 seconds
-setInterval(refreshdata, 5000);
+setInterval(refreshdata, 2000);
 
 
     </script>

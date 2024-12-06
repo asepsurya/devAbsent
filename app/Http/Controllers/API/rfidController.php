@@ -129,13 +129,16 @@ class rfidController extends Controller
                 return [
                     'nama'=>$item->gtk->nama,
                     'id' =>$item->gtk->id_rfid,
+                    'foto' =>$item->gtk->gambar,
+                    'jam' =>$item->time,
                     
                 ];
             }else{
                 return [
                     'nama'=>$item->student->nama,
                     'id' =>$item->student->id_rfid,
-                    
+                    'foto' =>$item->student->foto,
+                    'jam' =>$item->time,
                 ];
             }
 

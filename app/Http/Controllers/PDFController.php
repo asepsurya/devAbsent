@@ -174,6 +174,8 @@ class PDFController extends Controller
             'holiday'=>Event::all()
         ];
         $options = new Options();
+        $options->set('image-cache', storage_path('app/pdf_cache'));
+
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isPhpEnabled', true);
         $options->set('image-cache', true); // Enable caching for images
