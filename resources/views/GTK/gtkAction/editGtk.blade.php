@@ -68,7 +68,7 @@
                                 <option value="{{ $item->id_rfid }}" selected>{{ $item->id_rfid }}</option>
                                 @endif
                                 @foreach ($rfid as $item2 )
-                                    <option value="{{ $item2->id_rfid }}" >{{ $item2->id_rfid }}</option>
+                                    <option value="{{ $item2->id_rfid }}"{{ $item2->id_rfid == request('key') ?'selected' : '' }} >{{ $item2->id_rfid }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -336,8 +336,8 @@
         </div>
         <div class="col">
             <div class="mb-2">
-                <label class="form-label">Email <span class="text-danger">*</span></label>
-                <input type="email" value="@if( $item->userGTK->email)  {{ $item->userGTK->email }} @endif"
+                <label class="form-label">Username <span class="text-danger">*</span></label>
+                <input type="text" value="@if( $item->userGTK->email)  {{ $item->userGTK->email }} @endif"
                     class="form-control @error('email') is-invalid @enderror"
                     placeholder="mail@example.com" name="email" id="email" required>
                 @error('email')

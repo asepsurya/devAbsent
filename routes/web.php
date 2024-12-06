@@ -101,6 +101,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/akademik/datainduk/studentAddAction',[DataIndukController::class,'dataIndukStudentAdd'])->name('dataIndukStudentAdd');
     Route::get('/akademik/datainduk/studentEdit/{id}',[DataIndukController::class,'studentEditIndex'])->name('studentEditIndex');
     Route::post('/akademik/datainduk/studentEditAction',[DataIndukController::class,'dataIndukStudentEdit'])->name('dataIndukStudentEdit');
+    Route::post('/akademik/datainduk/studentfoto',[DataIndukController::class,'dataIndukStudentfoto'])->name('dataIndukStudentfoto');
     Route::get('/akademik/datainduk/studentDelete{id}',[DataIndukController::class,'studentDelete'])->name('studentDelete');
     Route::post('/akademik/datainduk/studentImport',[DataIndukController::class,'studentImport'])->name('studentImport');
     Route::get('/akademik/datainduk/student/import',[DataIndukController::class,'studentIndex'])->name('studentIndex');
@@ -190,7 +191,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/class/leasson/delete{id}',[leassonController::class,'leassonDelete'])->name('leassonDelete');
     Route::get('/class/leasson/list/{id}',[leassonController::class,'list'])->name('list');
     Route::get('/class/leasson/getgtk',[leassonController::class,'getgtk'])->name('getgtk');
- 
+
     // Apps Config Controller
     Route::get('/setelan/aplikasi', [AppsConfigController::class, 'app'])->name('setelan.app');
     Route::get('/setelan/customize', [AppsConfigController::class, 'customize'])->name('setelan.customize');
