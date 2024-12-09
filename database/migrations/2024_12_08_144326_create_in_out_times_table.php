@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('id_kelas');
             $table->string('jam_masuk')->nullable();
-            $table->string('jam_keluar')->nullable();
+            $table->string('jam_pulang')->nullable();
             $table->timestamps();
         });
     }

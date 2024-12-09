@@ -120,19 +120,20 @@
                     <i class="ti ti-x"></i>
                 </button>
             </div>
-            <form action="{{ route('changePassword') }}" action="POST">
+            <form action="{{ route('changeRole') }}" method="POST">
                 @csrf
+    
                 <div class="modal-body">
+                    <input type="text" name="id" value="{{ $item->id }}" hidden>
                     <div class="row">
-                        <form action="" method="post">
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label">Role Pengguna Aplikasi</label>
                                     <select name="role"  class="select">
-                                        <option value="admin" {{ $item->role == 'admin' ?'selected': '' }}>Administrator</option>
-                                        <option value="walikelas" {{ $item->role == 'walikelas' ?'selected': '' }}>Walikelas</option>
-                                        <option value="guru"{{ $item->role == 'guru' ?'selected': '' }}>Guru Pengajar</option>
-                                        <option value="siswa"{{ $item->role == 'siswa' ?'selected': '' }}>Siswa</option>
+                                        <option value="4" {{ $item->role == 'admin' ?'selected': '' }}>Administrator</option>
+                                        <option value="1" {{ $item->role == 'walikelas' ?'selected': '' }}>Walikelas</option>
+                                        <option value="2"{{ $item->role == 'guru' ?'selected': '' }}>Guru Pengajar</option>
+                                        <option value="3"{{ $item->role == 'siswa' ?'selected': '' }}>Siswa</option>
                                     </select>
                                 </div>
                             </div>

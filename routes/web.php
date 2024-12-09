@@ -180,6 +180,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/permission/change',[penggunaController::class,'usermodulesPermissionChange'])->name('usermodulesPermissionChange');
     Route::get('/user/user_privileges',[penggunaController::class,'user_privilegesIndex']);
     Route::post('/user/changePassword',[penggunaController::class,'changePassword'])->name('changePassword');
+    Route::post('/user/changeRole',[penggunaController::class,'changeRole'])->name('changeRole');
 
 
     Route::get('/verifikasiuser',[verifikasiUserController::class,'verifikasiUser']);
