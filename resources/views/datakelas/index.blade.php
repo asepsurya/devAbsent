@@ -18,6 +18,20 @@
     </div>
 </div>
 {{-- End Header --}}
+@if (Request::is('class/time'))
+<div class="alert alert-primary overflow-hidden p-0" role="alert">
+    <div class="p-3 bg-primary text-fixed-white d-flex justify-content-between">
+        <h3 class="aletr-heading mb-0 text-fixed-white"><span class="ti ti-info-circle"></span> Petunjuk Singkat</h3>
+
+    </div>
+
+    <div class="p-3">
+        <p>Halaman ini disediakan untuk mengatur waktu kedatangan dan kepulangan siswa, guna menentukan apakah seorang
+            siswa terlambat atau tidak.</p>
+    </div>
+</div>
+@endif
+
 <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
         <h4 class="mb-3">Daftar Kelas</h4>
@@ -31,52 +45,76 @@
         </div>
     </div>
     <div class="card-body p-0">
-        <div class="table-responsive " >
-            <table class="table table-nowrap mb-0" id="myTable" >
-                <thead>
-                    <tr>
-                        <th class="bg-light-400">#</th>
+        <div class="table-responsive ">
+            <form action="{{ route('time.update') }}" method="post">
+                @csrf
 
-                        <th class="bg-light-400" width="70%">Rombongan Belajar</th>
-                        <th class="bg-light-400 border" width="10%">Jumlah Siswa</th>
-                        <th class="bg-light-400">status</th>
+                <table class="table table-nowrap mb-0" id="myTable">
+                    <thead>
+                        <tr>
+                            <th class="bg-light-400">#</th>
+                            <th class="bg-light-400" width="70%">Rombongan Belajar</th>
+                            <th class="bg-light-400 border" width="10%">Jumlah Siswa</th>
+                            @if (Request::is('class/time'))
+                            <th class="bg-light-400 border" width="10%">Jam Masuk</th>
+                            <th class="bg-light-400 border" width="10%">Jam Pulang</th>
+                            @endif
+                            <th class="bg-light-400">status</th>
 
 
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
                         $no=1;
-                    @endphp
-                    @foreach ($kelas as $item)
+                        @endphp
+                        @foreach ($kelas as $item)
 
-                    <tr class="odd">
-                        <td>{{ $no++ }}</td>
+                        <tr class="odd">
+                            <td>{{ $no++ }}</td>
 
-                        <td>
-                            @if(Request::is('class/list'))
-                                <a href="{{ route('absensiClassManagement') }}?mapel=&tahun=&kelas={{ $item->id }}&tanggal={{ date('d/m/Y') }}" class="link-primary">{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</a>
+                            <td>
+                                @if(Request::is('class/list'))
+                                <a href="{{ route('absensiClassManagement') }}?mapel=&tahun=&kelas={{ $item->id }}&tanggal={{ date('d/m/Y') }}"
+                                    class="link-primary">{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan
+                                    }} {{ $item->sub_kelas }}</a>
+                                @elseif(Request::is('class/time'))
+                                <a>{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas
+                                    }}</a>
+                                @else
+                                <a href="{{ route('list',$item->id) }}" class="link-primary">{{ $item->nama_kelas }} -
+                                    {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</a>
+                                @endif
 
-                            @else
-                                <a href="{{ route('list',$item->id) }}" class="link-primary">{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</a>
+                            </td>
+
+                            <td class="border">
+                                <center><b> {{ $item->jmlRombel->count() }}</b> <span class="ti ti-users"></span>
+                                </center>
+                            </td>
+                            @if (Request::is('class/time'))
+                            <td hidden><input type="text" name="id_kelas[]" value="{{ $item->id }}"></td>
+                            <td class="border"><input type="time" name="jam_masuk[]" id="time" value="{{ $item->inOutTime->jam_masuk ?? ''}}" class="form-control"></td>
+                            <td class="border"><input type="time" name="jam_keluar[]"  value="{{ $item->inOutTime->jam_pulang ?? ''}}" class="form-control"></td>
                             @endif
-
-                        </td>
-
-                        <td class="border">
-                           <center><b> {{ $item->jmlRombel->count() }}</b> <span class="ti ti-users"></span></center></td>
-                        <td>
-                            @if($item->status == '1')
-                            <span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>
-                            @else
-                            <span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak Aktif</span>
-                            @endif
-                        </td>
-                    </tr>
-
-                    @endforeach
-                </tbody>
-            </table>
+                            <td>
+                                @if($item->status == '1')
+                                <span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>
+                                @else
+                                <span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak
+                                    Aktif</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @if (Request::is('class/time'))
+                <div class="d-flex justify-content-end m-2">
+                    <button class="btn btn-primary">Simpan Data</button>
+                </div>
+                @endif
+            </form>
         </div>
     </div>
 
@@ -101,6 +139,6 @@
         }
       }
     }
-    </script>
+</script>
 @endsection
 @endsection

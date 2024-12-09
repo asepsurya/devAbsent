@@ -28,7 +28,7 @@
             <a data-bs-toggle="modal" href="#ref" class=" btn btn-outline-light me-1"><span class="ti ti-settings"></span>
                 Referensi</a>
         </div>
-     
+
 
     </div>
 </div>
@@ -49,22 +49,21 @@
         </div>
         <div class="card-body p-0 m-0">
             <div class="m-3">
-                <a id="addRowBtn" class="btn btn-success mb-3 btn-sm mx-1">+ Tambah Jadwal</a>
-                <a id="addRowRef" class="btn btn-primary mb-3 btn-sm">+ Tambah Referensi</a>
+                <a id="addRowBtn" class="btn btn-success mb-3 mx-1">+ Tambah Jadwal</a>
+                <a id="addRowRef" class="btn btn-primary mb-3 ">+ Tambah Referensi</a>
             </div>
-            <input class="id_kelas" value="{{ $id }}" name="id_kelas" hidden>
-            <table class="table  input-table" id="draggable-table">
+            <input class="id_kelas" value="{{ $id }}" name="id_kelas" hidden >
+            <table class="table  input-table table table-nowrap mb-0" id="draggable-table">
                 <thead>
                     <tr>
                         <th class="bg-light-400">#</th>
+                        <th class="bg-light-400 border"></th> <!-- Column for the Delete Button -->
                         <th class="bg-light-400 border">Hari</th>
                         <th class="bg-light-400 border">Mata Pelajaran</th>
                         <th class="bg-light-400 border">Guru Pengajar</th>
                         <th class="bg-light-400 border"><span class="ti ti-clock"></span> Start</th>
                         <th class="bg-light-400 border"><span class="ti ti-clock"></span> End</th>
-                        <th class="bg-light-400 border"><span class="ti ti-certificate"></span> SK</th>
-                        <th class="bg-light-400 border"><span class="ti ti-calendar-due"></span> Tanggal SK</th>
-                        <th class="bg-light-400 border">Action</th> <!-- Column for the Delete Button -->
+
                     </tr>
                 </thead>
                 <tbody>
@@ -76,6 +75,7 @@
                     @if($jadwal->count())
                     <tr>
                         <td class="border">{{ $no++ }}</td>
+                        <td class="border"><a href="{{ route('leassonDelete',$key->id) }}" type="button" class=" btn btn-outline-light" ><span class="ti ti-trash"></span></button></td>
                         <td class="border" style="width: 200px;"><select name="day[]" class="form-control hari" required>
                                 <option value="1" {{ $key->day == '1' ?'selected':'' }}>Senin</option>
                                 <option value="2" {{ $key->day == '2' ?'selected':'' }}>Selasa</option>
@@ -95,14 +95,14 @@
                                 <option value="{{ $a->id_mapel }}">{{ $a->mata_pelajaran->nama }}</option>
                                 @endforeach
                                 @else
-                                <option selected value="{{ $key->id_mapel  }}"">{{ $key->ref->ref ?? '' }}</option>
+                                <option selected value="{{ $key->id_mapel  }}">{{ $key->ref->ref ?? '' }}</option>
                                  @foreach($ref2 as $b)
                                     <option value="{{ $b->ref_ID }} ">{{ $b->ref }}</option>
                                 @endforeach
                             @endif
-                        </select></td>  
+                        </select></td>
                     <td class=" border" style="width: 350px;">
-                                    <select name="id_gtk[]" class="form-control guru">
+                                    <select name="id_gtk[]" class="form-control guru id_gtk" >
                                         <option>-Pilih Guru Pengajar-</option>
                                         @foreach ($gtk as $item )
                                         <option value="{{ $item->nik }}" {{ $item->nik == $key->id_gtk ? 'selected' :''}}>{{ $item->nama }}</option>
@@ -111,108 +111,21 @@
                         </td>
                         <td class="border"><input type="time" name="start[]" class="form-control" value="{{ $key->start }}"></td>
                         <td class="border"><input type="time" name="end[]" class="form-control" value="{{ $key->end }}"></td>
-                        <td class="border"><input type="text" name="sk[]" class="form-control" value="{{ $key->sk }}"></td>
-                        <td class="border"><input type="date" name="tanggal_sk[]" class="form-control" value="{{ $key->tanggal_sk }}"></td>
-                        <td class="border"><a href="{{ route('leassonDelete',$key->id) }}" type="button" class="btn btn-small btn-danger" >X</button></td>
+
+
                     </tr>
+
+
                     @endif
 
                     @endforeach
             </table>
-
-            {{-- <div class="table-responsive">
-            <table class="table table-nowrap mb-0">
-                <thead>
-                    <tr>
-                        <th class="bg-light-400">#</th>
-                        <th class="bg-light-400" width="2%"></th>
-                        <th class="bg-light-400 border">Hari</th>
-                        <th class="bg-light-400">Mata Pelajaran</th>
-                        <th class="bg-light-400">Guru Pengajar</th>
-                        <th class="bg-light-400"><span class="ti ti-clock"></span> Start</th>
-                        <th class="bg-light-400"><span class="ti ti-clock"></span> End</th>
-                        <th class="bg-light-400"><span class="ti ti-calendar-due"></span> Status</th>
-                        <th class="bg-light-400"><span class="ti ti-certificate"></span> SK</th>
-                        <th class="bg-light-400"><span class="ti ti-calendar-due"></span> Tanggal SK</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                    $no=1;
-                    @endphp
-
-                    @if($jadwal->count())
-                    @foreach ($jadwal as $item )
-                    <tr>
-                        <td><a href="#">{{ $no++ }}</a></td>
-            <td>
-                <div class="hstack ">
-                    <a href="{{ route('leassonDelete',$item->id) }}" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><span class="ti ti-trash"></span></a>
-            </td>
-            <td class="border">
-                @if($item->day == 1)
-                Senin
-                @elseif ($item->day == 2)
-                Selasa
-                @elseif ($item->day == 3)
-                Rabu
-                @elseif ($item->day == 4)
-                Kamis
-                @elseif ($item->day == 5)
-                Jum'at
-                @elseif ($item->day == 6)
-                Sabtu
-                @elseif ($item->day == 7)
-                Minggu
-                @endif
-            </td>
-            <td>
-                @if($item->mata_pelajaran)
-                <b>{{ $item->mata_pelajaran->nama }}</b>
-                @else
-                <b>{{ $item->ref->ref }}</b>
-                @endif
-            </td>
-            <td>
-                @if($item->id_gtk == '')
-                Belum Disetel
-                @else
-                {{ $item->guru->nama }}
-                @endif
-            </td>
-            <td>
-                {{ $item->start }}
-            </td>
-            <td>
-                {{ $item->end }}
-            </td>
-            <td>
-                @if($item->status == 1)
-                <span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>
-                @else
-                <span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak AKtif</span>
-                @endif
-            </td>
-            <td>{{ $item->sk == '' ? '-' : $item->sk }}</td>
-            <td>{{ $item->tanggal_sk == '' ? '-' : $item->tanggal_sk }}</td>
-            </tr>
-            @endforeach
-            @else
-            <tr>
-                <td colspan="10">
-                    <center class="m-5"> <span class="ti ti-mood-confuzed"></span> Data masih kosong</center>
-                </td>
-            </tr>
-            @endif
-            </tbody>
-            </table>
-        </div> --}}
     </div>
 
     <div class="d-flex justify-content-end m-4">
         <button class="btn btn-primary" type="submit">Simpan Data </button>
     </div>
-    
+
 
 </form>
 
@@ -328,6 +241,7 @@
 
 
 @section('javascript')
+>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 @if (session('refresh'))
@@ -335,205 +249,253 @@
         window.location.reload();
     </script>
 @endif
+
 <script>
-   // Function to populate the GTK (id_gtk) dropdown dynamically using $gtk data
-function populateGtkDropdown(row) {
-    const gtkData = @json($gtk); 
-    const gtkDropdown = row.querySelector('.id_gtk'); // Get the select element for id_gtk
+    // Function to populate the GTK (id_gtk) dropdown dynamically using $gtk data
+    function populateGtkDropdown(row, selectedMataPelajaran, source) {
+        const gtkData = @json($gtk); // Assuming $gtk contains GTK data
+        const gtkDropdown = row.querySelector('.id_gtk'); // Get the select element for id_gtk
 
-    // Clear existing options
-    gtkDropdown.innerHTML = '<option value="">Pilih GTK</option>';
+        // Clear existing options
+        gtkDropdown.innerHTML = '<option value="">Pilih GTK</option>';
 
-    // Loop through the gtkData and add options
-    gtkData.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.nik;  // Use 'nik' as the value
-        option.textContent = `${item.nik} - ${item.nama}`;  // Display 'nik' and 'nama' in the option text
-        gtkDropdown.appendChild(option);
-    });
-}
+        // Loop through the gtkData and add options
+        gtkData.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.nik;  // Use 'nik' as the value
+            option.textContent = `${item.nama}`;  // Display 'nik' and 'nama' in the option text
 
-// Function to add a new row dynamically
-function addRow(source) {
-    let rowCount = 1;
-    // Get the table body
-    const tbody = document.querySelector('#draggable-table tbody');
-    
-    // Create a new row element
-    const newRow = document.createElement('tr');
-    newRow.setAttribute('draggable', 'true');
-    newRow.classList.add('drag-item');
+            // If the GTK belongs to the selected Mata Pelajaran and source is not 'ref', pre-select it
+            if (source !== 'ref' && item.mata_pelajaran && item.mata_pelajaran.nama === selectedMataPelajaran) {
+                option.selected = true;
+            }
 
-    // Define the data for the row (inputs for each column)
-    const rowData = [
-        // Automatically add row number
-        `<td class=" border"><span class="ti ti-grip-vertical"></span></td>`, // Row number (not an input)
-        
-        // Dropdown for Hari (Day of the week)
-        `<td class=" border" style="width: 150px;"><select name="day[]" class="form-control hari" required>
-                <option value="1">Senin</option>
-                <option value="2">Selasa</option>
-                <option value="3">Rabu</option>
-                <option value="4">Kamis</option>
-                <option value="5">Jumat</option>
-                <option value="6">Sabtu</option>
-                <option value="7">Minggu</option>
-            </select></td>`,
-
-        // Dropdown for Mata Pelajaran (Mapel)
-        `<td class=" border" style="width: 300px;"><select name="id_mapel[]" class="form-control mapel" required>
-                <option value="">Pilih Mata Pelajaran</option>
-                <!-- Dynamic options for Mata Pelajaran will be inserted here -->
-            </select></td>`,
-
-        // GTK Dropdown
-        `<td class=" border" style="width: 350px;"><select name="id_gtk[]" class="form-control id_gtk"></select></td>`,
-    
-        '<td class=" border"><input type="time" name="start[]" class="form-control"></td>',
-        '<td class=" border"><input type="time" name="end[]" class="form-control"></td>',
-        '<td class=" border"><input type="text" name="sk[]" class="form-control"></td>',
-        '<td class=" border"><input type="date" name="tanggal_sk[]" class="form-control"></td>',
-        
-        // Action Column with Delete Button
-        `<td class=" border"><button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button></td>`
-    ];
-
-    // Insert each <td> into the new row
-    rowData.forEach(data => {
-        newRow.innerHTML += data;
-    });
-
-    // Append the new row to the table body
-    tbody.appendChild(newRow);
-
-    // Populate the dropdown based on the selected data source
-    if (source === 'mapel') {
-        populateMapelDropdown(newRow); // Use $mapel data
-    } else if (source === 'ref') {
-        populateRefDropdown(newRow); // Use $ref data
+            gtkDropdown.appendChild(option);
+        });
     }
 
-    // Populate the GTK dropdown with the data from $gtk
-    populateGtkDropdown(newRow); // Populate GTK (id_gtk)
+    // Function to add a new row dynamically at the top of the table
+    function addRow(source) {
+        let rowCount = 1;
+        const tbody = document.querySelector('#draggable-table tbody');
 
-    // Initialize Select2 on the newly added selects
-    initializeSelect2();
+        // Create a new row element
+        const newRow = document.createElement('tr');
+        newRow.setAttribute('draggable', 'true');
+        newRow.classList.add('drag-item');
 
-    // Increment the rowCount for the next row
-    rowCount++;
+        // Define the data for the row (inputs for each column)
+        const rowData = [
+            `<td class="border"><span class="ti ti-grip-vertical"></span></td>`, // Row number (not an input)
+            `<td class="border"><button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button></td>`,
+            `<td class="border" style="width: 150px;">
+                <select name="day[]" class="form-control hari" required>
+                    <option value="1">Senin</option>
+                    <option value="2">Selasa</option>
+                    <option value="3">Rabu</option>
+                    <option value="4">Kamis</option>
+                    <option value="5">Jumat</option>
+                    <option value="6">Sabtu</option>
+                    <option value="7">Minggu</option>
+                </select>
+            </td>`,
+            `<td class="border" style="width: 300px;">
+                <select name="id_mapel[]" class="form-control mapel" required>
+                    <option value="">Pilih Mata Pelajaran</option>
+                </select>
+            </td>`,
+            `<td class="border" style="width: 350px;">
+                <select name="id_gtk[]" class="form-control id_gtk"></select>
+            </td>`,
+            '<td class="border"><input type="time" name="start[]" class="form-control"></td>',
+            '<td class="border"><input type="time" name="end[]" class="form-control"></td>',
+            '<td class="border" hidden><input type="text" name="sk[]" class="form-control"></td>',
+            '<td class="border" hidden><input type="date" name="tanggal_sk[]" class="form-control"></td>',
 
-    // Reapply the drag-and-drop functionality (in case the table is updated)
-    addDragAndDropFunctionality();
-}
+        ];
 
-// Function to populate the Mata Pelajaran (Mapel) dropdown dynamically using $mapel data
-function populateMapelDropdown(row) {
-    const mapelData = @json($mapel);
-    const mapelDropdown = row.querySelector('.mapel'); // Get the select element for mapel
-
-    // Clear existing options
-    mapelDropdown.innerHTML = '<option value="">Pilih Mata Pelajaran</option>';
-
-    // Loop through the mapelData and add options
-    mapelData.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.id_mapel;
-        option.textContent = item.mata_pelajaran.nama;
-        mapelDropdown.appendChild(option);
-    });
-}
-
-// Function to populate the Mata Pelajaran (Mapel) dropdown dynamically using $ref data
-function populateRefDropdown(row) {
-    const refData = @json($ref2);
-    const mapelDropdown = row.querySelector('.mapel'); // Get the select element for mapel
-
-    // Clear existing options
-    mapelDropdown.innerHTML = '<option value="">Pilih Referensi</option>';
-
-    // Loop through the refData and add options
-    refData.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.ref_ID;
-        option.textContent = item.ref;
-        mapelDropdown.appendChild(option);
-    });
-}
-
-// Function to initialize Select2 on dynamically added select elements
-function initializeSelect2() {
-    $('#draggable-table select').select2({
-        width: '100%' // Ensures Select2 width adapts to the table cell
-    });
-}
-
-// Function to delete a row
-function deleteRow(button) {
-    const row = button.closest('tr');
-    row.remove();
-    rowCount--; // Decrease the row count after deletion
-}
-
-// Function to add drag-and-drop functionality to rows
-function addDragAndDropFunctionality() {
-    const rows = document.querySelectorAll('.drag-item');
-    let draggedRow = null;
-
-    rows.forEach(row => {
-        row.addEventListener('dragstart', (e) => {
-            draggedRow = row;
-            setTimeout(() => {
-                row.classList.add('dragging');
-            }, 0);
+        // Insert each <td> into the new row
+        rowData.forEach(data => {
+            newRow.innerHTML += data;
         });
 
-        row.addEventListener('dragend', () => {
-            setTimeout(() => {
-                draggedRow.classList.remove('dragging');
-                draggedRow = null;
-            }, 0);
-        });
+        // Prepend the new row to the table body (adds the row to the top)
+        tbody.insertBefore(newRow, tbody.firstChild);
 
-        row.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            const draggedOverRow = e.target.closest('tr');
-            if (draggedOverRow && draggedOverRow !== draggedRow) {
-                draggedOverRow.classList.add('drag-placeholder');
+        // Get the selected Mata Pelajaran for the new row
+        let selectedMataPelajaran = '';
+        if (source === 'mapel') {
+            populateMapelDropdown(newRow); // Populate Mata Pelajaran dropdown
+        } else if (source === 'ref') {
+            populateRefDropdown(newRow); // Populate Ref dropdown
+        }
+
+        // Populate GTK dropdown based on selected Mata Pelajaran and source
+        populateGtkDropdown(newRow, selectedMataPelajaran, source);
+
+        // Initialize Select2 on the newly added selects
+        initializeSelect2();
+
+        // Increment the rowCount for the next row
+        rowCount++;
+
+        // Reapply the drag-and-drop functionality (in case the table is updated)
+        addDragAndDropFunctionality();
+    }
+
+    // Function to populate the Mata Pelajaran (Mapel) dropdown dynamically using $mapel data
+    function populateMapelDropdown(row) {
+        const mapelData = @json($mapel); // Assuming $mapel contains Mata Pelajaran data
+        const mapelDropdown = row.querySelector('.mapel'); // Get the select element for mapel
+
+        // Clear existing options
+        mapelDropdown.innerHTML = '<option value="">Pilih Mata Pelajaran</option>';
+
+        // Loop through the mapelData and add options
+        mapelData.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.id_mapel;
+            option.textContent = item.mata_pelajaran.nama;
+            mapelDropdown.appendChild(option);
+        });
+    }
+
+    // Function to populate the Ref dropdown dynamically using $ref data
+    function populateRefDropdown(row) {
+        const refData = @json($ref2); // Assuming $ref2 contains Ref data
+        const mapelDropdown = row.querySelector('.mapel'); // Get the select element for ref
+
+        // Clear existing options
+        mapelDropdown.innerHTML = '<option value="">Pilih Referensi</option>';
+
+        // Loop through the refData and add options
+        refData.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.ref_ID;
+            option.textContent = item.ref;
+            mapelDropdown.appendChild(option);
+        });
+    }
+
+    // Function to initialize Select2 on dynamically added select elements
+    function initializeSelect2() {
+        $('#draggable-table select').select2({
+            width: '100%' // Ensures Select2 width adapts to the table cell
+        });
+    }
+
+    // Function to delete a row
+    function deleteRow(button) {
+        const row = button.closest('tr');
+        row.remove();
+    }
+
+    // Function to add drag-and-drop functionality to rows
+    function addDragAndDropFunctionality() {
+        const rows = document.querySelectorAll('.drag-item');
+        let draggedRow = null;
+
+        rows.forEach(row => {
+            row.addEventListener('dragstart', (e) => {
+                draggedRow = row;
+                setTimeout(() => {
+                    row.classList.add('dragging');
+                }, 0);
+            });
+
+            row.addEventListener('dragend', () => {
+                setTimeout(() => {
+                    draggedRow.classList.remove('dragging');
+                    draggedRow = null;
+                }, 0);
+            });
+
+            row.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const draggedOverRow = e.target.closest('tr');
+                if (draggedOverRow && draggedOverRow !== draggedRow) {
+                    draggedOverRow.classList.add('drag-placeholder');
+                }
+            });
+
+            row.addEventListener('dragleave', () => {
+                const draggedOverRow = row.closest('tr');
+                if (draggedOverRow) {
+                    draggedOverRow.classList.remove('drag-placeholder');
+                }
+            });
+
+            row.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggedOverRow = e.target.closest('tr');
+                if (draggedOverRow && draggedOverRow !== draggedRow) {
+                    document.querySelector('tbody').insertBefore(draggedRow, draggedOverRow);
+                }
+                const allRows = document.querySelectorAll('.drag-item');
+                allRows.forEach(row => {
+                    row.classList.remove('drag-placeholder');
+                });
+            });
+        });
+    }
+
+    // Add event listener to the "Add Row" button for $mapel
+    document.getElementById('addRowBtn').addEventListener('click', function() {
+        addRow('mapel'); // Trigger the addRow function with $mapel data
+    });
+
+    // Add event listener to the "Add Row" button for $ref
+    document.getElementById('addRowRef').addEventListener('click', function() {
+        addRow('ref'); // Trigger the addRow function with $ref data
+    });
+
+    $(function(){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
 
-        row.addEventListener('dragleave', () => {
-            const draggedOverRow = row.closest('tr');
-            if (draggedOverRow) {
-                draggedOverRow.classList.remove('drag-placeholder');
-            }
-        });
+        $('#draggable-table').on('change', '.mapel', function() {
+            const mapel = $(this).val(); // Get the selected mapel ID
+            const row = $(this).closest('tr'); // Get the current row
+            const id_kelas = {{ $id }}; // Assuming $id is passed from the controller
 
-        row.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const draggedOverRow = e.target.closest('tr');
-            if (draggedOverRow && draggedOverRow !== draggedRow) {
-                document.querySelector('tbody').insertBefore(draggedRow, draggedOverRow);
-            }
-            const allRows = document.querySelectorAll('.drag-item');
-            allRows.forEach(row => {
-                row.classList.remove('drag-placeholder');
+            // Capture the current selected GTK (teacher) nik
+            const currentSelectedNik = row.find('.id_gtk').val(); // Get the selected teacher's nik
+
+            $.ajax({
+                method: "GET",
+                url: "{{ route('getgtk.leasson') }}",
+                data: {
+                    id_mapel: mapel,
+                    id_kelas: id_kelas,
+                    existing_nik: currentSelectedNik // Send current value of the GTK as existing_nik
+                },
+                success: function(data) {
+                    row.find('.id_gtk option:selected').remove(); // Remove selected option to avoid duplication
+                    // Add the new options based on the response data
+
+                    row.find('.id_gtk').append(data.a);
+
+                    // Optionally, select the previously selected GTK based on the response
+                    if (currentSelectedNik && currentSelectedNik === data.selectedNik) {
+                        row.find('.id_gtk').val(currentSelectedNik).trigger('change');; // Keep the same value selected
+                    } else if (data.selectedNik) {
+                        // Optionally, select the new selected GTK
+                        row.find('.id_gtk').val(data.selectedNik).trigger('change');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error fetching GTK data: " + error);
+                }
             });
         });
     });
-}
-
-// Add event listener to the "Add Row" button for $mapel
-document.getElementById('addRowBtn').addEventListener('click', function() {
-    addRow('mapel'); // Trigger the addRow function with $mapel data
-});
-
-// Add event listener to the "Add Row" button for $ref
-document.getElementById('addRowRef').addEventListener('click', function() {
-    addRow('ref'); // Trigger the addRow function with $ref data
-});
-
 </script>
+
+
+
 
 
 
@@ -566,36 +528,9 @@ document.getElementById('addRowRef').addEventListener('click', function() {
 
 </script>
 
+
 <script>
-    $(function(){
-        $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
-                });
 
-        $('#mapel').on('change',function(){
-            let mapel = $('.mapel').val();
-            let id_kelas = $('.id_kelas').val();
-            // var value = e.value;
-            $.ajax({
-
-                method:"POST",
-                url:"{{ route('getgtk') }}",
-                cache:false,
-                data : {
-                    id_mapel:mapel,
-                    id_kelas:id_kelas
-                },
-                success: function(data){
-                    $('.id_gtk').html(data.a);
-                    $('.name_gtk').val(data.b);
-                }
-            });
-
-        })
-    })
-</script>
-<script>
     var body = document.body;
     body.classList.add("mini-sidebar");
 </script>
@@ -607,6 +542,11 @@ document.getElementById('addRowRef').addEventListener('click', function() {
     $("#tab2").click(function(){
         $("#type").val('mapel');
     });
+</script>
+
+
+<script>
+
 </script>
 @endsection
 @endsection

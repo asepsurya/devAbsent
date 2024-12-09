@@ -19,5 +19,8 @@ class Kelas extends Model
     public function walikelas(){
         return $this->belongsTo('App\Models\walikelas','id','id_kelas');
     }
+    public function inOutTime(){
+        return $this->belongsTo('App\Models\inOutTime','id','id_kelas');
+    }
 
 }

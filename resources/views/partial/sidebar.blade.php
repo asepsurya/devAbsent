@@ -93,7 +93,7 @@
                         </li>
                         @endcan
                         @can('management_absent')
-                        <li  class="{{ Request::is('class*') ? 'active' : ''}}">
+                        <li  class="{{ Request::is('class/list') || Request::is('class/absensi/management*')  ? 'active' : ''}}">
                             <a href="/class/list" ><i class="ti ti-list-details"></i><span>Management Absensi</span></a>
                         </li>
                         @endcan
@@ -208,7 +208,10 @@
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Jadwal</span></h6>
-                        <li class="{{ Request::is('class/leasson*') ? 'active' : ''}}">
+                        <li class="{{ Request::is('class/time') ? 'active' : ''}}">
+                            <a href="/class/time"><i class="ti ti-clock-hour-2"></i><span>Jam Masuk dan Pulang</span></a>
+                        </li>
+                        <li class="{{ Request::is('class/leasson') ? 'active' : ''}}">
                             <a href="/class/leasson"><i class="ti ti-notebook"></i><span>Pelajaran</span></a>
                         </li>
                         <li  class="{{ Request::is('holidays') ? 'active' : ''}}">
@@ -221,7 +224,7 @@
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Report</span></h6>
-                        
+
                         <li>
                             <ul>
                                 <li class="submenu">
@@ -238,7 +241,7 @@
                                 </li>
                             </ul>
                         </li>
-                        
+
                         {{-- @can('setelan_aplikasi')
                         <li>
                             <ul>

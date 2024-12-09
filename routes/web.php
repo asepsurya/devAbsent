@@ -20,6 +20,7 @@ use App\Http\Controllers\pengaturanAkademik;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataIndukController;
+use App\Http\Controllers\inOutTimeController;
 use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\FullCalenderController;
@@ -192,7 +193,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/class/leasson/add',[leassonController::class,'leassonAdd'])->name('leassonAdd');
     Route::get('/class/leasson/delete{id}',[leassonController::class,'leassonDelete'])->name('leassonDelete');
     Route::get('/class/leasson/list/{id}',[leassonController::class,'list'])->name('list');
-    Route::get('/class/leasson/getgtk',[leassonController::class,'getgtk'])->name('getgtk');
+    Route::get('/class/leasson/getgtk',[leassonController::class,'getgtk'])->name('getgtk.leasson');
 
     // Apps Config Controller
     Route::get('/setelan/aplikasi', [AppsConfigController::class, 'app'])->name('setelan.app');
@@ -228,6 +229,9 @@ Route::get('/report/absent/students', [reportController::class, 'reportAbsentStu
 
 Route::get('/qr/{code}', [barcodeController::class, 'generateQRCode'])->name('qr.generate');
 Route::get('/card', [barcodeController::class, 'card'])->name('card');
+Route::get('/class/time', [inOutTimeController::class, 'indexClass'])->name('index.class');
+Route::post('/class/time/update', [inOutTimeController::class, 'classTimeUpdate'])->name('time.update');
+
 
 
 

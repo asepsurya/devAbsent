@@ -49,17 +49,37 @@ class leassonController extends Controller
     }
 
     public function getgtk(request $request){
-        $data = grupMapel::where(['id_mapel'=> $request->mapel, 'id_kelas'=> $request->id_kelas])->get();
-        foreach($data as $i){
-            if($i->id_gtk == ''){
+        $data = grupMapel::where(['id_mapel' => $request->id_mapel, 'id_kelas' => $request->id_kelas])->get();
+        $gtk = gtk::all();
+        $options = []; // Initialize an array to store options
+        $selectedNik = null; // Assuming you want to set the selected NIK
+
+        foreach ($data as $i) {
+            // Ensure the 'id_mapel' matches, otherwise skip this iteration
+
+
+            // Determine the name of the GTK
+            if ($i->id_gtk == '' ) {
                 $nama = 'BELUM DISETEL';
-            }else{
+            } else {
                 $nama = $i->guru->nama;
             }
-            return [
-                'a' => "<option value='$i->id_gtk'> $i->id_gtk </option>",
-                'b'=> $nama];
+
+
+            $options[] = "<option value='" . htmlspecialchars($i->id_gtk, ENT_QUOTES, 'UTF-8') . "' selected>" . htmlspecialchars($nama, ENT_QUOTES, 'UTF-8') . "</option>";
+
+            // If you want to remember the selected 'nik', you can set the selectedNik here.
+            if ($i->id_gtk == $request->existing_nik) { // Assuming $request->existing_nik contains the current NIK
+                $selectedNik = $i->id_gtk;
+            }
         }
+
+        return response()->json([
+            'a' => implode('', $options), // Join all options into a single string
+            'selectedNik' => $selectedNik, // Send back the selected NIK
+        ]);
+
+
     }
     public function leassonAdd(request $request){
      // Get all the submitted data
@@ -70,7 +90,7 @@ class leassonController extends Controller
      $ends = $request->input('end');  // Array of end times
      $sk = $request->input('sk');  // Array of SK values
      $tanggalSk = $request->input('tanggal_sk');  // Array of SK dates
- 
+
      // Define an array for day names
      $daysNames = [
          1 => 'Senin',
@@ -81,17 +101,17 @@ class leassonController extends Controller
          6 => 'Sabtu',
          7 => 'Minggu'
      ];
- 
+
      // Loop through the arrays and store the data
      for ($i = 0; $i < count($days); $i++) {
          // Check if the lesson already exists for the given day, mapel, gtk, and tahun_ajar
          $cek = Lesson::where([
              'day' => $days[$i],
              'id_mapel' => $mapelIds[$i],
-            
+
              'id_tahun_ajar' => $request->tahun_ajar
          ])->first();  // Use `first()` to get the first match or null
- 
+
          // If the lesson exists, update the existing record
          if ($cek) {
              $cek->update([
@@ -102,7 +122,7 @@ class leassonController extends Controller
                  'tanggal_sk' => $tanggalSk[$i] ?? null,
                  'status' => '1',
              ]);
- 
+
              $hari = $daysNames[$days[$i]] ?? 'Unknown';  // Get the day name or 'Unknown' if not found
              toastr()->success("Mata Pelajaran pada hari $hari telah diperbarui.");
          } else {
@@ -123,12 +143,12 @@ class leassonController extends Controller
              toastr()->success("Mata Pelajaran pada hari $hari telah ditambahkan.");
          }
      }
- 
+
      // Redirect back with a success message
      return redirect()->back()->with('refresh', 'Action was successful!');
 
     }
-    
+
     public function leassonDelete($id){
         Lesson::where('id',$id)->delete();
         toastr()->success('Data Berhasil dihapus');

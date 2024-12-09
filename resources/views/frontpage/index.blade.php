@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
@@ -39,7 +39,10 @@
             <a class="navbar-brand" href="/"><img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" alt=""  width="50px"/></a>
             <h5 class=" mt-3">{{ app('settings')['site_name'] }}</h5>
             </div>
-          <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto ms-lg-5 ms-xl-8 border-bottom border-lg-bottom-0 ">
               <li class="nav-item"><a class="nav-link fw-medium active" aria-current="page" href="#section1"> Beranda</a></li>
@@ -217,9 +220,12 @@
                                 </thead>
 
                                     <tbody id="myData"></tbody>
-
+                                    <div id="loadingSpinner" class="mt-2" style="display:none;">
+                                        <center><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading data...</center>
+                                      </div>
                             </table>
                         </div>
+                        <!-- Loading Spinner (Hidden by default) -->
 
                     </div>
                 </div>
@@ -267,7 +273,7 @@
       <!-- <section> close ============================-->
       <!-- ============================================-->
 
-      <section class="bg-100 pb-0 mb-0" id="section3">
+      {{-- <section class="bg-100 pb-0 mb-0" id="section3">
         <div class="container">
           <div class="row flex-center">
             <div class="col-xl-5 text-center mb-5 z-index-1">
@@ -281,7 +287,7 @@
           <!--/.bg-holder-->
           <img class="img-fluid position-relative z-index-1" src="{{ asset('landing/img/gallery/people.png') }}" alt="" />
         </div>
-      </section>
+      </section> --}}
 
       {{-- <section class="py-0">
 
@@ -304,17 +310,17 @@
       <!-- ============================================-->
       <!-- <section> begin ============================-->
 
-      <section class="bg-info pt-0 pb-0">
+      <section class=" pt-0 pb-0">
         <div class="container">
-          <div class="row justify-content-sm-between py-6">
-           
-          </div>
+          {{-- <div class="row justify-content-sm-between py-6">
+
+          </div> --}}
           {{-- <div class="row flex-center">
             <div class="col-auto py-4"><a href="#"><img class="img-fluid" src="{{ asset('asset/img/logo-white.png') }}" alt="" width="200" /></a></div>
           </div> --}}
           <hr class="opacity-25" />
-         <div class="row justify-content-lg-around pb-3 text-white">
-            Copyright 2024 | Absensi Sakti
+         <div class="d-flex justify-content-center pb-3">
+            <p>&copy; <span id="year"></span> Absensi Sakti. All rights reserved.</p>
          </div>
         </div><!-- end of .container-->
 
@@ -346,10 +352,10 @@
       </div>
       <div class="modal-body" id="modalBody">
         ...
-         
+
       </div>
-      <div class="modal-footer"> 
-      </div>
+      {{-- <div class="modal-footer">
+      </div> --}}
     </div>
   </div>
 </div>
@@ -364,15 +370,14 @@
      <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
 
     <script>
-       
+         document.getElementById('year').textContent = new Date().getFullYear();
         function menuToggle() {
           const toggleMenu = document.querySelector(".menu");
           toggleMenu.classList.toggle("active");
         }
       </script>
 
-
-   <script>
+<script>
 let modalOpen = false;  // Flag to track if the modal is open
 let lastData = null; // To track the last data to compare with new data
 
@@ -408,8 +413,6 @@ function refreshdata() {
                     // Only open the modal if it's not already open
                     if (!modalOpen) {
                         // Play text-to-voice message before showing the modal
-                        playTextToVoice(`Selamat datang, ${data.nama}. Terimakasih sudah absen hari ini.`);
-
                         // Show the modal after the voice message is played
                         setTimeout(() => {
                             $('#successModal').modal('show');
@@ -417,30 +420,49 @@ function refreshdata() {
 
                             // Dynamically insert data into modal body
                             $('#modalBody').html(
-    '<div class="d-flex justify-content-center mb-3">' +
-        // Check if 'data.foto' is not null or undefined
-        (data.foto ? 
-            '<img src="/storage/' + data.foto + '" class="avatar me-4 avatar-rounded" style="width: 150px; height: 150px;" alt="foto">' : 
-            '<img src="{{ asset("asset/img/user-default.jpg") }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto">'
-        ) +
-    '</div>' +
-    '<div class="p-3">' +
-        '<div class="mb-3"><label>NIS</label><input class="form-control" value="' + data.id + '" disabled></div>' +
-        '<div class="mb-3"><label>Nama Lengkap</label><input class="form-control" value="' + data.nama + '" disabled></div>' +
-        '<div class="mb-3"><label>Sudah Absen pada Pukul</label><input class="form-control" value="' + data.jam + '" disabled></div>' +
-    '</div>'
-);
+                            '<div class="d-flex justify-content-center mb-3">' +
+                                // Check if 'data.foto' is not null or undefined
+                                (data.foto ?
+                                    '<img src="/storage/' + data.foto + '" class="avatar me-4 avatar-rounded" style="width: 150px; height: 150px;" alt="foto">' :
+                                    '<img src="{{ asset("asset/img/user-default.jpg") }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto">'
+                                ) +
+                            '</div>' +
+                            '<div class="p-3">' +
+                                '<div class="mb-3"><label>NIS</label><input class="form-control" value="' + data.id + '" disabled></div>' +
+                                '<div class="mb-3"><label>Nama Lengkap</label><input class="form-control" value="' + data.nama + '" disabled></div>' +
+                                '<div class="mb-3"><label>Sudah Absen pada Pukul</label>'+
+                                    '<p><h1>'+data.jam+'</h1></p>'+
+
+                                '<div class="countdown">' +
+                                    '<small><i>Halaman ini akan ditutup secara otomatis dalam ' +
+                                    '<span id="countdownNumber">3</span> detik</i></small>' +
+                                '</div>' +
+                            '</div>'
+                        );
+
+                        // Countdown Timer Logic
+                        let countdown = 3; // Countdown time in seconds
+                        let countdownInterval = setInterval(function() {
+                            countdown--; // Decrease the countdown value by 1
+                            $('#countdownNumber').text(countdown); // Update the countdown number on the page
+
+                            if (countdown <= 0) {
+                                clearInterval(countdownInterval); // Stop the interval when the countdown reaches 0
+                                $('#myModal').modal('hide'); // Assuming you're using Bootstrap for the modal
+                            }
+                        }, 1000); // Run the interval every 1 second
+
 
 
                             // Update the lastData to the new data
                             lastData = data;
-
+                           // playTextToVoice(`Selamat datang, ${data.nama}. Terimakasih sudah absen hari ini.`);
                             // Hide modal after 10 seconds
                             setTimeout(function () {
                                 $('#successModal').modal('hide');
                                 modalOpen = false; // Reset the flag as the modal is hidden
                             }, 10000); // 10000 milliseconds = 10 seconds
-                        }, 2000); // Wait for the voice to start before showing the modal
+                        }); // Wait for the voice to start before showing the modal
                     }
                 } else {
                     // If data is the same or no data, hide the modal if it's open
@@ -469,56 +491,95 @@ function playTextToVoice(message) {
         console.warn("Speech synthesis not supported in this browser.");
     }
 }
-
 // Refresh data every 2 seconds
-setInterval(refreshdata, 2000);
+setInterval(refreshdata, 5000);
+</script>
+<script>
+    $('#loadingSpinner').show();  // Show the loading spinner when the request starts
+    // Function to refresh data
+    function refreshdata2() {
+      var content = "";  // Start with an empty content variable
+      $.ajax({
+        url: "{{ route('listabsents') }}",  // The URL for your AJAX request
+        method: "GET",                      // HTTP method (GET or POST)
+        dataType: "json",                   // Expected data type from server
+        success: function(response) {
+          // Hide the loading spinner when the data is loaded
+          $('#loadingSpinner').hide();
 
+          if (response.length === 0) {
+            // If no data is returned, show a no data message
+            content += '<tr>' +
+                          '<td colspan="3">' +
+                            '<center><span class="ti ti-mood-confuzed"></span><i> Belum ada riwayat absensi untuk hari ini..</i>' +
+                          '</center>' +
+                        '</td>' +
+                      '</tr>';
+          } else {
+            // Directly update the table with the response data
+            content = '';  // Clear previous content
 
-    </script>
+            // We assume 'response' is an array of objects
+            response.forEach(function(item) {
+              var $alert = (item.status === 'ENTRY') ? 'alert alert-success' : 'alert alert-danger';
 
-        <script>
-            function refreshdata2(){
+              content += '<tr class="' + $alert + '">';
+              content += '<td>' + item.date + ' <span class="ti ti-clock-hour-1"></span> ' + item.time + '</td>';
 
-            var content="";
-            $.ajax({
-                url:"{{ route('listabsents') }}",
-                method:"GET",
-                dataType:"json",
-                success: function(response){
-                    if(response.length === 0){
-                        content+='<tr>'+
-                                    '<td colspan="3">'+
-                                        '<center> <span class="ti ti-mood-confuzed"></span><i> Belum ada riwayat absensi untuk hari ini..</i>'+
-                                            '</center>'+
-                                        '</td>'+
-                                    '</tr>'
-                    }else{
+              // Check if 'student' or 'gtk' exists and generate the avatar accordingly
+              if (item.student) {
+                content += '<td>' +
+                             '<div class="d-flex align-items-center">' +
+                               '<a href="#" class="avatar avatar-md">';
+                                if (!item.student.foto || item.student.foto.trim() === '') {
+                                  content += '<img src="{{ asset("asset/img/user-default.jpg") }}" class="img-fluid rounded-circle" alt="foto">';
+                                } else {
+                                  content += '<img src="/storage/' + item.student.foto + '" class="img-fluid rounded-circle" alt="foto">';
+                                }
+                content +=     '</a>' +
+                              '<div class="ms-2">' +
+                                '<p class="mb-0">' + item.student.nama + '</p>' +
+                              '</div>' +
+                            '</div>' +
+                          '</td>';
+              } else {
+                content += '<td>' +
+                             '<div class="d-flex align-items-center">' +
+                               '<a href="#" class="avatar avatar-md">';
+                                if (!item.gtk.gambar || item.gtk.gambar.trim() === '') {
+                                  content += '<img src="{{ asset("asset/img/user-default.jpg") }}" class="img-fluid rounded-circle" alt="foto">';
+                                } else {
+                                  content += '<img src="/storage/' + item.gtk.gambar + '" class="img-fluid rounded-circle" alt="foto">';
+                                }
+                content +=     '</a>' +
+                              '<div class="ms-2">' +
+                                '<p class="mb-0">' + item.gtk.nama + '</p>' +
+                              '</div>' +
+                            '</div>' +
+                          '</td>';
+              }
 
-                        for(i=0;i<response.length;i++){
-                            // alert
-                            if(response[i].status == 'ENTRY'){
-                                $alert = 'alert alert-success';
-                            }else{
-                                $alert = 'alert alert-danger';
-                            }
-                            content+= '<tr class="'+$alert+'"><td>'+response[i].date+' <span class="ti ti-clock-hour-1"></span> '+response[i].time+'</td>'
-                        if(response[i].student){
-                            content += '<td>'+response[i].student.nama+ '</td>'
-                        }else{
-                            content += '<td>'+response[i].gtk.nama+ '</td>'
-                        }
-                        content+= '<td>'+response[i].status+'</td></tr>'
-                        // console.log(value['fname']);
-                    }
-                    }
-
-                    $('#myData').html(content);
-                }
+              content += '<td>' + item.status + '</td></tr>';
             });
-        }
-            setInterval(refreshdata2,5000);
+          }
 
-        </script>
+          // Insert the newly built content into the table
+          $('#myData').html(content);
+        },
+        error: function() {
+          // Hide the loading spinner in case of an error
+          $('#loadingSpinner').hide();
+          alert("Error fetching data.");
+        }
+      });
+    }
+
+    // Set the interval to refresh data every 5 seconds (5000ms)
+    setInterval(refreshdata2, 5000);
+
+    // Initial data load when the page is first loaded
+    refreshdata2();
+  </script>
 
 <script>
 function jam() {

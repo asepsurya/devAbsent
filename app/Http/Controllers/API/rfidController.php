@@ -62,14 +62,21 @@ class rfidController extends Controller
                             'out'=>$timenow,
                             'status'=>'H'
                         ]);
-                          absentsHistory::create([
+                        // method untuk tidak multiple history ketika sudah EXIT
+                          $cekhistory = absentsHistory::where([
                             'date'=>date('d/m/Y'),
-                            'time'=>$timenow,
                             'uid'=>$item->id_rfid,
-                            'status'=>$status
-                        ]);
+                            'status'=>'EXIT'
+                          ]);
 
-
+                            if($cekhistory->count() == 0){
+                                absentsHistory::create([
+                                    'date'=>date('d/m/Y'),
+                                    'time'=>$timenow,
+                                    'uid'=>$item->id_rfid,
+                                    'status'=>$status
+                                ]);
+                            }
 
                     } else {
                         // belum absen Input  jam entry
@@ -80,6 +87,7 @@ class rfidController extends Controller
                             'entry'=> $timenow,
                             'status'=>'H'
                         ]);
+
                         absentsHistory::create([
                             'date'=>date('d/m/Y'),
                             'time'=>$timenow,
@@ -131,7 +139,7 @@ class rfidController extends Controller
                     'id' =>$item->gtk->id_rfid,
                     'foto' =>$item->gtk->gambar,
                     'jam' =>$item->time,
-                    
+
                 ];
             }else{
                 return [
@@ -145,7 +153,7 @@ class rfidController extends Controller
         }
 
     }
-    
+
     public function rfidDataGET(request $request){
 
         $data = absentsHistory::where('date',date('d/m/Y'))->orderBy('id','DESC')->get();
@@ -180,6 +188,6 @@ class rfidController extends Controller
             return $item->id_rfid;
          }
          // For demonstration, return the RFID value (or process it as needed)
-        
+
     }
 }
