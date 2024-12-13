@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GTKController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\authController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\reportController;
 use App\Http\Controllers\AbsensiController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\DataIndukController;
 use App\Http\Controllers\inOutTimeController;
 use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\AppsConfigController;
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\verifikasiUserController;
 
@@ -199,14 +201,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/setelan/aplikasi', [AppsConfigController::class, 'app'])->name('setelan.app');
     Route::get('/setelan/customize', [AppsConfigController::class, 'customize'])->name('setelan.customize');
     Route::post('/setelan/aplikasi/change', [AppsConfigController::class, 'appChange'])->name('setelan.appChange');
+    Route::get('/kalender',[FullCalenderController::class,'kalender']);
+    Route::get('/events', [EventController::class, 'index']);  // Fetch events
+    Route::post('/events/create', [EventController::class, 'create']);  // Create new event
+    Route::get('/events/{id}', [EventController::class, 'destroy']);
+
+    Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
+    Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
+    Route::post('/announcements/update', [AnnouncementController::class, 'update'])->name('announcements.update');
 });
 Route::post('/logout',[authController::class,'logout'])->name('logout');
 // route Regency Administrasi
 Route::post('/getkabupaten',[RegionController::class,'getkabupaten'])->name('getkabupaten');
 Route::post('/getkecamatan',[RegionController::class,'getkecamatan'])->name('getkecamatan');
 Route::post('/getdesa',[RegionController::class,'getdesa'])->name('getdesa');
+Route::post('/getsemester',[RegionController::class,'getsemester'])->name('getsemester');
 Route::post('/getwalikelas',[RegionController::class,'getwalikelas'])->name('getwalikelas');
 Route::post('/getgtk',[RegionController::class,'getgtk'])->name('getgtk');
+
 
 Route::get('/fullcalender',[FullCalenderController::class,'index']);
 Route::post('/fullcalenderAjax',[FullCalenderController::class,'ajax']);

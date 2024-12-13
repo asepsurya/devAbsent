@@ -218,34 +218,55 @@ class authController extends Controller
         return redirect()->back();
     }
     public function imageProfile(request $request){
-        if(auth()->user()->role == "walikelas" || auth()->user()->role == "guru" ){
-            $validasiGambar = $request->validate([
-                'gambar'=>'image|file',
-             ]);
-            if($request->file('gambar')){
-                //gambar dibah maka gambar di storage di hapus
-                if($request->oldImage){
-                    Storage::delete($request->oldImage);
-                }
-                $validasiGambar['gambar'] = $request->file('gambar')->store('FotoProfile');
-             }
-             gtk::where('nik',$request->id)->update($validasiGambar);
-             toastr()->success('Data berhasil diupdate');
-        }else{
-            $validasiGambar = $request->validate([
-                'foto'=>'image|file',
-             ]);
-            if($request->file('foto')){
-                //gambar dibah maka gambar di storage di hapus
-                if($request->oldImage){
-                    Storage::delete($request->oldImage);
-                }
-                $validasiGambar['foto'] = $request->file('foto')->store('FotoProfile');
-             }
-             student::where('nis',$request->id)->update($validasiGambar);
-             toastr()->success('Data berhasil diupdate');
+
+        try {
+            $role = auth()->user()->role;
+            $base64Image = ($role == "walikelas" || $role == "guru")
+                ? $request->input('gambar')
+                : $request->input('foto');
+
+            // Decode the image
+            $imageParts = explode(';base64,', $base64Image);
+            $imageType = explode('image/', $imageParts[0])[1]; // e.g., jpeg, png
+
+            // Validate image type
+            $allowedTypes = ['jpeg', 'png', 'jpg', 'gif'];
+            if (!in_array($imageType, $allowedTypes)) {
+                toastr()->error('Invalid image type.');
+                return redirect()->back();
+            }
+
+            // Decode the Base64 image
+            $imageBase64 = base64_decode($imageParts[1]);
+
+            // Generate unique file name
+            $fileName = 'FotoProfile/' . uniqid() . '.' . $imageType;
+
+            // Save image to storage
+            Storage::put($fileName, $imageBase64);
+
+            // Delete old image if it exists
+            if ($request->oldImage) {
+                Storage::delete($request->oldImage);
+            }
+
+            // Update the database with the new file path
+            if ($role == "walikelas" || $role == "guru") {
+                gtk::where('nik', $request->id)->update(['gambar' => $fileName]);
+            } else {
+                Student::where('id', $request->id)->update(['foto' => $fileName]);
+            }
+
+            toastr()->success('Profile photo updated successfully.');
+            return redirect()->back();
+
+        } catch (\Exception $e) {
+            Log::error('Profile photo update failed: ' . $e->getMessage());
+            toastr()->error('An error occurred: ' . $e->getMessage());
+            return redirect()->back();
         }
-        return redirect()->back();
+
+
     }
     // logout action
     Public function logout(Request $request){

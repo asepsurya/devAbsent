@@ -116,10 +116,14 @@ class leassonController extends Controller
          if ($cek) {
              $cek->update([
                  'id_rombel' => $request->input('id_kelas'),  // Assuming id_kelas is hidden in your form
+                 'day' => $days[$i],
+                 'id_mapel' => $mapelIds[$i],
+                 'id_gtk' => $gtkIds[$i] ?? null,  // GTK is nullable
                  'start' => $starts[$i],
                  'end' => $ends[$i],
                  'sk' => $sk[$i] ?? null,
                  'tanggal_sk' => $tanggalSk[$i] ?? null,
+                 'id_tahun_ajar' => $request->tahun_ajar,
                  'status' => '1',
              ]);
 
@@ -141,6 +145,10 @@ class leassonController extends Controller
              ]);
              $hari = $daysNames[$days[$i]] ?? 'Unknown';  // Get the day name or 'Unknown' if not found
              toastr()->success("Mata Pelajaran pada hari $hari telah ditambahkan.");
+         }
+         $cekdata = grupMapel::where('id_mapel',$request->input('id_kelas'))->get();
+         if($cekdata->count()){
+            grupMapel::where('id_mapel',$mapelIds[$i])->update(['id_gtk'=> $gtkIds[$i] ?? null]);
          }
      }
 

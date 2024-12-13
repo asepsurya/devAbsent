@@ -10,6 +10,7 @@ use App\Models\Province;
 use App\Models\grupMapel;
 use App\Models\walikelas;
 use Illuminate\Http\Request;
+use App\Models\TahunPelajaran;
 
 class RegionController extends Controller
 {
@@ -65,6 +66,14 @@ class RegionController extends Controller
             'a' => $option,
             'b' => $nama
         ];
+    }
+
+    public function getsemester(request $request){
+        $data = TahunPelajaran::where('id',$request->tahun)->get();
+        foreach($data as $i){
+            return $i->semester ;
+        }
+
     }
 
 }

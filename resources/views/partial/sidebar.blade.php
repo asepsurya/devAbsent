@@ -13,7 +13,6 @@
 
             <ul>
                 <li>
-
                     <ul>
                         @if(auth()->user()->role =="superadmin")
                         <li class="{{ Request::is('dashboard') ? 'active' : ''}}">
@@ -61,9 +60,10 @@
                 </li>
                 @endif
                 <li>
-                    @can('absensi_kelas','absent','management_absent')
+                    @if(auth()->user()->can('absensi_kelas') || auth()->user()->can('absent') || auth()->user()->can('management_absent'))
                         <h6 class="submenu-hdr"><span>Management</span></h6>
-                    @endcan
+                    @endif
+
                     <ul>
                         @can('absent')
                         <li class="submenu">
@@ -151,7 +151,6 @@
                                     </ul>
                                 </li>
 
-
                             </ul>
                         </li>
                         @endcan
@@ -211,8 +210,14 @@
                         <li class="{{ Request::is('class/time') ? 'active' : ''}}">
                             <a href="/class/time"><i class="ti ti-clock-hour-2"></i><span>Jam Masuk dan Pulang</span></a>
                         </li>
+                        <li class="{{ Request::is('announcements') ? 'active' : ''}}">
+                            <a href="/announcements"><i class="ti ti-brand-trello"></i><span>Papan Pengumuman</span></a>
+                        </li>
                         <li class="{{ Request::is('class/leasson') ? 'active' : ''}}">
                             <a href="/class/leasson"><i class="ti ti-notebook"></i><span>Pelajaran</span></a>
+                        </li>
+                        <li class="{{ Request::is('kalender') ? 'active' : ''}}">
+                            <a href="/kalender"><i class="ti ti-calendar"></i><span>Kalender Akademik</span></a>
                         </li>
                         <li  class="{{ Request::is('holidays') ? 'active' : ''}}">
                             <a href="/holidays" ><i class="ti ti-calendar-stats"></i><span>Hari Libur</span></a>
@@ -241,25 +246,14 @@
                                 </li>
                             </ul>
                         </li>
-
-                        {{-- @can('setelan_aplikasi')
-                        <li>
-                            <ul>
-                                <li  class="{{ Request::is('setelan*') ? 'active' : ''}}">
-                                    <a href="{{ route('setelan.app') }}"><i class="ti ti-settings"></i><span>Pengaturan Aplikasi</span></a>
-                                </li>
-                            </ul>
-
-                        </li>
-                        @endcan --}}
                     </ul>
                 </li>
                 @endcan
 
                 <li>
                     <ul>
-                        <h6 class="submenu-hdr"><span>Setelan Aplikasi</span></h6>
                         @can('setelan')
+                        <h6 class="submenu-hdr"><span>Setelan Aplikasi</span></h6>
                         <li>
                             <ul>
                                 <li class="submenu">
