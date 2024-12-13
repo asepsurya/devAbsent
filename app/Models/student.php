@@ -42,4 +42,8 @@ class student extends Model
         return $this->belongsTo('App\Models\User','nis','nomor');
     }
 
+    public function jadwalStudent(){
+        return $this->hasMany('App\Models\Lesson','id_rombel','id_kelas');
+    }
+
 }

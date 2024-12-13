@@ -20,6 +20,7 @@ class DashboardController extends Controller
     public function Studentindex(){
         return view('dashboard.studentDashboard',[
             'title'=>'Dashboard',
+            'jadwal'=>student::where('nis',auth()->user()->nomor)->with('jadwalStudent')->get()
         ]);
     }
     public function teacherDashboard(){

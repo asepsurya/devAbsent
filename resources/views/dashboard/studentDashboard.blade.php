@@ -64,7 +64,7 @@
                                    Kelas :
                                 </span>
                                 @if(Auth::user()->rombelstudent)
-                                <span> {{ Auth::user()->rombelstudent->getkelas->jurusanKelas->nama_jurusan }} {{ Auth::user()->rombelstudent->getkelas->sub_kelas }}</span>
+                                <span>{{ Auth::user()->rombelstudent->getkelas->nama_kelas }} {{ Auth::user()->rombelstudent->getkelas->jurusanKelas->nama_jurusan }} {{ Auth::user()->rombelstudent->getkelas->sub_kelas }}</span>
                                 @else
                                 <span>Belum disetel</span>
                                 @endif
@@ -90,58 +90,51 @@
             <div class="card flex-fill">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h4 class="card-title">Today’s Class</h4>
-                    <div class="d-inline-flex align-items-center class-datepick">
+                    {{-- <div class="d-inline-flex align-items-center class-datepick">
                         <span class="icon"><i class="ti ti-chevron-left me-2"></i></span>
                         <input type="text" class="form-control datetimepicker border-0" placeholder="16 May 2024">
                         <span class="icon"><i class="ti ti-chevron-right"></i></span>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="card-body">
-                    <div class="card mb-3">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap p-3 pb-1">
-                            <div class="d-flex align-items-center flex-wrap mb-2">
-                                <span class="avatar avatar-lg flex-shrink-0 rounded me-2">
-                                    <img src="assets/img/parents/parent-07.jpg" alt="Profile">
-                                </span>
-                                <div>
-                                    <h6 class="mb-1 text-decoration-line-through">English</h6>
-                                    <span><i class="ti ti-clock me-2"></i>09:00 - 09:45 AM</span>
+                    @foreach ($jadwal as $item )
+                    @php
+                        $day_number = date('N'); // 'N' returns 1 for Monday, 7 for Sunday
+                        $current_time = \Carbon\Carbon::now()->format('H:i'); // Get current time in 'H:i' format
+                    @endphp
+                       @foreach ($item->jadwalStudent->where('day', $day_number)->sortBy('start') as $i)
+                        <div class="card mb-3">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap p-3 pb-1">
+                                <div class="d-flex align-items-center flex-wrap mb-2">
+                                    <span class="avatar avatar-lg flex-shrink-0 rounded me-2">
+                                     @if(!empty($i->guru->gambar))
+                                        <img src="/storage/{{ $i->guru->gambar }}" alt="Profile">
+                                    @else
+                                        <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Default Profile">
+                                    @endif
+                                    
+                                    </span>
+                                    <div>
+                                        <h6 class="mb-1 {{ $current_time > $i->end ? 'text-decoration-line-through' : ''}}">{{ $i->mata_pelajaran->nama }}</h6>
+                                        <span><i class="ti ti-clock me-2"></i>{{ $i->start }} - {{ $i->end }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <span class="badge badge-soft-success shadow-none mb-2"><i
-                                    class="ti ti-circle-filled fs-8 me-1"></i>Completed</span>
-                        </div>
-                    </div>
-                    <div class="card mb-3">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap p-3 pb-1">
-                            <div class="d-flex align-items-center flex-wrap mb-2">
-                                <span class="avatar avatar-lg flex-shrink-0 rounded me-2">
-                                    <img src="assets/img/parents/parent-02.jpg" alt="Profile">
+                            
+                            @if($current_time < $i->end)
+                                <span class="badge badge-soft-danger shadow-none mb-2">
+                                    <i class="ti ti-circle-filled fs-8 me-1"></i>On going
                                 </span>
-                                <div>
-                                    <h6 class="mb-1 text-decoration-line-through">Chemistry</h6>
-                                    <span><i class="ti ti-clock me-2"></i>10:45 - 11:30 AM</span>
-                                </div>
-                            </div>
-                            <span class="badge badge-soft-success shadow-none mb-2"><i
-                                    class="ti ti-circle-filled fs-8 me-1"></i>Completed</span>
-                        </div>
-                    </div>
-                    <div class="card mb-0">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap p-3 pb-1">
-                            <div class="d-flex align-items-center flex-wrap mb-2">
-                                <span class="avatar avatar-lg flex-shrink-0 rounded me-2">
-                                    <img src="assets/img/profiles/avatar-17.jpg" alt="Profile">
+                            @else
+                                <span class="badge badge-soft-success shadow-none mb-2">
+                                    <i class="ti ti-circle-filled fs-8 me-1"></i>Completed
                                 </span>
-                                <div>
-                                    <h6 class="mb-1">Physics</h6>
-                                    <span><i class="ti ti-clock me-2"></i>11:30 - 12:15 AM</span>
-                                </div>
+                            @endif
                             </div>
-                            <span class="badge badge-soft-warning shadow-none mb-2"><i
-                                    class="ti ti-circle-filled fs-8 me-1"></i>Inprogress</span>
                         </div>
-                    </div>
+                        @endforeach
+                    @endforeach
+                   
+                    
                 </div>
             </div>
         </div>
