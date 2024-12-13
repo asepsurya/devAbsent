@@ -142,6 +142,8 @@ Route::middleware('auth')->group(function () {
 
     // rombel
     Route::get('/akademik/pengaturan/rombel',[PengaturanAkademik::class,'PengaturaRombel'])->name('PengaturaRombel');
+    Route::get('/akademik/pengaturan/rombel/students',[PengaturanAkademik::class,'dataAwalSiswa'])->name('PengaturaRombel.dataAwalSiswa');
+    Route::get('/akademik/pengaturan/rombel/togetstudents',[PengaturanAkademik::class,'dataTujuanSiswa'])->name('PengaturaRombel.dataTujuanSiswa');
     Route::post('/akademik/pengaturan/rombelUpdate',[PengaturanAkademik::class,'PengaturaRombelUpdate'])->name('PengaturaRombelUpdate');
     // route walikelas
     Route::get('/akademik/pengaturan/walikelas',[PengaturanAkademik::class,'PengaturanWalikelas'])->name('PengaturanWalikelas');

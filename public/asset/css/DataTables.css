@@ -347,7 +347,7 @@ table.dataTable tfoot th {
 table.dataTable > thead > tr > th,
 table.dataTable > thead > tr > td {
   padding: 10px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid #e9edf4
 }
 table.dataTable > thead > tr > th:active,
 table.dataTable > thead > tr > td:active {
@@ -697,10 +697,10 @@ div.dt-container .dataTables_scroll div.dt-scroll-body > table > tbody > tr > td
   padding: 0 !important;
 }
 div.dt-container.dt-empty-footer tbody > tr:last-child > * {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid #e9edf4;
 }
 div.dt-container.dt-empty-footer .dt-scroll-body {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid #e9edf4;
 }
 div.dt-container.dt-empty-footer .dt-scroll-body tbody > tr:last-child > * {
   border-bottom: none;

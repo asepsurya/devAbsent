@@ -96,7 +96,70 @@ class pengaturanAkademik extends Controller
         return redirect()->back();
     }
 
-    public function PengaturaRombel(){
+    public function dataTujuanSiswa(request $request){
+        $searchTerm = $request->get('search'); // Get the search term from the request
+        $tahunAjar = $request->get('id_tahun_pelajaran');
+        $kelasTujuan = $request->get('id_kelas_tujuan');
+    
+        // Filter the data based on the search term
+        $query = rombel::where('id_tahun_pelajaran', $tahunAjar)
+                        ->where('id_kelas', $kelasTujuan)->with('rombelStudent');
+    
+         if ($searchTerm) {
+            $query->where(function($query) use ($searchTerm) {
+                $query->where('nis', 'like', "%{$searchTerm}%")
+                    ->orWhereHas('rombelStudent', function($query) use ($searchTerm) {
+                        $query->where('nama', 'like', "%{$searchTerm}%");
+                    });
+            });
+        }
+        
+        $students = $query->get(); // Adjust pagination as needed
+      
+        return DataTables::of($students) 
+        ->addColumn('nama', function (rombel $item) { 
+            return $item->rombelStudent->nama; // Access the 'nama' from the related model
+             })->addIndexColumn() ->make(true);
+            
+    }
+
+    public function dataAwalSiswa(request $request){
+        if ($request->ajax()) {
+            // Checking the value of 'id_kelas_asal' and querying data accordingly
+            if ($request->input('id_kelas_asal') == "all") {
+                // Get all students with status 1
+                $data = Student::where('status', '1')->get();
+            } elseif ($request->input('id_kelas_asal') == "belumDiatur") {
+                // Get students who do not have a class assigned (id_kelas is NULL)
+                $data = Student::whereNull('id_kelas')->where('status', '1')->get();
+            } else {
+                // Get students from the specific rombel and tahun ajar
+                $data = Rombel::where('id_kelas', $request->input('id_kelas_asal'))
+                    ->where('id_tahun_pelajaran', $request->input('tahunAjarAsal'))
+                    ->get();
+            }
+    
+            // Return data as DataTables response
+            return DataTables::of($data)
+                ->addColumn('nama', function ($item) use ($request) {
+                    // Conditional logic for 'nama' field depending on 'id_kelas_asal'
+                    if ($request->input('id_kelas_asal') == "belumDiatur" || $request->input('id_kelas_asal') == "all") {
+                        return $item->nama; // Return the student's name directly
+                    } else {
+                        // Assuming 'rombelStudent' is a relation on the Student model
+                        return $item->rombelStudent->nama; // Return the name from the related 'rombelStudent'
+                    }
+                })
+                ->addIndexColumn() // Add an index column
+                ->make(true); // Return the DataTable JSON response
+        }  
+
+    }
+
+    public function PengaturaRombel(request $request){
+
+
+
         // jika ada request atau filter 1
         if(request('id_kelas_asal') =="all"){
             $data = student::where(['status'=>'1'])->paginate(10)->appends(request()->query());
@@ -183,7 +246,7 @@ class pengaturanAkademik extends Controller
     }
 
     // Redirect back with success message
-    toastr()->success('Data Berhasil disubmit');
+    // toastr()->success('Data Berhasil disubmit');
     return redirect(route('PengaturaRombel','id_kelas_asal='.$request->id_kelas_asal.'&tahunAjarAsal='.$request->tahunAjarAsal.'&id_kelas_tujuan='.$request->id_kelas.'&id_tahun_pelajaran='.$request->id_tahun_pelajaran))->withInput();
 
     }

@@ -97,42 +97,44 @@
                     </div> --}}
                 </div>
                 <div class="card-body">
-                    @foreach ($jadwal as $item )
+                    @foreach ($jadwal as $item)
                     @php
-                        $day_number = date('N'); // 'N' returns 1 for Monday, 7 for Sunday
-                        $current_time = \Carbon\Carbon::now()->format('H:i'); // Get current time in 'H:i' format
+                        $day_number = date('N'); // Current day number (1 = Monday, 7 = Sunday)
+                        $current_time = \Carbon\Carbon::now()->format('H:i'); // Current time in 'H:i' format
                     @endphp
-                       @foreach ($item->jadwalStudent->where('day', $day_number)->sortBy('start') as $i)
+             
+                    @foreach ($item->jadwalStudent->where('day', $day_number)->sortBy('start') as $i)
                         <div class="card mb-3">
                             <div class="d-flex align-items-center justify-content-between flex-wrap p-3 pb-1">
                                 <div class="d-flex align-items-center flex-wrap mb-2">
                                     <span class="avatar avatar-lg flex-shrink-0 rounded me-2">
-                                     @if(!empty($i->guru->gambar))
-                                        <img src="/storage/{{ $i->guru->gambar }}" alt="Profile">
-                                    @else
-                                        <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Default Profile">
-                                    @endif
-                                    
+                                        @if(!empty($i->guru->gambar))
+                                            <img src="/storage/{{ $i->guru->gambar }}" alt="Profile">
+                                        @else
+                                            <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Default Profile">
+                                        @endif
                                     </span>
                                     <div>
-                                        <h6 class="mb-1 {{ $current_time > $i->end ? 'text-decoration-line-through' : ''}}">{{ $i->mata_pelajaran->nama }}</h6>
+                                        <h6 class="mb-1 {{ $current_time > $i->end ? 'text-decoration-line-through' : '' }}">
+                                            {{ $i->mata_pelajaran->nama }}
+                                        </h6>
                                         <span><i class="ti ti-clock me-2"></i>{{ $i->start }} - {{ $i->end }}</span>
                                     </div>
                                 </div>
-                            
-                            @if($current_time < $i->end)
-                                <span class="badge badge-soft-danger shadow-none mb-2">
-                                    <i class="ti ti-circle-filled fs-8 me-1"></i>On going
-                                </span>
-                            @else
-                                <span class="badge badge-soft-success shadow-none mb-2">
-                                    <i class="ti ti-circle-filled fs-8 me-1"></i>Completed
-                                </span>
-                            @endif
+                
+                                @if($current_time < $i->end)
+                                    <span class="badge badge-soft-danger shadow-none mb-2">
+                                        <i class="ti ti-circle-filled fs-8 me-1"></i>On going
+                                    </span>
+                                @else
+                                    <span class="badge badge-soft-success shadow-none mb-2">
+                                        <i class="ti ti-circle-filled fs-8 me-1"></i>Completed
+                                    </span>
+                                @endif
                             </div>
                         </div>
-                        @endforeach
                     @endforeach
+                @endforeach
                    
                     
                 </div>
