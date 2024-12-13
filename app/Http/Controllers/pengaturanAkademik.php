@@ -1,22 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Mapel;
-use App\Models\TahunPelajaran;
-use App\Models\Kelas;
-use App\Models\gtk;
-use App\Models\User;
-use App\Models\grupMapel;
-use App\Models\walikelas;
-use App\Models\student;
-use App\Models\rombel;
-use App\Imports\MapelImport;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\Facades\DataTables;
 use Alert;
 use Validator;
+use App\Models\gtk;
+use App\Models\User;
+use App\Models\Kelas;
+use App\Models\Mapel;
+use App\Models\Lesson;
+use App\Models\rombel;
+use App\Models\student;
+use App\Models\grupMapel;
+use App\Models\walikelas;
+use App\Imports\MapelImport;
 use Illuminate\Http\Request;
+use App\Models\TahunPelajaran;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\Facades\DataTables;
 
 class pengaturanAkademik extends Controller
 {
@@ -124,7 +125,7 @@ class pengaturanAkademik extends Controller
     $request->validate([
         'nis' => 'required|array', // Ensure nis is an array
         'nis.*' => 'required|string', // Each nis must be a string
-       
+
     ]);
 
     // Loop through each nis (student)
@@ -201,10 +202,10 @@ class pengaturanAkademik extends Controller
        ]);
     }
     public function pengaturanMapelAdd(request $request){
-    
+
      // Example logic: Insert selected mapel into the database
      $selectedIds = $request->selectedIds;
-    
+
      // Check if selectedIds is not empty and handle accordingly
      if (!empty($selectedIds)) {
          // Assuming you are saving the selected mapel to a table like grup_mapel
@@ -214,13 +215,13 @@ class pengaturanAkademik extends Controller
                  'status' => '1',  // Assuming '1' means active or selected
              ]);
          }
- 
+
          // Return a success message
          return response()->json([
              'message' => 'Selected data has been saved successfully.',
          ]);
      }
- 
+
      // Return an error message if no IDs were selected
      return response()->json([
          'message' => 'Please select at least one mapel.',
@@ -264,8 +265,42 @@ class pengaturanAkademik extends Controller
     }
 
     public function subject_teachersUpdate(request $request){
-       grupMapel::where('id',$request->id )->update(['id_gtk'=>$request->id_gtk ]);
-       toastr()->success('Data Berhasil diubah');
-       return redirect()->back();
+        // Retrieve input data from the form submission
+        $idtahun = $request->input('tahun');
+        $idkelas = $request->input('id_kelas');
+        $semester = $request->input('semester');
+        $idmapel = $request->input('id'); // Array of subject IDs
+        $idgtk = $request->input('id_gtk'); // Array of teacher IDs
+
+        // Ensure arrays are not empty
+        if (count($idmapel) != count($idgtk)) {
+            return redirect()->back()->withErrors(['msg' => 'The number of subjects does not match the number of teachers.']);
+        }
+
+        // Loop through each subject to update the respective GTK
+        foreach ($idmapel as $index => $mapelId) {
+            // Find the lesson by the subject ID, class ID, and year
+            $lesson = grupMapel::where([
+                'id_mapel' => $mapelId,
+                'id_kelas' => $idkelas,
+                'id_tahun_pelajaran' => $idtahun,
+            ])->first();
+
+            // If the lesson exists, update the GTK
+            if ($lesson) {
+                // Update the GTK for the current subject
+                $lesson->update([
+                    'id_gtk' => $idgtk[$index] ?? null,  // Use null if no GTK ID is provided
+                ]);
+                $cekJadwal = Lesson::where('id_mapel',$mapelId)->first();
+                if($cekJadwal){
+                    $cekJadwal->update(['id_gtk' => $idgtk[$index] ?? null, ]);
+                }
+            }
+        }
+        // After updating, show a success message and redirect back
+        toastr()->success('Data successfully updated');
+        return redirect()->back();
+
     }
 }

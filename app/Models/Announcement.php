@@ -1,15 +1,13 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Event extends Model
+class Announcement extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'title', 'start', 'end','type','warna'
-    ];
+    protected $fillable = ['date','title', 'content','author','recived'];
+
 }

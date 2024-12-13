@@ -75,9 +75,16 @@ class FullCalenderController extends Controller
             'title' => $request->title,
             'start' => $request->start,
             'end' => $request->end,
-            'type' => 'holiday',
+            'type' => $request->type,
+            'warna' => $request->warna,
         ]);
         toastr()->success('Event Berhasil disimpan');
         return redirect()->back();
+    }
+
+    public function kalender(){
+        return view('kalender_akademik.index',[
+            'title'=>'Kalender Akademik'
+        ]);
     }
 }

@@ -52,63 +52,45 @@
         <h4 class="mb-0 "><span class="ti ti-search"></span> Form Pencarian</h4>
 
     </div>
-    <div class="p-3 alert alert-primary overflow-hidden mb-0">
-        <div class="row mb-3 ">
-            <label class="col-lg-3 form-label mt-1">Tahun Pelajaran</label>
-            <div class="col-lg-9">
-                <select name="tahunAjar" id="tahunAjar" class="tahunAjar" onchange="copyTextValue()">
-                    <option value="" selected>-- Pilih Tahun Pelajaran --</option>
-                    @foreach ($tahunAjar as $item )
-                    <option value="{{ $item->id }}" {{ $item->id == request('tahun') ? 'selected' : '' }}>{{
-                        $item->tahun_pelajaran }} - {{ $item->semester }}
-                    </option>
-                    @php $a = request('tahun') @endphp
-                    @endforeach
-                </select>
+    <form action="{{ route('subject_teachers') }}" method="get" data-bs-display="static">
+        <div class="p-3 alert alert-primary overflow-hidden mb-0">
+            <div class="row mb-3 ">
+                <label class="col-lg-3 form-label mt-1">Tahun Pelajaran</label>
+                <div class="col-lg-9">
+                    <select name="tahun" id="tahun" class="tahunAjar">
+                        <option value="" selected>-- Pilih Tahun Pelajaran --</option>
+                        @foreach ($tahunAjar as $item )
+                        <option value="{{ $item->id }}" {{ $item->id == request('tahun') ? 'selected' : '' }}>{{
+                            $item->tahun_pelajaran }} - {{ $item->semester }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
-        </div>
-        {{-- <div class="row my-2">
-            <label class="col-lg-3 form-label mt-2">Semester</label>
-            <div class="col-lg-9">
-                <select name="semester" id="semester" class=" select2" onchange="semesterValue()">
-                    <option value="" selected>-- Pilih Semester --</option>
-                    <option value="Ganjil" {{ request('semester')=="Ganjil" ? 'selected' :'' }}>Ganjil</option>
-                    <option value="Genap" {{ request('semester')=="Genap" ? 'selected' :'' }}>Genap</option>
-                </select>
+            <input type="text" name="semester" id="semesterVal" value="{{ request('semester') }}" hidden>
+            <div class="row mb-2">
+                <label class="col-lg-3 form-label mt-2">Kelas</label>
+                <div class="col-lg-9">
+                    <select name="kelas" id="kelas" class="Kelas">
+                        <option value="" selected>-- Pilih Kelas --</option>
+                        @foreach ($kelas as $item )
+                        <option value="{{ $item->id }}" {{ $item->id == request('kelas') ? 'selected' : '' }}>{{
+                            $item->nama_kelas }} - {{
+                            $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</option>
+                        {{-- get Default Value --}}
+                        @php $c = request('kelas') @endphp
+                        @endforeach
+                    </select>
+                </div>
             </div>
-        </div> --}}
-        <div class="row mb-2">
-            <label class="col-lg-3 form-label mt-2">Kelas</label>
-            <div class="col-lg-9">
-                <select name="kelas" id="kelas" class="Kelas" onchange="kelasValue()">
-                    <option value="" selected>-- Pilih Kelas --</option>
-                    @foreach ($kelas as $item )
-                    <option value="{{ $item->id }}" {{ $item->id == request('kelas') ? 'selected' : '' }}>{{
-                        $item->nama_kelas }} - {{
-                        $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}</option>
-                    {{-- get Default Value --}}
-                    @php $c = request('kelas') @endphp
-                    @endforeach
-                </select>
-            </div>
-        </div>
-
-        <form action="{{ route('subject_teachers') }}" method="get" data-bs-display="static">
-            @csrf
-            {{-- Input Box untuk mengambil Data Default --}}
-            <input type="text" name="tahun" id="id_tahun_pelajaranVal" value="{{ $a }}" hidden>
-            <input type="text" name="semester" id="semesterVal" value="Ganjil" hidden>
-            <input type="text" name="kelas" id="kelasVal" value="{{ $c }}" hidden>
-
             <div class="row my-2">
                 <label class="col-lg-3 form-label mt-2"></label>
                 <div class="col-lg-9">
                     <div class="btn-group mt-3">
-                        <button class="btn btn-primary w-100" type="submit"><span
-                                class="ti ti-search"></span> Cari
+                        <button class="btn btn-primary w-100" type="submit"><span class="ti ti-search"></span> Cari
                             Data</button>
-        </form>
-    </div>
+    </form>
+</div>
 </div>
 </div>
 </div>
@@ -116,26 +98,31 @@
 
 <div class="card">
     <div class="table-responsive">
-        <table class="table table-nowrap my-0">
-            <thead>
-                <tr>
-                    <th class="bg-light-400" width="10%">#</th>
-                    <th class="bg-light-400" width="20%">Mata Pelajaran</th>
-                    <th class="bg-light-400">Guru Pengajar</th>
-                </tr>
-            </thead>
+        <form action="{{ route('subject_teachersUpdate') }}" method="post" id="myform">
+            @csrf
+            <table class="table table-nowrap my-0">
+                <thead>
+                    <tr>
+                        <th class="bg-light-400" width="10%">#</th>
+                        <th class="bg-light-400" width="20%">Mata Pelajaran</th>
+                        <th class="bg-light-400">Guru Pengajar</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                @php $no=1; @endphp
-                @foreach ($grupMapel as $item)
-                <tr>
-                    <td>{{ $no++ }}</td>
-                    <td>{{ $item->mata_pelajaran->nama }}</td>
-                    <td>
-                        <form action="{{ route('subject_teachersUpdate') }}" method="post" id="myform">
-                            @csrf
-                            <input type="text" name="id" value="{{ $item->id }}" class="tahun" hidden>
-                            <select name="id_gtk" class="select2 form-control gtk" onchange="this.form.submit()">
+                <tbody>
+                    @php $no=1; @endphp
+                    @foreach ($grupMapel as $item)
+                    <tr>
+                        <td>{{ $no++ }}</td>
+                        <td>{{ $item->mata_pelajaran->nama }}</td>
+                        <td>
+                            <div hidden>
+                                <input type="text" name="id[]" value="{{ $item->mata_pelajaran->id }}" class="tahun" >
+                                <input type="text" name="id_kelas" value="{{ request('kelas') }}">
+                                <input type="text" name="tahun" value="{{ request('tahun') }}">
+                                <input type="text" name="semester" value="{{ request('semester') }}">
+                            </div>
+                            <select name="id_gtk[]" class="select2 form-control gtk">
                                 @if ($item->id_gtk == '')
                                 <option value="" selected>-- Belum disetel --</option>
                                 @endif
@@ -144,36 +131,63 @@
                                     }}>{{ $item2->nik }} - {{ $item2->nama }} </option>
                                 @endforeach
                             </select>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
 
-                        </form>
-                    </td>
-                </tr>
-
-                @endforeach
-            </tbody>
-
-        </table>
+            </table>
+            <div class="d-flex justify-content-end m-2">
+                <button class="btn btn-primary">Simpan Perubahan</button>
+            </div>
+        </form>
     </div>
 </div>
 
 @section('javascript')
 <script>
+     $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+        });
+
+        $(function (){
+            $('#tahun').on('change',function(){
+                let tahun = $('#tahun').val();
+                $.ajax({
+                    type : 'POST',
+                    url : "{{route('getsemester')}}",
+                    data : {tahun:tahun},
+                    cache : false,
+                    success: function(msg){
+                        $('#semesterVal').val(msg);
+
+                    },
+                    error: function(data) {
+                        console.log('error:',data)
+                    },
+                })
+            })
+        });
+</script>
+
+<script>
  $('.tahunAjar').select2({
     placeholder: "Pilih Tahun Pelajaran",
-    allowClear: true
+
     });
  $('.Kelas').select2({
     placeholder: "Pilih Kelas",
-    allowClear: true
+
     });
  $('.gtk').select2({
     placeholder: "Belum disetel",
-    allowClear: true
+
     });
 
 
 </script>
-<script>
+{{-- <script>
     function copyTextValue() {
         var e = document.getElementById("tahunAjar");
         var val = e.options[e.selectedIndex].value;
@@ -191,6 +205,6 @@
         document.getElementById("kelasVal").value = val;
 
     }
-</script>
+</script> --}}
 @endsection
 @endsection

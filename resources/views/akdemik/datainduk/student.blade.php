@@ -225,8 +225,37 @@
                 },
                 {
                     data: 'nama',
-                    name: 'nama'
+                    render: function(data, type, row, meta) {
+                        let avatarImage = ''; // Initialize the avatar image HTML
+
+                        // Check if there is a valid 'gambar' or not
+                        if (row.foto && row.foto !== '') {
+                            avatarImage = '<img src="/storage/' + row.foto + '" class="img-fluid rounded-circle" alt="foto">';
+                        } else {
+                               // If no custom image exists, use initials as avatar
+                                // Split the name into initials
+                                let initials = data.split(' ').map(word => word.charAt(0).toUpperCase()).join('');
+
+
+
+                                // Create a circle with the initials inside
+                                avatarImage = '<div class="avatar avatar-md" style="background-color: #506ee4; display: flex; justify-content: center; align-items: center; border-radius: 50%;">' +
+                                                '<span style="color: white; font-size: 10px; font-weight: bold;">' + initials + '</span>' +
+                                            '</div>';
+                        }
+
+                        // Build and return the complete HTML for the column
+                        return '<div class="d-flex align-items-center">' +
+                                '<a href="#" class="avatar avatar-md">' +
+                                    avatarImage +
+                                '</a>' +
+                                '<div class="ms-2">' +
+                                    '<p class="mb-0">' + data + '</p>' +
+                                '</div>' +
+                            '</div>';
+                    }
                 },
+
                 {
                     data: 'gender',
                     render: function(data, type, row, meta){

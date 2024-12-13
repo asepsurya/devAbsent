@@ -1,4 +1,10 @@
 @extends('layout.main')
+@section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
+@endsection
 @section('container')
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3 border-bottom">
@@ -39,7 +45,8 @@
                         <span class="profile-pic">
 
                         @if($item->$relation->$img)
-                            <img src="/storage/{{ $item->$relation->$img }}"  alt="foto"  >
+                        <a href="/storage/{{ $item->$relation->$img }}" data-lightbox="image-{{ $item->id }}" data-title="Profile Photo">
+                            <img src="/storage/{{ $item->$relation->$img }}"  alt="foto"  ></a>
                         @else
                             <img src="{{ asset('asset/img/user-default.jpg') }}"  alt="foto">
                         @endif
@@ -48,28 +55,11 @@
                         @csrf
                         <div class="title-upload">
                             <h5>Edit Your Photo</h5>
-                            <a href="#" class="me-2">Delete </a>
-                            <a href="#" class="text-primary" id="ubahfoto">Update</a>
+                            <a class="text-primary" data-toggle="modal" data-target="#fileUploadModal">Update</a>
                             <input type="submit" class=" btn text-primary" value="Update" id="submitfoto">
                         </div>
                     </div>
-                    <div class="profile-uploader profile-uploader-two mb-0" id="form-input">
-                        <span class="upload-icon"><i class="ti ti-upload"></i></span>
-                        <div class="drag-upload-btn bg-transparent me-0 border-0">
-                            <p class="upload-btn"><span>Click to Upload</span> or drag and drop
-                            </p>
-                            <h6>JPG or PNG</h6>
-                            <h6>(Max 450 x 450 px)</h6>
-                        </div>
-                        <input type="text" name="oldImage" value="{{ $item->$relation->$img }}" hidden>
-                        <input type="text" name="id" value="{{ $item->nomor }}" hidden>
-                        @if(auth()->user()->role == "walikelas" || auth()->user()->role == "guru" )
-                            <input type="file" name="gambar" class="form-control"  id="image_sign" required>
-                        @else
-                            <input type="file" name="foto" class="form-control"  id="image_sign" required>
-                        @endif
-                        <div id="frames"></div>
-                    </div>
+
                 </form>
                 </div>
             </div>
@@ -196,14 +186,52 @@
         </div>
     </div>
 
-    {{-- Modal --}}
+    <!-- Modal for Image Upload -->
+<div class="modal fade" id="fileUploadModal" tabindex="-1" aria-labelledby="fileUploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="fileUploadModalLabel">Upload Foto Profile</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="studentForm" action="{{ route('imageProfile') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="text" value="{{ auth()->user()->nomor }}" name="id" hidden >
+                @if(auth()->user()->role == "walikelas" || auth()->user()->role == "guru" )
+                <input type="text" name="oldImage" value="{{ $item->gambar }}" hidden>
+                @else
+                <input type="text" name="oldImage" value="{{ $item->foto }}" hidden >
+                @endif
 
-    @endforeach
-    @section('javascript')
+                @if(auth()->user()->role == "walikelas" || auth()->user()->role == "guru" )
+                    <input type="hidden" name="gambar" class="form-control"  id="croppedFoto" required>
+                @else
+                    <input type="hidden" name="foto" class="form-control"  id="croppedFoto" required>
+                @endif
+
+                <label for="image-input">Upload Photo:</label>
+                <input type="file" id="image-input" accept="image/*" class="form-control">
+
+                <img id="preview" style="display:none; max-width:200px;" alt="Preview">
+
+                <div class="buttons mt-2">
+                  <button type="button" class="btn btn-primary" id="crop-btn" style="display: none;"><span class="ti ti-crop"></span> Crop</button>
+                  <button type="submit" class="btn btn-primary" id="submit-btn" disabled><span class="ti ti-device-floppy"></span> Save</button>
+                </div>
+              </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@endforeach
+@section('javascript')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
     <script>
         $('.select2').select2();
        document.getElementById("submitfoto").hidden = true;
-       document.getElementById("form-input").hidden = true;
        document.getElementById("alamat").disabled = true;
        document.getElementById("provinsi2").disabled = true;
        document.getElementById("kabupaten2").disabled = true;
@@ -314,5 +342,59 @@
                 })
             });
     </script>
-    @endsection
+
+<script>
+    const imageInput = document.getElementById('image-input');
+    const preview = document.getElementById('preview');
+    const cropBtn = document.getElementById('crop-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const croppedFotoInput = document.getElementById('croppedFoto');
+    let cropper;
+
+    // Handle image input change
+    imageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          preview.src = reader.result;
+          preview.style.display = 'block';
+          cropBtn.style.display = 'inline';
+          submitBtn.disabled = true;
+
+          // Initialize cropper
+          if (cropper) cropper.destroy();
+          cropper = new Cropper(preview, {
+            aspectRatio: 463 / 451, // Set aspect ratio for the desired dimensions
+            viewMode: 1,            // Restrict crop box within the canvas
+            autoCropArea: 1         // Maximize the crop box within the canvas
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Handle cropping
+    cropBtn.addEventListener('click', () => {
+      const canvas = cropper.getCroppedCanvas({
+        width: 463,  // Set width to 463px
+        height: 451, // Set height to 451px
+      });
+
+      // Convert to Blob and Base64
+      canvas.toBlob((blob) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          croppedFotoInput.value = reader.result; // Base64 data for form
+          preview.src = reader.result;
+          cropper.destroy();
+          cropBtn.style.display = 'none';
+          submitBtn.disabled = false;
+        };
+        reader.readAsDataURL(blob);
+      }, 'image/jpeg', 1.0); // Set image quality to 100%
+    });
+
+</script>
+@endsection
 @endsection
