@@ -60,8 +60,10 @@
                         <td>{{ $item->email}}</td>
                         <td>
                             <div class="hstack gap-2 fs-15">
-                                <a data-bs-toggle="modal" data-bs-target="#changePassword-{{ $item->id }}" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i
-                                        class="ti ti-pencil-minus"></i></a>
+                                <div class="d-flex align-items-center">
+                                    <a data-bs-toggle="modal" data-bs-target="#add_holiday-{{ $item->id }}" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2" data-bs-toggle="modal" data-bs-target="#edit_role"><i class="ti ti-edit-circle text-primary"></i></a>
+                                    <a data-bs-toggle="modal" data-bs-target="#edit_role-{{ $item->id }}" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="ti ti-shield text-skyblue"></i></a>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -70,63 +72,91 @@
             </table>
         </div>
     </div>
-</div>
+</div>@foreach ($userAdmin as $item )
 {{-- modal tambah Hari Libur --}}
-<div class="modal fade" id="add_holiday" aria-modal="true" role="dialog">
+<div class="modal fade" id="add_holiday-{{ $item->id }}" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><span class="ti ti-pencil-plus"></span> Pengguna Administrator</h4>
+                <h4 class="modal-title"><span class="ti ti-pencil-plus"></span> Ubah Kata Sandi</h4>
                 <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>
-            <form action="{{ route('userAdministratorAdd') }}" method="post">
+            <form action="{{ route('changePassword') }}" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <div class="row">
 
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="text" name="id" value="{{ $item->id }}" hidden>
+
+                            <div class="mb-3">
+                                <label class="form-label">Kata Sandi</label>
+                                <div class="pass-group mb-3">
+                                    <input type="password" class="pass-input form-control" placeholder="Masukan Kata Sandi" name="password">
+                                    <span class="ti toggle-password ti-eye-off"></span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ulangi Kata Sandi</label>
+                                <div class="pass-group mb-3">
+                                    <input type="password" class="pass-input form-control" placeholder="Masukan Kata Sandi" name="cpassword">
+                                    <span class="ti toggle-password ti-eye-off"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary w-100"><span class="ti ti-pencil-plus"></span> Ubah</button>
+                </div>
+                </form>
+        </div>
+
+    </div>
+</div>
+@endforeach
+@foreach ($userAdmin as $item )
+{{-- modal tambah Hari Libur --}}
+<div class="modal fade" id="edit_role-{{ $item->id }}" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span class="ti ti-pencil-plus"></span> Ubah Role Pengguna</h4>
+                <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+            <form action="{{ route('changeRole') }}" method="POST">
+                @csrf
+    
+                <div class="modal-body">
+                    <input type="text" name="id" value="{{ $item->id }}" hidden>
+                    <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Nama Lengkap</label>
-                                    <input type="text" class="form-control" name="title" required placeholder="Nama Lengkap">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Email</label>
-                                    <div class="input-icon mb-3 position-relative">
-                                        <span class="input-icon-addon">
-                                            <i class="ti ti-mail"></i>
-                                        </span>
-                                        <input type="text" value="" class="form-control" placeholder="admin@mail.com">
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Kata Sandi</label>
-                                    <div class="pass-group mb-3">
-                                        <input type="password" class="pass-input form-control" placeholder="Masukan Kata Sandi">
-                                        <span class="ti toggle-password ti-eye-off"></span>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Grup</label>
-                                    <select name="grup" id="grup" class="select2 form-control">
-                                        <option value="1">Administrator</option>
-                                        <option value="2">Wali Kelas</option>
-                                        <option value="3">Guru</option>
-                                        <option value="3">Siswa</option>
+                                    <label class="form-label">Role Pengguna Aplikasi</label>
+                                    <select name="role"  class="select">
+                                        <option value="4" {{ $item->role == 'admin' ?'selected': '' }}>Administrator</option>
+                                        <option value="1" {{ $item->role == 'walikelas' ?'selected': '' }}>Walikelas</option>
+                                        <option value="2"{{ $item->role == 'guru' ?'selected': '' }}>Guru Pengajar</option>
+                                        <option value="3"{{ $item->role == 'siswa' ?'selected': '' }}>Siswa</option>
                                     </select>
                                 </div>
                             </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-
-                    <button type="submit" class="btn btn-primary w-100">Tambah</button>
-            </form>
+                    <button type="submit" class="btn btn-primary w-100"><span class="ti ti-pencil-plus"></span> Ubah</button>
+                </div>
+                </form>
         </div>
-
     </div>
 </div>
-</div>
+
+@endforeach
+
 
 @endsection

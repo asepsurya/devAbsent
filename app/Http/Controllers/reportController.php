@@ -18,7 +18,7 @@ class reportController extends Controller
         return view('report.RFIDstudent', [
             'title' => 'Laporan Absensi',
             'created' => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
-            'students' => student::with('absentRFID')->get(),
+            'students' => student::with(['absentRFID','classTime'])->get(),
             'holiday'=>Event::all()
         ]);
     }

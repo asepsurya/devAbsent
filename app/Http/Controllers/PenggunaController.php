@@ -90,4 +90,25 @@ class PenggunaController extends Controller
         toastr()->success('Password berhasi diubah');
         return redirect()->back();
     }
+
+    public function changeRole(request $request){
+
+        $cek = DB::table('model_has_roles')->where('model_id','=', $request->id)->get();
+        if($cek->count()){
+            DB::table('model_has_roles')->where('model_id','=', $request->id)->update(['role_id'=>$request->role]);
+            if($request->role == '1'){
+                $role = 'walikelas';
+            }elseif($request->role == '2'){
+                $role = 'guru';
+            }elseif($request->role == '3'){
+                $role = 'siswa';
+            }elseif($request->role == '4'){
+                $role = 'admin';
+            }
+            User::where('id',$request->id)->update(['role'=>$role]);
+            toastr()->success('Role Berhasi diubah');
+            return redirect()->back();
+        }
+
+    }
 }
