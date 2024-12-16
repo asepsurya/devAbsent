@@ -207,6 +207,9 @@
                 <li>
                     <ul>
                         <h6 class="submenu-hdr"><span>Jadwal</span></h6>
+                        <li class="{{ Request::is('classroom*') ? 'active' : ''}}">
+                            <a href="/classroom"><i class="ti ti-building"></i><span>Ruangan Kelas</span></a>
+                        </li>
                         <li class="{{ Request::is('class/time') ? 'active' : ''}}">
                             <a href="/class/time"><i class="ti ti-clock-hour-2"></i><span>Jam Masuk dan Pulang</span></a>
                         </li>

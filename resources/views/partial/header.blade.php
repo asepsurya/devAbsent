@@ -23,7 +23,12 @@
     <div class="header-user">
         <div class="nav user-menu">
             <div class="nav-item nav-search-inputs me-auto">
-
+                @if (Request::is('classroom/detail*'))
+                    <h3><span class="ti ti-chalkboard"></span> Ruangan Kelas</h3>
+                @endif
+                @if (Request::is('quiz*'))
+                    <h3><span class="ti ti-chalkboard"></span> Quiz</h3>
+                @endif
                {{-- <div class="top-nav-search">
                 <a href="javascript:void(0);" class="responsive-search">
                     <i class="fa fa-search"></i>

@@ -236,8 +236,6 @@
                                 // Split the name into initials
                                 let initials = data.split(' ').map(word => word.charAt(0).toUpperCase()).join('');
 
-
-
                                 // Create a circle with the initials inside
                                 avatarImage = '<div class="avatar avatar-md" style="background-color: #506ee4; display: flex; justify-content: center; align-items: center; border-radius: 50%;">' +
                                                 '<span style="color: white; font-size: 10px; font-weight: bold;">' + initials + '</span>' +

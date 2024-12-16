@@ -19,6 +19,7 @@ use App\Http\Controllers\API\rfidController;
 use App\Http\Controllers\HolidaysController;
 use App\Http\Controllers\pengaturanAkademik;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataIndukController;
 use App\Http\Controllers\inOutTimeController;
@@ -27,12 +28,21 @@ use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\verifikasiUserController;
+use App\Http\Controllers\ClassRoomDetailController;
 
 Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
 Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
 Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
-
+Route::get('/download/{file}', function ($file='') {
+    $filePath = storage_path("app/{$file}");
+    dd( $filePath);
+    // if (file_exists($filePath)) {
+    //     return response()->download($filePath, $file);
+    // } else {
+    //     abort(404, 'File not found');
+    // }
+})->name('download');
 route::get('sss',function(){
     // memberikan Permission
     $user= User::FindorFail(413);
@@ -212,6 +222,31 @@ Route::middleware('auth')->group(function () {
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
     Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
     Route::post('/announcements/update', [AnnouncementController::class, 'update'])->name('announcements.update');
+
+    // class Room
+    Route::get('/classroom', [ClassRoomController::class, 'index'])->name('classroom.index');
+    Route::post('/classroom/add', [ClassRoomController::class, 'add'])->name('classroom.add');
+    Route::post('/classroom/update', [ClassRoomController::class, 'update'])->name('classroom.update');
+    Route::get('/classroom/archive/{id}', [ClassRoomController::class, 'archive'])->name('classroom.archive');
+    Route::get('/classroom/detail/{id}', [ClassRoomController::class, 'detail'])->name('classroom.detail');
+    Route::get('/classroom/recommend', [ClassRoomController::class, 'recommend'])->name('classroom.recommend');
+
+    Route::post('/classroom/detail/adduser', [ClassRoomDetailController::class, 'adduser'])->name('classroom.adduser');
+    Route::post('/classroom/detail/adduserClass', [ClassRoomDetailController::class, 'adduserClass'])->name('classroom.adduserClass');
+    Route::get('/classroom/detail/deleteuserClass/{id}', [ClassRoomDetailController::class, 'deleteuserClass'])->name('classroom.deleteuserClass');
+    Route::get('/classroom/addwork/{id}', [ClassRoomDetailController::class, 'tugas'])->name('classroom.tugas');
+    Route::post('/classroom/addwork/add', [ClassRoomDetailController::class, 'tambahTugas'])->name('classroom.tambahTugas');
+
+    Route::get('/classroom/questions/{id_kelas}/{task_id}/list', [ClassRoomDetailController::class, 'quiz'])->name('classroom.quiz');
+    Route::get('/classroom/questions/{id_kelas}/{task_id}/create', [ClassRoomDetailController::class, 'tambahQuiz'])->name('classroom.tambahQuiz');
+    Route::get('/classroom/questions/{id_kelas}/{id}/{task_id}/update', [ClassRoomDetailController::class, 'editQuiz'])->name('classroom.editQuiz');
+
+    Route::post('/classroom/question/add', [ClassRoomDetailController::class, 'quizAdd'])->name('classroom.quizAdd');
+    Route::post('/classroom/question/update', [ClassRoomDetailController::class, 'quizUpdate'])->name('classroom.quizUpdate');
+    Route::get('/quiz/{id_kelas}/{task_id}', [ClassRoomDetailController::class, 'quizIndex'])->name('quiz');
+    Route::post('/quiz/submit', [ClassRoomDetailController::class, 'quizSubmit'])->name('quiz.submit');
+
+
 });
 Route::post('/logout',[authController::class,'logout'])->name('logout');
 // route Regency Administrasi

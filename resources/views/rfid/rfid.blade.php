@@ -81,7 +81,7 @@
                                         @if($item->rfidStudent)
                                             {{ $item->rfidStudent->nama }}
 
-                                            @php $gender = $item->rfidStudent->gender; $role = $item->rfidStudent->studentUser->role; @endphp
+                                            @php $gender = $item->rfidStudent->gender; $role = $item->rfidStudent->studentUser->role ?? ''; @endphp
                                         @endif
                                         @if($item->rfidGTK)
                                             {{ $item->rfidGTK->nama }}
