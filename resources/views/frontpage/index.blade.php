@@ -24,6 +24,7 @@
     <!-- ===============================================-->
     <!--    Stylesheets-->
     <!-- ===============================================-->
+
     <link href="{{ asset('landing/css/theme.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
     <link rel="stylesheet" href="{{ asset('asset/css/customlanding.css') }}">
@@ -33,15 +34,15 @@
     <!--    Main Content-->
     <!-- ===============================================-->
     <main class="main" id="top">
-      <nav class="navbar navbar-expand-lg navbar-light fixed-top nav user-menu" data-navbar-on-scroll="data-navbar-on-scroll">
+      <nav class="navbar navbar-expand-lg navbar-light fixed-top nav user-menu" data-navbar-on-scroll="data-navbar-on-scroll" style="border-bottom:1px solid #e7e7e7">
         <div class="container-fluid">
             <div class="d-flex ">
             <a class="navbar-brand" href="/"><img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" alt=""  width="50px"/></a>
             <h5 class=" mt-3">{{ app('settings')['site_name'] }}</h5>
             </div>
             <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
+              <span class="navbar-toggler-icon"></span>
+          </button>
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto ms-lg-5 ms-xl-8 border-bottom border-lg-bottom-0 ">
@@ -56,7 +57,7 @@
             <div class="d-flex py-3 py-lg-0">
                 <div class="action">
 
-                    <div class="profile" onclick="menuToggle();">
+                    <div class="profil avatar avatar-md roundede" onclick="menuToggle();">
                         {{-- user siswa --}}
                         @if(auth()->user()->role == "siswa")
                          @if(Auth::user()->student == NULL)
@@ -175,7 +176,7 @@
             @else
             <form class="d-flex py-3 py-lg-0"><a class="btn btn-sm p-2 px-2 btn-info rounded-pill me-2" href="/login" role="button"><span class="ti ti-login"></span> Masuk Aplikasi</a>
             </form>
-                @endif
+            @endif
           </div>
         </div>
       </nav>
@@ -362,9 +363,9 @@
     <!-- ===============================================-->
     <!--    JavaScripts-->
     <!-- ===============================================-->
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> --}}
     <script src="{{ asset('landing/vendors/is/is.min.js') }}"></script>
     <script src="{{ asset('landing/js/theme.js') }}"></script>
      <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>

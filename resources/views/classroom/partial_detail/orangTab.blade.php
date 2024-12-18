@@ -2,9 +2,11 @@
     <div class="bg-white p-3 border rounded-1 d-flex align-items-center justify-content-between flex-wrap mb-4 pb-0">
         <h4 class="mb-3">Daftar Peserta</h4>
         <div class="d-flex align-items-center flex-wrap">
+            @if(auth()->user()->role !=="siswa")
             <div class="d-flex align-items-center flex-wrap">
                 <button class="btn btn-primary btn-small mb-3" data-bs-toggle="modal" data-bs-target="#addPeserta"><span class="ti ti-circle-plus"></span> Undang Peserta</button>
             </div>
+            @endif
         </div>
     </div>
 

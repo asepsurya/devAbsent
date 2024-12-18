@@ -125,7 +125,7 @@
                             <a class="btn btn-primary" onclick="addYouTubeLink()">+</a>
                         </div>
                     </div>
-                    <input type="hidden" name="link" id="youtubeLinks">
+                    <input  name="link[]" id="youtubeLinks" hidden>
                      <!-- Preview Section -->
                      <div class="preview-container" id="previewContainer"></div>
                 </div>
@@ -136,51 +136,53 @@
     </div>
 
     <!-- Right Sidebar -->
-    <div class="col-md-3 border-start bg-muted" style="min-height: 100vh;">
-        <div class="mb-3 border-bottom p-3">
+    <div class="col-md-3 border-start bg-muted" style="min-height: 100vh; ">
+        <div class="position:sticky; top: 80px;">
+            <div class="mb-3 border-bottom p-3 ">
 
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="ti ti-send"></span> Publikasikan
-                </button>
-                <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton" style="z-index:9999;">
-                    <li><button type="submit" class="dropdown-item border-bottom"><span class="ti ti-send"></span> Publikasikan</button></li>
-                    <li><a href="http://127.0.0.1:8000/classroom/addwork" class="dropdown-item"><span class="ti ti-notes"></span> Simpan sebagai draft</a></li>
-                </ul>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="ti ti-send"></span> Publikasikan
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton" style="z-index:9999;">
+                        <li><button type="submit" class="dropdown-item border-bottom"><span class="ti ti-send"></span> Publikasikan</button></li>
+                        <li><a href="http://127.0.0.1:8000/classroom/addwork" class="dropdown-item"><span class="ti ti-notes"></span> Simpan sebagai draft</a></li>
+                    </ul>
+
+                </div>
 
             </div>
-
-        </div>
-        <div class="py-2 me-2">
-            <div class="mb-3">
-                <label for="" class="form-label">Untuk</label>
-                <select  class="form-control select" >
-                    <option value="">Pemograman</option>
-                </select>
+            <div class="py-2 p-3">
+                {{-- <div class="mb-3">
+                    <label for="" class="form-label">Untuk</label>
+                    <select  class="form-control select" >
+                        <option value="">Pemograman</option>
+                    </select>
+                </div> --}}
                 <input type="text" value="{{ $id }}" name="id_kelas" hidden>
-            </div>
-            <div class="mb-3">
-                 Created by :
-                <div class="bg-light-400 rounded-2 p-3 mb-3 border">
-                    <div class="d-flex align-items-center">
-                        <a class="avatar avatar-lg flex-shrink-0"><img src="http://127.0.0.1:8000/asset/img/user-default.jpg" class="img-fluid rounded-circle" alt="img"></a>
-                        <div class="ms-2">
-                            <h6 class="text-dark text-truncate mb-0"><a>{{ auth()->user()->nama }}</a></h6>
-                            <small>{{ auth()->user()->email }}</small>
+                <div class="mb-3">
+                    Created by :
+                    <div class="bg-light-400 rounded-2 p-3 mb-3 border">
+                        <div class="d-flex align-items-center">
+                            <a class="avatar avatar-lg flex-shrink-0"><img src="http://127.0.0.1:8000/asset/img/user-default.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                            <div class="ms-2">
+                                <h6 class="text-dark text-truncate mb-0"><a>{{ auth()->user()->nama }}</a></h6>
+                                <small>{{ auth()->user()->email }}</small>
+                            </div>
                         </div>
                     </div>
+                    <input type="text" name="auth" value="{{ auth()->user()->nomor }}" hidden>
                 </div>
-                <input type="text" name="auth" value="{{ auth()->user()->nomor }}" hidden>
-            </div>
 
-            <div class="mb-3">
-                <label for="" class="form-label">Poin</label>
-                <input type="text" class="form-control" name="poin" placeholder="/100">
-            </div>
-            <div class="mb-3">
-                <label for="" class="form-label">Tenggat Waktu</label>
-                <input type="text" class="form-control datetimepicker" name="due_date" placeholder="Tenggat Waktu Pengerjaan">
+                <div class="mb-3" hidden>
+                    <label for="" class="form-label">Poin</label>
+                    <input type="text" class="form-control" name="poin" placeholder="/100">
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Tenggat Waktu</label>
+                    <input type="text" class="form-control datetimepicker" name="due_date" placeholder="Tenggat Waktu Pengerjaan">
 
+                </div>
             </div>
         </div>
     </div>

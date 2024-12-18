@@ -185,7 +185,7 @@ class PDFController extends Controller
         $pdf->setPaper('A4', 'landscape');
         $pdf->render();
         // Tampilkan di browser
-        return $pdf->stream('Laporan-AbsensiRDIFSiswa'.  Carbon::now()->format('YmdHis') .'-'.rand().'.pdf');
+        return $pdf->stream('Absensi_Siswa_' . Carbon::now()->format('Ymd') . '-' . rand(1000, 9999) . '.pdf');
 
         }
 

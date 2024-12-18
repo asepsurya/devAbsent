@@ -124,7 +124,31 @@ class ClassRoomDetailController extends Controller
             'title'=>'Tugas'
         ],compact('id'));
     }
+    public function deletequizAction(request $request){
+        // Find the task by ID (or return 404 if not found)
+        $task = tasks::findOrFail($request->task_id);
 
+        // Validate the input data
+        $validated = $request->validate([
+            'judul' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'id_kelas' => 'string',
+            'poin' => 'nullable|integer',
+            'due_date' => 'nullable|date',
+            'dok.*' => 'nullable|file|max:2048', // Max 2MB per file
+            'link.*' => 'nullable',
+        ]);
+        $task->update([
+            'judul' => $validated['judul'],
+            'description' => $validated['description'],
+            'id_kelas' => $validated['id_kelas'],
+            'poin' => $validated['poin'],
+            'due_date' => $validated['due_date'],
+            'type' => $request->type,  // Assuming 'type' is passed in the request
+        ]);
+        toastr()->success('data berhasil dihapus');
+        return redirect()->back();
+    }
     public function tambahTugas(request $request){
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
@@ -133,7 +157,7 @@ class ClassRoomDetailController extends Controller
             'poin' => 'nullable|integer',
             'due_date' => 'nullable|date',
             'dok.*' => 'nullable|file|max:2048', // Max 2MB per file
-            'link.*' => 'nullable|url',
+            'link.*' => 'nullable',
         ]);
 
         // Save task details
@@ -167,15 +191,148 @@ class ClassRoomDetailController extends Controller
                 ]);
             }
         }
-            if ($request->link) {
-                // Save YouTube links
+        if($request->hasFile('link')){
+            $links = $request->link;
+
+            // Process each link
+            foreach ($links as $link) {
                 taskslink::create([
-                    'task_id' => $task->id,
-                    'youtube_link' => $request->link,
+                    'task_id' => $task->id,  // Assuming $task is defined
+                    'youtube_link' => $link,
                 ]);
             }
+        }
+
         toastr()->success('data berhasil dihapus');
         return redirect()->route('classroom.detail',$request->id_kelas);
+    }
+
+    public function editTugasAction(request $request){
+         // Validate the incoming request data
+            $validated = $request->validate([
+                'judul' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'id_kelas' => 'string',
+                'poin' => 'nullable|integer',
+                'due_date' => 'nullable|date',
+                'dok.*' => 'nullable|file|max:2048', // Max 2MB per file
+                'link.*' => 'nullable|url',
+            ]);
+
+            // Find the task to update
+            $task = tasks::findOrFail($request->task_id); // Ensure task exists, if not it will throw a 404 error
+
+            // Update task details
+            $task->update([
+                'judul' => $validated['judul'],
+                'description' => $validated['description'],
+                'id_kelas' => $validated['id_kelas'],
+                'poin' => $validated['poin'],
+                'due_date' => $validated['due_date'],
+                'type' => $request->type, // Assuming 'type' is sent in the request
+            ]);
+
+            // Handle file uploads
+            if ($request->hasFile('dok')) {
+                foreach ($request->file('dok') as $file) {
+                    // Retrieve file name and size
+                    $fileName = $file->getClientOriginalName();
+                    $fileSize = $file->getSize(); // File size in bytes
+                    $fileExstention = $file->getClientOriginalExtension();
+
+                    // Store the file in the public/uploads/tasks directory
+                    $path = $file->store('uploads/tasks', 'local');
+
+                    // Save the file information to the database
+                    tasksmedia::create([
+                        'task_id' => $task->id, // Use the actual task ID
+                        'file_path' => $path,
+                        'name' => $fileName, // Save the original file name
+                        'size' => $fileSize, // Save the file size
+                        'exstention' => $fileExstention
+                    ]);
+                }
+            }
+
+            // Handle YouTube link updates (if provided)
+            if ($request->hasFile('link')) {
+                // You can use a `taskslink` model to handle multiple links, assuming the link is an array
+                // If it's not an array, you can still update a single link in a similar manner
+                foreach ($request->link as $link) {
+                    taskslink::updateOrCreate(
+                        ['task_id' => $task->id], // Find the existing task link by task_id
+                        ['youtube_link' => $link] // Update the youtube_link
+                    );
+                }
+            }
+
+            // Send success message
+            toastr()->success('Task updated successfully');
+
+            // Redirect to the classroom detail page
+            return redirect()->route('classroom.detail', $request->id_kelas);
+    }
+
+     // Define a method to extract YouTube video ID
+     public function extractYouTubeVideoId($url)
+     {
+         // Regular expression to extract the video ID
+         $pattern = '/(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/]+\/.*\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=))([^"&?\/\s]{11})/';
+ 
+         preg_match($pattern, $url, $matches);
+ 
+         // Return the video ID or null if no match is found
+         return $matches[1] ?? null;
+     }
+     
+    public function editTugas($task_id){
+       // Find the task based on the provided task_id
+        $task = tasks::find($task_id);
+
+        // Retrieve all task media files related to the task
+        $taskFiles = tasksmedia::where('task_id', $task_id)->get();
+
+        // Retrieve all YouTube links associated with the task
+        $taskLinks = taskslink::where('task_id', $task_id)->get();
+
+        // Initialize the videoIds array
+        $videoIds = [];
+
+        // Iterate over each taskLink and extract video IDs
+        foreach($taskLinks as $i) {
+            $urls = explode(',', $i->youtube_link);  // Assuming URLs are separated by commas
+
+            // Extract video IDs from all URLs for each taskLink
+            $currentVideoIds = array_map([$this, 'extractYouTubeVideoId'], $urls);
+
+            // Merge the current video IDs with the main array (to avoid overwriting previous ones)
+            $videoIds = array_merge($videoIds, $currentVideoIds);
+        }
+
+        // If no video IDs were found, ensure that $videoIds is an empty array
+        $videoIds = !empty($videoIds) ? $videoIds : [];
+        $urls = !empty($urls) ? $urls : [];
+
+        // Pass all the data to the view
+        return view('classroom.work.tugasEdit', [
+            'title' => 'Edit Tugas ',
+        ], compact('task', 'taskFiles', 'taskLinks', 'videoIds', 'urls','task_id'));  // Ensure the correct variable name is used
+
+    }
+
+    public function deleteTaskAction($task_id){
+         // First, delete all associated task media (files) for this task
+        tasksmedia::where('task_id', $task_id)->delete();
+
+        // Then, delete all associated task links (e.g., YouTube links)
+        taskslink::where('task_id', $task_id)->delete();
+
+        // Finally, delete the actual task itself
+        tasks::where('id', $task_id)->delete();
+
+        // Optionally, you can redirect or show a success message
+        toastr()->success('Task and associated data deleted successfully');
+        return redirect()->back();// Or wherever you want to redirect
     }
 
 
@@ -206,7 +363,7 @@ class ClassRoomDetailController extends Controller
             'pilihan_c' => 'required|string',
             'pilihan_d' => 'required|string',
             'pilihan_e' => 'nullable|string',
-            'jawaban' => 'required|in:pilihan_a,pilihan_b,pilihan_c,pilihan_d,pilihan_e',
+            'jawaban' => 'required|in:A,B,C,D,E',
             'task_id' => 'required|integer',
         ]);
 
@@ -377,4 +534,5 @@ class ClassRoomDetailController extends Controller
 
 
     }
+   
 }

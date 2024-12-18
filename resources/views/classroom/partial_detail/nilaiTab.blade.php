@@ -7,4 +7,9 @@
             </div>
         </div>
     </div>
+    <div class="card p-5">
+        <div class="d-flex justify-content-center">
+            <p>Data tidak ditemukan</p>
+        </div>
+    </div> 
 </div>

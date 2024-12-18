@@ -42,9 +42,11 @@
     <li class="nav-item" role="presentation">
         <a class="nav-link " href="#bottom-tab1" data-bs-toggle="tab" aria-selected="true" role="tab"><strong>Forum</strong></a>
     </li>
-    <li class="nav-item" role="presentation">
-        <a class="nav-link" href="#bottom-tab2" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Tugas Kelas</strong></a>
-    </li>
+    @if(auth()->user()->role !=="siswa")
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#bottom-tab2" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Tugas Kelas</strong></a>
+        </li>       
+    @endif
     <li class="nav-item" role="presentation">
         <a class="nav-link" href="#bottom-tab3" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Orang</strong></a>
     </li>
@@ -62,8 +64,8 @@
        @include('classroom.partial_detail.orangTab')
         @include('classroom.partial_detail.nilaiTab')
     </div>
-
 </div>
+
 @foreach ($peserta as $item )
 <div class="modal fade" id="delete-modal-{{ $item->nis }}" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
@@ -88,7 +90,36 @@
         </div>
     </div>
 </div>
+@endforeach
 
+@foreach ($task as $item)
+<div class="modal fade" id="editMateri-{{ $item->id }}" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content">
+
+            <form action="{{ route('classroom.quizTaskAction') }}" method="POST">
+                @csrf
+                <div class="modal-body ">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Nama Quiz</label>
+                        <input type="text" class="form-control" name="judul" placeholder="contoh : Quiz Matematika" value="{{ $item->judul }}">
+                        <div hidden>
+                            <input type="text" class="form-control" name="task_id" value="{{ $item->id }}">
+                            <input type="text" class="form-control" name="id_kelas" value="{{ $id }}">
+                            <input type="text" name="description" value="Quis">
+                            <input type="text" name="poin" >
+                            <input type="text" name="due_date" >
+                            <input type="text" name="type" value="quiz" hidden>
+                            <input type="text" name="auth" value="{{ auth()->user()->nomor }}">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-100">Simpan Perubahan</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div> 
 @endforeach
 
 <div class="modal fade" id="addMateri" aria-hidden="true" style="display: none;">
@@ -251,7 +282,6 @@
 </div>
 
 @endforeach
-
 @section('javascript')
 
 <script>

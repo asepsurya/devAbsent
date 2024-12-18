@@ -44,14 +44,24 @@
         @php
             $no=1;
         @endphp
-        @foreach ($quest as $item)
-        <tr>
-            <td width="1%">{{ $no++ }}</td>
-            <td width="95%"><a href="{{ route('classroom.editQuiz',[$id_kelas,$item->id,$task_id]) }}">{!! Str::words($item->soal, 10, '...') !!}</a></td>
-            <td>Added {{ $item->created_at->diffForHumans() }}</td>
-            <td><button class="btn btn-danger btn-sm"><span class="ti ti-trash-x"></span></button></td>
-        </tr>
-        @endforeach
+        @if($quest->count())
+            @foreach ($quest as $item)
+            <tr>
+                <td width="1%">{{ $no++ }}</td>
+                <td width="95%"><a href="{{ route('classroom.editQuiz',[$id_kelas,$item->id,$task_id]) }}">{!! Str::words($item->soal, 10, '...') !!}</a></td>
+                <td>Added {{ $item->created_at->diffForHumans() }}</td>
+                <td><button class="btn btn-danger btn-sm"><span class="ti ti-trash-x"></span></button></td>
+            </tr>
+            @endforeach
+        @else
+            <tr colspan="4">
+                <td>
+                    <div class="d-flex justify-content-center p-5">
+                        Belum menambahkan satu pertanyaan apapun 
+                    </div>
+                </td>
+            </tr>
+        @endif
     </table>
 </div>
 

@@ -34,14 +34,13 @@ Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
 Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
 Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
-Route::get('/download/{file}', function ($file='') {
-    $filePath = storage_path("app/{$file}");
-    dd( $filePath);
-    // if (file_exists($filePath)) {
-    //     return response()->download($filePath, $file);
-    // } else {
-    //     abort(404, 'File not found');
-    // }
+Route::get('/download/{file}', function ($filename) {
+
+    $path = storage_path('app/upload/' . $filename);  // Adjust the path as per your file storage
+        if (!file_exists($path)) {
+            abort(404);
+        }
+        return response()->file($path);
 })->name('download');
 route::get('sss',function(){
     // memberikan Permission
@@ -236,6 +235,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/classroom/detail/deleteuserClass/{id}', [ClassRoomDetailController::class, 'deleteuserClass'])->name('classroom.deleteuserClass');
     Route::get('/classroom/addwork/{id}', [ClassRoomDetailController::class, 'tugas'])->name('classroom.tugas');
     Route::post('/classroom/addwork/add', [ClassRoomDetailController::class, 'tambahTugas'])->name('classroom.tambahTugas');
+    Route::get('/classroom/addwork/edit/{task_id}', [ClassRoomDetailController::class, 'editTugas'])->name('classroom.editTugas');
+    Route::post('/classroom/addwork/edit/action', [ClassRoomDetailController::class, 'editTugasAction'])->name('classroom.editTugasAction');
+    Route::get('/classroom/addwork/delete/{task_id}', [ClassRoomDetailController::class, 'deleteTaskAction'])->name('classroom.deleteTaskAction');
+    Route::post('/classroom/addwork/delete/quiz', [ClassRoomDetailController::class, 'deletequizAction'])->name('classroom.quizTaskAction');
 
     Route::get('/classroom/questions/{id_kelas}/{task_id}/list', [ClassRoomDetailController::class, 'quiz'])->name('classroom.quiz');
     Route::get('/classroom/questions/{id_kelas}/{task_id}/create', [ClassRoomDetailController::class, 'tambahQuiz'])->name('classroom.tambahQuiz');
