@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\studentAnswer;
 use App\Models\ClassRoomPeople;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\File;
 use Illuminate\Console\View\Components\Task;
 
 class ClassRoomDetailController extends Controller
@@ -278,13 +279,13 @@ class ClassRoomDetailController extends Controller
      {
          // Regular expression to extract the video ID
          $pattern = '/(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/]+\/.*\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=))([^"&?\/\s]{11})/';
- 
+
          preg_match($pattern, $url, $matches);
- 
+
          // Return the video ID or null if no match is found
          return $matches[1] ?? null;
      }
-     
+
     public function editTugas($task_id){
        // Find the task based on the provided task_id
         $task = tasks::find($task_id);
@@ -350,38 +351,48 @@ class ClassRoomDetailController extends Controller
         return view('classroom.work.quiz.quizList', [
             'title' => 'My Quiz',
             'name_task' => $name,
-            'quest' => question::where('task_id', $task_id)->get(),
+            'quest' => question::where('task_id', $task_id)->orderBy('id', 'DESC')->get(),
         ], compact('id_kelas','task_id'));
 
     }
     public function quizAdd(request $request){
         // Validasi input dilakukan melalui StoreQuestionRequest
-        $validated = $request->validate([
-            'soal' => 'required|string',
-            'pilihan_a' => 'required|string',
-            'pilihan_b' => 'required|string',
-            'pilihan_c' => 'required|string',
-            'pilihan_d' => 'required|string',
-            'pilihan_e' => 'nullable|string',
-            'jawaban' => 'required|in:A,B,C,D,E',
-            'task_id' => 'required|integer',
-        ]);
+        // Validate the request, including the image input
+            $validated = $request->validate([
+                'soal' => 'required|string',
+                'pilihan_a' => 'required|string',
+                'pilihan_b' => 'required|string',
+                'pilihan_c' => 'required|string',
+                'pilihan_d' => 'required|string',
+                'pilihan_e' => 'nullable|string',
+                'jawaban' => 'required|in:A,B,C,D,E',
+                'task_id' => 'required|integer',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048', // Validate image
+            ]);
 
-        // Simpan data ke model Question
-        $question = new question();
-        $question->task_id = $validated['task_id'];
-        $question->soal = $validated['soal'];
-        $question->pilihan_a = $validated['pilihan_a'];
-        $question->pilihan_b = $validated['pilihan_b'];
-        $question->pilihan_c = $validated['pilihan_c'];
-        $question->pilihan_d = $validated['pilihan_d'];
-        $question->pilihan_e = $validated['pilihan_e'];
-        $question->jawaban = $validated['jawaban'];
-        $question->save();
+            // Handle image upload if provided
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                // Store the image in the 'public/images' directory
+                $imagePath = $request->file('image')->store('images', 'public');
+            }
 
-        toastr()->success('Pertanyaan Berhasil ditambahkan');
-        // Redirect atau respon sukses
-        return redirect()->back();
+            // Save data to the Question model
+            $question = new Question();
+            $question->task_id = $validated['task_id'];
+            $question->soal = $validated['soal'];
+            $question->pilihan_a = $validated['pilihan_a'];
+            $question->pilihan_b = $validated['pilihan_b'];
+            $question->pilihan_c = $validated['pilihan_c'];
+            $question->pilihan_d = $validated['pilihan_d'];
+            $question->pilihan_e = $validated['pilihan_e'];
+            $question->jawaban = $validated['jawaban'];
+            $question->image_path = $imagePath;  // Store the image path in the database
+            $question->save();
+
+            // Show success message and redirect
+            toastr()->success('Pertanyaan Berhasil ditambahkan');
+            return redirect()->back();
     }
 
     public function editQuiz($id_kelas, $id, $task_id){
@@ -436,10 +447,11 @@ class ClassRoomDetailController extends Controller
                                     ->toArray();
         // Fetch the questions and options
         $questions = question::where('task_id',$task_id)->get();  // Adjust based on your query logic
+        $questionsAnswer = studentAnswer::where('student_id',$studentId)->get();  // Adjust based on your query logic
         return view('classroom.work.quiz.quiz',[
             'title'=>'Quiz',
             'questions'=>question::where('task_id',$task_id)->inRandomOrder()->get(),
-            'questionsCount'=>$questions
+            'questionsAnswer'=>$questionsAnswer
 
         ],compact('task_id','questions', 'studentAnswers'));
     }
@@ -534,5 +546,12 @@ class ClassRoomDetailController extends Controller
 
 
     }
-   
+
+    public function quizDelete($id){
+        question::where('id',$id)->delete();
+        toastr()->success('Pertanyaan Berhasil dihapus');
+        // Redirect with a success message
+        return redirect()->back();
+    }
+
 }

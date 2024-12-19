@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GTKController;
 use App\Http\Controllers\PDFController;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\RegionController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\inOutTimeController;
 use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\ExcelPreviewController;
 use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\verifikasiUserController;
 use App\Http\Controllers\ClassRoomDetailController;
@@ -34,14 +36,8 @@ Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
 Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
 Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
-Route::get('/download/{file}', function ($filename) {
 
-    $path = storage_path('app/upload/' . $filename);  // Adjust the path as per your file storage
-        if (!file_exists($path)) {
-            abort(404);
-        }
-        return response()->file($path);
-})->name('download');
+
 route::get('sss',function(){
     // memberikan Permission
     $user= User::FindorFail(413);
@@ -246,9 +242,13 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/classroom/question/add', [ClassRoomDetailController::class, 'quizAdd'])->name('classroom.quizAdd');
     Route::post('/classroom/question/update', [ClassRoomDetailController::class, 'quizUpdate'])->name('classroom.quizUpdate');
+    Route::get('/classroom/question/delete/{id}', [ClassRoomDetailController::class, 'quizDelete'])->name('classroom.quizDelete');
     Route::get('/quiz/{id_kelas}/{task_id}', [ClassRoomDetailController::class, 'quizIndex'])->name('quiz');
     Route::post('/quiz/submit', [ClassRoomDetailController::class, 'quizSubmit'])->name('quiz.submit');
 
+    Route::get('/download/{filename}', [ClassRoomDetailController::class, 'download'])->name('download');
+    Route::post('/preview-excel', [ExcelPreviewController::class, 'previewExcel'])->name('preview.excel');
+    Route::post('/save-preview-data', [ExcelPreviewController::class, 'savePreviewData'])->name('save.preview.data');
 
 });
 Route::post('/logout',[authController::class,'logout'])->name('logout');

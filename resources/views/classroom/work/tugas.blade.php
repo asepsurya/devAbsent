@@ -1,7 +1,7 @@
 @extends('layout.main')
 @section('css')
 <!-- TinyMCE CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.6.0/tinymce.min.js" integrity="sha512-/4EpSbZW47rO/cUIb0AMRs/xWwE8pyOLf8eiDWQ6sQash5RP1Cl8Zi2aqa4QEufjeqnzTK8CLZWX7J5ZjLcc1Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.6.0/tinymce.min.js" integrity="sha512-/4EpSbZW47rO/cUIb0AMRs/xWwE8pyOLf8eiDWQ6sQash5RP1Cl8Zi2aqa4QEufjeqnzTK8CLZWX7J5ZjLcc1Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
 <style>
     .preview-container {
         display: flex;
@@ -300,19 +300,21 @@
         }
     });
 </script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.5.0/tinymce.min.js" integrity="sha512-KmEMNDKX2KDYPrBMr2MJj/JLgYK271k+P2341E5wvBMgepz1HS3wpc7r65hDXcp4Ul89omtSKIHxdk8VYHd9ug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
      var body = document.body;
      body.classList.add("mini-sidebar");
+</script>
 
+<script type="text/javascript">
     tinymce.init({
-    selector: '.editor', // Initialize TinyMCE on any element with class 'editor'
-    menubar: false,
-    statusbar: false,
-    height:200,
-    toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist',
+        selector: '.editor',
+        height: 400,
+        menubar: false,
+        statusbar: false,
+        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist ',
 
-    })
+    });
 </script>
 <script>
     var elements = document.querySelectorAll('.blank-page');

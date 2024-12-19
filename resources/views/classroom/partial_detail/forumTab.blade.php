@@ -73,7 +73,7 @@
                                 <div class="mx-3">
                                     <h6 class="mb-1 fw-semibold">
                                         <div class="d-flex align-items-center">
-                                            <a class="avatar avatar-lg flex-shrink-0"><img src="http://127.0.0.1:8000/asset/img/user-default.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                                            <a class="avatar avatar-lg flex-shrink-0"><img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="img"></a>
                                             <div class="ms-2">
                                                 <h6 class="text-dark text-truncate mb-0"><a>{{ $item->user->nama }}</a></h6>
                                                 <small class="text-muted">{{ $item->created_at->diffForHumans() }}</small>
@@ -84,7 +84,7 @@
                                     <div class="col my-3 ">
                                         <h5>{{ $item->judul }}</h5>
                                         @if ($item->type == 'quiz')
-                                        Kunjungi link berikut ini untuk memulai : <a href="{{ route('quiz',[$id,$item->id]) }}">{{ route('quiz',[$id,$item->id]) }}</a>
+                                        Kunjungi link berikut ini untuk memulai,jangan lupa berdo'a terlebih dahulu sebelum dimulai :) <a href="{{ route('quiz',[$id,$item->id]) }}">{{ route('quiz',[$id,$item->id]) }}</a>
                                         @else
                                             <p>{!! $item->description !!}</p>
                                         @endif
@@ -97,57 +97,63 @@
                                                         <div class="d-flex align-items-center">
                                                             <img src="{{ asset('asset/img/icon/qa.png') }}" alt="YouTube Icon" class="me-2" width="35">
                                                             <h5 class="text-nowrap">
-                                                                <a href="{{ route('quiz',[$id,$item->id]) }}" target="_Blank">Soal Pilihan Ganda</a>
+                                                                <a href="{{ route('quiz', [$id, $item->id]) }}" target="_blank">Soal Pilihan Ganda</a>
                                                             </h5>
                                                         </div>
                                                         <div class="d-flex align-items-center">
-                                                            <a href="javascript:void(0);"><i class="fa fa-star me-2"></i></a>
+
                                                             <div class="dropdown">
                                                                 <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" class="dropset">
                                                                     <i class="fa fa-ellipsis-v"></i>
                                                                 </a>
                                                                 <ul class="dropdown-menu">
-                                                                    <li><a href="" target="_blank" class="dropdown-item">Details</a></li>
+                                                                    <li>
+                                                                        <!-- Add a download link -->
+                                                                        <a class="dropdown-item">Download File</a>
+                                                                    </li>
                                                                 </ul>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex align-items-center justify-content-between mt-3">
-
                                                         <p class="text-primary mb-0 me-2">{{ $item->created_at->diffForHumans() }}</p>
-                                                        <div><a href="{{ route('quiz',[$id,$item->id]) }}" class="btn btn-primary">Ayo Mulai!</a> </div>
+                                                        <div>
+                                                            <a href="{{ route('quiz', [$id, $item->id]) }}" class="btn btn-primary">Ayo Mulai!</a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
                                     @else
                                         {{-- media --}}
                                     <div class="row g-2">
                                         @if($item->media)
                                             @foreach ($item->media as $media)
+
                                             <div class="owl-item active" style="width: 338.667px; margin-right: 15px;">
                                                 <div class="border rounded-3 bg-white p-3">
                                                     <div class="d-flex align-items-center justify-content-between">
                                                         <div class="d-flex align-items-center">
                                                             @if(isset($media->exstention) && $media->exstention == 'pdf')
-                                                            <img src="{{ asset('asset/img/icon/pdf-02.svg') }}" alt="PDF Icon" class="me-2">
-                                                            <h5 class="text-nowrap"><a href="{{ route('download',$media->file_path)}}" download>{{ Str::limit($media->name, 20, '...') }}</a></h5>
+                                                                <img src="{{ asset('asset/img/icon/pdf-02.svg') }}" alt="PDF Icon" class="me-2">
+                                                                <h5 class="text-nowrap"><a href="/storage/{{ $media->file_path }}" target="_blank" >{{ Str::limit($media->name, 20, '...') }}</a></h5>
                                                             @elseif(isset($media->exstention) && in_array($media->exstention, ['doc', 'docx']))
-                                                            <img src="{{ asset('asset/img/icon/doc.png') }}" alt="Document Icon" class="me-2" width="50px">
-                                                            <h5 class="text-nowrap"><a href="javascript:void(0);">{{ Str::limit($media->name, 20, '...') }}</a></h5>
+                                                                <img src="{{ asset('asset/img/icon/doc.png') }}" alt="Document Icon" class="me-2" width="50px">
+                                                                <h5 class="text-nowrap"><a href="/storage/{{$media->file_path }}" download="{{ $media->name }}">{{ Str::limit($media->name, 20, '...') }}</a></h5>
                                                             @else
-                                                            <img src="{{ asset('asset/img/icon/word.png') }}" alt="Default Icon" class="me-2" width="50px">
-                                                            <h5 class="text-nowrap"><a href="javascript:void(0);">{{ Str::limit($media->name, 20, '...') }}</a></h5>
+                                                                <img src="{{ asset('asset/img/icon/word.png') }}" alt="Default Icon" class="me-2" width="50px">
+                                                                <h5 class="text-nowrap"><a href="/storage/{{$media->file_path }}" download>{{ Str::limit($media->name, 20, '...') }}</a></h5>
                                                             @endif
                                                         </div>
                                                         <div class="d-flex align-items-center">
-                                                            <a href="javascript:void(0);"><i class="fa fa-star me-2"></i></a>
+
                                                             <div class="dropdown">
                                                                 <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" class="dropset">
                                                                     <i class="fa fa-ellipsis-v"></i>
                                                                 </a>
                                                                 <ul class="dropdown-menu">
-                                                                    <li><a href="javascript:void(0);" class="dropdown-item">Details</a></li>
+                                                                    <li><a href="/storage/{{$media->file_path }}" download="{{ $media->name }}" class="dropdown-item">Download File</a></li>
                                                                 </ul>
                                                             </div>
                                                         </div>
@@ -179,7 +185,7 @@
                                                             </h5>
                                                         </div>
                                                         <div class="d-flex align-items-center">
-                                                            <a href="javascript:void(0);"><i class="fa fa-star me-2"></i></a>
+
                                                             <div class="dropdown">
                                                                 <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" class="dropset">
                                                                     <i class="fa fa-ellipsis-v"></i>
@@ -215,9 +221,9 @@
                 <div class="d-flex justify-content-center">
                     <p>Belum membuat postingan apapun</p>
                 </div>
-            </div> 
+            </div>
             @endif
-           
+
         </div>
     </div>
 </div>

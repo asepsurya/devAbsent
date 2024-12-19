@@ -13,21 +13,54 @@
     border: 2px solid #007bff;
     box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
 }
+.question-box {
+    width: 50px; /* Lebar kotak */
+    height: 50px; /* Tinggi kotak */
+    display: flex;
+    justify-content: center; /* Posisikan konten di tengah horizontal */
+    align-items: center; /* Posisikan konten di tengah vertikal */
+    margin: 2px; /* Margin antar kotak */
+}
+
+.question-button {
+    width: 100%; /* Tombol mengisi lebar penuh kotak */
+    height: 100%; /* Tombol mengisi tinggi penuh kotak */
+    display: flex; /* Flexbox untuk tombol */
+    justify-content: center; /* Tengah horizontal */
+    align-items: center; /* Tengah vertikal */
+    border-radius: 8px; /* Membuat sudut membulat */
+    font-weight: bold; /* Mempertegas teks */
+    font-size: 14px; /* Ukuran font */
+    padding: 0; /* Hilangkan padding default */
+    line-height: 1; /* Atur line-height agar teks tidak melebar */
+}
+
+
+@media (max-width: 768px) {
+    .question-box {
+        width: 40px; /* Atur ulang lebar kotak untuk layar kecil */
+        height: 40px;
+    }
+}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @endsection
 @section('container')
 <form action="{{ route('quiz.submit') }}" method="post" id="quizForm">
     @csrf
     <div class="row">
         <div class="col-md-9">
-            <div class="card-body">
+            <div class="card-body p-4" style="background-color: #e6f2ff;">
                 <div class="list-group p-3">
-                    @forelse ($questions as $index => $question)
-                        <div class="list-group-item p-3">
-                            {{-- <h5>Pertanyaan {{ ($questions->currentPage() - 1) * $questions->perPage() + $index + 1 }}:</h5> --}}
-                            <h5>Pertanyaan {{ $index + 1 }}</h5>
 
-                            <p class="fw-semibold">{!! $question->soal !!}</p>
+                    @forelse ($questions as $index => $question)
+
+                        <div class="list-group-item p-3" >
+                            {{-- <h5>Pertanyaan {{ ($questions->currentPage() - 1) * $questions->perPage() + $index + 1 }}:</h5> --}}
+                            <h5 class="mb-2"  id="soal{{ $index+1 }}">Pertanyaan {{ $index + 1 }}</h5>
+
+                            <p class="fs-17">{!! $question->soal !!}</p>
 
                             <!-- Hidden input to store question ID -->
                             <input type="hidden" name="question_id[]" value="{{ $question->id }}">
@@ -43,8 +76,9 @@
                             @endphp
 
                             @foreach ($options as $key => $option)
+
                                 @if ($option)
-                                    <div class="card my-2 board-hover option-card">
+                                    <div class="card my-2 board-hover option-card" >
                                         <div class="card-body p-2 px-3 d-md-flex align-items-center justify-content-between">
                                             <div class="d-flex align-items-center">
                                                 <div class="form-check form-check-md me-3">
@@ -54,7 +88,7 @@
                                                 <span class="bg-soft-primary text-primary avatar avatar-md me-2 br-5 flex-shrink-0">
                                                     {{ $key }}
                                                 </span>
-                                                <div class="mt-3">
+                                                <div class="mt-1">
                                                     <p class="mb-0">{!! $option !!}</p>
                                                 </div>
                                             </div>
@@ -67,37 +101,51 @@
                         <div class="list-group-item text-center">
                             <p>No questions available.</p>
                         </div>
+                        <script>
+
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'No Questions',
+                                text: 'There are no questions available at the moment.',
+                                confirmButtonText: 'Go Back'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.history.back(); // Redirect back
+                                }
+                            });
+                        </script>
                     @endforelse
                 </div>
             </div>
 
         </div>
-        <div class="col-md-3 border-start bg-white" style="min-height: 100vh;">
+        <div class="col-md-3  bg-white" style="min-height: 100vh;">
             <div style="position: sticky; top: 70px;">
                 <div class="d-flex justify-content-center mt-3">
                     <h4>Waktu Tersisa: <span id="countdown-timer">10:00</span></h4>
                 </div>
-                <div class="card mt-4 pt-2 mx-3">
+                <div class="card mt-4 pt-2 mx-3 ">
                     <h6 class="mb-2 d-flex justify-content-center">Pertanyaan:</h6>
-                    <div class="d-flex flex-wrap justify-content-center">
+                    <div class="d-flex flex-wrap justify-content-center"  style="overflow-y: auto; max-height: 400px;">
+                        @foreach ($questions as $index => $question)
+                            @php
+                                // Check if the question has been answered
+                                $isAnswered = isset($studentAnswers[$question->id]); // Assuming $studentAnswers contains answers keyed by question_id
+                                $btnClass = $isAnswered ? 'btn-success' : 'btn-outline-light bg-white';
+                            @endphp
 
-                        @foreach ($questionsCount as $index => $question)
-                        @php
-                            // Check if the question has been answered
-                            $isAnswered = isset($studentAnswers[$question->id]); // Assuming $studentAnswers contains answers keyed by question_id
-                            $btnClass = $isAnswered ? 'btn-success' : 'btn-outline-light bg-white';
-                        @endphp
-
-                        <div class="me-1 mb-2">
-                            <a href="{{ url('#soal' . ($index + 1)) }}"
-                               class="btn {{ $btnClass }} btn-icon position-relative question-button"
-                               data-id="{{ $question->id }}">
-                                {{ $index + 1 }}
-                            </a>
-                        </div>
-                    @endforeach
-
+                            <div class="question-box m-1">
+                                <a href="{{ url('#soal' . ($index + 1)) }}"
+                                   class="btn btn-sm {{ $btnClass }} position-relative question-button "
+                                   data-id="{{ $question->id }}">
+                                    {{ $index + 1 }}
+                                </a>
+                            </div>
+                        @endforeach
                     </div>
+                </div>
+                <div class="m-3">
+                    <button type="submit" class="btn btn-primary w-100" id="submitBtn">Submit</button>
                 </div>
                 <div class="alert alert-primary overflow-hidden p-0 m-3" role="alert">
                     <div class="p-3 bg-primary text-fixed-white d-flex justify-content-between">
@@ -118,9 +166,7 @@
                     <input type="hidden" name="student_id" value="{{ auth()->user()->nomor }}">
                     <input type="hidden" name="task_id" value="{{ $task_id }}">
                 </div>
-                <div class="m-3">
-                    <button type="submit" class="btn btn-primary w-100" id="submitBtn">Submit</button>
-                </div>
+
             </div>
         </div>
     </div>
@@ -181,6 +227,8 @@
 </script>
 {{-- count time --}}
 <script>
+     var body = document.body;
+     body.classList.add("mini-sidebar");
     document.addEventListener('DOMContentLoaded', function () {
         const countdownElement = document.getElementById('countdown-timer');
         const form = document.querySelector('form');
