@@ -125,7 +125,7 @@
                             <a class="btn btn-primary" onclick="addYouTubeLink()">+</a>
                         </div>
                     </div>
-                    <input  name="link[]" id="youtubeLinks" hidden>
+                    <input  name="link" id="youtubeLinks" hidden>
                      <!-- Preview Section -->
                      <div class="preview-container" id="previewContainer"></div>
                 </div>

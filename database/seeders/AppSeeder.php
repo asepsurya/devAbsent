@@ -214,54 +214,79 @@ class AppSeeder extends Seeder
         // ----------------------------------------------------------------
 
         // CREATE PERMISSION MENU
-        Permission::create(['name' => 'absent']);
+        Permission::create(['name' => 'Absensi RFID']);
+        Permission::create(['name' => 'Absensi Kelas']);
+        Permission::create(['name' => 'Management Absensi']);
         Permission::create(['name' => 'akademik']);
         Permission::create(['name' => 'gtk']);
         Permission::create(['name' => 'lisensi']);
         Permission::create(['name' => 'rfid']);
         Permission::create(['name' => 'verifikasi_pengguna']);
-        Permission::create(['name' => 'pelajaran']);
-        Permission::create(['name' => 'hari_libur']);
+        Permission::create(['name' => 'Ruangan Kelas']);
+        Permission::create(['name' => 'Setelan Masuk Keluar']);
+        Permission::create(['name' => 'Papan Pengumuman']);
+        Permission::create(['name' => 'Jadwal Pelajaran']);
+        Permission::create(['name' => 'Kalender Akademik']);
+        Permission::create(['name' => 'Setelan Hari Libur']);
         Permission::create(['name' => 'laporan']);
-        Permission::create(['name' => 'pengguna']);
-        Permission::create(['name' => 'setelan']);
-        Permission::create(['name' => 'management_absent']);
-        Permission::create(['name' => 'absensi_kelas']);
-        Permission::create(['name' => 'setelan_aplikasi']);
-        // PERMISSION CRUD
-        Permission::create(['name' => 'create']);
-        Permission::create(['name' => 'delete']);
-        Permission::create(['name' => 'update']);
-        Permission::create(['name' => 'read']);
+        Permission::create(['name' => 'Setelan Aplikasi']);
+        Permission::create(['name' => 'action']);
+     
        // create roles and assign existing permissions
 
         //FOR ROLE WALI KELAS
        $role1 = Role::create(['name' => 'walikelas']);
         //give Permission
-       $role1->givePermissionTo('update');
-       $role1->givePermissionTo('delete');
-       $role1->givePermissionTo('read');
+       $role1->givePermissionTo('Absensi Kelas');
+       $role1->givePermissionTo('akademik');
+       $role1->givePermissionTo('gtk');
+       $role1->givePermissionTo('verifikasi_pengguna');
+       $role1->givePermissionTo('Ruangan Kelas');
+       $role1->givePermissionTo('Setelan Masuk Keluar');
+       $role1->givePermissionTo('Papan Pengumuman');
+       $role1->givePermissionTo('Jadwal Pelajaran');
+       $role1->givePermissionTo('Kalender Akademik');
+       $role1->givePermissionTo('Setelan Hari Libur');
+       $role1->givePermissionTo('laporan');
+       $role1->givePermissionTo('action');
 
         // FOR GURU
        $role2 = Role::create(['name' => 'guru']);
         // give Permisson
-       $role2->givePermissionTo('create');
-       $role2->givePermissionTo('read');
-       $role2->givePermissionTo('delete');
-       $role2->givePermissionTo('update');
+        $role2->givePermissionTo('Absensi Kelas');
+        $role2->givePermissionTo('akademik');
+        $role2->givePermissionTo('gtk');
+        $role2->givePermissionTo('verifikasi_pengguna');
+        $role2->givePermissionTo('Ruangan Kelas');
+        $role2->givePermissionTo('Papan Pengumuman');
+        $role2->givePermissionTo('Jadwal Pelajaran');
+        $role2->givePermissionTo('Kalender Akademik');
+        $role2->givePermissionTo('action');
 
         // FOR SISWA
         $role3 = Role::create(['name' => 'siswa']);
         // give Permission
-        $role3->givePermissionTo('read');
+        $role3->givePermissionTo('Ruangan Kelas');
 
         // FOR ADMIN
         $role4 = Role::create(['name' => 'admin']);
-        // give Permisson
-        $role4->givePermissionTo('create');
-        $role4->givePermissionTo('read');
-        $role4->givePermissionTo('delete');
-        $role4->givePermissionTo('update');
+        
+        $role4->givePermissionTo('Absensi RFID');
+        $role4->givePermissionTo('Management Absensi');
+        $role4->givePermissionTo('akademik');
+        $role4->givePermissionTo('gtk');
+        $role4->givePermissionTo('lisensi');
+        $role4->givePermissionTo('verifikasi_pengguna');
+        $role4->givePermissionTo('Ruangan Kelas');
+        $role4->givePermissionTo('Setelan Masuk Keluar');
+        $role4->givePermissionTo('Papan Pengumuman');
+        $role4->givePermissionTo('Jadwal Pelajaran');
+        $role4->givePermissionTo('Kalender Akademik');
+        $role4->givePermissionTo('Setelan Hari Libur');
+        $role4->givePermissionTo('laporan');
+        $role4->givePermissionTo('Setelan Aplikasi');
+        $role4->givePermissionTo('action');
+        
 
         $role5 = Role::create(['name' => 'superadmin']);
 

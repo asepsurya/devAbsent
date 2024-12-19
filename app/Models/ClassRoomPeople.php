@@ -11,4 +11,8 @@ class ClassRoomPeople extends Model
     public function peopleStudent(){
         return $this->belongsTo('App\Models\student','nis','nis');
     }
+
+    public function getClass(){
+        return $this->HasMany('App\Models\ClassRoom','class_code','id_kelas');
+    }
 }

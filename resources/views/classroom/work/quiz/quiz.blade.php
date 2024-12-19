@@ -42,16 +42,26 @@
         height: 40px;
     }
 }
+    html .darkmode .a,
+    html[data-theme=dark] .a {
+    background: #0f0c1c;
+    border-bottom-color: #eeeeee
+    }
+    .a{
+        background-color: #e7e7e7;
+        height: 100%;
+    }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @endsection
 @section('container')
-<form action="{{ route('quiz.submit') }}" method="post" id="quizForm">
-    @csrf
+
     <div class="row">
         <div class="col-md-9">
-            <div class="card-body p-4" style="background-color: #e6f2ff;">
+            <form action="{{ route('quiz.submit') }}" method="post" id="quizForm">
+                @csrf
+            <div class="card-body p-4 a" >
                 <div class="list-group p-3">
 
                     @forelse ($questions as $index => $question)
@@ -116,13 +126,15 @@
                         </script>
                     @endforelse
                 </div>
+                <input type="hidden" name="student_id" value="{{ auth()->user()->nomor }}">
+                <input type="hidden" name="task_id" value="{{ $task_id }}">
             </div>
-
+            </form>
         </div>
         <div class="col-md-3  bg-white" style="min-height: 100vh;">
             <div style="position: sticky; top: 70px;">
                 <div class="d-flex justify-content-center mt-3">
-                    <h4>Waktu Tersisa: <span id="countdown-timer">10:00</span></h4>
+                    <h4>Waktu Tersisa: <span id="countdown-timer">{{ $time }}:00</span></h4>
                 </div>
                 <div class="card mt-4 pt-2 mx-3 ">
                     <h6 class="mb-2 d-flex justify-content-center">Pertanyaan:</h6>
@@ -144,9 +156,19 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="m-3">
-                    <button type="submit" class="btn btn-primary w-100" id="submitBtn">Submit</button>
-                </div>
+                <form action="{{ route('quiz.finish') }}" method="POST" id="finish" >
+                    @csrf
+                    <div hidden>
+                        <input type="text" name="finish_time" id="finish_time">
+                        <input type="text" name="status" value="1">
+                        <input type="text" name="student_id" value="{{ auth()->user()->nomor }}">
+                        <input type="text" name="task_id" value="{{ $task_id }}">
+                    </div>
+                    <div class="m-3">
+                        <button type="submit" class="btn btn-primary w-100" id="submitBtn">Submit</button>
+                    </div>
+                </form>
+               
                 <div class="alert alert-primary overflow-hidden p-0 m-3" role="alert">
                     <div class="p-3 bg-primary text-fixed-white d-flex justify-content-between">
                         <h3 class="alert-heading mb-0 text-fixed-white">Quiz Matematika</h3>
@@ -159,21 +181,61 @@
                     <div class="d-flex align-items-center">
                         <a class="avatar avatar-lg flex-shrink-0"><img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="img"></a>
                         <div class="ms-2">
-                            <h6 class="text-dark text-truncate mb-0"><a>Administrator</a></h6>
+                            <h6 class="text-dark text-truncate mb-0"><a>{{ auth()->user()->nama }}</a></h6>
                             <p>{{ auth()->user()->nomor }}</p>
                         </div>
                     </div>
-                    <input type="hidden" name="student_id" value="{{ auth()->user()->nomor }}">
-                    <input type="hidden" name="task_id" value="{{ $task_id }}">
                 </div>
 
             </div>
         </div>
     </div>
-</form>
+
+
+
+<!-- Modal HTML Structure -->
+<div class="modal fade" id="startModal" tabindex="-1" aria-labelledby="startModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="startModalLabel">Quiz Starting</h5>
+        </div>
+        <div class="modal-body ">
+            <div class="p-5">
+                <center><h3>Are you ready to start the quiz?</h3></center>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary w-100" id="startQuizButton">Start Quiz</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+ 
 
 @section('javascript')
-
+<script>
+    // Add event listener to the submit button
+    document.getElementById('submitBtn').addEventListener('click', function() {
+        // Show SweetAlert2 confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to submit your answers?',
+            icon: 'warning',
+            showCancelButton: true, // Show Cancel button
+            confirmButtonText: 'Yes, submit it!',
+            cancelButtonText: 'No, go back',
+            reverseButtons: true
+        }).then((result) => {
+            // If the user clicked 'Yes, submit it!'
+            if (result.isConfirmed) {
+                // You can submit the form here
+                document.getElementById('finish').submit(); // Replace 'quizForm' with the actual form id if different
+            }
+        });
+    });
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
     // Listen for changes in answers
@@ -227,43 +289,85 @@
 </script>
 {{-- count time --}}
 <script>
-     var body = document.body;
-     body.classList.add("mini-sidebar");
-    document.addEventListener('DOMContentLoaded', function () {
-        const countdownElement = document.getElementById('countdown-timer');
-        const form = document.querySelector('form');
-        const totalTime = 10 * 60; // Total time in seconds (10 minutes)
-        const timerKey = 'quizTimer'; // Key to store timer in localStorage
-
-        let timer = localStorage.getItem(timerKey)
-            ? parseInt(localStorage.getItem(timerKey), 10)
-            : totalTime;
-
-        function updateTimer() {
-            const minutes = Math.floor(timer / 60);
-            const seconds = timer % 60;
-            countdownElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            timer--;
-
-            if (timer < 0) {
-                clearInterval(timerInterval);
-                alert('Waktu habis! Jawaban Anda akan dikirim.');
-                localStorage.removeItem(timerKey); // Clear timer from localStorage
-                form.submit(); // Automatically submit the form
-            } else {
-                localStorage.setItem(timerKey, timer); // Save remaining time to localStorage
-            }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if quiz status is 1, prevent navigation out
+        const quizStatus = {{ $studentScore->status ?? 0 }}; // Default to 0 if null or undefined
+        const quizTimer = {{ $task_id }};
+        if (quizStatus === 0) {
+            window.onbeforeunload = function() {
+                alert( "Anda tidak bisa keluar dari halaman ini selama ujian berlangsung.");
+            };
         }
 
-        const timerInterval = setInterval(updateTimer, 1000);
-
-        // Clear timer on form submission
-        form.addEventListener('submit', function () {
-            localStorage.removeItem(timerKey);
+        // Modal will show before quiz starts
+        $('#startModal').modal('show');
+        // Start the quiz and begin timer when "Mulai" button is clicked
+        document.getElementById('startQuizButton').addEventListener('click', function() {
+            $('#startModal').modal('hide');
+            startQuizTimer();  // Start the countdown timer
+            // window.onbeforeunload = null;  // Allow page leave after quiz starts
         });
+
+        // Start countdown timer after user clicks "Mulai"
+        function startQuizTimer() {
+            const countdownElement = document.getElementById('countdown-timer');
+            const totalTime = {{ $time }} * 60;  // in seconds
+
+            // Get the remaining time from localStorage if it exists
+            let timer = localStorage.getItem(quizTimer) ? parseInt(localStorage.getItem(quizTimer)) : totalTime;
+            const finishtime = document.getElementById('finish_time');
+            const timerInterval = setInterval(function() {
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+                countdownElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                finishtime.value = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                timer--;
+
+                // Save remaining time to localStorage
+                localStorage.setItem(quizTimer, timer);
+
+                if (timer < 0) {
+                    clearInterval(timerInterval);
+                    Swal.fire({
+                        title: 'Waktu Habis!',
+                        text: 'Jawaban Anda akan dikirim secara otomatis.',
+                        icon: 'warning',
+                        showConfirmButton: false,
+                        timer: 3000 // Show alert for 3 seconds
+                    }).then(() => {
+                        submitQuiz();
+                    });
+                }
+            }, 3000);
+        }
+
+        // If the page is reloaded, use the stored timer value
+        if (localStorage.getItem(quizTimer)) {
+            startQuizTimer();
+        }
+
+        // Function to submit the quiz, clear localStorage, and log out the user
+        function submitQuiz() {
+            // Show SweetAlert message
+            Swal.fire({
+                title: 'Terima Kasih!',
+                text: 'Telah Mengikuti Ujian/Kuis ini',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                showConfirmButton: true
+            }).then(() => {
+                // Wait for 3 seconds before submitting the form
+                setTimeout(function() {
+                    // Clear the timer data from localStorage when submitting the quiz
+                    localStorage.removeItem('quizTimer');
+
+                    // Submit the form (replace 'finish' with the actual form id if different)
+                    document.getElementById('finish').submit();
+                }, 3000); // 3000ms = 3 seconds delay
+            });
+        }
     });
 </script>
-
 
 <script>
       var elements = document.querySelectorAll('.blank-page');

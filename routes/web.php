@@ -245,6 +245,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/classroom/question/delete/{id}', [ClassRoomDetailController::class, 'quizDelete'])->name('classroom.quizDelete');
     Route::get('/quiz/{id_kelas}/{task_id}', [ClassRoomDetailController::class, 'quizIndex'])->name('quiz');
     Route::post('/quiz/submit', [ClassRoomDetailController::class, 'quizSubmit'])->name('quiz.submit');
+    Route::post('/quiz/finish', [ClassRoomDetailController::class, 'quizFinish'])->name('quiz.finish');
 
     Route::get('/download/{filename}', [ClassRoomDetailController::class, 'download'])->name('download');
     Route::post('/preview-excel', [ExcelPreviewController::class, 'previewExcel'])->name('preview.excel');

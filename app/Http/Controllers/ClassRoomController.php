@@ -14,9 +14,29 @@ class ClassRoomController extends Controller
 {
     public function index(){
         if(request('archive')){$archive = 'true';}else{$archive = 'false';}
-        $data =  ClassRoom::where(['auth' => auth()->user()->nomor, 'archive'=>$archive
-           ])->with(['user','mapel'])->get();
+           
 
+            if(auth()->user()->role == "siswa") {
+                // Fetching the ClassRoomPeople entry for the current student
+                $classRoomPeople = ClassRoomPeople::where('nis', auth()->user()->nomor)->first();
+                
+                if ($classRoomPeople) {
+                    // If the student exists in ClassRoomPeople, get the associated ClassRoom
+                    $data = $classRoomPeople->getClass()->with(['user', 'mapel', 'people'])->get();
+                } else {
+                    // If no entry for the student, set data to an empty collection or handle as needed
+                    $data = collect(); 
+                }
+
+            } else {
+                // For other roles, fetch the classrooms with 'user', 'mapel', and 'people' relationships
+                $data = ClassRoom::where(['auth' => auth()->user()->nomor, 'archive' => $archive])
+                    ->with(['people', 'mapel', 'user'])
+                    ->get();
+            }
+            
+      
+        
         return view('classroom.index',[
             'title'=> 'Ruangan Kelas Saya',
             'class'=> $data,

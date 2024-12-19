@@ -47,12 +47,16 @@
             <a class="nav-link" href="#bottom-tab2" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Tugas Kelas</strong></a>
         </li>       
     @endif
+   
     <li class="nav-item" role="presentation">
         <a class="nav-link" href="#bottom-tab3" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Orang</strong></a>
     </li>
+
+    @if(auth()->user()->role !=="siswa")
     <li class="nav-item" role="presentation">
         <a class="nav-link" href="#bottom-tab4" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Nilai</strong></a>
     </li>
+    @endif
 </ul>
 @foreach ($myclass as $item )
 
@@ -135,12 +139,20 @@
                         <div hidden>
                             <input type="text" class="form-control" name="id_kelas" value="{{ $id }}">
                             <input type="text" name="description" value="Quis">
-                            <input type="text" name="poin" >
+                         
                             <input type="text" name="due_date" >
                             <input type="text" name="type" value="quiz" hidden>
                             <input type="text" name="auth" value="{{ auth()->user()->nomor }}">
                         </div>
 
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Durasi Pengerjaan</label>
+                        <div class="d-flex justify-content-between">
+                            <input type="number" name="poin" value="10" class="form-control me-3" >
+                            <div class="mt-2">Menit</div>
+                        </div>
+                       
                     </div>
                     <button class="btn btn-primary w-100">Tambah</button>
                 </div>

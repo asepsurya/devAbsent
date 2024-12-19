@@ -17,6 +17,8 @@ return new class extends Migration
                 $table->string('student_id');
                 $table->integer('benar')->default(0);
                 $table->integer('nilai')->default(0);
+                $table->string('finish_time')->nullable();
+                $table->string('status')->default(0);
                 $table->timestamps();
 
         });

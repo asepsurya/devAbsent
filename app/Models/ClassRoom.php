@@ -13,4 +13,7 @@ class ClassRoom extends Model
     public function mapel(){
         return $this->belongsTo('App\Models\Mapel','id_mapel','id');
     }
+    public function people(){
+        return $this->HasMany('App\Models\ClassRoomPeople','id_kelas','class_code');
+    }
 }

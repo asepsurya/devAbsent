@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\studentAnswer;
 use App\Models\ClassRoomPeople;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Console\View\Components\Task;
 
@@ -158,7 +159,6 @@ class ClassRoomDetailController extends Controller
             'poin' => 'nullable|integer',
             'due_date' => 'nullable|date',
             'dok.*' => 'nullable|file|max:2048', // Max 2MB per file
-            'link.*' => 'nullable',
         ]);
 
         // Save task details
@@ -192,16 +192,13 @@ class ClassRoomDetailController extends Controller
                 ]);
             }
         }
-        if($request->hasFile('link')){
-            $links = $request->link;
-
+        if($request->link){
             // Process each link
-            foreach ($links as $link) {
                 taskslink::create([
                     'task_id' => $task->id,  // Assuming $task is defined
-                    'youtube_link' => $link,
+                    'youtube_link' => $request->link,
                 ]);
-            }
+            
         }
 
         toastr()->success('data berhasil dihapus');
@@ -217,7 +214,7 @@ class ClassRoomDetailController extends Controller
                 'poin' => 'nullable|integer',
                 'due_date' => 'nullable|date',
                 'dok.*' => 'nullable|file|max:2048', // Max 2MB per file
-                'link.*' => 'nullable|url',
+               
             ]);
 
             // Find the task to update
@@ -256,15 +253,23 @@ class ClassRoomDetailController extends Controller
             }
 
             // Handle YouTube link updates (if provided)
-            if ($request->hasFile('link')) {
-                // You can use a `taskslink` model to handle multiple links, assuming the link is an array
-                // If it's not an array, you can still update a single link in a similar manner
-                foreach ($request->link as $link) {
-                    taskslink::updateOrCreate(
-                        ['task_id' => $task->id], // Find the existing task link by task_id
-                        ['youtube_link' => $link] // Update the youtube_link
-                    );
+            if ($request->link) {
+                $data = taskslink::where('task_id', $task->id)->first();
+
+                if ($data) {
+                    // If the record exists, update it
+                    $data->update([
+                        'youtube_link' => $request->link // Update the youtube_link
+                    ]);
+                } else {
+                    // If the record doesn't exist, create a new one
+                    taskslink::create([
+                        'task_id' => $task->id,
+                        'youtube_link' => $request->link // Create with the provided youtube_link
+                    ]);
                 }
+
+                
             }
 
             // Send success message
@@ -367,15 +372,9 @@ class ClassRoomDetailController extends Controller
                 'pilihan_e' => 'nullable|string',
                 'jawaban' => 'required|in:A,B,C,D,E',
                 'task_id' => 'required|integer',
-                'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048', // Validate image
             ]);
 
-            // Handle image upload if provided
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                // Store the image in the 'public/images' directory
-                $imagePath = $request->file('image')->store('images', 'public');
-            }
+        
 
             // Save data to the Question model
             $question = new Question();
@@ -387,7 +386,7 @@ class ClassRoomDetailController extends Controller
             $question->pilihan_d = $validated['pilihan_d'];
             $question->pilihan_e = $validated['pilihan_e'];
             $question->jawaban = $validated['jawaban'];
-            $question->image_path = $imagePath;  // Store the image path in the database
+
             $question->save();
 
             // Show success message and redirect
@@ -446,14 +445,20 @@ class ClassRoomDetailController extends Controller
                                     ->pluck('answer', 'question_id')
                                     ->toArray();
         // Fetch the questions and options
+
+        $time = tasks::where('id',$task_id)->first();
         $questions = question::where('task_id',$task_id)->get();  // Adjust based on your query logic
         $questionsAnswer = studentAnswer::where('student_id',$studentId)->get();  // Adjust based on your query logic
+
+        $studentScore = StudentScore::where('student_id',$studentId)->first();
         return view('classroom.work.quiz.quiz',[
             'title'=>'Quiz',
             'questions'=>question::where('task_id',$task_id)->inRandomOrder()->get(),
-            'questionsAnswer'=>$questionsAnswer
+            'questionsAnswer'=>$questionsAnswer,
+            'time'=>$time->poin
+            
 
-        ],compact('task_id','questions', 'studentAnswers'));
+        ],compact('task_id','questions', 'studentAnswers','studentScore'));
     }
 
     public function quizSubmit(request $request){
@@ -552,6 +557,19 @@ class ClassRoomDetailController extends Controller
         toastr()->success('Pertanyaan Berhasil dihapus');
         // Redirect with a success message
         return redirect()->back();
+    }
+
+    public function quizFinish(request $request){
+
+        StudentScore::where(['task_id'=>$request->task_id,'student_id'=>$request->student_id])->update([
+            'status'=>$request->status,
+            'finish_time'=>$request->finish_time,
+        ]);
+        toastr()->success('Terimakasih');
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login');
     }
 
 }

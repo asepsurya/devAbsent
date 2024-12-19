@@ -53,11 +53,14 @@
 <div class="bg-white p-3 border rounded-1 d-flex align-items-center justify-content-between flex-wrap mb-4 pb-0">
     <h4 class="mb-3">Daftar Kelas</h4>
     <div class="d-flex align-items-center flex-wrap">
+        @can('action')
         <div class="d-flex align-items-center flex-wrap">
             <button class="btn btn-primary btn-small mb-3" data-bs-toggle="modal" data-bs-target="#addClass"><span class="ti ti-circle-plus"></span> Buat Kelas</button>
         </div>
+        @endcan
     </div>
 </div>
+@can('action')
 <div class="mb-2 d-flex justify-content-end">
     <nav>
         <ol class="breadcrumb mb-0">
@@ -71,7 +74,9 @@
                 <a href="/classroom?archive={{ $mycode }}">Archive</a></li>
         </ol>
     </nav>
-</div>
+</div>   
+@endcan
+
 <div class="row">
     @foreach ($class as $item )
     <div class="col-xxl-4 col-xl-4 col-md-6 d-flex">
@@ -80,6 +85,7 @@
                 <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.219)0.219);"></div>
                 <h3 class="text-white"></h3>
                 <div class="d-flex align-items-center">
+                    @can('action')
                     <div class="dropdown">
                         <a href="#" class="btn btn-white btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti ti-dots-vertical fs-14"></i>
@@ -100,6 +106,7 @@
                             @endif
                         </ul>
                     </div>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
