@@ -31,6 +31,7 @@ use App\Http\Controllers\ExcelPreviewController;
 use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\verifikasiUserController;
 use App\Http\Controllers\ClassRoomDetailController;
+use App\Http\Controllers\setelanHari\setelanHariController;
 
 Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
@@ -204,6 +205,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/class/leasson/delete{id}',[leassonController::class,'leassonDelete'])->name('leassonDelete');
     Route::get('/class/leasson/list/{id}',[leassonController::class,'list'])->name('list');
     Route::get('/class/leasson/getgtk',[leassonController::class,'getgtk'])->name('getgtk.leasson');
+    
+    Route::get('/class/leasson/time',[leassonController::class,'leassonTime'])->name('leasson.time');
+    Route::post('/class/leasson/time/add',[leassonController::class,'addleassonTime'])->name('leasson.addtime');
+    Route::post('/class/leasson/time/update',[leassonController::class,'updateleassonTime'])->name('leasson.updatetime');
+    Route::get('/class/leasson/time/delete/{id}',[leassonController::class,'deleteleassonTime'])->name('leasson.deletetime');
+    
+    Route::get('/class/leasson/hari',[setelanHariController::class,'index'])->name('leasson.index');
+
 
     // Apps Config Controller
     Route::get('/setelan/aplikasi', [AppsConfigController::class, 'app'])->name('setelan.app');

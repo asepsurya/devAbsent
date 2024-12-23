@@ -26,7 +26,9 @@
     <link rel="stylesheet" href="{{ asset('asset/css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
 <style>
-
+.spinner-border {
+    margin-right: 5px; /* Jarak antara teks dan spinner */
+}
 </style>
 <body class="account-page bg-light-gradient">
     <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:cover;">
@@ -64,7 +66,7 @@
                                 </div>
                                 @endif
                                 {{-- End --}}
-                                <form action="{{ route('loginAction') }}" method="post">
+                                <form action="{{ route('loginAction') }}" method="post" id="loginForm">
                                     @csrf
                                     <div class="mb-3 ">
                                         <label class="form-label">Username</label>
@@ -117,7 +119,7 @@
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <button class="btn btn-primary w-100">Masuk</button>
+                                        <button class="btn btn-primary w-100"><span id="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span> Masuk</button>
                                 </form>
                             </div>
                             <div class="text-center">
@@ -136,7 +138,14 @@
         </div>
     </div>
     </div>
-
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            // Tampilkan spinner
+            document.getElementById('loading').style.display = 'inline-block';
+            // Nonaktifkan tombol untuk mencegah pengiriman ganda
+            document.getElementById('loginButton').disabled = true;
+        });
+    </script>
     <script src="asset/js/jquery-3.7.1.min.js" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <script src="asset/js/bootstrap.bundle.min.js" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <script src="asset/js/moment.js" type="d8aa163ebe66f835399f615d-text/javascript"></script>
