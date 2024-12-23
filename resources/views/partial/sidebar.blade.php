@@ -227,11 +227,19 @@
                         @endcan
 
                         @can('Jadwal Pelajaran')
-                            <li class="{{ Request::is('class/leasson') ? 'active' : ''}}">
-                                <a href="/class/leasson">
-                                    <i class="ti ti-notebook"></i><span>Pelajaran</span>
-                                </a>
-                            </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="{{ Request::is('class/leasson*') ? 'subdrop active' : ''}}">
+                                <i class="ti ti-notebook"></i><span>Jadwal Pelajaran</span><span class="menu-arrow"></span>
+                            </a>
+
+                            <ul class="mx-3">
+                                <li><a href="/class/leasson/time" class="{{ Request::is('class/leasson/time') ? 'active' : ''}}">Jam Pelajaran</a></li>
+                                <li><a href="/class/leasson/hari" class="{{ Request::is('class/leasson/hari') ? 'active' : ''}}">Hari Efektif</a></li>
+                                <li><a href="/class/leasson" class="{{ Request::is('class/leasson/list*') ? 'active' : ''}}">Setel Jadwal</a></li>
+                            </ul>
+
+
+                        </li>
                         @endcan
 
                         @can('Kalender Akademik')

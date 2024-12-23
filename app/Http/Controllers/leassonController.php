@@ -7,8 +7,9 @@ use App\Models\Kelas;
 use App\Models\Mapel;
 use App\Models\Lesson;
 use App\Models\Jurusan;
-use App\Models\ref_jadwal;
 use App\Models\grupMapel;
+use App\Models\ref_jadwal;
+use App\Models\JamPelajaran;
 use Illuminate\Http\Request;
 use App\Models\TahunPelajaran;
 use App\Http\Controllers\Controller;
@@ -200,5 +201,51 @@ class leassonController extends Controller
         ref_jadwal::where('ref_ID',$id)->delete();
         toastr()->success('Data Berhasil dihapus');
         return redirect()->back()->with('ref', 5)->withInput();
+    }
+
+    public function leassonTime(){
+        return view('jadwal.jampelajaran',[
+            'title'=>'Setelan Jam Pelajaran',
+            'data'=>JamPelajaran::where('status',1)->get()
+        ]);
+    }
+
+    public function addleassonTime(request $request){
+         // Validasi input
+         $request->validate([
+            'jam_ke' => 'required|integer',
+            'jam_mulai' => 'required|date_format:H:i',
+            'jam_berakhir' => 'required|date_format:H:i',
+            'status' => 'required|string',
+        ]);
+
+        // Insert data ke model JamPelajaran
+        JamPelajaran::create([
+            'jam_ke' => $request->jam_ke,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_berakhir' => $request->jam_berakhir,
+            'status' => $request->status,
+        ]);
+        toastr()->success('Data Berhasil ditambahkan');
+        return redirect()->back();
+    }
+
+    public function updateleassonTime(request $request){
+        
+        JamPelajaran::where('id',$request->id)->update([
+            'jam_ke' => $request->jam_ke,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_berakhir' => $request->jam_berakhir,
+            'status' => $request->status,
+        ]);
+        toastr()->success('Data Berhasil diperbaharui');
+        return redirect()->back();
+       
+    }
+
+    public function deleteleassonTime($id){
+        JamPelajaran::where('id',$id)->delete();
+        toastr()->success('Data Berhasil dihapus');
+        return redirect()->back();
     }
 }
