@@ -47,7 +47,7 @@
                         @endif
                     </ul>
                 </li>
-            
+
                 @if(auth()->user()->role == 'siswa')
                     <li>
                         <h6 class="submenu-hdr"><span>Menu Saya</span></h6>
@@ -71,7 +71,7 @@
                         </ul>
                     </li>
                 @endif
-            
+
                 <li>
                     @if(auth()->user()->canAny(['Absensi RFID', 'Absensi Kelas', 'Management Absensi']))
                         <h6 class="submenu-hdr"><span>Management</span></h6>
@@ -96,7 +96,7 @@
                                 </ul>
                             </li>
                         @endcan
-            
+
                         @can('Absensi Kelas')
                             <li class="{{ Request::is('absent/class*') ? 'active' : ''}}">
                                 <a href="/absent/class">
@@ -104,7 +104,7 @@
                                 </a>
                             </li>
                         @endcan
-            
+
                         @can('Management Absensi')
                             <li class="{{ Request::is('class/list') || Request::is('class/absensi/management*') ? 'active' : ''}}">
                                 <a href="/class/list">
@@ -114,13 +114,13 @@
                         @endcan
                     </ul>
                 </li>
-            
+
                 <li>
                     <ul>
                         @can('akademik', 'lisensi', 'gtk', 'rfid', 'verifikasi_pengguna')
                             <h6 class="submenu-hdr"><span>Master Data</span></h6>
                         @endcan
-            
+
                         @can('akademik')
                             <li class="submenu">
                                 <a href="javascript:void(0);" class="{{ Request::is('akademik*') ? 'subdrop active' : ''}}">
@@ -153,69 +153,55 @@
                                 </ul>
                             </li>
                         @endcan
-                    </ul>
-                </li>
-            
-                @can('gtk')
-                    <li>
-                        <ul>
-                            <li class="submenu">
-                                <a href="javascript:void(0);" class="{{ Request::is('gtk*') ? 'subdrop active' : ''}}">
-                                    <i class="ti ti-users"></i><span>GTK</span><span class="menu-arrow"></span>
-                                </a>
-                                <ul>
-                                    <li><a href="/gtk/all" class="{{ Request::is('gtk/all') ? 'active' : ''}}">Semua GTK</a></li>
-                                    <li><a href="/gtk/employment_types" class="{{ Request::is('gtk/employment_types') ? 'active' : ''}}">Jenis GTK</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                @endcan
-            
-                @can('lisensi')
-                    <li>
-                        <ul>
-                            <li class="{{ Request::is('device/lisensi*') ? 'active' : ''}}">
-                                <a href="{{ route('lisensiIndex') }}">
-                                    <i class="ti ti-key"></i><span>Lisensi</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endcan
-            
-                @can('rfid')
-                    <li>
-                        <ul>
-                            <li class="{{ Request::is('rfid') ? 'active' : ''}}">
-                                <a href="{{ route('rfid') }}">
-                                    <i class="ti ti-nfc"></i><span>Registrasi RFID</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endcan
-            
-                @can('verifikasi_pengguna')
-                    <li>
-                        <ul>
-                            <li class="{{ Request::is('verifikasiuser') ? 'active' : ''}}">
-                                <a href="/verifikasiuser">
-                                    <i class="ti ti-user"></i><span>Verifikasi Pengguna
+                        @can('gtk')
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="{{ Request::is('gtk*') ? 'subdrop active' : ''}}">
+                                <i class="ti ti-users"></i><span>GTK</span><span class="menu-arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="/gtk/all" class="{{ Request::is('gtk/all') ? 'active' : ''}}">Semua GTK</a></li>
+                                <li><a href="/gtk/employment_types" class="{{ Request::is('gtk/employment_types') ? 'active' : ''}}">Jenis GTK</a></li>
+                            </ul>
+                        </li>
+                        @endcan
+                        @can('lisensi')
+                        <li class="{{ Request::is('device/lisensi*') ? 'active' : ''}}">
+                            <a href="{{ route('lisensiIndex') }}">
+                                <i class="ti ti-key"></i><span>Lisensi</span>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('rfid')
+                        <li class="{{ Request::is('rfid') ? 'active' : ''}}">
+                            <a href="{{ route('rfid') }}">
+                                <i class="ti ti-nfc"></i><span>Registrasi RFID</span>
+                            </a>
+                        </li>
+                        @endcan
+                        @can('verifikasi_pengguna')
+                        <li class="{{ Request::is('verifikasiuser') ? 'active' : ''}}">
+                            <a href="/verifikasiuser">
+                                <i class="ti ti-user"></i><span>Verifikasi Pengguna
+                                    @if ($countActiveUsers)
                                         <span class="notification-status-dot"></span>
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endcan
-            
+                                    @endif
+                                </span>
+
+                            </a>
+                        </li>
+
+                        @endcan
+                    </ul>
+
+                </li>
+
                 <li>
                     <ul>
                         @if(auth()->user()->canAny(['Ruangan Kelas', 'Setelan Masuk Keluar', 'Papan Pengumuman', 'Jadwal Pelajaran', 'Kalender Akademik', 'Setelan Hari Libur']))
                         <h6 class="submenu-hdr"><span>Jadwal dan Kelas</span></h6>
                         @endif
-            
+
                         @can('Ruangan Kelas')
                             <li class="{{ Request::is('classroom*') ? 'active' : ''}}">
                                 <a href="/classroom">
@@ -223,7 +209,7 @@
                                 </a>
                             </li>
                         @endcan
-            
+
                         @can('Setelan Masuk Keluar')
                             <li class="{{ Request::is('class/time') ? 'active' : ''}}">
                                 <a href="/class/time">
@@ -231,7 +217,7 @@
                                 </a>
                             </li>
                         @endcan
-            
+
                         @can('Papan Pengumuman')
                             <li class="{{ Request::is('announcements') ? 'active' : ''}}">
                                 <a href="/announcements">
@@ -239,7 +225,7 @@
                                 </a>
                             </li>
                         @endcan
-            
+
                         @can('Jadwal Pelajaran')
                             <li class="{{ Request::is('class/leasson') ? 'active' : ''}}">
                                 <a href="/class/leasson">
@@ -247,7 +233,7 @@
                                 </a>
                             </li>
                         @endcan
-            
+
                         @can('Kalender Akademik')
                             <li class="{{ Request::is('kalender') ? 'active' : ''}}">
                                 <a href="/kalender">
@@ -255,7 +241,7 @@
                                 </a>
                             </li>
                         @endcan
-            
+
                         @can('Setelan Hari Libur')
                             <li class="{{ Request::is('holidays') ? 'active' : ''}}">
                                 <a href="/holidays">
@@ -265,7 +251,7 @@
                         @endcan
                     </ul>
                 </li>
-            
+
                 @can('laporan')
                     <li>
                         <ul>
@@ -288,7 +274,7 @@
                         </ul>
                     </li>
                 @endcan
-            
+
                 <li>
                     <ul>
                         @can('Setelan Aplikasi')
@@ -307,16 +293,16 @@
                                         </ul>
                                     </li>
                                 </ul>
-                                <ul>                           
+                                <ul>
                                     <li class="{{ Request::is('setelan*') ? 'active' : ''}}">
                                         <a href="{{ route('setelan.app') }}"><i class="ti ti-settings"></i><span>Pengaturan Aplikasi</span></a>
-                                    </li>                           
+                                    </li>
                                 </ul>
                             </li>
                         @endcan
                     </ul>
 
-                </li>                             
+                </li>
         </div>
     </div>
 </div>

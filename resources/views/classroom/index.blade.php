@@ -74,7 +74,7 @@
                 <a href="/classroom?archive={{ $mycode }}">Archive</a></li>
         </ol>
     </nav>
-</div>   
+</div>
 @endcan
 
 <div class="row">
@@ -166,7 +166,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Mata Pelajaran ( Wajib )</label>
-                                    <input type="text" class="form-control mapel"   name="mapel" autocomplete="off" placeholder="Mata Pelajaran" value="{{ $item->mapel->nama }}">
+                                    <input type="text" class="form-control mapel"   name="mapel" autocomplete="off" placeholder="Mata Pelajaran" value="{{ $item->mapel->nama ?? ''}}">
                                     <div class="suggestions"></div>
                                     <input type="text" class="mapel_id" name="id_mapel" value="{{ $item->id_mapel }}" hidden>
                                 </div>

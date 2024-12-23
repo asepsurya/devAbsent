@@ -114,7 +114,7 @@
                     @foreach ($grupMapel as $item)
                     <tr>
                         <td>{{ $no++ }}</td>
-                        <td>{{ $item->mata_pelajaran->nama }}</td>
+                        <td>{{ $item->mata_pelajaran->nama ?? '' }}</td>
                         <td>
                             <div hidden>
                                 <input type="text" name="id[]" value="{{ $item->mata_pelajaran->id }}" class="tahun" >

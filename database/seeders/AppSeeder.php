@@ -231,7 +231,7 @@ class AppSeeder extends Seeder
         Permission::create(['name' => 'laporan']);
         Permission::create(['name' => 'Setelan Aplikasi']);
         Permission::create(['name' => 'action']);
-     
+
        // create roles and assign existing permissions
 
         //FOR ROLE WALI KELAS
@@ -270,7 +270,7 @@ class AppSeeder extends Seeder
 
         // FOR ADMIN
         $role4 = Role::create(['name' => 'admin']);
-        
+
         $role4->givePermissionTo('Absensi RFID');
         $role4->givePermissionTo('Management Absensi');
         $role4->givePermissionTo('akademik');
@@ -286,7 +286,7 @@ class AppSeeder extends Seeder
         $role4->givePermissionTo('laporan');
         $role4->givePermissionTo('Setelan Aplikasi');
         $role4->givePermissionTo('action');
-        
+
 
         $role5 = Role::create(['name' => 'superadmin']);
 
@@ -516,7 +516,7 @@ class AppSeeder extends Seeder
             'id_kelas'=>'1',
             'id_mapel'=>'1',
             'semester'=>'Ganjil',
-            'id_gtk'=>'3278071906970005',
+            'id_gtk'=>'6376372635140008',
             'status'=>'2',
         ]);
 
