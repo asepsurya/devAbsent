@@ -20,9 +20,8 @@ return new class extends Migration
             $table->string('id_tahun_ajar'); // mengambil data tahun ajar
             $table->string('sk')->nullable(); // input nomor sk
             $table->string('tanggal_sk')->nullable(); // input tanggal sk
-            $table->string('start')->nullable(); // input jumlah jam pelajaran
-            $table->string('end')->nullable(); // input jumlah jam pelajaran
             $table->string('status');
+            $table->string('id_jam');
             $table->timestamps();
         });
     }

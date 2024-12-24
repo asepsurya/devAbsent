@@ -1,7 +1,7 @@
 @extends('layout.main')
 @section('css')
 <style>
-    
+
     .dropdown-menu {
         z-index: 1050; /* Atur z-index sesuai kebutuhan */
     }
@@ -43,10 +43,10 @@
         <table class="table table-striped table-bordered" id="table1">
             <thead class="thead-light">
                 <tr>
-                    <th class="border">#</th>
-                    <th class="border" width="3%">Nama Hari</th>
+                    <th class="border" width="1%">#</th>
+                    <th class="border">Nama Hari</th>
                     <th class="border">Status</th>
-                    <th class="border"Action</th>
+                    <th class="border">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,7 +56,33 @@
                 @foreach ($data as $i )
                 <tr>
                     <td class="border">{{ $no++ }}</td>
-                    <td class="border">{{ $i->jam_ke }}</td>
+                    <td class="border">
+                        @switch($i->id_hari)
+                            @case(1)
+                                Senin
+                                @break
+                            @case(2)
+                                Selasa
+                                @break
+                            @case(3)
+                                Rabu
+                                @break
+                            @case(4)
+                                Kamis
+                                @break
+                            @case(5)
+                                Jumat
+                                @break
+                            @case(6)
+                                Sabtu
+                                @break
+                            @case(7)
+                                Minggu
+                                @break
+                            @default
+                                Tidak Diketahui
+                        @endswitch
+                    </td>
                     <td class="border">
                         @if($i->status == 1)
                         <span class="badge badge-soft-success d-inline-flex align-items-center">
@@ -64,22 +90,22 @@
                         @else
                         <span class="badge badge-soft-danger d-inline-flex align-items-center">
                             Tidak Aktif </span>
-                        @endif                     
+                        @endif
                     </td>
                     <td class="border">
                             <a class="btn btn-icon btn-sm btn-soft-primary rounded-pill" data-bs-toggle="modal" href="#editModal-{{ $i->id }}" role="button"><i class="ti ti-list-details"></i></a>
-                            <a class="btn btn-icon btn-sm btn-soft-danger rounded-pill"  href="{{ route('leasson.deletetime',$i->id) }}" role="button"><i class="ti ti-trash-x"></i></a>      
+                            <a class="btn btn-icon btn-sm btn-soft-danger rounded-pill"  href="{{ route('leasson.delete',$i->id) }}" role="button"><i class="ti ti-trash-x"></i></a>
                     </td>
-                </tr>                            
+                </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 
 </div>
-@foreach ($data as $i )   
+@foreach ($data as $setelanHari )
 
-<div class="modal fade" id="editModal-{{ $i->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade" id="editModal-{{ $setelanHari->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -89,26 +115,29 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('leasson.updatetime') }}" method="POST">
+                <form action="{{ route('leasson.update') }}" method="POST">
                     @csrf
-                    <input type="text" name="id" value="{{ $i->id }}" hidden>
+                    @method('POST')
+                    <input type="text" name="id" id="id" value="{{ $setelanHari->id }}" hidden>
                     <div class="form-group mb-3">
-                        <label for="jamKe">Jam Ke</label>
-                        <input type="number" class="form-control" id="jamKe" name="jam_ke" required value="{{ $i->jam_ke }}">
+                        <label for="id_hari">Pilih Hari</label>
+                        <select name="id_hari"  class="form-control select" required>
+                            <option value="">-- Pilih Hari --</option>
+                            <option value="1" {{ $setelanHari->id_hari == 1 ? 'selected' : '' }}>Senin</option>
+                            <option value="2" {{ $setelanHari->id_hari == 2 ? 'selected' : '' }}>Selasa</option>
+                            <option value="3" {{ $setelanHari->id_hari == 3 ? 'selected' : '' }}>Rabu</option>
+                            <option value="4" {{ $setelanHari->id_hari == 4 ? 'selected' : '' }}>Kamis</option>
+                            <option value="5" {{ $setelanHari->id_hari == 5 ? 'selected' : '' }}>Jumat</option>
+                            <option value="6" {{ $setelanHari->id_hari == 6 ? 'selected' : '' }}>Sabtu</option>
+                            <option value="7" {{ $setelanHari->id_hari == 7 ? 'selected' : '' }}>Minggu</option>
+                        </select>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="jamMulai">Jam Mulai</label>
-                        <input type="time" class="form-control" id="jamMulai" name="jam_mulai" required value="{{ $i->jam_mulai }}">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="jamBerakhir">Jam Berakhir</label>
-                        <input type="time" class="form-control" id="jamBerakhir" name="jam_berakhir" required value="{{ $i->jam_berakhir }}">
-                    </div>
+
                     <div class="form-group mb-3">
                         <label for="status">Status</label>
-                        <select class="form-control select" id="status" name="status" required>
-                            <option value="1" {{ $i->status == 1 ? 'selected' : '' }}>Aktif</option>
-                            <option value="2" {{ $i->status == 2 ? 'selected' : '' }}>Tidak Aktif</option>
+                        <select class="form-control select"  name="status" required>
+                            <option value="1" {{ $setelanHari->status == 1 ? 'selected' : '' }}>Aktif</option>
+                            <option value="2" {{ $setelanHari->status == 2 ? 'selected' : '' }}>Tidak Aktif</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Simpan Perubahan</button>
@@ -118,6 +147,7 @@
     </div>
 </div>
 @endforeach
+
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -128,20 +158,23 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('leasson.addtime') }}" method="POST">
+                <form action="{{ route('leasson.add') }}" method="POST">
                     @csrf
                     <div class="form-group mb-3">
-                        <label for="jamKe">Jam Ke</label>
-                        <input type="number" class="form-control" id="jamKe" name="jam_ke" required>
+                        <label for="jamKe">Pilih Hari</label>
+                       <select name="id_hari" id="id_hari" class="select">
+                        <option value="">-- Pilih Hari --</option>
+                            <option value="1">Senin</option>
+                            <option value="2">Selasa</option>
+                            <option value="3">Rabu</option>
+                            <option value="4">Kamis</option>
+                            <option value="5">Jumat</option>
+                            <option value="6">Sabtu</option>
+                            <option value="7">Minggu</option>
+
+                       </select>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="jamMulai">Jam Mulai</label>
-                        <input type="time" class="form-control" id="jamMulai" name="jam_mulai" required>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="jamBerakhir">Jam Berakhir</label>
-                        <input type="time" class="form-control" id="jamBerakhir" name="jam_berakhir" required>
-                    </div>
+
                     <div class="form-group mb-3">
                         <label for="status">Status</label>
                         <select class="form-control select" id="status" name="status" required>
