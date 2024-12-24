@@ -45,7 +45,6 @@ class leassonController extends Controller
 
             'tahun_ajar'=>TahunPelajaran::where('status',1)->get(),
             'jadwal'=>$jadwal,
-            'gtk'=>gtk::where('status','1')->get(),
 
             'mapel' => grupMapel::where(['id_kelas'=> $id])->with(['mata_pelajaran'])->get(),
             'ref2'=>ref_jadwal::where('status','1')->get(),
@@ -82,8 +81,8 @@ class leassonController extends Controller
 
             // Push the teacher data into the options array
             $options[] = [
-                'nama' => $nama,
-                'nik' => $id_gtk
+                'nama' => $nama ?: 'BELUM DISETEL',
+                'nik' => $id_gtk ?: 'BELUM DISETEL',
             ];
         }
 
@@ -124,6 +123,31 @@ class leassonController extends Controller
      return redirect()->back()->with('refresh', 'Action was successful!');
 
     }
+    public function leassonUpate(request $request){
+        $days = $request->input('day');  // Array of days
+        $mapelIds = $request->input('id_mapel');  // Array of mapel IDs
+        $gtkIds = $request->input('id_gtk');  // Array of GTK IDs
+        $id_hari = $request->input('id_hari');  // Array of start times
+        $sk = $request->input('sk');  // Array of SK values
+        $tanggalSk = $request->input('tanggal_sk');  // Array of SK dates
+        $id_jam = $request->input('id_jam');  // Array of SK dates
+        $id = $request->id;
+        Lesson::where('id',$id)->update([
+            'id_rombel' => $request->input('id_kelas'),  // Assuming id_kelas is hidden in your form
+            'day' => $days,
+            'id_mapel' => $mapelIds,
+            'id_gtk' => $gtkIds ?? null,  // GTK is nullable
+            'id_jam' => $id_jam,
+            'sk' => $sk ?? null,
+            'tanggal_sk' => $tanggalSk ?? null,
+            'id_tahun_ajar' => $request->tahun_ajar,
+            'status' => '1',
+        ]);
+        toastr()->success("Mata Pelajaran telah diperbaharui.");
+        // Redirect back with a success message
+        return redirect()->back()->with('refresh', 'Action was successful!');
+    }
+
 
     public function leassonDelete($id){
         Lesson::where('id',$id)->delete();
@@ -137,16 +161,14 @@ class leassonController extends Controller
             $kelas =  $item->nama_kelas.' '.$item->jurusanKelas->nama_jurusan.' '. $item->sub_kelas;
             $id_kelas = $id;
         }
+        $jadwal = Lesson::where('id_rombel',$id)->orderBy('day', 'asc')->with(['mata_pelajaran','guru','ref'])->get();
         return view('jadwal.view',[
             'title'=>'Jadwal Pelajaran '.$kelas,
-            'senin'=> Lesson::where(['day'=>'1','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
-            'selasa'=> Lesson::where(['day'=>'2','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
-            'rabu'=> Lesson::where(['day'=>'3','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
-            'kamis'=> Lesson::where(['day'=>'4','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
-            'jumat'=> Lesson::where(['day'=>'5','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
-            'sabtu'=> Lesson::where(['day'=>'6','id_rombel'=>$id_kelas])->with(['mata_pelajaran','guru','ref'])->get(),
+            'jadwal'=>$jadwal,
+            'hari'=>setelanHari::where('status',1)->get(),
+            'jam'=>JamPelajaran::all(),
 
-        ]);
+        ],compact('id'));
     }
     public function reference(request $request){
         ref_jadwal::create([

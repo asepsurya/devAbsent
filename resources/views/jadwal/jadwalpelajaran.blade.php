@@ -39,8 +39,8 @@
         <table class="table">
             <thead class="thead-light">
                 <tr>
-                    <th scope="col" class="border" width="2%">No</th>
-                    <th scope="col" class="border" width="2%">Jam</th>
+                    <th scope="col" class="border" width="1%">No</th>
+                    <th scope="col" class="border" width="">Jam</th>
                     @foreach ($hari as $a )
                     <th scope="col" class="border text-center">
                         @switch($a->id_hari)
@@ -81,7 +81,7 @@
                     <td class="border" width="2%">{{ $no++ }}</td>
                     <td class="border" width="2%">{{ $b->jam_mulai }} - {{ $b->jam_berakhir }}</td>
                     @foreach ($hari as $a)
-                        <td class="border text-center" width="2%">
+                        <td class="border text-center" >
                             {{-- Check if there's a schedule for this day and time slot --}}
                             @php
                                 $scheduleFound = false;  // Flag to check if any schedule exists for this time slot
@@ -94,7 +94,8 @@
                                     <div class="border p-2 rounded">
                                         @if($jadwalItem->mata_pelajaran)
                                            <a data-toggle="modal"
-                                            data-target="#editScheduleModal-{{ $jadwalItem->id  }}">{{ $jadwalItem->mata_pelajaran->nama ?? '' }}</a>
+                                            data-target="#editScheduleModal-{{ $jadwalItem->id  }}">{{ \Str::limit($jadwalItem->mata_pelajaran->nama ?? '', 15) }}
+                                        </a>
                                         @else
                                             {{ $jadwalItem->ref->ref }}
                                         @endif
@@ -137,9 +138,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="editScheduleForm" action="" method="POST">
+                <form id="editScheduleForm" action="{{ route('leassonUpdate') }}" method="POST">
                     @csrf
-                    @method('PUT') <!-- Use PUT method for updating -->
+                 
+                    <input type="hidden" name="id" value="{{ $item->id }}">
                     <input type="hidden" name="id_jam" value="{{ $item->id_jam }}">
                     <input type="hidden" name="day" value="{{ $item->day }}" >
                     <input type="hidden" name="id_kelas" value="{{ $item->id_rombel }}">
@@ -164,17 +166,21 @@
                             </optgroup>
 
                             <optgroup label="Referensi">
-                                @foreach ($ref2 as $ref)
-                                    <option value="{{ $ref->ref_ID }}">{{ $ref->ref }}</option>
-                                @endforeach
+                                @if($ref2->count())
+                                    @foreach ($ref2 as $ref)
+                                        <option value="{{ $ref->ref_ID }}">{{ $ref->ref }}</option>
+                                    @endforeach
+                                @else
+                                    <option value="">---Belum Menemukan Data Referensi----</option>
+                                @endif
                             </optgroup>
                         </select>
                     </div>
 
                     <div class="form-group mb-3">
                         <label for="edit_id_gtk" class="form-label">Teacher</label>
-                        <input type="text" class="form-control edit_id_gtk" name="id_gtk" hidden>
-                        <input type="text" class="form-control edit_name" name="name_gtk" disabled>
+                        <input type="text" class="form-control edit_id_gtk" name="id_gtk" value="{{ $item->id_gtk }}" hidden>
+                        <input type="text" class="form-control edit_name" name="name_gtk" disabled value="{{ $item->guru->nama ?? '' }}" >
                     </div>
 
                     <div class="form-group">
@@ -223,9 +229,13 @@
                             </optgroup>
 
                             <optgroup label="Referensi">
-                                @foreach ($ref2 as $ref)
-                                    <option value="{{ $ref->ref_ID }}">{{ $ref->ref }}</option>
-                                @endforeach
+                                @if($ref2->count())
+                                    @foreach ($ref2 as $ref)
+                                        <option value="{{ $ref->ref_ID }}">{{ $ref->ref }}</option>
+                                    @endforeach
+                                @else
+                                    <option value="">---Belum Menemukan Data Referensi----</option>
+                                @endif
                             </optgroup>
                             <!-- Add your other options here -->
                         </select>
@@ -364,19 +374,30 @@
 
   $(document).ready(function () {
     // Initialize Select2 when the modal is opened
-    $('#scheduleModal').on('shown.bs.modal', function () {
-        // Initialize Select2 on the select element
-        $('.select2').select2({
-            dropdownParent: $('#scheduleModal'),
-            placeholder: "Reference",
-        });
-        $('.tahunAjar').select2({
-            dropdownParent: $('#scheduleModal'),
-            placeholder: "Tahun Pelajaran",
-        });
+        $('#scheduleModal').on('shown.bs.modal', function (e) {
+        // Get the element that triggered the modal (the button or link)
+            var button = $(e.relatedTarget);
 
+            // Extract values from the data attributes of the button
+            var jamKe = button.data('id-jam');
+            var hariId = button.data('id-hari');
 
+            // Set the values to the modal input fields
+            $('#modal-id-jam').val(jamKe);
+            $('#modal-id-hari').val(hariId);
+
+            // Initialize Select2 (if you still want to apply Select2 inside the modal)
+            $('.select2').select2({
+                dropdownParent: $('#scheduleModal'),
+                placeholder: "Reference",
+            });
+
+            $('.tahunAjar').select2({
+                dropdownParent: $('#scheduleModal'),
+                placeholder: "Tahun Pelajaran",
+            });
     });
+
 
     $('.editScheduleModal').on('shown.bs.modal', function () {
         // Initialize Select2

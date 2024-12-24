@@ -19,13 +19,150 @@
             <button type="button" class="btn btn-outline-light bg-white  me-1" onclick="history.back()">
                 <i class="ti ti-arrow-left"></i> Kembali
             </button>
+            <a href="{{ route('export.jadwal' ,$id) }}">
+            <button type="button" class="btn btn-primary  me-1" onclick="history.back()">
+                <i class="ti ti-download"></i> Download PDF
+            </button></a>
         </div>
 
     </div>
 </div>
 {{-- End Header --}}
+<div class="table-responsive">
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="border  bg-primary text-white" width="1%">No</th>
+                <th scope="col" class="border  bg-primary text-white" width="">Jam</th>
+                @foreach ($hari as $a )
+             
+                <th colspan="2" class="border text-center">
+                    @switch($a->id_hari)
+                    @case(1)
+                    Senin
+                    @break
+                    @case(2)
+                    Selasa
+                    @break
+                    @case(3)
+                    Rabu
+                    @break
+                    @case(4)
+                    Kamis
+                    @break
+                    @case(5)
+                    Jum'at
+                    @break
+                    @case(6)
+                    Sabtu
+                    @break
+                    @case(7)
+                    Minggu
+                    @break
+                    @default
+                    Tidak Diketahui
+                    @endswitch
+                </th>
+                
+                @endforeach
+            <tr>
+        </thead>
+        <tbody>
+            @php
+                $no = 1;
+            @endphp
+        @foreach ($jam as $b)
+            <tr >
+                <td class="border bg-primary text-white" width="2%">{{ $no++ }}</td>
+                <td class="border bg-primary text-white" width="2%">{{ $b->jam_mulai }} - {{ $b->jam_berakhir }}</td>
+                @foreach ($hari as $a)
+                   
+                    <td class="border" >
+                        {{-- Check if there's a schedule for this day and time slot --}}
+                        @php
+                            $scheduleFound = false;  // Flag to check if any schedule exists for this time slot
+                        @endphp
 
-<div class="row">
+                        {{-- Loop through possible time slots --}}
+                        @foreach ($jadwal->where('day', $a->id_hari) as $jadwalItem)
+                            @if ($jadwalItem->id_jam == $b->jam_ke)
+                                {{-- If there's a matching schedule, display the subject --}}
+                            
+                                    @if($jadwalItem->mata_pelajaran)
+                                    {{ \Str::limit($jadwalItem->mata_pelajaran->nama ?? '',255) }}
+                                    @else
+                                        {{ $jadwalItem->ref->ref }}
+                                    @endif
+                                
+
+                                @php
+                                    $scheduleFound = true;  // Mark that a schedule was found
+                                @endphp
+                            @endif
+                        @endforeach
+
+                        {{-- If no schedule found for this time slot, display the "add" button --}}
+                        @if (!$scheduleFound)
+                                -
+                        @endif
+                    </td>
+                    <td>
+                            @php
+                            $scheduleFound = false;  // Flag to check if any schedule exists for this time slot
+                        @endphp
+
+                        {{-- Loop through possible time slots --}}
+                        @foreach ($jadwal->where('day', $a->id_hari) as $jadwalItem)
+                        @if ($jadwalItem->id_jam == $b->jam_ke)
+                            {{-- If there's a matching schedule, display the subject --}}
+                            
+                            @if ($jadwalItem->guru)
+                                @php
+                                    // Get the full name from the object
+                                    $name = $jadwalItem->guru->nama;
+                    
+                                    // Split the name into parts
+                                    $parts = explode(' ', $name);
+                    
+                                    // Initialize an empty string for the abbreviated name
+                                    $abbreviatedName = '';
+                    
+                                    // Loop through the parts and take the first letter of each word
+                                    foreach ($parts as $part) {
+                                        $abbreviatedName .= strtoupper(substr($part, 0, 1));
+                                    }
+                                @endphp
+                
+                                <!-- Output the abbreviated name inside a badge -->
+                                <a id="popoverButton" class="badge badge-soft-success d-inline-flex align-items-center" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-custom-class="header-info" data-bs-html="true" data-bs-content="{{ $name }}" data-bs-original-title="Nama Guru Pengajar : ">{{ $abbreviatedName }}</a>
+
+                                
+                            @endif
+                    
+                            @php
+                                $scheduleFound = true;  // Mark that a schedule was found
+                            @endphp
+                        @endif
+                    @endforeach
+                    
+
+                        {{-- If no schedule found for this time slot, display the "add" button --}}
+                        @if (!$scheduleFound)
+                                -
+                        @endif
+                    </td>
+                @endforeach
+
+            </tr>
+        @endforeach
+            </tbody>
+
+    </table>
+ 
+</div>
+
+
+{{-- <div class="row">
     <div class="col-xxl-3 col-xl-6 col-md-7 d-flex">
         <div class="card flex-fill">
             <div class="card-header d-flex align-items-center justify-content-between">
@@ -192,8 +329,17 @@
     </div>
 
 
-</div>
+</div> --}}
 @section('javascript')
+<script>
+    // Initialize Bootstrap popovers
+    document.addEventListener('DOMContentLoaded', function () {
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl);
+        });
+    });
+</script>
 <script>
     var body = document.body;
     body.classList.add("mini-sidebar");

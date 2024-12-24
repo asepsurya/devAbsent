@@ -20,6 +20,7 @@
         "realrashid/sweet-alert": "^7.2",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-permission": "^6.9",
+        "tecnickcom/tcpdf": "^6.8",
         "yajra/laravel-datatables-oracle": "11.0",
         "yoeunes/toastr": "^3.0"
     },

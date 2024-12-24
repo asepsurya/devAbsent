@@ -202,6 +202,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/class/leasson/reference/edit',[leassonController::class,'referenceEdit'])->name('referenceEdit');
     Route::get('/class/leasson/reference/delete{id}',[leassonController::class,'referenceDelete'])->name('referenceDelete');
     Route::post('/class/leasson/add',[leassonController::class,'leassonAdd'])->name('leassonAdd');
+    Route::post('/class/leasson/update',[leassonController::class,'leassonUpate'])->name('leassonUpdate');
     Route::get('/class/leasson/delete{id}',[leassonController::class,'leassonDelete'])->name('leassonDelete');
     Route::get('/class/leasson/list/{id}',[leassonController::class,'list'])->name('list');
     Route::get('/class/leasson/getgtk',[leassonController::class,'getgtk'])->name('getgtk.leasson');
@@ -288,6 +289,7 @@ Route::get('/export/users/students', [PDFController::class, 'generatePDFUserSisw
 Route::get('/export/gtks', [PDFController::class, 'generatePDFGTKAll'])->name('export.gtks');
 Route::get('/export/students', [PDFController::class, 'generatePDFSiswaAll'])->name('export.students');
 Route::get('/export/RFIDstudents', [PDFController::class, 'generatePDFRFIDstudents'])->name('export.RFIDstudents');
+Route::get('/export/jadwal/{id_kelas}', [PDFController::class, 'generateJadwal'])->name('export.jadwal');
 
 Route::get('/report/absentrfid/student', [reportController::class, 'reportRFIDStudent']);
 Route::get('/report/absentrfid/teacher', [reportController::class, 'reportRFIDTeacher']);
