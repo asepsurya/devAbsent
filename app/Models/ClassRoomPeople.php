@@ -15,4 +15,8 @@ class ClassRoomPeople extends Model
     public function getClass(){
         return $this->HasMany('App\Models\ClassRoom','class_code','id_kelas');
     }
+    public function getScore(){
+        return $this->HasMany('App\Models\StudentScore','student_id','nis');
+    }
+    
 }

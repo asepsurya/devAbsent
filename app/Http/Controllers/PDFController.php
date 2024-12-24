@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use App\Models\User;
 use PDF;
 use TCPDF;
-use Dompdf\Options;
-use Illuminate\Support\Facades\App;
+use Carbon\Carbon;
 use App\Models\gtk;
-use App\Models\student;
+use Dompdf\Options;
+use App\Models\User;
 use App\Models\Event;
 use App\Models\Kelas;
+use App\Models\tasks;
 use App\Models\absent;
+use App\Models\student;
+use Illuminate\Http\Request;
+use App\Models\ClassRoomPeople;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\File;
 
 
 class PDFController extends Controller
@@ -343,6 +345,20 @@ class PDFController extends Controller
         $html .= '</tbody></table>';
     
         return $html;
+    }
+
+    public function generateScore($id){
+        
+        $task = tasks::where('id_kelas',$id)->orderBy('id', 'DESC')->with(['media','links','user'])->get();  // Fetch all tasks
+        $peserta = ClassRoomPeople::where('id_kelas',$id)->with('peopleStudent')->get();  // Fetch all participants
+
+        // Load the HTML view to render the table
+        $pdf = PDF::loadView('exportPDF.studentScore', compact('task', 'peserta','id'))
+         ->setPaper('a4', 'landscape');  // Set landscape orientation
+
+        // Download the generated PDF
+        return $pdf->download('export.pdf');
+    
     }
     
     

@@ -52,6 +52,8 @@
                                    <small>Added {{ $item->created_at->diffForHumans() }} </small>
 
                                 </td>
+                                @can('action')
+                                
                                 <td>
                                   <a href="#" class="btn btn-white btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -65,6 +67,8 @@
 
                                     </ul>
                                 </td>
+                                    
+                                @endcan
                             </tr>
 
                             @endforeach
