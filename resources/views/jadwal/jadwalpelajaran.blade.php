@@ -99,33 +99,45 @@
                         <th class="border" width="1%">
                           #
                         </th>
-                        <th class="border" >Jam</th>
-                        <th class="border">Nama Mata Pelajaran</th>
+                        <th  class="border-top"  width="2%"></th>
+                        <th class="border-top" >Jam</th>
+                        <th class="border-top" >Nama Mata Pelajaran</th>
+                       
                     </tr>
                 </thead>
                 <tbody>
                     @if($jadwal->where('day',$a->id_hari)->count())
                         @foreach ($jadwal->where('day',$a->id_hari) as $item )
                         <tr>
-                            <td>
-                               <button class="btn btn-outline-light bg-white  "><span class="ti ti-trash-x"></span></button>
+                            <td class="border">
+                                <a href="{{ route('leassonDelete',$item->id) }}">
+                                 <button class="btn btn-outline-light bg-white  "><span class="ti ti-trash-x"></span></button>
+                               </a>
+                            </td>
+                            <td class=" p-2 m-2">
+                                <a data-id-hari="{{ $a->id_hari }}" class=""
+                                    data-toggle="modal"
+                                    data-target="#addManualScheduleModal-{{ $item->id }}">
+                                    <img src="{{ asset('asset/img/plus.png') }}" alt="Add Schedule">
+                                 </a>
+                                 
                             </td>
                             <td class="border">{{ $item->start }} - {{ $item->end }}</td>
-                            <td class="border">
+                            <td >
                             @if($item->mata_pelajaran)
                                 <a data-toggle="modal"
-                                data-target="#editScheduleModal-{{ $item->id  }}">{{ \Str::limit($item->mata_pelajaran->nama ?? '', 15) }}
+                                data-target="#editScheduleModal-{{ $item->id  }}">{{ $item->mata_pelajaran->nama ?? '' }}
                             </a>
                             @else
                                 {{ $item->ref->ref }}
                             @endif
 
-                            </td>
+                            </td>    
                         </tr>
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="3"> Belum Menambahkan Data</td>
+                            <td colspan="4"> Belum Menambahkan Data</td>
                         </tr>
                     @endif
                 </tbody>
@@ -232,12 +244,11 @@
             <div class="modal-body">
                 <form id="editScheduleForm" action="{{ route('leassonUpdate') }}" method="POST">
                     @csrf
-
+                    
                     <input type="hidden" name="id" value="{{ $item->id }}">
                     <input type="hidden" name="id_jam" value="{{ $item->id_jam }}">
                     <input type="hidden" name="day" value="{{ $item->day }}" >
                     <input type="hidden" name="id_kelas" value="{{ $item->id_rombel }}">
-
                     <div class="mb-3">
                         <label for="edit_mata_pelajaran" class="form-label">Mata Pelajaran</label>
                         <select name="tahun_ajar" class="form-control">
@@ -285,6 +296,86 @@
 </div>
 @endforeach
 
+{{-- add Modal Manual --}}
+@foreach ($jadwal as $item)
+<div class="modal fade addManualScheduleModal" id="addManualScheduleModal-{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="editScheduleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editScheduleModalLabel">Tambah Jadwal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editScheduleForm" action="{{ route('leassonAddManual') }}" method="POST">
+                    @csrf
+                    <div hidden>
+                        <input name="id" value="{{ $item->id }}">
+                        <input name="day" value="{{ $item->day }}" >
+                        <input name="id_kelas" value="{{ $item->id_rombel }}">
+                        <input name="id_jam" id="modal-id-jam-manual" class="modal-id-jam-manual" >
+                    </div>
+                   
+                    <div class="mb-3">
+                        <label for="edit_mata_pelajaran" class="form-label">Mata Pelajaran</label>
+                        <select name="tahun_ajar" class="form-control ">
+                            @foreach ($tahun_ajar as $item2)
+                            <option value="{{ $item2->id }}" {{ $item->id_tahun_ajar == $item2->id ? 'selected' : '' }} >Tahun Pelajaran : {{ $item2->tahun_pelajaran }} - {{ $item2->semester }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="jam" class="form-label">Start</label>
+                                <input type="text" name="start"  value="{{ $item->end }}" class="form-control start" readonly>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="jam" class="form-label">End</label>
+                                <input type="time"  name="end" class="form-control myTime" >
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="edit_id_mapel" class="form-label">Pilih Referensi</label>
+                        <select class="form-control add_id_mapel_manual select2 " name="id_mapel"  id="add_id_mapel_manual" required>
+                            <option value="">Select Subject</option>
+                            <optgroup label="Mata Pelajaran">
+                                @foreach ($mapel as $mapel2)
+                                    <option value="{{ $mapel2->id_mapel }}" data-waktu="{{ app('settings')['waktu_mapel'] }}" >{{ $mapel2->mata_pelajaran->nama }}</option>
+                                @endforeach
+                            </optgroup>
+
+                            <optgroup label="Referensi">
+                                @if($ref2->count())
+                                    @foreach ($ref2 as $ref)
+                                        <option value="{{ $ref->ref_ID }}" data-waktu="{{ $ref->waktu }}">{{ $ref->ref }}</option>
+                                    @endforeach
+                                @else
+                                    <option value="">---Belum Menemukan Data Referensi----</option>
+                                @endif
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="edit_id_gtk" class="form-label">Teacher</label>
+                        <input type="text" class="form-control " id="id_gtk_manual" name="id_gtk" value="{{ $item->id_gtk }}" hidden>
+                        <input type="text" class="form-control " id="name_gtk_manual" name="name_gtk" disabled value="{{ $item->guru->nama ?? '' }}" >
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary w-100">Update Schedule</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 <div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -316,7 +407,7 @@
                     <!-- Add other form fields as needed -->
                     <div class="form-group mb-3">
                         <label for="id_mapel " class="form-label">Mata Pelajaran</label>
-                        <select class="form-control select2" name="id_mapel" id="id_mapel" required>
+                        <select class="form-control select2 id_mapel " name="id_mapel"required>
                             <option value="">Select Subject</option>
                             <optgroup label="Mata Pelajaran">
                                 @foreach ($mapel as  $mapel)
@@ -357,9 +448,9 @@
                     @csrf
                     <div hidden>
                         <input type="text" name="start_school" value="{{ app('settings')['start_school'] }}">
-                        <input  name="id_jam" id="modal-id-jam-ref" >
-                        <input  name="day" id="modal-id-hari-ref">
-                        <input  name="id_kelas" value="{{ $id }}">
+                        <input name="id_jam" id="modal-id-jam-ref" >
+                        <input name="day" id="modal-id-hari-ref">
+                        <input name="id_kelas" value="{{ $id }}">
                     </div>
 
                     <div class="mb-3" hidden>
@@ -448,7 +539,26 @@
             var waktu = selectedOption.data('waktu');
             // Set the 'waktu' value to the hidden input field
             $('#modal-id-jam-ref').val(waktu);
+            
         });
+
+        $('.add_id_mapel_manual').change(function() {
+            // Get the selected option
+            var selectedOption = $(this).find('option:selected');
+            
+            // Get the 'waktu' (time) from the 'data-waktu' attribute
+            var waktu = selectedOption.data('waktu');
+            
+            // Set the 'waktu' value to the hidden input field (modal-id-jam-manual)
+            $('.modal-id-jam-manual').val(waktu);
+            
+            
+            
+        });
+
+       
+
+    
     });
 </script>
 
@@ -478,6 +588,7 @@
         }
     });
 </script>
+
 <script>
 
   $(document).ready(function () {
@@ -500,8 +611,9 @@
                 placeholder: "Reference",
             });
 
+        });
 
-    });
+   
 
     $('#scheduleModalref').on('shown.bs.modal', function (e) {
         var button = $(e.relatedTarget);
@@ -513,15 +625,29 @@
         $('#modal-id-hari-ref').val(hariId);
 
         $('.select2').select2({
-                dropdownParent: $('#scheduleModalref'),
-                placeholder: "Reference",
-            });
-            $('.tahunAjar').select2({
-                dropdownParent: $('#scheduleModal'),
-                placeholder: "Tahun Pelajaran",
-            });
+            dropdownParent: $('#scheduleModalref'),
+            placeholder: "Reference",
+         });
+
+        $('.tahunAjar').select2({
+            dropdownParent: $('#scheduleModal'),
+            placeholder: "Tahun Pelajaran",
+         });  
+
     });
 
+
+    $('.addManualScheduleModal').on('shown.bs.modal', function () {
+        // Initialize Select2
+        var selectElement = $(this).find('.select2'); // This selects the .select2 within the modal
+
+        // Initialize or reinitialize Select2
+        selectElement.select2({
+            dropdownParent: $(this), // Ensures dropdown is inside the modal
+            placeholder: "Reference", // Set a placeholder
+        });
+
+    });
 
     $('.editScheduleModal').on('shown.bs.modal', function () {
         // Initialize Select2
@@ -542,7 +668,6 @@
     });
 
 });
-
 </script>
 
 <script>
@@ -553,7 +678,7 @@
             }
         });
     // Event listener for when the subject (id_mapel) changes
-    $('#id_mapel').on('change', function () {
+    $('.id_mapel').on('change', function () {
         var id_mapel = $(this).val();  // Get the selected subject ID
         var id_kelas = {{ $id }};
         if (id_mapel) {
@@ -600,6 +725,63 @@
     });
 });
 </script>
+
+<script>
+    $(document).ready(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    // Event listener for when the subject (id_mapel) changes
+    $('.edit_id_mapel').on('change', function () {
+        var id_mapel = $(this).val();  // Get the selected subject ID
+        var id_kelas = {{ $id }};
+        if (id_mapel) {
+            // Make the AJAX request to get teacher data based on the selected subject
+            $.ajax({
+                url: "{{ route('getgtk.leasson') }}",  // Your route to fetch teacher data
+                type: 'GET',
+                data: {
+                    id_mapel: id_mapel,
+                    id_kelas: id_kelas,
+
+                },
+                success: function (response) {
+
+                    // Check if the response contains teacher data
+                    if (response.options && response.options.length > 0) {
+                        // Assuming you want to set the first teacher in the list (response.options[0])
+                        var teacher = response.options[0];  // Get the first teacher's data
+
+                        // Set the teacher's ID (NIK) in the 'id_gtk' field
+                        $('.edit_id_gtk').val(teacher.nik);
+
+                        // Set the teacher's name in the 'name' field
+                        $('.edit_name').val(teacher.nama);
+                    } else {
+                        // Handle the case where no teacher data is found
+                        $('.edit_id_gtk').val('');
+                        $('.edit_name').val('');
+                        // alert('No teacher found for this subject/class.');
+                    }// Set the teacher's name
+                },
+                error: function (xhr, status, error) {
+                    // If no teacher is found, show a message or clear the fields
+                    $('.edit_id_gtk').val('');
+                    $('.edit_name').val('');
+                    // alert('Teacher not found for this subject.');
+                }
+            });
+        } else {
+            // If no subject is selected, clear the fields
+            $('.edit_id_gtk').val('');
+            $('.edit_name').val('');
+        }
+    });
+});
+</script>
+
 
 <script>
 
@@ -653,6 +835,64 @@
             // If no subject is selected, clear the fields
             $('.edit_id_gtk').val('');
             $('.edit_name').val('');
+        }
+    });
+});
+</script>
+
+
+<script>
+
+    $(document).ready(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    // Event listener for when the subject (id_mapel) changes
+    $('.add_id_mapel_manual').on('change', function () {
+        var id_mapel = $(this).val();  // Get the selected subject ID
+        var id_kelas = {{ $id }};
+        if (id_mapel) {
+            // Make the AJAX request to get teacher data based on the selected subject
+            $.ajax({
+                url: "{{ route('getgtk.leasson') }}",  // Your route to fetch teacher data
+                type: 'GET',
+                data: {
+                    id_mapel: id_mapel,
+                    id_kelas: id_kelas,
+
+                },
+                success: function (response) {
+
+                    // Check if the response contains teacher data
+                    if (response.options && response.options.length > 0) {
+                        // Assuming you want to set the first teacher in the list (response.options[0])
+                        var teacher = response.options[0];  // Get the first teacher's data
+
+                        // Set the teacher's ID (NIK) in the 'id_gtk' field
+                        $('#id_gtk_manual').val(teacher.nik);
+
+                        // Set the teacher's name in the 'name' field
+                        $('#name_gtk_manual').val(teacher.nama);
+                    } else {
+                        // Handle the case where no teacher data is found
+                        $('#id_gtk_manual').val('');
+                        $('#name_gtk_manual').val('');
+                        // alert('No teacher found for this subject/class.');
+                    }// Set the teacher's name
+                },
+                error: function (xhr, status, error) {
+                    // If no teacher is found, show a message or clear the fields
+                    $('#id_gtk_manual').val('');
+                    $('#name_gtk_manual').val('');
+                    // alert('Teacher not found for this subject.');
+                }
+            });
+        } else {
+            // If no subject is selected, clear the fields
+            $('#id_gtk_manual').val('');
+            $('#name_gtk_manual').val('');
         }
     });
 });

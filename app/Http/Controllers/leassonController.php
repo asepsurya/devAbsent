@@ -32,7 +32,7 @@ class leassonController extends Controller
         if(request('tahun_ajar2')){
             $jadwal = Lesson::where(['id_rombel'=>$id,'id_tahun_ajar'=>request('tahun_ajar')])->orderBy('day', 'asc')->with(['mata_pelajaran','guru','ref'])->get();
         }else{
-            $jadwal = Lesson::where('id_rombel',$id)->orderBy('day', 'asc')->with(['mata_pelajaran','guru','ref'])->get();
+            $jadwal = Lesson::where('id_rombel',$id)->orderBy('day', 'asc')->orderBy('start', 'asc')->with(['mata_pelajaran','guru','ref'])->get();
         }
         // get data Kelas
         $cek = Kelas::where('id',$id)->with(['jurusanKelas'])->get();
@@ -156,8 +156,37 @@ class leassonController extends Controller
         return redirect()->back()->with('refresh', 'Action was successful!');
 
 
-
     }
+
+    public function leassonAddManual(request $request){
+        $days = $request->input('day');  // Array of days
+        $mapelIds = $request->input('id_mapel');  // Array of mapel IDs
+        $gtkIds = $request->input('id_gtk');  // Array of GTK IDs
+        $id_hari = $request->input('id_hari');  // Array of start times
+        $sk = $request->input('sk');  // Array of SK values
+        $tanggalSk = $request->input('tanggal_sk');  // Array of SK dates
+        $id_jam = $request->input('id_jam');  // Array of SK dates
+
+        Lesson::create([
+            'id_rombel' => $request->input('id_kelas'),  // Assuming id_kelas is hidden in your form
+            'day' => $days,  // Store the array of days
+            'id_mapel' => $mapelIds,  // Store the array of mapel IDs
+            'id_gtk' => $gtkIds ?? null,  // GTK is nullable
+            'start' => $request->start,  // Use the formatted start time
+            'end' => $request->end,  // Use the formatted end time
+            'sk' => $sk ?? null,  // SK is nullable
+            'tanggal_sk' => $tanggalSk ?? null,  // Tanggal SK is nullable
+            'id_tahun_ajar' => $request->tahun_ajar,  // Assuming you pass the academic year
+            'status' => '1',  // Assuming active status
+        ]);
+
+        // Display success message
+        toastr()->success("Mata Pelajaran telah ditambahkan.");
+
+        // Redirect back with a success message
+        return redirect()->back()->with('refresh', 'Action was successful!');
+    }
+
     public function leassonUpate(request $request){
         $days = $request->input('day');  // Array of days
         $mapelIds = $request->input('id_mapel');  // Array of mapel IDs
@@ -172,7 +201,6 @@ class leassonController extends Controller
             'day' => $days,
             'id_mapel' => $mapelIds,
             'id_gtk' => $gtkIds ?? null,  // GTK is nullable
-            'id_jam' => $id_jam,
             'sk' => $sk ?? null,
             'tanggal_sk' => $tanggalSk ?? null,
             'id_tahun_ajar' => $request->tahun_ajar,
@@ -197,6 +225,7 @@ class leassonController extends Controller
             $id_kelas = $id;
         }
         $jadwal = Lesson::where('id_rombel',$id)->orderBy('day', 'asc')->with(['mata_pelajaran','guru','ref'])->get();
+        
         return view('jadwal.view',[
             'title'=>'Jadwal Pelajaran '.$kelas,
             'jadwal'=>$jadwal,

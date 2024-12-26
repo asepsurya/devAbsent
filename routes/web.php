@@ -202,6 +202,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/class/leasson/reference/edit',[leassonController::class,'referenceEdit'])->name('referenceEdit');
     Route::get('/class/leasson/reference/delete{id}',[leassonController::class,'referenceDelete'])->name('referenceDelete');
     Route::post('/class/leasson/add',[leassonController::class,'leassonAdd'])->name('leassonAdd');
+    Route::post('/class/leasson/addManual',[leassonController::class,'leassonAddManual'])->name('leassonAddManual');
     Route::post('/class/leasson/update',[leassonController::class,'leassonUpate'])->name('leassonUpdate');
     Route::get('/class/leasson/delete{id}',[leassonController::class,'leassonDelete'])->name('leassonDelete');
     Route::get('/class/leasson/list/{id}',[leassonController::class,'list'])->name('list');

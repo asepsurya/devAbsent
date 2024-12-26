@@ -24698,7 +24698,7 @@ html[data-theme=dark] .bg-outline-danger {
 
 html .darkmode .nav-tabs li a,
 html[data-theme=dark] .nav-tabs li a {
-    color: #b9b7c0
+    color: #000;
 }
 
 html .darkmode span.bg-success,
