@@ -23,6 +23,8 @@ class SettingSeeder extends Seeder
             ['key'=>'email','value'=>'superAdmin.sakti@gmail.com'],
             ['key'=>'fax','value'=>'4511 2233'],
             ['key'=>'register','value'=>'true'],
+            ['key'=>'start_school','value'=>'07:00'],
+            ['key'=>'waktu_mapel','value'=>'45'],
 
        ];
        Setting::insert($settingData);

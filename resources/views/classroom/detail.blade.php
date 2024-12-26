@@ -1,71 +1,14 @@
-@extends('layout.main')
-@section('css')
-<!-- TinyMCE CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.6.0/tinymce.min.js" integrity="sha512-/4EpSbZW47rO/cUIb0AMRs/xWwE8pyOLf8eiDWQ6sQash5RP1Cl8Zi2aqa4QEufjeqnzTK8CLZWX7J5ZjLcc1Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<style>
-    /* Initially set the height of the editor to 150px */
-    .editor {
-      height: 150px; /* Default small height */
-      transition: height 0.3s ease; /* Smooth transition for height change */
-      overflow: hidden;
-    }
-    .cc{
-        background-color: white;
-    }
-    html .darkmode .cc,
-    html[data-theme=dark] .cc {
-    background: #0f0c1c;
-    border-bottom-color: #1b1632
-}
-@media (max-width: 767.98px) {
-    .nav-tabs {
-        border-bottom: 0;
-        position: relative;
-        background-color: #fff;
-        border: none;
-        padding: 5px 0;
-        border-radius: 3px;
-    }
-    .scrollable-table {
-    max-height: 300px; /* Adjust height as needed */
-    overflow-y: auto;
-    border: 1px solid #dee2e6; /* Optional border for clarity */
-}
+@extends('classroom.layout.classRoom')
 
-}
-  </style>
-@endsection
-@section('container')
-{{-- header --}}
-
-<ul class="nav nav-tabs nav-tabs-bottom mb-3 border-bottom mt-0 cc  " role="tablist" style="position: fixed; z-index: 998; width: 100%; top:55px; ">
-    <li class="nav-item" role="presentation">
-        <a class="nav-link " href="#bottom-tab1" data-bs-toggle="tab" aria-selected="true" role="tab"><strong>Forum</strong></a>
-    </li>
-    @if(auth()->user()->role !=="siswa")
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" href="#bottom-tab2" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Tugas Kelas</strong></a>
-        </li>       
-    @endif
-   
-    <li class="nav-item" role="presentation">
-        <a class="nav-link" href="#bottom-tab3" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Orang</strong></a>
-    </li>
-
-    @if(auth()->user()->role !=="siswa")
-    <li class="nav-item" role="presentation">
-        <a class="nav-link" href="#bottom-tab4" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Nilai</strong></a>
-    </li>
-    @endif
-</ul>
+@section('content')
 @foreach ($myclass as $item )
 
 {{-- End Header --}}
 <div class="pt-5">
     <div class="tab-content px-3">
-       @include('classroom.partial_detail.forumTab')
-       @include('classroom.partial_detail.tugasTab')
-       @include('classroom.partial_detail.orangTab')
+    @include('classroom.partial_detail.forumTab')
+    @include('classroom.partial_detail.tugasTab')
+    @include('classroom.partial_detail.orangTab')
         @include('classroom.partial_detail.nilaiTab')
     </div>
 </div>
@@ -123,7 +66,7 @@
             </form>
         </div>
     </div>
-</div> 
+</div>
 @endforeach
 
 <div class="modal fade" id="addMateri" aria-hidden="true" style="display: none;">
@@ -139,7 +82,7 @@
                         <div hidden>
                             <input type="text" class="form-control" name="id_kelas" value="{{ $id }}">
                             <input type="text" name="description" value="Quis">
-                         
+
                             <input type="text" name="due_date" >
                             <input type="text" name="type" value="quiz" hidden>
                             <input type="text" name="auth" value="{{ auth()->user()->nomor }}">
@@ -152,7 +95,7 @@
                             <input type="number" name="poin" value="10" class="form-control me-3" >
                             <div class="mt-2">Menit</div>
                         </div>
-                       
+
                     </div>
                     <button class="btn btn-primary w-100">Tambah</button>
                 </div>
@@ -294,8 +237,8 @@
 </div>
 
 @endforeach
-@section('javascript')
 
+@section('myjavascript')
 <script>
     // Filtering for the first table
     const filterInput1 = document.getElementById('filterInput');
@@ -431,19 +374,5 @@
 
     });
 </script>
-<script>
-    var body = document.body;
-    body.classList.add("mini-sidebar");
-    // Select all elements with the 'blank-page' class
-    var elements = document.querySelectorAll('.blank-page');
-    document.querySelector('.header').style.borderBottom = 'none';
-    // Loop through the elements and remove the class from each
-    elements.forEach(function(element) {
-    element.classList.remove('blank-page');
-    element.classList.remove('content');
-    });
-
-</script>
-
 @endsection
 @endsection

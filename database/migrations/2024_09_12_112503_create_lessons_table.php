@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('sk')->nullable(); // input nomor sk
             $table->string('tanggal_sk')->nullable(); // input tanggal sk
             $table->string('status');
-            $table->string('id_jam');
+            $table->string('start');
+            $table->string('end');
             $table->timestamps();
         });
     }

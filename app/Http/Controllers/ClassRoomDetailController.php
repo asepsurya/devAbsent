@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kelas;
 use App\Models\tasks;
 use App\Models\student;
 use App\Models\question;
+use App\Models\ClassRoom;
 use App\Models\taskslink;
 use App\Models\tasksmedia;
 use App\Models\StudentScore;
@@ -198,7 +200,7 @@ class ClassRoomDetailController extends Controller
                     'task_id' => $task->id,  // Assuming $task is defined
                     'youtube_link' => $request->link,
                 ]);
-            
+
         }
 
         toastr()->success('data berhasil dihapus');
@@ -214,7 +216,7 @@ class ClassRoomDetailController extends Controller
                 'poin' => 'nullable|integer',
                 'due_date' => 'nullable|date',
                 'dok.*' => 'nullable|file|max:2048', // Max 2MB per file
-               
+
             ]);
 
             // Find the task to update
@@ -269,7 +271,7 @@ class ClassRoomDetailController extends Controller
                     ]);
                 }
 
-                
+
             }
 
             // Send success message
@@ -374,7 +376,7 @@ class ClassRoomDetailController extends Controller
                 'task_id' => 'required|integer',
             ]);
 
-        
+
 
             // Save data to the Question model
             $question = new Question();
@@ -456,7 +458,7 @@ class ClassRoomDetailController extends Controller
             'questions'=>question::where('task_id',$task_id)->inRandomOrder()->get(),
             'questionsAnswer'=>$questionsAnswer,
             'time'=>$time->poin
-            
+
 
         ],compact('task_id','questions', 'studentAnswers','studentScore'));
     }
@@ -570,6 +572,15 @@ class ClassRoomDetailController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
+    }
+
+    public function detailTugas($task_id, $id_kelas){
+        return view('classroom.taskdetail',[
+            'title'=>'Detail Tugas',
+                'myclass'=>ClassRoom::where('class_code',$id_kelas)->with('user')->get(),
+                'task'=>tasks::where(['id_kelas'=>$id_kelas,'id'=>$task_id])->orderBy('id', 'DESC')->with(['media','links','user'])->get()
+
+        ],compact('task_id','id_kelas'));
     }
 
 }

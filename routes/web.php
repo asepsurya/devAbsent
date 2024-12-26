@@ -242,6 +242,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/classroom/detail/adduser', [ClassRoomDetailController::class, 'adduser'])->name('classroom.adduser');
     Route::post('/classroom/detail/adduserClass', [ClassRoomDetailController::class, 'adduserClass'])->name('classroom.adduserClass');
     Route::get('/classroom/detail/deleteuserClass/{id}', [ClassRoomDetailController::class, 'deleteuserClass'])->name('classroom.deleteuserClass');
+    Route::get('/classroom/detail/tugas/{task_id}/{id_kelas}', [ClassRoomDetailController::class, 'detailTugas'])->name('classroom.detailTugas');
     Route::get('/classroom/addwork/{id}', [ClassRoomDetailController::class, 'tugas'])->name('classroom.tugas');
     Route::post('/classroom/addwork/add', [ClassRoomDetailController::class, 'tambahTugas'])->name('classroom.tambahTugas');
     Route::get('/classroom/addwork/edit/{task_id}', [ClassRoomDetailController::class, 'editTugas'])->name('classroom.editTugas');

@@ -82,7 +82,7 @@
                                         {{-- <a href="#" data-bs-toggle="modal" data-bs-target="#view_details">Tugas Pertemuan 2</a> --}}
                                     </h6>
                                     <div class="col my-3 ">
-                                        <h5>{{ $item->judul }}</h5>
+                                        <h5><a href="{{ route('classroom.detailTugas',[$item->id,$id]) }}">{{ $item->judul }}</a></h5>
                                         @if ($item->type == 'quiz')
                                         Kunjungi link berikut ini untuk memulai,jangan lupa berdo'a terlebih dahulu sebelum dimulai :) <a href="{{ route('quiz',[$id,$item->id]) }}">{{ route('quiz',[$id,$item->id]) }}</a>
                                         @else
@@ -203,9 +203,9 @@
                                             </div>
                                             @endforeach
                                         @endif
+
                                     </div>
                                     @endif
-
 
                                 </div>
 

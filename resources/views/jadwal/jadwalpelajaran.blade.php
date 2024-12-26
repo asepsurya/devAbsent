@@ -1,5 +1,7 @@
 @extends('layout.main')
+@section('css')
 
+@endsection
 @section('container')
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
@@ -34,100 +36,190 @@
     </div>
 </div>
 {{-- End Header --}}
+<ul class="nav nav-tabs tab-style-1 d-sm-flex d-block" id="myTab" role="tablist">
+    @foreach ($hari as $a)
+        <li class="nav-item" role="presentation">
+            <a class="nav-link "
+               id="tab-{{ $a->id }}"
+               data-bs-toggle="pill"
+               href="#{{ $a->id }}"
+               role="tab"
+               aria-controls="{{ $a->id }}"
+               aria-selected="true">
+                <i class="ti ti-calendar"></i> {{-- Calendar Icon --}}
+                @switch($a->id_hari)
+                    @case(1) Senin @break
+                    @case(2) Selasa @break
+                    @case(3) Rabu @break
+                    @case(4) Kamis @break
+                    @case(5) Jum'at @break
+                    @case(6) Sabtu @break
+                    @case(7) Minggu @break
+                    @default Tidak Diketahui
+                @endswitch
+            </a>
+        </li>
+    @endforeach
+</ul>
 
+<div class="tab-content" id="myTabContent">
+    @foreach ($hari as $a)
+        <div class="tab-pane fade @if ($loop->first)  @endif" id="{{ $a->id }}" role="tabpanel" aria-labelledby="tab-{{ $a->id }}">
+            <div class="d-flex justify-content-between">
 
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col" class="border" width="1%">No</th>
-                    <th scope="col" class="border" width="">Jam</th>
-                    @foreach ($hari as $a )
-                    <th scope="col" class="border text-center">
-                        @switch($a->id_hari)
-                        @case(1)
-                        Senin
-                        @break
-                        @case(2)
-                        Selasa
-                        @break
-                        @case(3)
-                        Rabu
-                        @break
-                        @case(4)
-                        Kamis
-                        @break
-                        @case(5)
-                        Jum'at
-                        @break
-                        @case(6)
-                        Sabtu
-                        @break
-                        @case(7)
-                        Minggu
-                        @break
-                        @default
-                        Tidak Diketahui
-                        @endswitch
-                    </th>
-                    @endforeach
-                <tr>
-            </thead>
-            <tbody>
-                @php
-                    $no = 1;
-                @endphp
-               @foreach ($jam as $b)
-                <tr >
-                    <td class="border" width="2%">{{ $no++ }}</td>
-                    <td class="border" width="2%">{{ $b->jam_mulai }} - {{ $b->jam_berakhir }}</td>
-                    @foreach ($hari as $a)
-                        <td class="border text-center" >
-                            {{-- Check if there's a schedule for this day and time slot --}}
-                            @php
-                                $scheduleFound = false;  // Flag to check if any schedule exists for this time slot
-                            @endphp
-
-                            {{-- Loop through possible time slots --}}
-                            @foreach ($jadwal->where('day', $a->id_hari) as $jadwalItem)
-                                @if ($jadwalItem->id_jam == $b->jam_ke)
-                                    {{-- If there's a matching schedule, display the subject --}}
-                                    <div class="border p-2 rounded">
-                                        @if($jadwalItem->mata_pelajaran)
-                                           <a data-toggle="modal"
-                                            data-target="#editScheduleModal-{{ $jadwalItem->id  }}">{{ \Str::limit($jadwalItem->mata_pelajaran->nama ?? '', 15) }}
-                                        </a>
-                                        @else
-                                            {{ $jadwalItem->ref->ref }}
-                                        @endif
-                                    </div>
-
-                                    @php
-                                        $scheduleFound = true;  // Mark that a schedule was found
-                                    @endphp
-                                @endif
-                            @endforeach
-
-                            {{-- If no schedule found for this time slot, display the "add" button --}}
-                            @if (!$scheduleFound)
-                            <button class="btn btn-sm btn-primary"
-                            data-id-jam="{{ $b->jam_ke }}"
+                <h4 class="mt-2">Jadwal Hari
+                    @switch($a->id_hari)
+                        @case(1) Senin @break
+                        @case(2) Selasa @break
+                        @case(3) Rabu @break
+                        @case(4) Kamis @break
+                        @case(5) Jum'at @break
+                        @case(6) Sabtu @break
+                        @case(7) Minggu @break
+                        @default Tidak Diketahui
+                    @endswitch
+                </h4>
+                <div class="mb-3">
+                    <div class="btn-group">
+                        <button class="btn btn-primary "
                             data-id-hari="{{ $a->id_hari }}"
                             data-toggle="modal"
-                            data-target="#scheduleModal">
-                                +
-                            </button>
+                            data-target="#scheduleModal"> +  Tambah Mata Pelajaran </button>
+                        <button class="btn btn btn-outline-light "
+                            data-id-hari="{{ $a->id_hari }}"
+                            data-toggle="modal"
+                            data-target="#scheduleModalref">Referensi</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-striped ">
+                <thead>
+                    <tr>
+                        <th class="border" width="1%">
+                          #
+                        </th>
+                        <th class="border" >Jam</th>
+                        <th class="border">Nama Mata Pelajaran</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if($jadwal->where('day',$a->id_hari)->count())
+                        @foreach ($jadwal->where('day',$a->id_hari) as $item )
+                        <tr>
+                            <td>
+                               <button class="btn btn-outline-light bg-white  "><span class="ti ti-trash-x"></span></button>
+                            </td>
+                            <td class="border">{{ $item->start }} - {{ $item->end }}</td>
+                            <td class="border">
+                            @if($item->mata_pelajaran)
+                                <a data-toggle="modal"
+                                data-target="#editScheduleModal-{{ $item->id  }}">{{ \Str::limit($item->mata_pelajaran->nama ?? '', 15) }}
+                            </a>
+                            @else
+                                {{ $item->ref->ref }}
                             @endif
-                        </td>
-                    @endforeach
 
-                </tr>
-            @endforeach
+                            </td>
+                        </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="3"> Belum Menambahkan Data</td>
+                        </tr>
+                    @endif
                 </tbody>
+            </table>
+        </div>
+    @endforeach
+</div>
 
-        </table>
+<div class="modal fade " id="ref" aria-labelledby="exampleModalToggleLabel" tabindex="-1" aria-modal="true"
+    role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-body m-0 p-0">
+                <form action="{{ route('reference') }}" method="post">
+                    @csrf
+                    <div class="bg-light">
+                        <div class="mb-3 m-3">
+                            <label class="form-label">Nama Refrensi <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="ref" required placeholder="Example: Ishoma,Upacara Bendera">
+                        </div>
+                        <div class="m-3">
+                            <label class="form-label">Waktu ajar <span class="text-danger">*</span></label>
+                            <div class="row">
+                                <div class="col-sm-4"><input type="number" class="form-control" name="waktu" required placeholder=""></div>
+                                <div class="col-sm-4 mt-2"> Menit</div>
+                            </div>
+
+                            <button class="btn btn-primary mt-2 w-100"><span class="ti ti-device-floppy"></span> Tambah</button>
+                        </div>
+                    </div>
+
+                    <div class="accordion accordions-items-seperate m-3" id="accordionSpacingExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                    aria-controls="flush-collapseOne">
+                                    Edit Referensi
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample" style="">
+                                <div class="accordion-body m-0 p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-nowrap mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="bg-light-400" width="10%"></th>
+                                                    <th class="bg-light-400">Referensi</th>
+                                                    <th class="bg-light-400">Waktu Ajar</th>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($ref2 as $item )
+                                                <tr>
+                                                    <td>
+                                                        <div class="hstack gap-2 fs-15">
+                                                            <a data-bs-toggle="modal" href="#edit-ref-{{ $item->ref_ID }}" class="btn btn-icon btn-sm btn-soft-info rounded-pill" >
+                                                                <i class="ti ti-pencil-minus"></i>
+                                                            </a>
+                                                            <a href="{{ route('referenceDelete',$item->ref_ID) }}" class="btn btn-icon btn-sm btn-soft-danger rounded-pill">
+                                                                <i class="ti ti-trash"></i>
+                                                            </a>
+                                                        </div>
+
+                                                    </td>
+                                                    <td>
+                                                        <div id="ref_item">{{$item->ref}}</div>
+                                                    </td>
+                                                    <td>{{ $item->waktu }} Menit</td>
+
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button data-bs-toggle="modal" href="#add_holiday" class="btn btn-outline-light me-1"> <span
+                        class="ti ti-arrow-left"></span>Kembali
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal -->
 @foreach ($jadwal as $item)
-
 <div class="modal fade editScheduleModal" id="editScheduleModal-{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="editScheduleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -140,7 +232,7 @@
             <div class="modal-body">
                 <form id="editScheduleForm" action="{{ route('leassonUpdate') }}" method="POST">
                     @csrf
-                 
+
                     <input type="hidden" name="id" value="{{ $item->id }}">
                     <input type="hidden" name="id_jam" value="{{ $item->id_jam }}">
                     <input type="hidden" name="day" value="{{ $item->day }}" >
@@ -191,8 +283,8 @@
         </div>
     </div>
 </div>
-
 @endforeach
+
 <div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -205,12 +297,16 @@
             <div class="modal-body">
                 <form id="scheduleForm" action="{{ route('leassonAdd') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="id_jam" id="modal-id-jam">
-                    <input type="hidden" name="day" id="modal-id-hari">
-                    <input type="hidden" name="id_kelas" value="{{ $id }}">
-                    <div class="mb-3">
-                        <label for="mata_pelajaran" class="form-label">Mata Pelajaran</label>
-                        <select name="tahun_ajar" class=" form-control">
+                    <div hidden>
+                        <input type="text" name="start_school" value="{{ app('settings')['start_school'] }}">
+                        <input  name="id_jam" id="modal-id-jam" value="{{ app('settings')['waktu_mapel'] }}" >
+                        <input  name="day" id="modal-id-hari">
+                        <input  name="id_kelas" value="{{ $id }}">
+                    </div>
+
+                    <div class="mb-3" hidden>
+                        <label for="mata_pelajaran" class="form-label">Tahun Ajaran</label>
+                        <select name="tahun_ajar" class=" form-control " readonly>
                             @foreach ($tahun_ajar as $item )
                             <option value="{{ $item->id }}" {{ request('tahun_ajar') == $item->id ? 'selected' : '' }}>Tahun Pelajaran : {{ $item->tahun_pelajaran }} - {{ $item->semester }}
                             </option>
@@ -219,23 +315,13 @@
                     </div>
                     <!-- Add other form fields as needed -->
                     <div class="form-group mb-3">
-                        <label for="id_mapel " class="form-label">PIlih Referensi</label>
+                        <label for="id_mapel " class="form-label">Mata Pelajaran</label>
                         <select class="form-control select2" name="id_mapel" id="id_mapel" required>
                             <option value="">Select Subject</option>
                             <optgroup label="Mata Pelajaran">
                                 @foreach ($mapel as  $mapel)
                                     <option value="{{ $mapel->id_mapel }}">{{ $mapel->mata_pelajaran->nama }}</option>
                                 @endforeach
-                            </optgroup>
-
-                            <optgroup label="Referensi">
-                                @if($ref2->count())
-                                    @foreach ($ref2 as $ref)
-                                        <option value="{{ $ref->ref_ID }}">{{ $ref->ref }}</option>
-                                    @endforeach
-                                @else
-                                    <option value="">---Belum Menemukan Data Referensi----</option>
-                                @endif
                             </optgroup>
                             <!-- Add your other options here -->
                         </select>
@@ -256,80 +342,61 @@
         </div>
     </div>
 </div>
-<div class="modal fade " id="ref" aria-labelledby="exampleModalToggleLabel" tabindex="-1" aria-modal="true"
-    role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
 
-            <div class="modal-body m-0 p-0">
-                <form action="{{ route('reference') }}" method="post">
+<div class="modal fade" id="scheduleModalref" tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="scheduleModalLabel">Tambah Referensi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="scheduleForm" action="{{ route('leassonAdd') }}" method="POST">
                     @csrf
-                    <div class="bg-light">
-                        <div class="m-3">
-                            <label class="form-label">Nama Refrensi <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="ref" required placeholder="Example: Ishoma,Upacara Bendera">
-                            <button class="btn btn-primary mt-2 w-100"><span class="ti ti-device-floppy"></span> Tambah</button>
-                        </div>
+                    <div hidden>
+                        <input type="text" name="start_school" value="{{ app('settings')['start_school'] }}">
+                        <input  name="id_jam" id="modal-id-jam-ref" >
+                        <input  name="day" id="modal-id-hari-ref">
+                        <input  name="id_kelas" value="{{ $id }}">
                     </div>
 
-                    <div class="accordion accordions-items-seperate m-3" id="accordionSpacingExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="flush-headingOne">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                    aria-controls="flush-collapseOne">
-                                    Edit Referensi
-                                </button>
-                            </h2>
-                            <div id="flush-collapseOne" class="accordion-collapse collapse"
-                                aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample" style="">
-                                <div class="accordion-body m-0 p-0">
-                                    <div class="table-responsive">
-                                        <table class="table table-nowrap mb-0">
-                                            <thead>
-                                                <tr>
-                                                    <th class="bg-light-400" width="10%"></th>
-                                                    <th class="bg-light-400">Referensi</th>
+                    <div class="mb-3" hidden>
+                        <label for="mata_pelajaran" class="form-label">Tahun Pelajaran</label>
+                        <select name="tahun_ajar" class=" form-control " readonly>
+                            @foreach ($tahun_ajar as $item )
+                            <option value="{{ $item->id }}" {{ request('tahun_ajar') == $item->id ? 'selected' : '' }}>Tahun Pelajaran : {{ $item->tahun_pelajaran }} - {{ $item->semester }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- Add other form fields as needed -->
+                    <div class="form-group mb-3">
+                        <label for="id_mapel " class="form-label">Pilih Referensi</label>
+                        <select class="form-control select2" name="id_mapel" id="ref-data"  required>
+                            <option value="">Select Subject</option>
+                            <optgroup label="Refensi">
+                                @foreach ($ref2 as  $ref)
+                                    <option value="{{ $ref->ref_ID }}" data-waktu="{{ $ref->waktu }}" >{{ $ref->ref }}</option>
+                                @endforeach
+                            </optgroup>
+                            <!-- Add your other options here -->
+                        </select>
+                    </div>
 
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($ref2 as $item )
-                                                <tr>
-                                                    <td>
-                                                        <div class="hstack gap-2 fs-15">
-                                                            <a data-bs-toggle="modal" href="#edit-ref-{{ $item->ref_ID }}" class="btn btn-icon btn-sm btn-soft-info rounded-pill" >
-                                                                <i class="ti ti-pencil-minus"></i>
-                                                            </a>
-                                                            <a href="{{ route('referenceDelete',$item->ref_ID) }}" class="btn btn-icon btn-sm btn-soft-danger rounded-pill">
-                                                                <i class="ti ti-trash"></i>
-                                                            </a>
-                                                        </div>
+                    <!-- Add more fields as needed -->
 
-                                                    </td>
-                                                    <td>
-                                                        <div id="ref_item">{{$item->ref}}</div>
-                                                    </td>
-
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary w-100">Tambah</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button data-bs-toggle="modal" href="#add_holiday" class="btn btn-outline-light me-1"> <span
-                        class="ti ti-arrow-left"></span>Kembali
-                </button>
             </div>
         </div>
     </div>
 </div>
+
+
 @foreach ($ref2 as $a )
 
 {{-- Edit referensi --}}
@@ -342,6 +409,7 @@
                 <form action="{{ route('referenceEdit') }}" method="post">
                     @csrf
                     <div class="bg-light">
+
                         <div class="m-3">
                             <label class="form-label">Nama Refrensi <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="ref_ID" required placeholder="Ex:Ishoma,Upacara" value="{{ $a->ref_ID }}" hidden>
@@ -371,6 +439,46 @@
     </script>
 @endif
 <script>
+    $(document).ready(function () {
+        // When a new option is selected in the 'id_mapel' select box
+        $('#ref-data').change(function() {
+            // Get the selected option
+            var selectedOption = $(this).find('option:selected');
+            // Get the 'waktu' from the 'data-waktu' attribute
+            var waktu = selectedOption.data('waktu');
+            // Set the 'waktu' value to the hidden input field
+            $('#modal-id-jam-ref').val(waktu);
+        });
+    });
+</script>
+
+<script>
+    // Ensure the active tab is stored in sessionStorage or localStorage
+    document.addEventListener("DOMContentLoaded", function() {
+        // When a tab is clicked, store its ID
+        document.querySelectorAll('.nav-link').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                const activeTabId = tab.getAttribute('href').substring(1); // Get the ID of the tab content
+                sessionStorage.setItem('activeTab', activeTabId); // Store the active tab ID in sessionStorage
+            });
+        });
+
+        // When the page loads, check if there's a stored active tab
+        const storedActiveTab = sessionStorage.getItem('activeTab');
+        if (storedActiveTab) {
+            // Show the tab corresponding to the stored active tab ID
+            const tabToActivate = document.getElementById(storedActiveTab);
+            const tabLink = document.querySelector(`[href="#${storedActiveTab}"]`);
+
+            // Add classes to activate the right tab and content
+            if (tabLink) {
+                tabLink.classList.add('active');
+                tabToActivate.classList.add('show', 'active');
+            }
+        }
+    });
+</script>
+<script>
 
   $(document).ready(function () {
     // Initialize Select2 when the modal is opened
@@ -379,11 +487,11 @@
             var button = $(e.relatedTarget);
 
             // Extract values from the data attributes of the button
-            var jamKe = button.data('id-jam');
+            // var jamKe = button.data('id-jam');
             var hariId = button.data('id-hari');
 
             // Set the values to the modal input fields
-            $('#modal-id-jam').val(jamKe);
+            // $('#modal-id-jam').val(jamKe);
             $('#modal-id-hari').val(hariId);
 
             // Initialize Select2 (if you still want to apply Select2 inside the modal)
@@ -392,6 +500,22 @@
                 placeholder: "Reference",
             });
 
+
+    });
+
+    $('#scheduleModalref').on('shown.bs.modal', function (e) {
+        var button = $(e.relatedTarget);
+
+        // Extract values from the data attributes of the button
+        // var jamKe = button.data('id-jam');
+        var hariId = button.data('id-hari');
+
+        $('#modal-id-hari-ref').val(hariId);
+
+        $('.select2').select2({
+                dropdownParent: $('#scheduleModalref'),
+                placeholder: "Reference",
+            });
             $('.tahunAjar').select2({
                 dropdownParent: $('#scheduleModal'),
                 placeholder: "Tahun Pelajaran",
@@ -410,6 +534,7 @@
         });
 
     });
+
 
     // Reset Select2 when modal is closed to clear previous selections
     $('#scheduleModal').on('hidden.bs.modal', function () {

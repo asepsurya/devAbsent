@@ -174,7 +174,7 @@
               </div>
             </div>
             @else
-            <form class="d-flex py-3 py-lg-0"><a class="btn btn-sm p-2 px-2 btn-info rounded-pill me-2" href="/login" role="button"><span class="ti ti-login"></span> Masuk Aplikasi</a>
+            <form class="d-flex py-3 py-lg-0"><a class="btn btn-sm p-2 px-2 btn-info  me-2" href="/login" role="button"><span class="ti ti-login"></span> Masuk Aplikasi</a>
             </form>
             @endif
           </div>

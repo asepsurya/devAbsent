@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('ref');
             $table->string('ref_ID');
+            $table->string('waktu');
             $table->string('status');
             $table->timestamps();
         });
