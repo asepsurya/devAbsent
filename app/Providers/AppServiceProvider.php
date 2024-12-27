@@ -7,6 +7,7 @@ use App\Models\Setting;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,9 +25,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $activeUsers = User::where('status', '1')->get();
-        $countActiveUsers = $activeUsers->count();
-        view()->share('countActiveUsers',$countActiveUsers);
+        
+        if (Schema::hasTable('users')) {
+            // Jika tabel 'users' ada, lanjutkan untuk mengambil data pengguna aktif
+            $activeUsers = User::where('status', '1')->get();
+            $countActiveUsers = $activeUsers->count();
+        
+            // Bagikan data pengguna aktif ke semua tampilan
+            view()->share('countActiveUsers', $countActiveUsers);
+        } else {
+            // Jika tabel 'users' tidak ada, bisa melakukan sesuatu atau memberi peringatan
+            // Misalnya, tidak melanjutkan proses atau menampilkan pesan error
+            // Log::warning('Tabel users tidak ditemukan.');
+        }
 
 
 
