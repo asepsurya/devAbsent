@@ -208,10 +208,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/class/leasson/list/{id}',[leassonController::class,'list'])->name('list');
     Route::get('/class/leasson/getgtk',[leassonController::class,'getgtk'])->name('getgtk.leasson');
 
-    Route::get('/class/leasson/time',[leassonController::class,'leassonTime'])->name('leasson.time');
-    Route::post('/class/leasson/time/add',[leassonController::class,'addleassonTime'])->name('leasson.addtime');
-    Route::post('/class/leasson/time/update',[leassonController::class,'updateleassonTime'])->name('leasson.updatetime');
-    Route::get('/class/leasson/time/delete/{id}',[leassonController::class,'deleteleassonTime'])->name('leasson.deletetime');
+    Route::get('/class/leasson/reference',[leassonController::class,'leassonTime'])->name('leasson.reference');
+    // Route::post('/class/leasson/time/add',[leassonController::class,'addleassonTime'])->name('leasson.addtime');
+    // Route::post('/class/leasson/time/update',[leassonController::class,'updateleassonTime'])->name('leasson.updatetime');
+    // Route::get('/class/leasson/time/delete/{id}',[leassonController::class,'deleteleassonTime'])->name('leasson.deletetime');
 
     Route::get('/class/leasson/hari',[setelanHariController::class,'index'])->name('leasson.index');
     Route::post('/class/leasson/hari/add',[setelanHariController::class,'add'])->name('leasson.add');
@@ -223,6 +223,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/setelan/aplikasi', [AppsConfigController::class, 'app'])->name('setelan.app');
     Route::get('/setelan/customize', [AppsConfigController::class, 'customize'])->name('setelan.customize');
     Route::post('/setelan/aplikasi/change', [AppsConfigController::class, 'appChange'])->name('setelan.appChange');
+    Route::post('/setelan/schooltime', [AppsConfigController::class, 'schoolTime'])->name('setelan.schoolTime');
     Route::get('/kalender',[FullCalenderController::class,'kalender']);
     Route::get('/events', [EventController::class, 'index']);  // Fetch events
     Route::post('/events/create', [EventController::class, 'create']);  // Create new event

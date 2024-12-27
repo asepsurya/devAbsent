@@ -199,6 +199,8 @@ class leassonController extends Controller
         Lesson::where('id',$id)->update([
             'id_rombel' => $request->input('id_kelas'),  // Assuming id_kelas is hidden in your form
             'day' => $days,
+            'start'=>$request->start,
+            'end'=>$request->end,
             'id_mapel' => $mapelIds,
             'id_gtk' => $gtkIds ?? null,  // GTK is nullable
             'sk' => $sk ?? null,
@@ -206,6 +208,7 @@ class leassonController extends Controller
             'id_tahun_ajar' => $request->tahun_ajar,
             'status' => '1',
         ]);
+
         toastr()->success("Mata Pelajaran telah diperbaharui.");
         // Redirect back with a success message
         return redirect()->back()->with('refresh', 'Action was successful!');
@@ -225,7 +228,7 @@ class leassonController extends Controller
             $id_kelas = $id;
         }
         $jadwal = Lesson::where('id_rombel',$id)->orderBy('day', 'asc')->with(['mata_pelajaran','guru','ref'])->get();
-        
+
         return view('jadwal.view',[
             'title'=>'Jadwal Pelajaran '.$kelas,
             'jadwal'=>$jadwal,
@@ -246,7 +249,8 @@ class leassonController extends Controller
     }
     public function referenceEdit(request $request){
         ref_jadwal::where('ref_ID',$request->ref_ID)->update([
-            'ref'=>$request->ref
+            'ref'=>$request->ref,
+            'waktu'=>$request->waktu,
         ]);
         toastr()->success('Data Berhasil diubah');
         return redirect()->back()->with('ref', 5)->withInput();
@@ -259,8 +263,8 @@ class leassonController extends Controller
 
     public function leassonTime(){
         return view('jadwal.jampelajaran',[
-            'title'=>'Setelan Jam Pelajaran',
-            'data'=>JamPelajaran::where('status',1)->get()
+            'title'=>'Setelan Referensi Jadwal Pelajaran',
+            'data'=>ref_jadwal::where('status',1)->get()
         ]);
     }
 

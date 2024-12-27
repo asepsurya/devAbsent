@@ -28,7 +28,7 @@
                 Tampilkan Jadwal</a>
         </div>
         <div class="pe-1 mb-2">
-            <a data-bs-toggle="modal" href="#ref" class=" btn btn-outline-light me-1"><span class="ti ti-settings"></span>
+            <a href="{{ route('leasson.reference') }}" class=" btn btn-outline-light me-1"><span class="ti ti-settings"></span>
                 Referensi</a>
         </div>
 
@@ -102,7 +102,7 @@
                         <th  class="border-top"  width="2%"></th>
                         <th class="border-top" >Jam</th>
                         <th class="border-top" >Nama Mata Pelajaran</th>
-                       
+
                     </tr>
                 </thead>
                 <tbody>
@@ -120,7 +120,7 @@
                                     data-target="#addManualScheduleModal-{{ $item->id }}">
                                     <img src="{{ asset('asset/img/plus.png') }}" alt="Add Schedule">
                                  </a>
-                                 
+
                             </td>
                             <td class="border">{{ $item->start }} - {{ $item->end }}</td>
                             <td >
@@ -132,7 +132,7 @@
                                 {{ $item->ref->ref }}
                             @endif
 
-                            </td>    
+                            </td>
                         </tr>
                         @endforeach
                     @else
@@ -146,89 +146,7 @@
     @endforeach
 </div>
 
-<div class="modal fade " id="ref" aria-labelledby="exampleModalToggleLabel" tabindex="-1" aria-modal="true"
-    role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
 
-            <div class="modal-body m-0 p-0">
-                <form action="{{ route('reference') }}" method="post">
-                    @csrf
-                    <div class="bg-light">
-                        <div class="mb-3 m-3">
-                            <label class="form-label">Nama Refrensi <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="ref" required placeholder="Example: Ishoma,Upacara Bendera">
-                        </div>
-                        <div class="m-3">
-                            <label class="form-label">Waktu ajar <span class="text-danger">*</span></label>
-                            <div class="row">
-                                <div class="col-sm-4"><input type="number" class="form-control" name="waktu" required placeholder=""></div>
-                                <div class="col-sm-4 mt-2"> Menit</div>
-                            </div>
-
-                            <button class="btn btn-primary mt-2 w-100"><span class="ti ti-device-floppy"></span> Tambah</button>
-                        </div>
-                    </div>
-
-                    <div class="accordion accordions-items-seperate m-3" id="accordionSpacingExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="flush-headingOne">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                    aria-controls="flush-collapseOne">
-                                    Edit Referensi
-                                </button>
-                            </h2>
-                            <div id="flush-collapseOne" class="accordion-collapse collapse"
-                                aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample" style="">
-                                <div class="accordion-body m-0 p-0">
-                                    <div class="table-responsive">
-                                        <table class="table table-nowrap mb-0">
-                                            <thead>
-                                                <tr>
-                                                    <th class="bg-light-400" width="10%"></th>
-                                                    <th class="bg-light-400">Referensi</th>
-                                                    <th class="bg-light-400">Waktu Ajar</th>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($ref2 as $item )
-                                                <tr>
-                                                    <td>
-                                                        <div class="hstack gap-2 fs-15">
-                                                            <a data-bs-toggle="modal" href="#edit-ref-{{ $item->ref_ID }}" class="btn btn-icon btn-sm btn-soft-info rounded-pill" >
-                                                                <i class="ti ti-pencil-minus"></i>
-                                                            </a>
-                                                            <a href="{{ route('referenceDelete',$item->ref_ID) }}" class="btn btn-icon btn-sm btn-soft-danger rounded-pill">
-                                                                <i class="ti ti-trash"></i>
-                                                            </a>
-                                                        </div>
-
-                                                    </td>
-                                                    <td>
-                                                        <div id="ref_item">{{$item->ref}}</div>
-                                                    </td>
-                                                    <td>{{ $item->waktu }} Menit</td>
-
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button data-bs-toggle="modal" href="#add_holiday" class="btn btn-outline-light me-1"> <span
-                        class="ti ti-arrow-left"></span>Kembali
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Modal -->
 @foreach ($jadwal as $item)
@@ -244,7 +162,7 @@
             <div class="modal-body">
                 <form id="editScheduleForm" action="{{ route('leassonUpdate') }}" method="POST">
                     @csrf
-                    
+
                     <input type="hidden" name="id" value="{{ $item->id }}">
                     <input type="hidden" name="id_jam" value="{{ $item->id_jam }}">
                     <input type="hidden" name="day" value="{{ $item->day }}" >
@@ -257,7 +175,19 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="jam" class="form-label">Start</label>
+                                <input type="time" name="start"  value="{{ $item->start }}" class="form-control start" >
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="jam" class="form-label">End</label>
+                                <input type="time"  name="end" class="form-control " value="{{ $item->end }}" >
+                            </div>
+                        </div>
 
+                    </div>
                     <div class="form-group mb-3">
                         <label for="edit_id_mapel" class="form-label">Pilih Referensi</label>
                         <select class="form-control select2 edit_id_mapel" name="id_mapel"  required>
@@ -316,7 +246,7 @@
                         <input name="id_kelas" value="{{ $item->id_rombel }}">
                         <input name="id_jam" id="modal-id-jam-manual" class="modal-id-jam-manual" >
                     </div>
-                   
+
                     <div class="mb-3">
                         <label for="edit_mata_pelajaran" class="form-label">Mata Pelajaran</label>
                         <select name="tahun_ajar" class="form-control ">
@@ -329,14 +259,14 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="jam" class="form-label">Start</label>
-                                <input type="text" name="start"  value="{{ $item->end }}" class="form-control start" readonly>
+                                <input type="time" name="start"  value="{{ $item->end }}" class="form-control start" >
                             </div>
                             <div class="col-sm-6">
                                 <label for="jam" class="form-label">End</label>
                                 <input type="time"  name="end" class="form-control myTime" >
                             </div>
                         </div>
-                       
+
                     </div>
                     <div class="form-group mb-3">
                         <label for="edit_id_mapel" class="form-label">Pilih Referensi</label>
@@ -488,40 +418,6 @@
 </div>
 
 
-@foreach ($ref2 as $a )
-
-{{-- Edit referensi --}}
-<div class="modal fade " id="edit-ref-{{ $a->ref_ID }}" aria-labelledby="exampleModalToggleLabel" tabindex="-1" aria-modal="true"
-    role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-
-            <div class="modal-body m-0 p-0">
-                <form action="{{ route('referenceEdit') }}" method="post">
-                    @csrf
-                    <div class="bg-light">
-
-                        <div class="m-3">
-                            <label class="form-label">Nama Refrensi <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="ref_ID" required placeholder="Ex:Ishoma,Upacara" value="{{ $a->ref_ID }}" hidden>
-                            <input type="text" class="form-control" name="ref" required placeholder="Ex:Ishoma,Upacara" value="{{ $a->ref }}">
-                            <button class="btn btn-primary mt-2 w-100">Simpan</button>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button data-bs-toggle="modal" href="#ref" class="btn btn-outline-light me-1"> <span
-                        class="ti ti-arrow-left"></span>Kembali
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@endforeach
-
 @section('javascript')
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 @if (session('refresh'))
@@ -539,26 +435,26 @@
             var waktu = selectedOption.data('waktu');
             // Set the 'waktu' value to the hidden input field
             $('#modal-id-jam-ref').val(waktu);
-            
+
         });
 
         $('.add_id_mapel_manual').change(function() {
             // Get the selected option
             var selectedOption = $(this).find('option:selected');
-            
+
             // Get the 'waktu' (time) from the 'data-waktu' attribute
             var waktu = selectedOption.data('waktu');
-            
+
             // Set the 'waktu' value to the hidden input field (modal-id-jam-manual)
             $('.modal-id-jam-manual').val(waktu);
-            
-            
-            
+
+
+
         });
 
-       
 
-    
+
+
     });
 </script>
 
@@ -613,7 +509,7 @@
 
         });
 
-   
+
 
     $('#scheduleModalref').on('shown.bs.modal', function (e) {
         var button = $(e.relatedTarget);
@@ -632,7 +528,7 @@
         $('.tahunAjar').select2({
             dropdownParent: $('#scheduleModal'),
             placeholder: "Tahun Pelajaran",
-         });  
+         });
 
     });
 

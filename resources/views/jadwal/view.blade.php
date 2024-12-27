@@ -36,30 +36,30 @@
     </div>
 </div>
 {{-- End Header --}}
-<table class="table  table-striped">
+<table class="table ">
     <thead>
         <tr>
             <th class="border">HARI</th>
             <th class="border"> WAKTU</th>
             <th class="border">MATA PELAJARAN</th>
             <th class="border">GURU PENGAJAR</th>
-         
+
         </tr>
-      
+
     </thead>
     <tbody>
 
         @foreach([1, 2, 3, 4, 5, 6, 7] as $day)  <!-- Loop through days (1 = Monday, 7 = Sunday) -->
         @php
             $dayName = ['1' => 'SENIN', '2' => 'SELASA', '3' => 'RABU', '4' => 'KAMIS', '5' => 'JUMAT', '6' => 'SABTU', '7' => 'MINGGU'][$day];
-            $jadwalForDay = $jadwal->where('day', $day); 
+            $jadwalForDay = $jadwal->where('day', $day);
         @endphp
-        
+
         @if($jadwalForDay->isNotEmpty())  <!-- Check if there are any schedules for the current day -->
             <tr>
                 <td rowspan="{{ $jadwalForDay->count() + 1 }}" class="border">{{ $dayName }}</td>  <!-- Display the day name -->
             </tr>
-    
+
             @foreach ($jadwalForDay as $jadwalItem)  <!-- Loop through the schedule for that day -->
                 <tr>
                     <td class="border">{{ $jadwalItem->start }} - {{ $jadwalItem->end }}</td>
@@ -79,7 +79,7 @@
             @endforeach
         @endif
     @endforeach
-         
+
     </tbody>
 </table>
 <br>
@@ -87,7 +87,7 @@
 
 
 {{-- <div class="row">
-    
+
     <div class="col-xxl-3 col-xl-6 col-md-7 d-flex">
         <div class="card flex-fill">
             <div class="card-header d-flex align-items-center justify-content-between">

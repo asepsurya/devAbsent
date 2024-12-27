@@ -1,7 +1,7 @@
 @extends('layout.main')
 @section('css')
 <style>
-    
+
     .dropdown-menu {
         z-index: 1050; /* Atur z-index sesuai kebutuhan */
     }
@@ -27,8 +27,8 @@
             <button type="button" class="btn btn-outline-light bg-white  me-1" onclick="history.back()">
                 <i class="ti ti-arrow-left"></i> Kembali
             </button>
-            <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-primary">
-                <i class="ti ti-plus"></i> Tambah Jam
+            <button type="button" data-bs-toggle="modal" href="#ref" class="btn btn-primary">
+                <i class="ti ti-plus"></i> Tambah Referensi
             </button>
         </div>
 
@@ -37,18 +37,18 @@
 {{-- End Header --}}
 <div class="card">
     <div class="card-header">
-        <h3>Tabel Jam Pelajaran</h3>
+        <h3>Tabel Referensi</h3>
     </div>
     <div class="table-responsive">
         <table class="table table-striped table-bordered" id="table1">
             <thead class="thead-light">
                 <tr>
                     <th class="border">#</th>
-                    <th class="border" width="3%">Jam Ke</th>
-                    <th class="border">Jam Mulai</th>
-                    <th class="border">Jam Berakhir</th>
+                    <th class="border" width="3%">ID</th>
+                    <th class="border">Nama Referensi</th>
+                    <th class="border">Estimasi Waktu</th>
                     <th class="border">Status</th>
-                    <th class="border"Action</th>
+                    <th class="border">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,9 +58,9 @@
                 @foreach ($data as $i )
                 <tr>
                     <td class="border">{{ $no++ }}</td>
-                    <td class="border">{{ $i->jam_ke }}</td>
-                    <td class="border">{{ $i->jam_mulai }}</td>
-                    <td class="border">{{ $i->jam_berakhir }}</td>
+                    <td class="border text-primary">{{ $i->ref_ID }}</td>
+                    <td class="border">{{ $i->ref }}</td>
+                    <td class="border">{{ $i->waktu }} Menit</td>
                     <td class="border">
                         @if($i->status == 1)
                         <span class="badge badge-soft-success d-inline-flex align-items-center">
@@ -70,101 +70,136 @@
                             Tidak Aktif </span>
                         @endif
 
-                      
+
                     </td>
                     <td class="border">
-                        
-                            <a class="btn btn-icon btn-sm btn-soft-primary rounded-pill" data-bs-toggle="modal" href="#editModal-{{ $i->id }}" role="button"><i class="ti ti-list-details"></i></a>
-                            <a class="btn btn-icon btn-sm btn-soft-danger rounded-pill"  href="{{ route('leasson.deletetime',$i->id) }}" role="button"><i class="ti ti-trash-x"></i></a>
-                        
-                       
+
+                            <a class="btn btn-icon btn-sm btn-soft-primary rounded-pill" data-bs-toggle="modal" href="#edit-ref-{{ $i->ref_ID }}" role="button"><i class="ti ti-list-details"></i></a>
+                            <a class="btn btn-icon btn-sm btn-soft-danger rounded-pill"  href="{{ route('referenceDelete',$i->ref_ID) }}" role="button"><i class="ti ti-trash-x"></i></a>
+
+
                     </td>
                 </tr>
-                             
+
                 @endforeach
             </tbody>
         </table>
     </div>
 
 </div>
-@foreach ($data as $i )   
 
-<div class="modal fade" id="editModal-{{ $i->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+
+<div class="card">
+      <div class="table-responsive">
+        <form action="{{ route('setelan.schoolTime') }}" method="POST">
+            @csrf
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="border">No</th>
+                    <th class="border">Name</th>
+                    <th class="border">Default Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border">1</td>
+                    <td class="border">Setelan Jam Masuk Sekolah</td>
+                    <td><input type="time" class="form-control" name="start_school" value="{{ app('settings')['start_school'] }}"></td>
+                </tr>
+                <tr >
+                    <td class="border">2</td>
+                    <td class="border">Estimasi Waktu Jam Mata Pelajaran</td>
+                    <td>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <input type="number" class="form-control" name="waktu_mapel" value="{{ app('settings')['waktu_mapel'] }}" >
+                            </div>
+                            <div class="col-sm-5 mt-2">Menit</div>
+                        </div>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="m-2 d-flex justify-content-end">
+            <button class="btn btn-primary"><span class="ti ti-settings"></span> Simpan Setelan</button>
+        </div>
+        </form>
+      </div>
+</div>
+
+
+<div class="modal fade " id="ref" aria-labelledby="exampleModalToggleLabel" tabindex="-1" aria-modal="true"
+    role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Ubah Jam Pelajaran</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-bs-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('leasson.updatetime') }}" method="POST">
+
+            <div class="modal-body m-0 p-0">
+                <form action="{{ route('reference') }}" method="post">
                     @csrf
-                    <input type="text" name="id" value="{{ $i->id }}" hidden>
-                    <div class="form-group mb-3">
-                        <label for="jamKe">Jam Ke</label>
-                        <input type="number" class="form-control" id="jamKe" name="jam_ke" required value="{{ $i->jam_ke }}">
+                    <div class="bg-light">
+                        <div class="mb-3 m-3">
+                            <label class="form-label">Nama Refrensi <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="ref" required placeholder="Example: Ishoma,Upacara Bendera">
+                        </div>
+                        <div class="m-3">
+                            <label class="form-label">Waktu ajar <span class="text-danger">*</span></label>
+                            <div class="row">
+                                <div class="col-sm-4"><input type="number" class="form-control" name="waktu" required placeholder=""></div>
+                                <div class="col-sm-4 mt-2"> Menit</div>
+                            </div>
+
+                            <button class="btn btn-primary mt-2 w-100"><span class="ti ti-device-floppy"></span> Tambah</button>
+                        </div>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="jamMulai">Jam Mulai</label>
-                        <input type="time" class="form-control" id="jamMulai" name="jam_mulai" required value="{{ $i->jam_mulai }}">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="jamBerakhir">Jam Berakhir</label>
-                        <input type="time" class="form-control" id="jamBerakhir" name="jam_berakhir" required value="{{ $i->jam_berakhir }}">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="status">Status</label>
-                        <select class="form-control select" id="status" name="status" required>
-                            <option value="1" {{ $i->status == 1 ? 'selected' : '' }}>Aktif</option>
-                            <option value="2" {{ $i->status == 2 ? 'selected' : '' }}>Tidak Aktif</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Simpan Perubahan</button>
                 </form>
             </div>
+            <div class="modal-footer">
+                <button data-bs-toggle="modal" href="#add_holiday" class="btn btn-outline-light me-1"> <span
+                        class="ti ti-x"></span>Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@foreach ($data as $a )
+{{-- Edit referensi --}}
+<div class="modal fade " id="edit-ref-{{ $a->ref_ID }}" aria-labelledby="exampleModalToggleLabel" tabindex="-1" aria-modal="true"
+    role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-body m-0 p-0">
+                <form action="{{ route('referenceEdit') }}" method="post">
+                    @csrf
+                    <div class="bg-light">
+
+                        <div class="m-3">
+                            <label class="form-label">Nama Refrensi <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="ref_ID" required placeholder="Ex:Ishoma,Upacara" value="{{ $a->ref_ID }}" hidden>
+                            <input type="text" class="form-control" name="ref" required placeholder="Ex:Ishoma,Upacara" value="{{ $a->ref }}">
+
+                        </div>
+                        <div class="m-3">
+                            <label class="form-label">Waktu ajar <span class="text-danger">*</span></label>
+                            <div class="row">
+                                <div class="col-sm-4"><input type="number" class="form-control" name="waktu" required  value="{{ $a->waktu }}"></div>
+                                <div class="col-sm-4 mt-2"> Menit</div>
+                            </div>
+                            <button class="btn btn-primary mt-4 w-100">Simpan</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
         </div>
     </div>
 </div>
 @endforeach
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Tambah Jam Pelajaran</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('leasson.addtime') }}" method="POST">
-                    @csrf
-                    <div class="form-group mb-3">
-                        <label for="jamKe">Jam Ke</label>
-                        <input type="number" class="form-control" id="jamKe" name="jam_ke" required>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="jamMulai">Jam Mulai</label>
-                        <input type="time" class="form-control" id="jamMulai" name="jam_mulai" required>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="jamBerakhir">Jam Berakhir</label>
-                        <input type="time" class="form-control" id="jamBerakhir" name="jam_berakhir" required>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="status">Status</label>
-                        <select class="form-control select" id="status" name="status" required>
-                            <option value="1">Aktif</option>
-                            <option value="2">Tidak Aktif</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Simpan Data</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
 @section('javascript')
 
 @endsection

@@ -66,4 +66,13 @@ class AppsConfigController extends Controller
         return redirect()->route('setelan.app')->with('status', 'success Update');
 
     }
+
+    public function schoolTime(request $request){
+        Setting::where('key', 'start_school')->update(['value' => $request->start_school]);
+        Setting::where('key', 'waktu_mapel')->update(['value' => $request->waktu_mapel]);
+
+        Artisan::call('cache:clear');
+        toastr()->success('Setelan Berhasil disimpan');
+        return redirect()->back();
+    }
 }

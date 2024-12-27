@@ -233,7 +233,7 @@
                             </a>
 
                             <ul class="mx-3">
-                                <li><a href="/class/leasson/time" class="{{ Request::is('class/leasson/time') ? 'active' : ''}}">Jam Pelajaran</a></li>
+                                <li><a href="/class/leasson/reference" class="{{ Request::is('class/leasson/reference') ? 'active' : ''}}">Setelan Referensi</a></li>
                                 <li><a href="/class/leasson/hari" class="{{ Request::is('class/leasson/hari') ? 'active' : ''}}">Hari Efektif</a></li>
                                 <li><a href="/class/leasson" class="{{ Request::is('class/leasson/list*') ? 'active' : ''}}">Setel Jadwal</a></li>
                             </ul>
