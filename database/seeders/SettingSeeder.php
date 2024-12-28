@@ -22,6 +22,8 @@ class SettingSeeder extends Seeder
             ['key'=>'phone','value'=>'( +255 ) 99283'],
             ['key'=>'email','value'=>'superAdmin.sakti@gmail.com'],
             ['key'=>'fax','value'=>'4511 2233'],
+            ['key'=>'headmaster','value'=>'KEPALA SEKOLAH'],
+            ['key'=>'headmasterid','value'=>'1234567890'],
             ['key'=>'register','value'=>'true'],
             ['key'=>'start_school','value'=>'07:00'],
             ['key'=>'waktu_mapel','value'=>'45'],

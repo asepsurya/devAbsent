@@ -80,10 +80,10 @@
                 <span class="icon-addon">
                     <i class="ti ti-search"></i>
                 </span>
-                <input type="text" class="form-control" placeholder="Cari Siswa.." id="myInput" onkeyup="myFunction()">
+                <input type="text" class="form-control" placeholder="Cari Guru.." id="myInput" onkeyup="myFunction()">
             </div>
-            <button class="btn btn-outline-light bg-white mb-3 mx-1"><span class="ti ti-printer"></span> Cetak</button>
-            <button class="btn btn-outline-light bg-white mb-3">Exsport PDF</button>
+            <a class="btn btn-outline-light bg-white mb-3 mx-1" href="/export/RFIDteachers?month={{ request('month') }}&year={{ request('year')}}&type=cetak"  target="_BLANK"><span class="ti ti-printer"></span> Cetak</a>
+            <a href="/export/RFIDteachers?month={{ request('month') }}&year={{ request('year') }}"><button class="btn btn-outline-light bg-white mb-3">Exsport PDF</button></a>
         </div>
     </div>
     <div class="card-body p-0">

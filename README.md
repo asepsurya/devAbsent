@@ -9,6 +9,7 @@ Aplikasi dan website ini dibangun untuk mengatasi permasalahan pencatatan absens
 Mesin yang digunakan untuk aplikasi ini terdapat dua jenis, menggunakan idcard dan menggunakan fingerprint. Dengan adanya sistem ini, diharapkan bisa membantu mengatasi permasalahan-permasalahan yang telah disebutkan.
 
 ## Fitur Absensi Sakti
+
 - Dashboard Admin, Walikelas, Guru dan Siswa
 - Fitur absensi RFID/Fingerprint untuk guru maupun siswa
 - Fitur absensi manual(hadir, sakit, izin dan alpa) oleh admin/walikelas
@@ -30,14 +31,47 @@ Mesin yang digunakan untuk aplikasi ini terdapat dua jenis, menggunakan idcard d
 
 ***Setup Aplikasi***
 
-1. Clone repository ini menggunakan perintah `git clone https://github.com/asepsurya/Aplikasi-Absensi-SAKTI.git`
-2. Jalankan perintah `cp .env.example .env`
-3. Isikan konfigurasi database anda dan juga Environment Variable diatas pada file .env
-4. Jalankan perintah `composer install`
-5. Jalankan perintah `php artisan key:generate`
-6. Jalankan perintah `php artisan migrate:fresh --seed`
-7. Jalankan perintah `php artisan storage:link`
-8. Jalankan perintah `php artisan serve` lalu buka browser dan kunjungi link `http://localhost:8000`
+1. Clone repository
+   ```bash
+   git clone https://github.com/asepsurya/Aplikasi-Absensi-SAKTI.git
+   ```
+2. Buat file .env
+   ```bash
+   cp .env.example .env
+   ```
+3. Konfigurasi database
+   ```bash
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=saktiabsensi
+    DB_USERNAME=root
+    DB_PASSWORD=
+   ```
+4. Install depedencies
+   ```bash
+   composer install
+   ```
+5. Buat APP_KEY
+   ```bash
+   php artisan key:generate
+   ```
+6. Membuat tabel baru ke database dan input data awal
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
+7. Membuat link storage agar diakses public
+   ```bash
+   php artisan storage:link
+   ```
+8. Jalankan website
+   ```bash
+   php artisan serve
+   ```
+9. Buka di browser
+   ```bash
+   http://127.0.0.1:8000
+   ```
 
 ***Login User***
 
@@ -53,6 +87,8 @@ Mesin yang digunakan untuk aplikasi ini terdapat dua jenis, menggunakan idcard d
 4. Siswa
    user : `24257001@saktiproject.my.id`
    pass : `tasik2024`
+
+Playlist Video Tutorial [SAKTI PROJECT](https://www.youtube.com/@saktiproject)
 
 ## Lisensi
 

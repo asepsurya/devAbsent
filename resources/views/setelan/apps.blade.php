@@ -240,6 +240,42 @@
                                 <div class="row align-items-center flex-fill">
                                     <div class="col-xxl-8 col-lg-6">
                                         <div class="mb-3">
+                                            <h6>Kepala Sekolah</h6>
+                                            <p>Nama lengkap berikut gelar Kepala Sekolah atau Instansi</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-4 col-lg-6">
+                                        <div class="mb-3">
+                                            @foreach ($settings->where('key','headmaster') as $headmaster )
+                                            <input type="text" class="form-control" placeholder="Kepala Sekolah" name="headmaster" value="{{ $headmaster->value }}">
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
+                                <div class="row align-items-center flex-fill">
+                                    <div class="col-xxl-8 col-lg-6">
+                                        <div class="mb-3">
+                                            <h6>NRKS</h6>
+                                            <p>Diisi dengan Nomor Registrasi Kepala Sekolah</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-4 col-lg-6">
+                                        <div class="mb-3">
+                                            @foreach ($settings->where('key','headmasterid') as $headmasterid )
+                                            <input type="text" class="form-control" placeholder="Nomor Registrasi Kepala Sekolah" name="headmasterid" value="{{ $headmasterid->value }}">
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
+                                <div class="row align-items-center flex-fill">
+                                    <div class="col-xxl-8 col-lg-6">
+                                        <div class="mb-3">
                                             <h6>Register Page</h6>
                                             <p>Tampilkan Halaman Register..? Fitur ini untuk membatasi pendaftaran atau Registrasi di halaman <a href="/register" target="_BLANK" class="text-primary">Register</a></p>
                                         </div>

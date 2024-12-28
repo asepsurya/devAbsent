@@ -144,7 +144,7 @@
     </style>
 </head>
 <body>
-    
+
     <div class="kop-surat">
         <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo']) }}" />
         <div class="text">
@@ -200,7 +200,7 @@
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $absentData->id_rfid }}</td>
-                    <td>{{ $absentData->nama }}</td>
+                    <td style="text-align: left;">{{ $absentData->nama }}</td>
 
                     @foreach (range(1, $daysInMonth) as $day2)
                         @php
@@ -283,11 +283,13 @@
     </table>
     <!-- Area tanda tangan -->
     <div class="signature-section">
-        {{-- <p>Malang, {{ date(now()) }} </p> <!-- Anda bisa mengganti  secara dinamis --> --}}
+        {{-- <p>Malang, {{ date(now()) }} </p> <!-- Anda bisa mengganti secara dinamis --> --}}
         <div class="signature">
             <p>Kepala Sekolah</p>
-            <div class="line"></div>
-            <p><strong>Nama Kepala Sekolah</strong></p> <!-- Ganti dengan nama Kepala Sekolah -->
+            <br> <!-- Menambahkan jarak setelah teks Kepala Sekolah -->
+            <div class="line"></div> <!-- Garis dengan jarak 0 -->
+            <p style="margin: 0; padding: 0;"><strong>{{ app('settings')['headmaster'] }}</strong></p> <!-- Nama Kepala Sekolah dengan jarak 0 -->
+            <p style="margin: 0; padding: 0;"><strong>NRKS. {{ app('settings')['headmasterid'] }}</strong></p> <!-- NRKS dengan jarak 0 -->
         </div>
     </div>
 
