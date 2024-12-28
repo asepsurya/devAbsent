@@ -294,6 +294,7 @@ Route::get('/export/users/students', [PDFController::class, 'generatePDFUserSisw
 Route::get('/export/gtks', [PDFController::class, 'generatePDFGTKAll'])->name('export.gtks');
 Route::get('/export/students', [PDFController::class, 'generatePDFSiswaAll'])->name('export.students');
 Route::get('/export/RFIDstudents', [PDFController::class, 'generatePDFRFIDstudents'])->name('export.RFIDstudents');
+Route::get('/export/RFIDteachers', [PDFController::class, 'generatePDFRFIDteachers'])->name('export.RFIDstudents');
 Route::get('/export/jadwal/{id_kelas}', [PDFController::class, 'generateJadwal'])->name('export.jadwal');
 Route::get('/export/score/{id}', [PDFController::class, 'generateScore'])->name('export.score');
 

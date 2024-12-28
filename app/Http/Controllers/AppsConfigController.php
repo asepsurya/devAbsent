@@ -55,6 +55,8 @@ class AppsConfigController extends Controller
                 Setting::where('key', 'phone')->update(['value' => $request->phone]);
                 Setting::where('key', 'email')->update(['value' => $request->email]);
                 Setting::where('key', 'fax')->update(['value' => $request->fax]);
+                Setting::where('key', 'headmaster')->update(['value' => $request->headmaster]);
+                Setting::where('key', 'headmasterid')->update(['value' => $request->headmasterid]);
                 Setting::where('key', 'register')->update(['value' => $request->register]);
 
         });
