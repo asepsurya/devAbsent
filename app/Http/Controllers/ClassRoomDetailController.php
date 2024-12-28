@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kelas;
 use App\Models\tasks;
+use App\Models\Comment;
 use App\Models\student;
 use App\Models\question;
 use App\Models\ClassRoom;
@@ -575,11 +576,14 @@ class ClassRoomDetailController extends Controller
     }
 
     public function detailTugas($task_id, $id_kelas){
+        $comments = Comment::where('task_id', $task_id)
+        ->with('user')
+        ->get();
         return view('classroom.taskdetail',[
             'title'=>'Detail Tugas',
                 'myclass'=>ClassRoom::where('class_code',$id_kelas)->with('user')->get(),
-                'task'=>tasks::where(['id_kelas'=>$id_kelas,'id'=>$task_id])->orderBy('id', 'DESC')->with(['media','links','user'])->get()
-
+                'task'=>tasks::where(['id_kelas'=>$id_kelas,'id'=>$task_id])->orderBy('id', 'DESC')->with(['media','links','user'])->get(),
+                'comments'=>$comments
         ],compact('task_id','id_kelas'));
     }
 

@@ -29,6 +29,16 @@
         background: #0f0c1c;
         border-bottom-color: #1b1632
     }
+    .badge {
+    position: absolute;
+    top: -5px; /* Position the badge above the avatar */
+    right: -5px; /* Position it to the right of the avatar */
+    transform: translate(50%, -50%); /* Adjust position to be at the top-right corner */
+    font-size: 12px; /* Adjust font size of the badge */
+    padding: 5px;
+    background-color: #f44336; /* Badge background color (red) */
+    color: white; /* Text color */
+    }
 </style>
 @endsection
 @section('container')

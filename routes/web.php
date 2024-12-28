@@ -12,6 +12,7 @@ use App\Http\Controllers\RegionController;
 use App\Http\Controllers\reportController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\barcodeController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\landingController;
 use App\Http\Controllers\leassonController;
 use App\Http\Controllers\lisensiController;
@@ -266,7 +267,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/download/{filename}', [ClassRoomDetailController::class, 'download'])->name('download');
     Route::post('/preview-excel', [ExcelPreviewController::class, 'previewExcel'])->name('preview.excel');
     Route::post('/save-preview-data', [ExcelPreviewController::class, 'savePreviewData'])->name('save.preview.data');
-
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
 });
 Route::post('/logout',[authController::class,'logout'])->name('logout');
 // route Regency Administrasi

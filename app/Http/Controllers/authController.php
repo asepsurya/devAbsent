@@ -219,7 +219,6 @@ class authController extends Controller
     }
     public function imageProfile(request $request){
 
-        try {
             $role = auth()->user()->role;
             $base64Image = ($role == "walikelas" || $role == "guru")
                 ? $request->input('gambar')
@@ -254,17 +253,11 @@ class authController extends Controller
             if ($role == "walikelas" || $role == "guru") {
                 gtk::where('nik', $request->id)->update(['gambar' => $fileName]);
             } else {
-                Student::where('id', $request->id)->update(['foto' => $fileName]);
+                student::where('nis', $request->id)->update(['foto' => $fileName]);
             }
 
             toastr()->success('Profile photo updated successfully.');
             return redirect()->back();
-
-        } catch (\Exception $e) {
-            Log::error('Profile photo update failed: ' . $e->getMessage());
-            toastr()->error('An error occurred: ' . $e->getMessage());
-            return redirect()->back();
-        }
 
 
     }

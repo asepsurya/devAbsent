@@ -12,7 +12,10 @@ use App\Models\Event;
 use App\Models\Kelas;
 use App\Models\tasks;
 use App\Models\absent;
+use App\Models\Lesson;
 use App\Models\student;
+use App\Models\setelanHari;
+use App\Models\JamPelajaran;
 use Illuminate\Http\Request;
 use App\Models\ClassRoomPeople;
 use Illuminate\Support\Facades\App;
@@ -170,7 +173,7 @@ class PDFController extends Controller
             ]);
         }else{
 
-        
+
         $data = [
             'created' => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
             'students' => student::with('absentRFID')->get(),
@@ -196,57 +199,24 @@ class PDFController extends Controller
 
     public function generateJadwal($id_kelas)
     {
-        // Create a new TCPDF instance
-        $pdf = new TCPDF();
-    
-        // Set document properties
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Your Name');
-        $pdf->SetTitle('Schedule Report');
-    
-        // Add a page (landscape orientation)
-        $pdf->AddPage('L', 'A4');
+        $cek = Kelas::where('id',$id_kelas)->with('jurusanKelas')->get();
+        foreach($cek as $item){
+            $kelas =  $item->nama_kelas.' '.$item->jurusanKelas->nama_jurusan.' '. $item->sub_kelas;
+        }
 
-        // Set the font for the school name
-        $pdf->SetFont('helvetica', 'B', 20);
-        $pdf->SetXY(50, 15);  // Position of the text
-    
-  
-        // Add some space before the main content
-        $pdf->Ln(30); // 30 units to ensure the next content is well spaced
-    
-        // Set font for the schedule table
-        $pdf->SetFont('helvetica', '', 10);
-    
-        // Prepare the HTML content (replace this with your actual data)
-        $html = $this->generateScheduleTable($id_kelas);
-    
-        // Output the HTML content into the PDF
-        $pdf->writeHTML($html, true, false, true, false, '');
-    
-        // Add signature and QR code at the end
-        $pdf->Ln(20); // Add some space before the signature
-    
-        // Set the font for the signature text
-        $pdf->SetFont('helvetica', 'I', 10);
-        $pdf->Cell(0, 10, 'Kepala Sekolah', 0, 1, 'L');
-        
-        // Add signature image (replace with actual path to the signature image)
-        $pdf->Image('path_to_signature.jpg', 40, $pdf->GetY(), 50, 20);  // Adjust coordinates and dimensions
-    
-        // Generate a smaller QR Code for the headmaster's signature (you can replace '1234567890' with actual data)
-        $pdf->SetXY(120, $pdf->GetY());  // Adjust position for QR code
-        $pdf->write2DBarcode('1234567890', 'QRCODE,L', '', '', 30, 30, [], 'N');  // QR Code with data and size (smaller size)
-    
-        // Add the "Ditandatangani Secara Elektronik" text below the QR code
-        $pdf->SetXY(0, $pdf->GetY() + 35); // Position text under QR Code
-        $pdf->SetFont('helvetica', 'I', 8);
-        $pdf->Cell(0, 10, 'Ditandatangani Secara Elektronik', 0, 1, 'C');  // Text centered below QR code
-    
-        // Close and output PDF document
-        return $pdf->Output('schedule_report.pdf', 'I'); // Display PDF in browser
+        $jadwal = Lesson::where('id_rombel',$id_kelas)->orderBy('day', 'asc')->with(['mata_pelajaran','guru','ref'])->get();
+        $hari = setelanHari::where('status',1)->get();
+        $jam =JamPelajaran::all();
+        $title = $kelas;
+        // Load Blade view and pass data
+        $pdf = app('dompdf.wrapper')->loadView('exportPDF.jadwal', compact('jadwal','hari','jam','title'));
+
+        // Stream PDF to browser
+        return $pdf->stream('jadwal_pelajaran.pdf');
+
+
     }
-    
+
     private function generateScheduleTable($id_kelas)
     {
         // Fetch data from the database
@@ -254,10 +224,10 @@ class PDFController extends Controller
             ->orderBy('day', 'asc')
             ->with(['mata_pelajaran', 'guru', 'ref'])
             ->get();
-    
+
         $hari = \App\Models\setelanHari::where('status', 1)->get();
         $jam = \App\Models\JamPelajaran::all();
-    
+
         // Create HTML table structure
         $html = '
         <table border="1" cellpadding="5">
@@ -265,7 +235,7 @@ class PDFController extends Controller
                 <tr>
                     <th>No</th>
                     <th>Jam</th>';
-    
+
         // Add the day names dynamically from the $hari variable
         foreach ($hari as $h) {
             // Map the id_hari to the day name
@@ -295,29 +265,29 @@ class PDFController extends Controller
                 default:
                     $dayName = 'Tidak Diketahui';
             }
-    
+
             $html .= '<th>' . $dayName . '</th>';
         }
-    
+
         $html .= '
                 </tr>
             </thead>
             <tbody>';
-    
+
         $no = 1;
         foreach ($jam as $b) {
             $html .= '<tr>
                 <td>' . $no++ . '</td>
                 <td>' . $b->jam_mulai . ' - ' . $b->jam_berakhir . '</td>';
-    
+
             // Loop through days (hari)
             foreach ($hari as $a) {
                 $scheduleFound = false;
                 $html .= '<td>';
-    
+
                 // Filter jadwal for current day
                 $jadwalForDay = $jadwal->where('day', $a->id_hari)->where('id_jam', $b->jam_ke);
-    
+
                 // Check if there's a matching schedule
                 if ($jadwalForDay->isNotEmpty()) {
                     foreach ($jadwalForDay as $jadwalItem) {
@@ -330,25 +300,25 @@ class PDFController extends Controller
                         break;
                     }
                 }
-    
+
                 // If no schedule found, display a dash
                 if (!$scheduleFound) {
                     $html .= '-';
                 }
-    
+
                 $html .= '</td>';
             }
-    
+
             $html .= '</tr>';
         }
-    
+
         $html .= '</tbody></table>';
-    
+
         return $html;
     }
 
     public function generateScore($id){
-        
+
         $task = tasks::where('id_kelas',$id)->orderBy('id', 'DESC')->with(['media','links','user'])->get();  // Fetch all tasks
         $peserta = ClassRoomPeople::where('id_kelas',$id)->with('peopleStudent')->get();  // Fetch all participants
 
@@ -358,10 +328,10 @@ class PDFController extends Controller
 
         // Download the generated PDF
         return $pdf->download('export.pdf');
-    
+
     }
-    
-    
+
+
 
 
 }

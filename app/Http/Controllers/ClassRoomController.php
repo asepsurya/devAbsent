@@ -14,18 +14,18 @@ class ClassRoomController extends Controller
 {
     public function index(){
         if(request('archive')){$archive = 'true';}else{$archive = 'false';}
-           
+
 
             if(auth()->user()->role == "siswa") {
                 // Fetching the ClassRoomPeople entry for the current student
                 $classRoomPeople = ClassRoomPeople::where('nis', auth()->user()->nomor)->first();
-                
+
                 if ($classRoomPeople) {
                     // If the student exists in ClassRoomPeople, get the associated ClassRoom
                     $data = $classRoomPeople->getClass()->with(['user', 'mapel', 'people'])->get();
                 } else {
                     // If no entry for the student, set data to an empty collection or handle as needed
-                    $data = collect(); 
+                    $data = collect();
                 }
 
             } else {
@@ -34,9 +34,9 @@ class ClassRoomController extends Controller
                     ->with(['people', 'mapel', 'user'])
                     ->get();
             }
-            
-      
-        
+
+
+
         return view('classroom.index',[
             'title'=> 'Ruangan Kelas Saya',
             'class'=> $data,
@@ -50,7 +50,7 @@ class ClassRoomController extends Controller
             'students'=>student::where('status','1')->get(),
             'class'=>Kelas::orderBy('id', 'DESC')->with(['jurusanKelas','jmlRombel'])->get(),
             'peserta'=>ClassRoomPeople::where('id_kelas',$id)->with('peopleStudent')->get(),
-            'task'=>tasks::where('id_kelas',$id)->orderBy('id', 'DESC')->with(['media','links','user'])->get()
+            'task'=>tasks::where('id_kelas',$id)->orderBy('id', 'DESC')->with(['media','links','user','comment'])->get()
         ],compact('id'));
     }
     public function recommend(request $request){

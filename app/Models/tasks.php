@@ -27,5 +27,9 @@ class tasks extends Model
     public function user(){
         return $this->belongsTo('App\Models\User','created_by','nomor');
     }
+    public function comment(){
+        return $this->Hasmany('App\Models\Comment','task_id','id');
+    }
+
 
 }

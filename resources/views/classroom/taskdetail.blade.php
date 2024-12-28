@@ -1,19 +1,68 @@
 @extends('classroom.layout.classRoom')
 @section('css')
+<script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/emoji-button.min.js"></script>
 <style>
-    .close-btn {
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    font-weight: bold;
-    color: red;
-    cursor: pointer;
-}
+    /* Container for button and input */
+    .emoji-container {
+        position: relative;
+    }
 
-.close-btn:hover {
-    color: darkred;
-}
-.comment-section {
+    /* Emoji button styling */
+    .emoji-btn {
+        font-size: 24px;
+        padding: 8px 12px;
+        cursor: pointer;
+        background: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+
+
+    /* Emoji picker styling */
+    .emoji-picker {
+        display: none;
+
+        z-index: 1000;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: auto;
+    }
+
+    /* Individual emoji button styling */
+    .emoji {
+        font-size: 20px;
+        margin: 5px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 5px;
+    }
+
+    .emoji:hover {
+        background-color: #f0f0f0;
+        border-radius: 50%;
+    }
+</style>
+<style>
+       .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            color: red;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: darkred;
+        }
+        .comment-section {
             max-width: 800px;
             margin: 50px auto;
             background-color: white;
@@ -109,12 +158,19 @@
         .comment-footer button:hover {
             color: #45a049;
         }
+        .nav-tabs{
+            background-color: white;
+        }
+        html .darkmode .nav-tabs,
+        html[data-theme=dark] .nav-tabs {
+            background: #0f0c1c;
+
+         }
+
 </style>
+
 @endsection
 @section('content')
-{{-- <div class="pt-5">
-    asdddddddddddddddddddd
-</div> --}}
 @foreach ($myclass as $item )
 <div class="pt-5">
     <div class="p-3" >
@@ -339,23 +395,196 @@
 
             </div>
         </div>
-        <div class="card">
-            <div class="card-header ">
-                {{-- komentar --}}
-                <div class="comment-box">
-                    <img src="https://via.placeholder.com/40" class="comment-avatar" alt="avatar">
-                    <input type="text" id="commentInput" placeholder="Tulis komentar..." />
-                    <button class="btn btn-primary" onclick="addComment()">Kirim</button>
+        <div class="container ">
+            <h4 class="mb-3"><span class="ti ti-brand-hipchat"></span> Forum Diskusi</h4>
+            <div class="card">
+                <!-- Daftar komentar -->
+                <div class="card-body" id="commentSection" style="max-height: 400px; overflow-y: auto;">
+                    <div id="loadingIndicator" class="d-flex justify-content-center" style="display: none;">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    {{-- .... --}}
                 </div>
+                <div class="card-footer bg-light">
+                    <div class="d-flex align-items-center " >
+                        <input type="text" name="user_id" id="nameInput" class="form-control me-2" placeholder="Masukkan nama Anda..." value="{{ auth()->user()->nomor }}" hidden>
+                        <input type="text" name="username" id="nameInputName" class="form-control me-2" placeholder="Masukkan nama Anda..." value="{{ auth()->user()->nama }}" hidden>
+                        <input type="text" name="id_kelas" class="form-control me-2" placeholder="Masukkan nama Anda..." value="{{ $id_kelas }}" hidden>
+                        <input type="text" name="task_id" class="form-control me-2" placeholder="Masukkan nama Anda..." value="{{ $task_id }}" hidden>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        @if(auth()->user()->student)
+                            <img src="/storage/{{ auth()->user()->student->foto }}" class="rounded-circle me-3" alt="avatar" width="50">
+                        @elseif (auth()->user()->gtk)
+                            <img src="/storage/{{ auth()->user()->gtk->gambar }}" class="rounded-circle me-3" alt="avatar" width="50">
+                        @else
+                            <img src="{{ asset('asset/img/user-default.jpg') }}" class="rounded-circle me-3" alt="avatar" width="50">
+                        @endif
+                        <button id="emojiPickerButton" class="btn ">😊</button>
+                        <input type="text" id="commentInput" name="comment" class="form-control me-2  p-2" placeholder="Tulis komentar..." style="border-radius:50px;">
 
-            </div>
-            <div class="card-body">
-              <p>Tidak Ada tugas yang perlu diselesaikan</p>
+                        <button class="btn btn-primary" onclick="addComment()"  style="border-radius:20px;"> Kirim </button>
+                    </div>
+
+                    <div id="emojiPicker" class="mt-2" style="display: none;  z-index: 1000;border-radius:30px; border: 1px solid #ccc; background-color: white; padding: 10px; ">
+                       @include('classroom.partial_detail.emote')
+
+                        <!-- Add more emoji buttons here -->
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
 
 </div>
 @endforeach
+
+@section('myjavascript')
+
+<script>
+    // Get elements
+    const emojiButton = document.getElementById("emojiPickerButton");
+    const emojiPicker = document.getElementById("emojiPicker");
+    const commentInput = document.getElementById("commentInput");
+
+    // Toggle emoji picker visibility when emoji button is clicked
+    emojiButton.addEventListener("click", function() {
+        emojiPicker.style.display = emojiPicker.style.display === "none" ? "block" : "none";
+        const rect = emojiButton.getBoundingClientRect();
+        emojiPicker.style.left = rect.left + "px";  // Position the emoji picker below the button
+        emojiPicker.style.top = rect.bottom + "px";
+    });
+
+    // Insert emoji into the input field when clicked
+    emojiPicker.addEventListener("click", function(e) {
+        if (e.target && e.target.classList.contains("emoji")) {
+            const emoji = e.target.getAttribute("data-emoji");
+            commentInput.value += emoji;  // Append emoji to the input field
+        }
+    });
+
+    // Close the emoji picker if clicked outside
+    window.addEventListener("click", function(e) {
+        if (!emojiButton.contains(e.target) && !emojiPicker.contains(e.target)) {
+            emojiPicker.style.display = "none";  // Close picker when clicking outside
+        }
+    });
+</script>
+
+<script>
+    // Function to add a new comment via AJAX
+function addComment() {
+    const commentInput = document.getElementById('commentInput');
+    const commentText = commentInput.value.trim();
+
+    if (!commentText) {
+        alert('Komentar tidak boleh kosong!');
+        return;
+    }
+
+    // Prepare the data
+    const data = {
+        comment: commentText,
+        user_id: document.querySelector('[name="user_id"]').value,  // Assuming user_id is a hidden input
+        username: document.querySelector('[name="username"]').value,  // Assuming username is a hidden input
+        id_kelas: document.querySelector('[name="id_kelas"]').value,
+        task_id: document.querySelector('[name="task_id"]').value
+    };
+
+    // Send the comment to the server via AJAX
+    fetch('{{ route('comments.store') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'  // CSRF Token
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Add the new comment to the comment section
+            addCommentToSection(data.comment);
+            commentInput.value = '';  // Clear the input field
+        } else {
+            alert('Gagal mengirim komentar!');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan, coba lagi nanti.');
+    });
+}
+
+// Function to add a comment to the comment section
+function addCommentToSection(commentData) {
+    const commentSection = document.getElementById('commentSection');
+
+    // Create the new comment element
+    const newComment = document.createElement('div');
+    newComment.classList.add('d-flex', 'align-items-start', 'mb-3');
+    let $link;
+
+    if (commentData.gtkFoto && commentData.gtkFoto !== '') {
+        $link = '/storage/' + commentData.gtkFoto.gambar;  // Concatenate correctly using + operator
+    } else if (commentData.studentFoto && commentData.studentFoto !== '') {
+        // If gtkFoto is not available, check studentFoto
+        $link = '/storage/' + commentData.studentFoto.foto;  // Concatenate correctly using + operator
+    } else {
+        // Fallback to a default image if neither is available
+        $link = '{{ asset("asset/img/user-default.jpg") }}';  // Laravel Blade helper
+    }
+    // Create the new comment element
+
+    newComment.classList.add('d-flex', 'align-items-start', 'mb-3');
+
+    newComment.innerHTML = `
+        <img src="${$link}" class="rounded-circle me-3" alt="avatar" width="40">
+        <div>
+            <strong>${commentData.username}</strong> <small>| ${commentData.created_at} </small>
+            <div class="p-3 bg-light rounded">${commentData.comment}</div>
+        </div>
+    `;
+
+    // Append the new comment to the top (or bottom) of the comment section
+    commentSection.prepend(newComment);
+}
+
+// Function to fetch the latest comments every 5 seconds (polling)
+function fetchComments() {
+    const taskId = document.querySelector('[name="task_id"]').value;  // Get task_id from the hidden input field
+
+    fetch('{{ route('comments.index') }}' + '?task_id=' + taskId)  // Pass task_id as a query parameter
+        .then(response => response.json())
+        .then(data => {
+            const commentSection = document.getElementById('commentSection');
+
+            // Clear existing comments (optional, if you want to reload all comments)
+            commentSection.innerHTML = '';
+
+            if (data.success && data.comments.length > 0) {
+                // If there are comments, add them to the section
+                data.comments.forEach(comment => {
+                    addCommentToSection(comment);  // Add each comment to the section
+                });
+            } else {
+                // If there are no comments, display a message
+                const noCommentsMessage = document.createElement('div');
+                noCommentsMessage.classList.add('p-3', 'bg-light', 'rounded', 'text-center');
+                noCommentsMessage.textContent = 'Belum ada komentar untuk tugas ini.';
+                commentSection.appendChild(noCommentsMessage);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching comments:', error);
+        });
+    }
+
+// Polling every 5 seconds to fetch new comments
+setInterval(fetchComments, 5000);
+
+</script>
+
+@endsection
 @endsection

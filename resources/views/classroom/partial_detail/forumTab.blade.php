@@ -66,10 +66,19 @@
                     <div class="card board-hover mb-3">
                         <div class="card-body d-md-flex align-items-center justify-content-between pb-1">
                             <div class="d-flex align-items-center mb-3">
-
-                                <span class="bg-soft-primary text-primary avatar avatar-md me-2 br-5 flex-shrink-0">
-                                    <i class="ti ti-notification fs-16"></i>
-                                </span>
+                                <div style="display: flex;flex-direction: column; ">
+                                    <a href="{{ route('classroom.detailTugas',[$item->id,$id]) }}">
+                                    <span class="mb-2 bg-soft-primary text-primary avatar avatar-md me-2 br-5 flex-shrink-0 ">
+                                        <i class="ti ti-brand-hipchat fs-16"></i>
+                                         <span class="badge position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle">{{ $item->comment->count() }}</span>
+                                    </span>
+                                    </a>
+                                    <a href="{{ route('classroom.detailTugas',[$item->id,$id]) }}">
+                                    <span class="bg-soft-primary text-primary avatar avatar-md me-2 br-5 flex-shrink-0">
+                                        <i class="ti ti-list-details fs-16"></i>
+                                    </span>
+                                    </a>
+                                </div>
                                 <div class="mx-3">
                                     <h6 class="mb-1 fw-semibold">
                                         <div class="d-flex align-items-center">
