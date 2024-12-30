@@ -8,6 +8,7 @@ use App\Models\Comment;
 use App\Models\student;
 use App\Models\question;
 use App\Models\ClassRoom;
+use App\Models\fileTugas;
 use App\Models\taskslink;
 use App\Models\tasksmedia;
 use App\Models\StudentScore;
@@ -579,13 +580,15 @@ class ClassRoomDetailController extends Controller
         $comments = Comment::where('task_id', $task_id)
         ->with('user')
         ->get();
+        $files = fileTugas::where(['task_id'=> $task_id,'student_id'=>auth()->user()->nomor])->get();
         return view('classroom.taskdetail',[
             'title'=>'Detail Tugas',
                 'myclass'=>ClassRoom::where('class_code',$id_kelas)->with('user')->get(),
                 'task'=>tasks::where(['id_kelas'=>$id_kelas,'id'=>$task_id])->orderBy('id', 'DESC')->with(['media','links','user'])->get(),
                 'comments'=>$comments,
-                'peserta'=> ClassRoomPeople::where('id_kelas',$id_kelas)->get()
-        ],compact('task_id','id_kelas'));
+                'peserta'=> fileTugas::where('task_id',$task_id)->with('student')->get(),
+                'score'=>StudentScore::where(['task_id'=> $task_id,'student_id'=>auth()->user()->nomor])->get()
+        ],compact('task_id','id_kelas','files'));
     }
 
 }

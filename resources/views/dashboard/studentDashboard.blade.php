@@ -116,7 +116,12 @@
                                     </span>
                                     <div>
                                         <h6 class="mb-1 {{ $current_time > $i->end ? 'text-decoration-line-through' : '' }}">
-                                            {{ $i->mata_pelajaran->nama }}
+                                            @if ($i->mata_pelajaran)
+                                                 {{ $i->mata_pelajaran->nama ?? 'NULL' }}
+                                            @else
+                                                 {{ $i->ref->ref ?? 'NULL' }}
+                                            @endif
+                                           
                                         </h6>
                                         <span><i class="ti ti-clock me-2"></i>{{ $i->start }} - {{ $i->end }}</span>
                                     </div>

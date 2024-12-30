@@ -24,6 +24,7 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataIndukController;
+use App\Http\Controllers\FileTugasController;
 use App\Http\Controllers\inOutTimeController;
 use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\AppsConfigController;
@@ -210,6 +211,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/class/leasson/getgtk',[leassonController::class,'getgtk'])->name('getgtk.leasson');
 
     Route::get('/class/leasson/reference',[leassonController::class,'leassonTime'])->name('leasson.reference');
+
+
+
+    Route::post('/file-tugas', [FileTugasController::class, 'store'])->name('filetugas.store');
+    Route::get('/file-tugas/{file_id}', [FileTugasController::class, 'destroy'])->name('filetugas.delete');
+    Route::post('/file-tugas/verifikasi', [FileTugasController::class, 'verifikasi'])->name('filetugas.verifikasi');
     // Route::post('/class/leasson/time/add',[leassonController::class,'addleassonTime'])->name('leasson.addtime');
     // Route::post('/class/leasson/time/update',[leassonController::class,'updateleassonTime'])->name('leasson.updatetime');
     // Route::get('/class/leasson/time/delete/{id}',[leassonController::class,'deleteleassonTime'])->name('leasson.deletetime');

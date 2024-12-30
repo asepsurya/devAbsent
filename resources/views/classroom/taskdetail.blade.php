@@ -1,6 +1,7 @@
 @extends('classroom.layout.classRoom')
 @section('css')
 <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/emoji-button.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
 <style>
     /* Container for button and input */
     .emoji-container {
@@ -175,7 +176,46 @@
             background: #0f0c1c;
 
          }
-
+         .preview-container {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .preview-box {
+            position: relative;
+            width: 140px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: red;
+            border-radius:30px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 5px;
+        }
+        .preview-box img {
+            max-width: 100%;
+            height: auto;
+        }
+        .preview-box p {
+            font-size: 14px;
+            margin-top: 10px;
+            word-wrap: break-word;
+        }
+        .disabled-section {
+            opacity: 0.5;
+            pointer-events: none;  /* Prevent interactions */
+        }
 </style>
 
 @endsection
@@ -186,25 +226,36 @@
 
         <div class="d-flex justify-content-between mb-3 border-bottom">
             <div>
-                <h3 class="mt-3">Detail Tugas</h3>
+                <h3 class="mt-3 mb-2">Detail Tugas</h3>
             </div>
-            <div class="m-2">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><span class="ti ti-list-details"></span> Detail</a>
-                    </li>
-
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><span class="ti ti-clipboard-list"></span> Tugas Siswa</a>
-                    </li>
-
-                    <li class="nav-item" role="presentation">
-                        <a class=" btn btn-primary"  href="/classroom/detail/{{ $id_kelas }}" ><span class="ti ti-arrow-left"></span> Kembali</a>
-                    </li>
-                </ul>
-                {{-- <a href="/classroom/detail/{{ $id_kelas }}" class="btn btn-primary"><span class="ti ti-arrow-left"></span>Kembali</a> --}}
-            </div>
-
+            @if(auth()->user()->role != 'siswa')
+                <div class="m-2">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                                <span class="ti ti-list-details"></span> Detail
+                            </a>
+                        </li>
+                
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">
+                                <span class="ti ti-clipboard-list"></span> Tugas Siswa
+                            </a>
+                        </li>
+                
+                        <li class="nav-item" role="presentation">
+                            <a class="btn btn-primary" href="/classroom/detail/{{ $id_kelas }}">
+                                <span class="ti ti-arrow-left"></span> Kembali
+                            </a>
+                        </li>
+                    </ul>
+                
+                </div>
+            @else
+            <a class="btn btn-primary my-3" href="/classroom/detail/{{ $id_kelas }}">
+                <span class="ti ti-arrow-left"></span> Kembali
+            </a>
+            @endif
         </div>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -373,62 +424,115 @@
 
                     </div>
                     <div class="col-lg-3">
-                        @if($item->type == 'task')
+                    @if($item->type == 'task')
                         <div class="card">
-                            <div class="card-header d-flex align-items-center justify-content-between">
-                                <strong>Unggah Tugas</strong>
-                                <h3 class="text-white"></h3>
-                                <div class="d-flex align-items-center">
-                                    <div class="dropdown">
-                                        <a href="#" class="btn btn-white btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="ti ti-dots-vertical fs-14"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-right p-3">
-                                            <li>
-                                                <a class="dropdown-item rounded-1" href="edit-teacher.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                            <!-- Display Validation Errors -->
+                                @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
                                 </div>
+                            @endif
+                            <div class="card-header">
+                                <h4>Manangement Upload</h4>
                             </div>
-                            <div class="card-body">
-                                <div class="card position-relative">
-                                    <!-- Button X in top-right corner -->
-                                    <button class="btn-close position-absolute top-0 end-0 m-2" aria-label="Close"></button>
+                            <form action="{{ route('filetugas.store') }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <input type="text" name="task_id" value="{{ $task_id }}" hidden>
+                            
+                                <div class="card-body {{ auth()->user()->role == 'superadmin' ? 'disabled-section' : ''}} n">
+                                    @if ($files->isEmpty())
+                                        <!-- No files, show the upload form -->
+                                        <input type="text" name="student_id" id="student_id" value="{{ auth()->user()->nomor }}" hidden>
+                                        <input type="file" class="form-control" name="files[]" id="fileInput" multiple onchange="previewFiles()" >
+                                        
+                                        <!-- Preview container -->
+                                        <div class="row">
+                                            <div class="preview-container" id="previewContainer">
+                                                <!-- Preview will appear here -->
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100"> <span class="ti ti-upload"></span> Upload File</button>
+                                    @else
+                                        <!-- Files exist, display them -->
+                                        <div class="alert alert-info">
+                                            <div class="mb-3">
+                                                <strong>Tugas telah diserahkan :</strong>
+                                            </div>
+                                           
+                                            <ul>
+                                                @foreach ($files as $file)
+                                                <li class="d-flex justify-content-start align-items-center mb-2">
+                                                    <!-- Delete Button (on the left) -->
+                                                    <a href="/file-tugas/{{ $file->id }}" class="btn btn-danger btn-sm me-2" 
+                                                       onclick="return confirm('Are you sure you want to delete this file?')">
+                                                       <span class="ti ti-trash-x"></span>
+                                                    </a>
+                                                
+                                                    <!-- File details (on the right) -->
+                                                    <div class="ml-2">
+                                                        <a href="{{ Storage::url($file->path) }}" target="_blank">{{ $file->file_name }}</a>
+                                                        ({{ number_format($file->size / 1024, 2) }} KB) @if($file->status == 2)<span class="ti ti-checks text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Tugas telah diperiksa"></span>@endif
 
-                                    <div class="card-body d-flex justify-content-center">
-                                        <img src="{{ asset('asset/img/icon/word.png') }}" width="100">
-                                    </div>
-                                    <center class="mb-2"><span class="ti ti-check text-success"></span>File Terkumpulkan</center>
+                                                    </div>
+                                                </li>
+                                                
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                 </div>
-                                <input type="file" class="form-control">
-                            </div>
+                            </form>
+                            
 
                         </div>
                     @else
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 align="center">Your Score</h4>
+                    @php
+                    $totalScore = 0;  // Initialize the variable to store total score
+                    $time = 0;
+                    $status=''       // Initialize time variable to store finish time
+                @endphp
+                
+                @foreach ($score as $item)
+                    @php
+                        $totalScore = $item->nilai;  // Add the score to total score
+                        $time = $item->finish_time; 
+                        $status = $item->status;  // Keep updating with the last finish time
+                    @endphp
+                @endforeach
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 align="center">Your Score</h4>
+                            @if($status == '1' ?? '')
+                             <span class="badge bg-success d-inline-flex align-items-center ms-2"> Aktif</span>
+                            @endif
+                        </div>
+                       
+                    </div>
+                
+                    <div class="card-body bg-light">
+                        <div align="center">
+                            <h1 class="text-success mt-4 fs-1">{{ $totalScore ?? '0' }}</h1><br>  <!-- Display total score or default to 0 -->
+                        </div>
+                    </div>
+                
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>Finish Time: </strong>
                             </div>
-                            <div class="card-body bg-light">
-                                <div align="center">
-                                    <h1 class="text-success mt-4 fs-1">100</h1><br>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <span class="text-success">Benar </span> :10
-                                    </div>
-                                    <div>
-                                        <span class="text-danger">Salah</span> : 0
-                                    </div>
-                                </div>
+                            <div>
+                                <span class="text-success">{{ $time ?? '0' }}</span>  <!-- Display finish time or default to 0 -->
                             </div>
                         </div>
+                    </div>
+                </div>
+                
                     @endif
 
                     </div>
@@ -454,13 +558,13 @@
                         <input type="text" name="task_id" class="form-control me-2" placeholder="Masukkan nama Anda..." value="{{ $task_id }}" hidden>
                     </div>
                     <div class="d-flex align-items-center">
-                        @if(auth()->user()->student)
-                            <img src="/storage/{{ auth()->user()->student->foto }}" class="rounded-circle me-3" alt="avatar" width="50">
-                        @elseif (auth()->user()->gtk)
-                            <img src="/storage/{{ auth()->user()->gtk->gambar }}" class="rounded-circle me-3" alt="avatar" width="50">
-                        @else
-                            <img src="{{ asset('asset/img/user-default.jpg') }}" class="rounded-circle me-3" alt="avatar" width="50">
-                        @endif
+                        @php
+                            $user = auth()->user();
+                            $foto = $user->student ? $user->student->foto : ($user->gtk ? $user->gtk->gambar : null);
+                        @endphp
+                    
+                        <img src="{{ $foto ? '/storage/' . $foto : asset('asset/img/user-default.jpg') }}" class="rounded-circle me-3" alt="avatar" width="50">
+                    
                         <button id="emojiPickerButton" class="btn ">😊</button>
                         <input type="text" id="commentInput" name="comment" class="form-control me-2  p-2" placeholder="Tulis komentar..." style="border-radius:50px;">
 
@@ -479,12 +583,13 @@
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="py-3">
-                    <input type="text" class="form-control" placeholder="Search...">
+                    <input type="text" class="form-control" placeholder="Search..." id="myInput" onkeyup="myFunction()">
                 </div>
-
-                <table class="table table-nowrap mb-0" id="myTable2">
+               
+                <table class="table table-nowrap mb-0" id="tabeltugas">
                     <thead>
                         <tr>
+                            <th width="1%"></th>
                             <th>Nama</th>
                             <th>Tanggal Pengumpulan</th>
                             <th></th>
@@ -492,101 +597,212 @@
                     </thead>
                     <tbody>
                         @if ($peserta->count())
-
-                            @foreach ($peserta as $item )
-                            <tr>
-                            <td width="50%">
-                                    <div class="d-flex align-items-center">
-                                    <a href="#" class="avatar avatar-md">
-                                            @if ( $item->peopleStudent->foto =='')
-                                                <img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
-                                            @else
-                                                <img src="/storage/{{ $item->peopleStudent->foto }}" class="img-fluid rounded-circle" alt="foto">
-                                            @endif
-                                        </a>
-                                        <div class="ms-2">
-                                            <p class="mb-0">{{ $item->peopleStudent->nama }}</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>2 Januari 2025</td>
-                                <td><button class="btn btn-primary btn-sm"  data-bs-toggle="modal" data-bs-target="#fileModal"><span class="ti ti-eye"></span> Lihat Tugas</button></td>
-                            </tr>
-
-                            @endforeach
-                        @else
-                            <tr>
+                        @foreach ($peserta as $key => $item)
+                        <tr>
+                            <!-- Iterate through each student and show the details only for the first student -->
+                            @foreach($item->student as  $student)
+                                @if ($key)  <!-- Only display for the first student -->
                                 <td>
-                                    <div class="d-flex justify-content-center p-5">
-                                        Belum ada peserta yang ditambahkan
-                                    </div>
+                                    @if($item->status == '1') 
+                                        <span class="ti ti-check" data-bs-toggle="tooltip" title="Belum Diperiksa"></span> 
+                                    @else 
+                                        <span class="ti ti-checks text-success" data-bs-toggle="tooltip" title="Sudah Diperiksa"></span> 
+                                    @endif
                                 </td>
-                            </tr>
-                        @endif
+                                
+                                    <td width="50%">
+                                       
+                                        <div class="d-flex align-items-center">
+                                            <a href="#" class="avatar avatar-md">
+                                                <!-- Check if student photo exists -->
+                                                @if ($student->foto == '')
+                                                    <img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
+                                                @else
+                                                    <img src="/storage/{{ $student->foto }}" class="img-fluid rounded-circle" alt="foto">
+                                                @endif
+                                            </a>
+                                            <div class="ms-2">
+                                                <p class="mb-0">{{ $student->nama }}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y | H:i') }}</td>
+                            
+                                    <!-- Button to view assignment with a modal trigger (displayed for every row) -->
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#fileModal-{{ $item->student_id }}">
+                                            <span class="ti ti-eye"></span> Lihat Tugas
+                                        </button>
+                                    </td>
+                                @endif
+                            @endforeach
+                            <!-- Assignment date (displayed for every row, not tied to the student) -->
+                           
+                        </tr>
+                    @endforeach        
+                    @else
+                        <tr>
+                            <td colspan="3" class="text-center">Belum ada tugas yang dikumpulkan</td>
+                        </tr>
+                    @endif       
                     </tbody>
                 </table>
-
              </div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                <h4>Contact Tab</h4>
-                <p>This is the contact tab content.</p>
-            </div>
+          
         </div>
 
 
 </div>
 @endforeach
-<div class="modal fade" id="fileModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
+@foreach ($peserta as $file)
+<div class="modal fade" id="fileModal-{{ $file->student_id }}" tabindex="-1" data-bs-backdrop="static" aria-labelledby="fileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="fileModalLabel">File List</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <!-- Table inside modal body -->
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">File Name</th>
-                <th scope="col">Size</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Example Table Rows (Add more as needed) -->
-              <tr>
-                <th scope="row">1</th>
-                <td>example-file1.pdf</td>
-                <td>2.4 MB</td>
-                <td><a href="#" class="btn btn-success btn-sm">Download</a></td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>example-file2.jpg</td>
-                <td>1.2 MB</td>
-                <td><a href="#" class="btn btn-success btn-sm">Download</a></td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>example-file3.zip</td>
-                <td>15.6 MB</td>
-                <td><a href="#" class="btn btn-success btn-sm">Download</a></td>
-              </tr>
-              <!-- Add more files here -->
-            </tbody>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
+        <form action="{{ route('filetugas.verifikasi') }}" method="post">
+            @csrf
+            <div class="modal-body p-0 m-0">
+            <!-- Table inside modal body -->
+            <table class="table ">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">File Name</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $no =1;
+                    @endphp
+                <!-- Example Table Rows (Add more as needed) -->
+                @foreach ($peserta->where('student_id',$file->student_id ) as $file)
+                <tr>
+                    <td>
+                        <input type="text" name="id[]" value="{{ $file->id }}" hidden>
+                        {{ $no++ }}</td>
+                    <td>{{ $file->file_name }}</td>
+                    <td>{{ number_format($file->size / 1024, 2) }} KB</td>
+                    <td>
+                        <a href="{{ Storage::url($file->path) }}" data-lightbox="gallery" class="btn btn-success btn-sm me-2"><span class="ti ti-eye"></span> Periksa Tugas</a>
+                        <a href="{{ Storage::url($file->path) }}" target="_blank" class="btn btn-primary btn-sm" download><span class="ti ti-download"></span></a></td>
+                </tr>
+                @endforeach
+                
+                <!-- Add more files here -->
+                </tbody>
+            </table>
+            </div>
+            <div class="modal-footer">
+            <button type="submit" class="btn btn-primary w-100" >Selesai</button>
+            </div>
+        </form>
       </div>
     </div>
   </div>
+@endforeach
 
 @section('myjavascript')
+<script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox.min.js"></script>
+<script>
+    function myFunction() {
+      // Declare variables
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("tabeltugas");
+      tr = table.getElementsByTagName("tr");
+    
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+    </script>
+<script>
+    // Menyimpan tab aktif ke localStorage saat tab berubah
+    const tabs = document.querySelectorAll('.nav-link');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            localStorage.setItem('activeTab', tab.id);
+        });
+    });
 
+    // Memuat tab yang aktif setelah halaman di-load
+    document.addEventListener('DOMContentLoaded', () => {
+        const activeTabId = localStorage.getItem('activeTab');
+        if (activeTabId) {
+            const activeTab = document.getElementById(activeTabId);
+            if (activeTab) {
+                const tab = new bootstrap.Tab(activeTab);
+                tab.show();
+            }
+        }
+    });
+</script>
+
+<script>
+    function previewFiles() {
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+
+        // Clear previous previews
+        previewContainer.innerHTML = '';
+
+        const files = fileInput.files;
+        if (files.length > 0) {
+            Array.from(files).forEach(file => {
+                const previewBox = document.createElement('div');
+                previewBox.classList.add('preview-box');
+
+                // Remove button
+                const removeBtn = document.createElement('button');
+                removeBtn.classList.add('remove-btn');
+                removeBtn.textContent = 'x';
+                removeBtn.onclick = function() {
+                    previewBox.remove(); // Remove the preview box
+                };
+                previewBox.appendChild(removeBtn);
+
+                // Icon and file name
+                const icon = document.createElement('img');
+                const fileType = file.type.split('/')[0]; // Determine if file is image or not
+
+                // Default icon for non-image files
+                if (fileType !== 'image') {
+                    icon.src = '{{ asset("asset/img/icon/word.png") }}'; // You can replace this with any appropriate icon
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        icon.src = e.target.result; // For images, use the image preview
+                    };
+                    reader.readAsDataURL(file);
+                }
+                previewBox.appendChild(icon);
+
+                // File name
+                const fileName = document.createElement('p');
+                fileName.textContent = file.name;
+                previewBox.appendChild(fileName);
+
+                previewContainer.appendChild(previewBox);
+            });
+        }
+    }
+</script>
 <script>
     // Get elements
     const emojiButton = document.getElementById("emojiPickerButton");
@@ -671,15 +887,31 @@ function addCommentToSection(commentData) {
     newComment.classList.add('d-flex', 'align-items-start', 'mb-3');
     let $link;
 
-    if (commentData.gtkFoto && commentData.gtkFoto !== '') {
-        $link = '/storage/' + commentData.gtkFoto.gambar;  // Concatenate correctly using + operator
-    } else if (commentData.studentFoto && commentData.studentFoto !== '') {
-        // If gtkFoto is not available, check studentFoto
-        $link = '/storage/' + commentData.studentFoto.foto;  // Concatenate correctly using + operator
+
+    // Memeriksa gtkFoto
+    if (commentData.gtkFoto && commentData.gtkFoto.gambar) {
+        // Jika gtkFoto ada dan memiliki gambar
+        if (commentData.gtkFoto.gambar == null || commentData.gtkFoto.gambar === '') {
+            // Jika gambar pada gtkFoto kosong atau null, gunakan gambar default
+            $link = '/asset/img/user-default.jpg';  // Gambar default
+        } else {
+            // Jika gambar ada, tampilkan gambar gtkFoto
+            $link = '/storage/' + commentData.gtkFoto.gambar;
+        }
+    } else if (commentData.studentFoto && commentData.studentFoto.foto) {
+        // Jika gtkFoto tidak ada, periksa studentFoto
+        if (commentData.studentFoto.foto == null || commentData.studentFoto.foto === '') {
+            // Jika gambar pada studentFoto kosong atau null, gunakan gambar default
+            $link = '/asset/img/user-default.jpg';  // Gambar default
+        } else {
+            // Jika gambar ada, tampilkan gambar studentFoto
+            $link = '/storage/' + commentData.studentFoto.foto;
+        }
     } else {
-        // Fallback to a default image if neither is available
-        $link = '{{ asset("asset/img/user-default.jpg") }}';  // Laravel Blade helper
+        // Fallback ke gambar default jika keduanya tidak ada
+        $link = '/asset/img/user-default.jpg';  // Gambar default
     }
+
     // Create the new comment element
 
     newComment.classList.add('d-flex', 'align-items-start', 'mb-3');
