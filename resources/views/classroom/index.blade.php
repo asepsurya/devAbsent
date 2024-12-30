@@ -29,16 +29,7 @@
         background: #0f0c1c;
         border-bottom-color: #1b1632
     }
-    .badge {
-    position: absolute;
-    top: -5px; /* Position the badge above the avatar */
-    right: -5px; /* Position it to the right of the avatar */
-    transform: translate(50%, -50%); /* Adjust position to be at the top-right corner */
-    font-size: 12px; /* Adjust font size of the badge */
-    padding: 5px;
-    background-color: #f44336; /* Badge background color (red) */
-    color: white; /* Text color */
-    }
+
 </style>
 @endsection
 @section('container')
@@ -137,11 +128,14 @@
                 </div>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-                @if($item->user->status == '2')
+                <div>
+                    @if($item->user->status == '2')
                     <span class="badge badge-soft-success">Status : Aktif</span>
                 @else
                     <span class="badge badge-soft-danger">Status : Tidak Aktif</span>
                 @endif
+                </div>
+
                 <a href="{{ route('classroom.detail',$item->class_code) }}" class="btn btn-light btn-sm">View Details</a>
             </div>
         </div>

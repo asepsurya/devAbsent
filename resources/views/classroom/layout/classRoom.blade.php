@@ -59,29 +59,65 @@
 
 <ul class="nav nav-tabs nav-tabs-bottom mb-3 border-bottom mt-0 cc  " role="tablist" style="position: fixed; z-index: 998; width: 100%; top:55px; ">
     <li class="nav-item" role="presentation">
-        <a class="nav-link " href="#bottom-tab1" data-bs-toggle="tab" aria-selected="true" role="tab"><strong>Forum</strong></a>
+        <a class="nav-link "
+        @if(Request::is('classroom/detail/tugas*'))
+            href="/classroom/detail/{{ $id_kelas }}"
+        @else
+            href="#bottom-tab1"
+            data-bs-toggle="tab"
+            aria-selected="true"
+            role="tab"
+        @endif
+            ><strong>Forum</strong></a>
     </li>
     @if(auth()->user()->role !=="siswa")
         <li class="nav-item" role="presentation">
-            <a class="nav-link" href="#bottom-tab2" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Tugas Kelas</strong></a>
+            <a class="nav-link"
+            @if(Request::is('classroom/detail/tugas*'))
+                href="/classroom/detail/{{ $id_kelas }}"
+            @else
+                href="#bottom-tab2"
+                data-bs-toggle="tab"
+                aria-selected="true"
+                role="tab"
+            @endif
+            ><strong>Tugas Kelas</strong></a>
         </li>
     @endif
 
     <li class="nav-item" role="presentation">
-        <a class="nav-link" href="#bottom-tab3" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Orang</strong></a>
+        <a class="nav-link"
+        @if(Request::is('classroom/detail/tugas*'))
+            href="/classroom/detail/{{ $id_kelas }}"
+        @else
+            href="#bottom-tab3"
+            data-bs-toggle="tab"
+            aria-selected="true"
+            role="tab"
+        @endif
+        ><strong>Orang</strong></a>
     </li>
 
     @if(auth()->user()->role !=="siswa")
     <li class="nav-item" role="presentation">
-        <a class="nav-link" href="#bottom-tab4" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"><strong>Nilai</strong></a>
+        <a class="nav-link"
+        @if(Request::is('classroom/detail/tugas*'))
+            href="/classroom/detail/{{ $id_kelas }}"
+        @else
+            href="#bottom-tab4"
+            data-bs-toggle="tab"
+            aria-selected="true"
+            role="tab"
+        @endif
+        ><strong>Nilai</strong></a>
     </li>
     @endif
 </ul>
 
-    @yield('content');
+    @yield('content')
 
     @section('javascript')
-        @yield('myjavascript');
+        @yield('myjavascript')
 
         <script>
             var body = document.body;

@@ -583,7 +583,8 @@ class ClassRoomDetailController extends Controller
             'title'=>'Detail Tugas',
                 'myclass'=>ClassRoom::where('class_code',$id_kelas)->with('user')->get(),
                 'task'=>tasks::where(['id_kelas'=>$id_kelas,'id'=>$task_id])->orderBy('id', 'DESC')->with(['media','links','user'])->get(),
-                'comments'=>$comments
+                'comments'=>$comments,
+                'peserta'=> ClassRoomPeople::where('id_kelas',$id_kelas)->get()
         ],compact('task_id','id_kelas'));
     }
 
