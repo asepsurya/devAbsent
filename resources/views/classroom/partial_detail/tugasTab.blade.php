@@ -41,7 +41,7 @@
                             </div>
                             <div class="d-flex align-items-center board-action mb-3">
                                 <a href="{{ route('classroom.quiz',[$id,$item->id]) }}" class="text-primary border rounded p-2 badge me-1 primary-btn-hover">
-                                Lihat Pertanyaan
+                                    <span class="ti ti-eye"></span> Lihat Pertanyaan
                                 </a>
                                 <a data-bs-toggle="modal" data-bs-target="#editMateri-{{ $item->id }}" class="text-danger border rounded p-1  me-1 badge danger-btn-hover">
                                     <i class="ti ti-pencil fs-16"></i>
@@ -75,6 +75,9 @@
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center board-action mb-3">
+                                    <a href="{{ route('classroom.detailTugas',[$item->id,$id]) }}" class="text-primary border rounded p-2 badge me-1 primary-btn-hover">
+                                       <span class="ti ti-eye"></span> Lihat Tugas
+                                    </a>
                                     <a href="{{ route('classroom.editTugas', $item->id) }}" class="text-primary border rounded p-1 badge me-1 primary-btn-hover">
                                         <i class="ti ti-edit-circle fs-16"></i>
                                     </a>
@@ -89,10 +92,17 @@
                         <div id="details-{{ $item->id }}" class="collapse">
                             <div class="card-body border-top p-5">
                                 <div class="d-flex align-items-center">
-                                    <a class="avatar avatar-lg flex-shrink-0"><img src="http://127.0.0.1:8000/asset/img/user-default.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                                    <a class="avatar avatar-lg flex-shrink-0">
+                                    @php
+                                        $user = auth()->user();
+                                        $foto = $user->student ? $user->student->foto : ($user->gtk ? $user->gtk->gambar : null);
+                                    @endphp
+                                    <img src="{{ $foto ? '/storage/' . $foto : asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="avatar" >
+                                    </a>
                                     <div class="ms-2">
-                                        <h6 class="text-dark text-truncate mb-0"><a>Administrator</a></h6>
-                                        <small class="text-muted">23 Des 2024</small>
+                                        <h6 class="text-dark text-truncate mb-0"><a>{{ $user->nama }}</a></h6>
+                                        <small class="text-muted">{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}
+                                        </small>
                                     </div>
                                 </div>
 
@@ -115,17 +125,7 @@
                                                     <h5 class="text-nowrap"><a href="javascript:void(0);">{{ Str::limit($media->name, 20, '...') }}</a></h5>
                                                     @endif
                                                 </div>
-                                                <div class="d-flex align-items-center">
-                                                    <a href="javascript:void(0);"><i class="fa fa-star me-2"></i></a>
-                                                    <div class="dropdown">
-                                                        <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" class="dropset">
-                                                            <i class="fa fa-ellipsis-v"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu">
-                                                            <li><a href="javascript:void(0);" class="dropdown-item">Details</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
+                                               
                                             </div>
                                             <div class="d-flex align-items-center justify-content-start mt-3">
                                                 <p class="text-primary mb-0 me-2">{{ $media->created_at->diffForHumans() }}</p>

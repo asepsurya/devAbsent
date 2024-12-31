@@ -257,6 +257,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/classroom/addwork/add', [ClassRoomDetailController::class, 'tambahTugas'])->name('classroom.tambahTugas');
     Route::get('/classroom/addwork/edit/{task_id}', [ClassRoomDetailController::class, 'editTugas'])->name('classroom.editTugas');
     Route::post('/classroom/addwork/edit/action', [ClassRoomDetailController::class, 'editTugasAction'])->name('classroom.editTugasAction');
+    Route::get('/classroom/addwork/edit/filedelete/{id}', [ClassRoomDetailController::class, 'filedelete'])->name('classroom.filedelete');
+    Route::post('/classroom/addwork/edit/linkdelete', [ClassRoomDetailController::class, 'linkdelete'])->name('classroom.linkdelete');
+    Route::post('/classroom/addAnnouncement', [ClassRoomDetailController::class, 'addAnnouncement'])->name('classroom.addAnnouncement');
     Route::get('/classroom/addwork/delete/{task_id}', [ClassRoomDetailController::class, 'deleteTaskAction'])->name('classroom.deleteTaskAction');
     Route::post('/classroom/addwork/delete/quiz', [ClassRoomDetailController::class, 'deletequizAction'])->name('classroom.quizTaskAction');
 

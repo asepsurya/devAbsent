@@ -242,7 +242,7 @@
                         </li>
 
                         <li class="nav-item" role="presentation">
-                            <a class="btn btn-primary" href="/classroom/detail/{{ $id_kelas }}">
+                            <a class="btn btn-primary" onclick="window.location.reload(); window.location.href='/classroom/detail/{{ $id_kelas }}';">
                                 <span class="ti ti-arrow-left"></span> Kembali
                             </a>
                         </li>
@@ -283,11 +283,15 @@
                                                     <h5>{{ $item->judul }}</h5>
                                                     @if ($item->type == 'quiz')
                                                     Kunjungi link berikut ini untuk memulai,jangan lupa berdo'a terlebih dahulu sebelum dimulai :)
+                                                    <p>
                                                         @if($score && $score->where('status', '1')->where('student_id', auth()->user()->nomor)->count() > 0)
-                                                            <button class="btn btn-success mt-2">Hore..! Kamu Sudah Mengikuti Quiz Ini</button>
+                                                            <div class="alert alert-info" role="alert">
+                                                                Terimakasih sudah mengikuti quiz atau tugas Ini 😊
+                                                            </div>
                                                         @else
                                                             <a href="{{ route('quiz',[$id_kelas,$item->id]) }}">{{ route('quiz',[$id_kelas,$item->id]) }}</a>
                                                         @endif
+                                                    </p>
                                                     @else
                                                         <p>{!! $item->description !!}</p>
                                                     @endif
@@ -492,7 +496,7 @@
                     @php
                     $totalScore = 0;  // Initialize the variable to store total score
                     $time = 0;
-                    $status=''       // Initialize time variable to store finish time
+                    $status= ''       // Initialize time variable to store finish time
                 @endphp
 
                 @foreach ($score as $item)
@@ -508,7 +512,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 align="center">Your Score</h4>
                             @if($status == '1' ?? '')
-                             <span class="badge bg-success d-inline-flex align-items-center ms-2"> Aktif</span>
+                             <span class="badge bg-success d-inline-flex align-items-center ms-2"> Sudah Mengkuti Quiz ini</span>
                             @endif
                         </div>
 
@@ -526,7 +530,7 @@
                                 <strong>Finish Time: </strong>
                             </div>
                             <div>
-                                <span class="text-success">{{ $time ?? '0' }}</span>  <!-- Display finish time or default to 0 -->
+                                <span class="text-success">{{ $time ?? '-' }}</span>  <!-- Display finish time or default to 0 -->
                             </div>
                         </div>
                     </div>
@@ -600,60 +604,60 @@
                             // Initialize an array to store the processed student IDs
                             $processedStudentIds = [];
                         @endphp
+                        @if($peserta->where('task_id', $task_id)->count())
+                            @foreach ($peserta as $key => $item)
+                                <tr>
+                                    <!-- Iterate through each student -->
+                                    @foreach($item->student as  $student)
+                                        @if (!in_array($student->id, $processedStudentIds)) <!-- Check if this student has been displayed already -->
+                                            @php
+                                                // Mark this student as processed by adding their ID to the array
+                                                $processedStudentIds[] = $student->id;
+                                            @endphp
 
-                        @foreach ($peserta as $key => $item)
-                            <tr>
-                                <!-- Iterate through each student -->
-                                @foreach($item->student as  $student)
-                                    @if (!in_array($student->id, $processedStudentIds)) <!-- Check if this student has been displayed already -->
-                                        @php
-                                            // Mark this student as processed by adding their ID to the array
-                                            $processedStudentIds[] = $student->id;
-                                        @endphp
+                                            <td>
+                                                @if($item->status == '1')
+                                                    <span class="ti ti-check" data-bs-toggle="tooltip" title="Belum Diperiksa"></span>
+                                                @else
+                                                    <span class="ti ti-checks text-success" data-bs-toggle="tooltip" title="Sudah Diperiksa"></span>
+                                                @endif
+                                            </td>
 
-                                        <td>
-                                            @if($item->status == '1')
-                                                <span class="ti ti-check" data-bs-toggle="tooltip" title="Belum Diperiksa"></span>
-                                            @else
-                                                <span class="ti ti-checks text-success" data-bs-toggle="tooltip" title="Sudah Diperiksa"></span>
-                                            @endif
-                                        </td>
-
-                                        <td width="50%">
-                                            <div class="d-flex align-items-center">
-                                                <a href="#" class="avatar avatar-md">
-                                                    <!-- Check if student photo exists -->
-                                                    @if ($student->foto == '')
-                                                        <img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
-                                                    @else
-                                                        <img src="/storage/{{ $student->foto }}" class="img-fluid rounded-circle" alt="foto">
-                                                    @endif
-                                                </a>
-                                                <div class="ms-2">
-                                                    <p class="mb-0">{{ $student->nama }}</p>
+                                            <td width="50%">
+                                                <div class="d-flex align-items-center">
+                                                    <a href="#" class="avatar avatar-md">
+                                                        <!-- Check if student photo exists -->
+                                                        @if ($student->foto == '')
+                                                            <img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
+                                                        @else
+                                                            <img src="/storage/{{ $student->foto }}" class="img-fluid rounded-circle" alt="foto">
+                                                        @endif
+                                                    </a>
+                                                    <div class="ms-2">
+                                                        <p class="mb-0">{{ $student->nama }}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
+                                            </td>
 
-                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y | H:i') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y | H:i') }}</td>
 
-                                        <!-- Button to view assignment with a modal trigger -->
-                                        <td>
-                                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#fileModal-{{ $item->student_id }}">
-                                                <span class="ti ti-eye"></span> Lihat Tugas
-                                            </button>
-                                        </td>
-                                    @endif
-                                @endforeach
-                            </tr>
-                        @endforeach
+                                            <!-- Button to view assignment with a modal trigger -->
+                                            <td>
+                                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#fileModal-{{ $item->student_id }}">
+                                                    <span class="ti ti-eye"></span> Lihat Tugas
+                                                </button>
+                                            </td>
+                                        @endif
+                                    @endforeach
+                                </tr>
+                            @endforeach
 
-                        @empty($peserta)
-                            <tr>
-                                <td colspan="4" class="text-center">Belum ada tugas yang dikumpulkan</td>
-                            </tr>
-                        @endempty
-
+                        @else
+                        <tr>
+                            <td colspan="4" class="text-center">Belum ada tugas yang dikumpulkan</td>
+                        </tr>
+                        @endif
+                    
                     </tbody>
                 </table>
              </div>
@@ -707,6 +711,17 @@
             </table>
             </div>
             <div class="modal-footer">
+                <div class="mb-3">
+                    <label for="status" class="form-label">Masukan Score / Nilai </label>
+                    <input type="text" class="form-control" name="task_id" value="{{ $task_id }}" hidden>
+                    <input type="text" class="form-control" name="student_id" value="{{ $file->student_id }}" hidden>
+                    @php
+                        $scoreRecord = $score->where('student_id',$file->student_id)->first()->nilai ?? '';  // Get the 'nilai' of the first record
+                    @endphp
+                    
+                    <input type="number" class="form-control" name="score" placeholder="1-100" 
+                    value="{{ $scoreRecord }}" min="1" max="100">       
+                </div>          
             <button type="submit" class="btn btn-primary w-100" >Selesai</button>
             </div>
         </form>

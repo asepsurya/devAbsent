@@ -124,7 +124,7 @@
                            <div class="preview-container" id="previewContainer">
                             @foreach($taskFiles as $file)
                                 <div class="preview-box">
-                                    <button class="remove-btn" onclick="removeFile('{{ $file->id }}', this)">x</button>
+                                    <a class="remove-btn" href="{{ route('classroom.filedelete', $file->id) }}" >x</a>
                                     @if(in_array(pathinfo($file->file_path, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png']))
                                         <img src="{{ asset('storage/'.$file->file_path) }}" alt="Preview">
                                     @else
@@ -140,61 +140,35 @@
                                     $youtubeLinks = json_decode($taskLink->youtube_link, true);
                                 @endphp
                         
-                            @if(is_array($youtubeLinks))
-                                @foreach($youtubeLinks as $youtubeLink)
-                                    <div class="preview-box position-relative">
-                                        <!-- Remove Button with YouTube Link passed to JavaScript -->
-                                        <a class="remove-btn" value="{{ $youtubeLink }}" >x</a>                       
-                                        <div class="iframe-container">
-                                            @php
-                                                // Improved regular expression to extract video ID from YouTube URLs
-                                                preg_match('/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+|(?:v|e(?:mbed)?)\/|.*[?&]v=)([a-zA-Z0-9_-]{11}))|(?:youtu\.be\/([a-zA-Z0-9_-]{11}))/i', $youtubeLink, $matches);
-                                                $videoId = $matches[1] ?? $matches[2] ?? null;
-                                            @endphp
-                                            
-                                            @if($videoId)
-                                                <iframe width="420" height="315"
-                                                        src="https://www.youtube.com/embed/{{ $videoId }}"
-                                                        frameborder="0"
-                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                        allowfullscreen>
-                                                </iframe>
-                                            @else
-                                                <p>Invalid YouTube link</p>
-                                            @endif
-                                        </div>
+                        @if(is_array($youtubeLinks))
+                        @foreach($youtubeLinks as $youtubeLink)
+                                <div class="preview-box position-relative" data-link="{{ $youtubeLink }}">
+                                    <!-- Remove Button with YouTube Link passed to JavaScript -->
+                                    <a href="javascript:void(0)" class="remove-btn" data-link="{{ $youtubeLink }}">x</a>
+                                    <div class="iframe-container">
+                                        @php
+                                            // Improved regular expression to extract video ID from YouTube URLs
+                                            preg_match('/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+|(?:v|e(?:mbed)?)\/|.*[?&]v=)([a-zA-Z0-9_-]{11}))|(?:youtu\.be\/([a-zA-Z0-9_-]{11}))/i', $youtubeLink, $matches);
+                                            $videoId = $matches[1] ?? $matches[2] ?? null;
+                                        @endphp
+                                        
+                                        @if($videoId)
+                                            <iframe width="420" height="315"
+                                                    src="https://www.youtube.com/embed/{{ $videoId }}"
+                                                    frameborder="0"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowfullscreen>
+                                            </iframe>
+                                        @else
+                                            <p>Invalid YouTube link</p>
+                                        @endif
                                     </div>
-                                @endforeach
-                            @else
-                                <p>No YouTube links available</p>
-                            @endif
+                                </div>
+                            @endforeach
+                        @endif
+                    
                         @endforeach
                         
-
-                            {{-- @foreach($videoIds as $videoId)
-                                <div class="preview-box position-relative">
-                                    <button class="remove-btn">x</button>
-                                    <div class="iframe-container">
-                                       
-                                        <div class="preview-box position-relative">
-                                           
-                                            <div class="iframe-container">
-                                                <button class="btn btn-danger btn-sm position-absolute top-0 end-0"
-                                                onclick="removeYouTubeLink({{ $taskLinks  }}, this)">
-                                            x
-                                        </button>
-                                                <iframe width="420" height="315"
-                                                        src="https://www.youtube.com/embed/{{ $videoId }}"
-                                                        frameborder="0"
-                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                        allowfullscreen>
-                                                </iframe>
-                                            </div>
-                                        </div>
-                                    </div>
-                                 
-                                </div>
-                            @endforeach --}}
                         </div>
                     
                     </div>
@@ -252,6 +226,51 @@
 @endsection
 
 @section('javascript')
+
+<script>
+    // Add an event listener for the remove button clicks
+    document.querySelectorAll('.remove-btn').forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            
+            const linkToDelete = button.getAttribute('data-link'); // Get the link to delete
+            const index = button.getAttribute('data-index'); // Get the index of the link to delete
+            
+            // Optionally, remove the preview box from the page
+            const previewBox = document.getElementById('preview-box-' + index);
+            if (previewBox) {
+                previewBox.remove();
+            }
+            
+            // Send the DELETE request using AJAX
+            fetch("{{ route('classroom.linkdelete') }}", {
+                method: 'POST', // Using POST to handle delete in Laravel
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // CSRF token for Laravel
+                },
+                body: JSON.stringify({
+                    task_id: {{ $task_id }},
+                    link: linkToDelete // Pass the YouTube link to the backend
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    this.closest('.preview-box').remove();
+                    // alert('Link deleted successfully');
+                } else {
+                    alert('Failed to delete link');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the link');
+            });
+        });
+    });
+</script>
+
 <script>
     const youtubeLinks = []; // Array to store the links
 

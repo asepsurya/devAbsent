@@ -89,24 +89,11 @@
         {{-- sidebar --}}
         <div class="col-md-3 border-start bg-muted" style="min-height: 100vh;">
             <div class="mb-3 border-bottom ">
-
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="ti ti-send"></span> Publikasikan
-                    </button>
-                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton" style="z-index:9999;">
-                        <li><button type="submit" class="dropdown-item border-bottom"><span class="ti ti-send"></span> Publikasikan</button></li>
-                        <li><a href="http://127.0.0.1:8000/classroom/addwork" class="dropdown-item"><span class="ti ti-notes"></span> Simpan sebagai draft</a></li>
-                    </ul>
-                </div>
-
+                <button type="submit" class="btn btn-primary w-100 my-2"><span class="ti ti-send"></span> Simpan Pertanyaan</button>
             </div>
             <div class="py-2 me-2">
                 <div class="mb-3">
-                    <label for="" class="form-label">Untuk</label>
-                    <select  class="form-control select" >
-                        <option value="">Pemograman</option>
-                    </select>
+               
                     <input type="text" value="{{ $task_id }}" name="task_id" hidden >
                 </div>
                 <div class="mb-3">
@@ -121,7 +108,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

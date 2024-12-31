@@ -3,26 +3,7 @@
 <!-- TinyMCE CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.6.0/tinymce.min.js" integrity="sha512-/4EpSbZW47rO/cUIb0AMRs/xWwE8pyOLf8eiDWQ6sQash5RP1Cl8Zi2aqa4QEufjeqnzTK8CLZWX7J5ZjLcc1Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
-    .glowing-border {
-  border: 2px solid transparent; /* border dasar */
-  padding: 10px; /* ruang di dalam border */
-  border-radius: 5px; /* radius border agar sudut melengkung */
-  box-shadow: 0 0 10px 2px rgba(0, 255, 0, 0.8); /* efek cahaya hijau */
-  transition: box-shadow 0.3s ease-in-out; /* efek transisi */
-}
-
-.glowing-border:hover {
-  box-shadow: 0 0 20px 5px rgba(0, 255, 0, 1); /* efek lebih terang saat hover */
-}
-    /* Initially set the height of the editor to 150px */
-    .editor {
-        height: 150px;
-        /* Default small height */
-        transition: height 0.3s ease;
-        /* Smooth transition for height change */
-        overflow: hidden;
-    }
-
+ 
     .cc {
         background-color: white;
     }
@@ -52,17 +33,20 @@
         }
 
     }
+
 </style>
+
 @endsection
 @section('container')
 {{-- header --}}
 
 <ul class="nav nav-tabs nav-tabs-bottom mb-3 border-bottom mt-0 cc  " role="tablist" style="position: fixed; z-index: 998; width: 100%; top:55px; ">
     <li class="nav-item" role="presentation">
-        <a class="nav-link "
+        <a 
         @if(Request::is('classroom/detail/tugas*'))
-            href="/classroom/detail/{{ $id_kelas }}"
+            class="btn" onclick="event.preventDefault(); setTimeout(function(){ window.location.href='/classroom/detail/{{ $id_kelas }}'; }, 50);"
         @else
+             class="nav-link "
             href="#bottom-tab1"
             data-bs-toggle="tab"
             aria-selected="true"
@@ -72,10 +56,11 @@
     </li>
     @if(auth()->user()->role !=="siswa")
         <li class="nav-item" role="presentation">
-            <a class="nav-link"
+            <a 
             @if(Request::is('classroom/detail/tugas*'))
-                href="/classroom/detail/{{ $id_kelas }}"
+                 class="btn" onclick="event.preventDefault(); setTimeout(function(){ window.location.href='/classroom/detail/{{ $id_kelas }}'; }, 50);"
             @else
+                class="nav-link"
                 href="#bottom-tab2"
                 data-bs-toggle="tab"
                 aria-selected="true"
@@ -86,10 +71,11 @@
     @endif
 
     <li class="nav-item" role="presentation">
-        <a class="nav-link"
+        <a 
         @if(Request::is('classroom/detail/tugas*'))
-            href="/classroom/detail/{{ $id_kelas }}"
+             class="btn" onclick="event.preventDefault(); setTimeout(function(){ window.location.href='/classroom/detail/{{ $id_kelas }}'; }, 50);"
         @else
+            class="nav-link"
             href="#bottom-tab3"
             data-bs-toggle="tab"
             aria-selected="true"
@@ -100,10 +86,11 @@
 
     @if(auth()->user()->role !=="siswa")
     <li class="nav-item" role="presentation">
-        <a class="nav-link"
+        <a 
         @if(Request::is('classroom/detail/tugas*'))
-            href="/classroom/detail/{{ $id_kelas }}"
+            class="btn" onclick="event.preventDefault(); setTimeout(function(){ window.location.href='/classroom/detail/{{ $id_kelas }}'; }, 50);"
         @else
+            class="nav-link"
             href="#bottom-tab4"
             data-bs-toggle="tab"
             aria-selected="true"

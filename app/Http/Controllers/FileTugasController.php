@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\fileTugas;
+use App\Models\StudentScore;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -65,7 +66,18 @@ class FileTugasController extends Controller
 
         // Update the status of all files with the given IDs
         FileTugas::whereIn('id', $fileIds)->update(['status' => 2]);
-
+        StudentScore::updateOrCreate(
+            [
+                'task_id' => $request->task_id,  // Unique field(s) to check if the record exists
+                'student_id' => $request->student_id,  // Unique field(s) to check if the record exists
+            ],
+            [
+                'benar' => '0',
+                'nilai' => $request->score,
+                'status' => '1',
+            ]
+        );
+        
         // Show success message
         toastr()->success('File Berhasil di verifikasi');
 

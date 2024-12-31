@@ -18,6 +18,7 @@ use App\Models\ClassRoomPeople;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Console\View\Components\Task;
 
 class ClassRoomDetailController extends Controller
@@ -584,8 +585,81 @@ class ClassRoomDetailController extends Controller
                 'task'=>tasks::where(['id_kelas'=>$id_kelas,'id'=>$task_id])->orderBy('id', 'DESC')->with(['media','links','user'])->get(),
                 'comments'=>$comments,
                 'peserta'=> fileTugas::where('task_id',$task_id)->with('student')->get(),
-                'score'=>StudentScore::where(['task_id'=> $task_id,'student_id'=>auth()->user()->nomor])->get()
+                'score'=>StudentScore::where(['task_id'=> $task_id])->get()
         ],compact('task_id','id_kelas','files'));
+    }
+
+    public function filedelete($id){
+
+       $cek = tasksmedia::find($id);
+
+        // Check if the record exists
+        if ($cek) {
+            // Get the file path
+            $path = $cek->file_path;   
+            // Delete the file from storage
+            if (Storage::exists($path)) {
+                Storage::delete($path);
+            }
+            // Delete the record from the database
+            $cek->delete();
+        } else {
+            // Handle if record doesn't exist (optional)
+            return "Record not found!";
+        }
+
+        return redirect()->back();
+       
+    }
+
+    public function linkdelete(request $request){
+        // Get the task_id and link to delete from the request
+    $taskId = $request->input('task_id');
+    $linkToDelete = $request->input('link');
+    
+    // Find the task by task_id (corrected typo: fisrt() -> first())
+    $task = taskslink::where('task_id', $taskId)->first();
+    
+    if ($task) {
+        // Ensure youtube_link is an array or decoded JSON column
+        $links = json_decode($task->youtube_link, true); // Decode JSON into an array (if it's stored as JSON)
+        
+        if (is_array($links)) {
+            // Filter out the link that needs to be deleted
+            $updatedLinks = array_filter($links, function ($link) use ($linkToDelete) {
+                return $link !== $linkToDelete;
+            });
+            
+            // Reindex the array to fix keys (optional but good practice)
+            $updatedLinks = array_values($updatedLinks);
+            
+            // Update the youtube_link field with the updated links
+            $task->update(['youtube_link' => json_encode($updatedLinks)]); // Re-encode to JSON
+            
+            // Return a success response
+            return response()->json(['success' => true]);
+        }
+        
+        // If the youtube_link is not an array or invalid, return error
+        return response()->json(['success' => false, 'message' => 'Invalid links data'], 400);
+    }
+    
+    // If the task was not found, return an error response
+    return response()->json(['success' => false, 'message' => 'Task not found'], 404);
+    }
+
+
+    public function addAnnouncement(request $request){
+        tasks::create([
+            'judul' => $request->input('judul'),
+            'description' => $request->input('description'),
+            'id_kelas' => $request->input('id_kelas'),
+            'type' => 'pengumuman',
+            'created_by' =>$request->input('created_by'),
+
+        ]);
+        toastr()->success('Data Berhasil dipublikasikan');
+        return redirect()->back();
     }
 
 }

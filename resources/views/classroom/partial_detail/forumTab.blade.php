@@ -14,21 +14,7 @@
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <strong>Kode Kelas</strong>
                     <h3 class="text-white"></h3>
-                    <div class="d-flex align-items-center">
-                        <div class="dropdown">
-                            <a href="#" class="btn btn-white btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="ti ti-dots-vertical fs-14"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right p-3">
-                                <li>
-                                    <a class="dropdown-item rounded-1" href="edit-teacher.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    
                 </div>
                 <div class="card-body">
                    <h1 class="text-primary">{{ $id }}</h1>
@@ -36,9 +22,10 @@
             </div>
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <strong>Tugas Mendatang</strong>
-
-
+                    <strong>Tugas yang harus segera diselesaikan</strong>
+                    <span class="bg-success-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
+                        <i class="ti ti-alert-triangle fs-16"></i>     
+                    </span>
                 </div>
                 <div class="card-body">
                     @php
@@ -55,20 +42,20 @@
                     });
                 @endphp
 
-                @if($upcomingTasks->isNotEmpty())
+                @if($upcomingTasks->count())
                     @foreach ($upcomingTasks->sortBy('due_date')->where('type','task') as $i)
                         <div class="notice-widget">
-                            <div class="d-flex align-items-center justify-content-between ">
-                                <div class="d-flex align-items-center overflow-hidden me-2">
-                                    <span class="bg-primary-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
-                                        <i class="ti ti-books fs-16"></i>
+                            <div class="d-flex align-items-center justify-content-between  ">
+                                <div class="d-flex align-items-center overflow-hidden me-2 mb-3">
+                                    <span class="bg-warning-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
+                                        <i class="ti ti-alert-triangle fs-16"></i>
                                     </span>
                                     <div class="overflow-hidden">
                                         <h6 class="text-truncate mb-1">{{ $i->judul ?? 'No Title' }}</h6>
                                         <p><i class="ti ti-calendar me-2"></i>  Due Date: {{ $i->due_date }}</p>
                                     </div>
                                 </div>
-                                <a href=""><i class="ti ti-chevron-right fs-16"></i></a>
+                                <a href="{{ route('classroom.detailTugas',[$i->id,$id]) }}"><i class="ti ti-chevron-right fs-16"></i></a>
                             </div>
                         </div>
                     @endforeach
@@ -81,6 +68,35 @@
         </div>
 
         <div class="col-lg-9">
+            @if(auth()->user()->role != 'siswa')
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                           <h4><span class="ti ti-pinned"></span> Tulis Pengumuman</h4> 
+                        </button>
+                    </h="h2">
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <form action="{{ route('classroom.addAnnouncement') }}" method="POST">
+                            @csrf
+                            <div class="accordion-body">
+                                <input type="text" name="id_kelas" value="{{ $id }}" hidden>
+                                <input type="text" name="created_by" value="{{ auth()->user()->nomor }}" hidden>
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Judul</label>
+                                    <input type="text" name="judul" class="form-control" placeholder="Judul Pengumuman" required>
+                                </div>
+                                <textarea name="description" id="description" cols="30" rows="10" class="myeditor" placeholder="Isi pengumuman" required></textarea>
+
+                                <button type="submit" class="btn btn-primary mt-3 w-100"><span class="ti ti-send"></span> Publish</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            @endif
+          
             @if($task->count())
                 @foreach ($task as $item)
                     <div class="card board-hover mb-3">
@@ -116,14 +132,22 @@
                                         <h5>{{ $item->judul }}</h5>
                                         @if ($item->type == 'quiz')
                                         Kunjungi link berikut ini untuk memulai,jangan lupa berdo'a terlebih dahulu sebelum dimulai :)
+                                        <p>
                                             @if($score && $score->where('status', '1')->where('task_id', $item->id)->where('student_id', auth()->user()->nomor)->count() > 0)
-                                                <button class="btn btn-success mt-2">Hore..! Kamu Sudah Mengikuti Quiz Ini </button>
+                                                <div class="alert alert-info" role="alert">
+                                                    Terimakasih sudah mengikuti quiz atau tugas Ini 😊
+                                                </div>
                                             @else
                                                 <a href="{{ route('quiz',[$id,$item->id]) }}">{{ route('quiz',[$id,$item->id]) }}</a>
 
                                             @endif
+                                        </p>
                                         @else
-                                            <p>{!! $item->description !!}</p>
+                                        <div class="mt-2 ">
+                                             {!! $item->description !!}
+                                        </div>
+                                       
+                                           
                                         @endif
                                     </div>
                                     @if ($item->type == 'quiz')

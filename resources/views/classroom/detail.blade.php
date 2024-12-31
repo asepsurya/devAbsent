@@ -48,13 +48,21 @@
                 @csrf
                 <div class="modal-body ">
                     <div class="mb-3">
-                        <label for="" class="form-label">Nama Quiz</label>
-                        <input type="text" class="form-control" name="judul" placeholder="contoh : Quiz Matematika" value="{{ $item->judul }}">
+                        <div class="mb-3">
+                            <label for="" class="form-label">Nama Quiz</label>
+                            <input type="text" class="form-control" name="judul" placeholder="contoh : Quiz Matematika" value="{{ $item->judul }}">
+                        </div>        
+                        <div class="mb-3">
+                            <label class="form-label">Durasi Pengerjaan</label>
+                            <div class="d-flex justify-content-between">
+                                <input type="number" name="poin" value="{{ $item->poin }}" class="form-control me-3" >
+                                <div class="mt-2">Menit</div>
+                            </div>
+                        </div>
                         <div hidden>
                             <input type="text" class="form-control" name="task_id" value="{{ $item->id }}">
                             <input type="text" class="form-control" name="id_kelas" value="{{ $id }}">
                             <input type="text" name="description" value="Quis">
-                            <input type="text" name="poin" >
                             <input type="text" name="due_date" >
                             <input type="text" name="type" value="quiz" hidden>
                             <input type="text" name="auth" value="{{ auth()->user()->nomor }}">
@@ -201,7 +209,7 @@
                                     <td width="95%">
                                         <div class="d-flex align-items-center">
                                             <a href="#" class="avatar avatar-md">
-                                                <img src="/storage/FotoProfile/675252eeeec60.jpeg"
+                                                <img src="{{ asset('asset/img/user-default.jpg') }}"
                                                     class="img-fluid rounded-circle" alt="foto">
                                             </a>
                                             <div class="ms-2">
@@ -372,6 +380,49 @@
       });
     }
 
+    });
+</script>
+<script>
+    tinymce.init({
+    selector: '.myeditor', // Your textarea class or ID
+     menubar: false,
+    statusbar: false,
+
+    plugins: [
+    'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace',
+    'wordcount', 'fullscreen', 'insertdatetime', 'media', 'table', 'code', 'codesample'
+  ],
+  toolbar: [
+    'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright | outdent indent | bullist numlist | blockquote | link image media | table | preview code | fullscreen',
+    'formatselect | fontselect fontsizeselect | forecolor backcolor | emoticons charmap'
+  ],
+    setup: function(editor) {
+        editor.on('change', function() {
+        tinymce.triggerSave(); // Save the content to the textarea before submitting
+        });
+    }
+    });
+</script>
+
+<script>
+    tinymce.init({
+    selector: '.myeditor', // Your textarea class or ID
+    menubar: false,
+    statusbar: false,
+
+    plugins: [
+    'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace',
+    'wordcount', 'fullscreen', 'insertdatetime', 'media', 'table', 'code', 'codesample'
+    ],
+    toolbar: [
+        'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright | outdent indent | bullist numlist | blockquote | link image media | table | preview code | fullscreen',
+        'formatselect | fontselect fontsizeselect | forecolor backcolor | emoticons charmap'
+    ],
+    setup: function(editor) {
+        editor.on('change', function() {
+        tinymce.triggerSave(); // Save the content to the textarea before submitting
+        });
+    }
     });
 </script>
 @endsection
