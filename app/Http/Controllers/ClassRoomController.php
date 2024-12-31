@@ -7,6 +7,7 @@ use App\Models\Mapel;
 use App\Models\tasks;
 use App\Models\student;
 use App\Models\ClassRoom;
+use App\Models\StudentScore;
 use Illuminate\Http\Request;
 use App\Models\ClassRoomPeople;
 
@@ -50,7 +51,8 @@ class ClassRoomController extends Controller
             'students'=>student::where('status','1')->get(),
             'class'=>Kelas::orderBy('id', 'DESC')->with(['jurusanKelas','jmlRombel'])->get(),
             'peserta'=>ClassRoomPeople::where('id_kelas',$id)->with('peopleStudent')->get(),
-            'task'=>tasks::where('id_kelas',$id)->orderBy('id', 'DESC')->with(['media','links','user','comment'])->get()
+            'task'=>tasks::where('id_kelas',$id)->orderBy('id', 'DESC')->with(['media','links','user','comment'])->get(),
+            'score'=>StudentScore::where(['student_id'=>auth()->user()->nomor])->get()
         ],compact('id'));
     }
     public function recommend(request $request){

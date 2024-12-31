@@ -58,8 +58,6 @@
             cursor: pointer;
         }
 
-</style>
-<style>
        .close-btn {
             background: transparent;
             border: none;
@@ -236,20 +234,20 @@
                                 <span class="ti ti-list-details"></span> Detail
                             </a>
                         </li>
-                
+
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">
                                 <span class="ti ti-clipboard-list"></span> Tugas Siswa
                             </a>
                         </li>
-                
+
                         <li class="nav-item" role="presentation">
                             <a class="btn btn-primary" href="/classroom/detail/{{ $id_kelas }}">
                                 <span class="ti ti-arrow-left"></span> Kembali
                             </a>
                         </li>
                     </ul>
-                
+
                 </div>
             @else
             <a class="btn btn-primary my-3" href="/classroom/detail/{{ $id_kelas }}">
@@ -284,7 +282,12 @@
                                                 <div class="col my-3 ">
                                                     <h5>{{ $item->judul }}</h5>
                                                     @if ($item->type == 'quiz')
-                                                    Kunjungi link berikut ini untuk memulai,jangan lupa berdo'a terlebih dahulu sebelum dimulai :) <a href="{{ route('quiz',[$id_kelas,$item->id]) }}">{{ route('quiz',[$id_kelas,$item->id]) }}</a>
+                                                    Kunjungi link berikut ini untuk memulai,jangan lupa berdo'a terlebih dahulu sebelum dimulai :)
+                                                        @if($score && $score->where('status', '1')->where('student_id', auth()->user()->nomor)->count() > 0)
+                                                            <button class="btn btn-success mt-2">Hore..! Kamu Sudah Mengikuti Quiz Ini</button>
+                                                        @else
+                                                            <a href="{{ route('quiz',[$id_kelas,$item->id]) }}">{{ route('quiz',[$id_kelas,$item->id]) }}</a>
+                                                        @endif
                                                     @else
                                                         <p>{!! $item->description !!}</p>
                                                     @endif
@@ -297,28 +300,24 @@
                                                                     <div class="d-flex align-items-center">
                                                                         <img src="{{ asset('asset/img/icon/qa.png') }}" alt="YouTube Icon" class="me-2" width="35">
                                                                         <h5 class="text-nowrap">
-                                                                            <a href="{{ route('quiz', [$id_kelas, $item->id]) }}" target="_blank">Soal Pilihan Ganda</a>
+                                                                            @if($score && $score->where('status', '1')->where('student_id', auth()->user()->nomor)->count() > 0)
+                                                                                Soal Pilihan Ganda
+                                                                             @else
+                                                                                <a href="{{ route('quiz', [$id_kelas, $item->id]) }}" target="_blank">Soal Pilihan Ganda</a>
+                                                                             @endif
+
                                                                         </h5>
                                                                     </div>
-                                                                    <div class="d-flex align-items-center">
 
-                                                                        <div class="dropdown">
-                                                                            <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" class="dropset">
-                                                                                <i class="fa fa-ellipsis-v"></i>
-                                                                            </a>
-                                                                            <ul class="dropdown-menu">
-                                                                                <li>
-                                                                                    <!-- Add a download link -->
-                                                                                    <a class="dropdown-item">Download File</a>
-                                                                                </li>
-                                                                            </ul>
-                                                                        </div>
-                                                                    </div>
                                                                 </div>
                                                                 <div class="d-flex align-items-center justify-content-between mt-3">
                                                                     <p class="text-primary mb-0 me-2">{{ $item->created_at->diffForHumans() }}</p>
                                                                     <div>
-                                                                        <a href="{{ route('quiz', [$id_kelas, $item->id]) }}" class="btn btn-primary">Ayo Mulai!</a>
+                                                                        @if($score && $score->where('status', '1')->where('student_id', auth()->user()->nomor)->count() > 0)
+                                                                        @else
+                                                                            <a href="{{ route('quiz', [$id_kelas, $item->id]) }}" class="btn btn-primary">Ayo Mulai!</a>
+                                                                        @endif
+
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -442,13 +441,13 @@
                             <form action="{{ route('filetugas.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <input type="text" name="task_id" value="{{ $task_id }}" hidden>
-                            
+
                                 <div class="card-body {{ auth()->user()->role == 'superadmin' ? 'disabled-section' : ''}} n">
                                     @if ($files->isEmpty())
                                         <!-- No files, show the upload form -->
                                         <input type="text" name="student_id" id="student_id" value="{{ auth()->user()->nomor }}" hidden>
                                         <input type="file" class="form-control" name="files[]" id="fileInput" multiple onchange="previewFiles()" >
-                                        
+
                                         <!-- Preview container -->
                                         <div class="row">
                                             <div class="preview-container" id="previewContainer">
@@ -462,16 +461,16 @@
                                             <div class="mb-3">
                                                 <strong>Tugas telah diserahkan :</strong>
                                             </div>
-                                           
+
                                             <ul>
                                                 @foreach ($files as $file)
                                                 <li class="d-flex justify-content-start align-items-center mb-2">
                                                     <!-- Delete Button (on the left) -->
-                                                    <a href="/file-tugas/{{ $file->id }}" class="btn btn-danger btn-sm me-2" 
+                                                    <a href="/file-tugas/{{ $file->id }}" class="btn btn-danger btn-sm me-2"
                                                        onclick="return confirm('Are you sure you want to delete this file?')">
                                                        <span class="ti ti-trash-x"></span>
                                                     </a>
-                                                
+
                                                     <!-- File details (on the right) -->
                                                     <div class="ml-2">
                                                         <a href="{{ Storage::url($file->path) }}" target="_blank">{{ $file->file_name }}</a>
@@ -479,14 +478,14 @@
 
                                                     </div>
                                                 </li>
-                                                
+
                                                 @endforeach
                                             </ul>
                                         </div>
                                     @endif
                                 </div>
                             </form>
-                            
+
 
                         </div>
                     @else
@@ -495,15 +494,15 @@
                     $time = 0;
                     $status=''       // Initialize time variable to store finish time
                 @endphp
-                
+
                 @foreach ($score as $item)
                     @php
                         $totalScore = $item->nilai;  // Add the score to total score
-                        $time = $item->finish_time; 
+                        $time = $item->finish_time;
                         $status = $item->status;  // Keep updating with the last finish time
                     @endphp
                 @endforeach
-                
+
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
@@ -512,15 +511,15 @@
                              <span class="badge bg-success d-inline-flex align-items-center ms-2"> Aktif</span>
                             @endif
                         </div>
-                       
+
                     </div>
-                
+
                     <div class="card-body bg-light">
                         <div align="center">
                             <h1 class="text-success mt-4 fs-1">{{ $totalScore ?? '0' }}</h1><br>  <!-- Display total score or default to 0 -->
                         </div>
                     </div>
-                
+
                     <div class="card-footer">
                         <div class="d-flex justify-content-between">
                             <div>
@@ -532,7 +531,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                     @endif
 
                     </div>
@@ -562,9 +561,9 @@
                             $user = auth()->user();
                             $foto = $user->student ? $user->student->foto : ($user->gtk ? $user->gtk->gambar : null);
                         @endphp
-                    
+
                         <img src="{{ $foto ? '/storage/' . $foto : asset('asset/img/user-default.jpg') }}" class="rounded-circle me-3" alt="avatar" width="50">
-                    
+
                         <button id="emojiPickerButton" class="btn ">😊</button>
                         <input type="text" id="commentInput" name="comment" class="form-control me-2  p-2" placeholder="Tulis komentar..." style="border-radius:50px;">
 
@@ -585,7 +584,7 @@
                 <div class="py-3">
                     <input type="text" class="form-control" placeholder="Search..." id="myInput" onkeyup="myFunction()">
                 </div>
-               
+
                 <table class="table table-nowrap mb-0" id="tabeltugas">
                     <thead>
                         <tr>
@@ -596,59 +595,69 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($peserta->count())
+                    {{-- @if ($peserta->count()) --}}
+                        @php
+                            // Initialize an array to store the processed student IDs
+                            $processedStudentIds = [];
+                        @endphp
+
                         @foreach ($peserta as $key => $item)
-                        <tr>
-                            <!-- Iterate through each student and show the details only for the first student -->
-                            @foreach($item->student as  $student)
-                                @if ($key)  <!-- Only display for the first student -->
-                                <td>
-                                    @if($item->status == '1') 
-                                        <span class="ti ti-check" data-bs-toggle="tooltip" title="Belum Diperiksa"></span> 
-                                    @else 
-                                        <span class="ti ti-checks text-success" data-bs-toggle="tooltip" title="Sudah Diperiksa"></span> 
-                                    @endif
-                                </td>
-                                
-                                    <td width="50%">
-                                       
-                                        <div class="d-flex align-items-center">
-                                            <a href="#" class="avatar avatar-md">
-                                                <!-- Check if student photo exists -->
-                                                @if ($student->foto == '')
-                                                    <img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
-                                                @else
-                                                    <img src="/storage/{{ $student->foto }}" class="img-fluid rounded-circle" alt="foto">
-                                                @endif
-                                            </a>
-                                            <div class="ms-2">
-                                                <p class="mb-0">{{ $student->nama }}</p>
+                            <tr>
+                                <!-- Iterate through each student -->
+                                @foreach($item->student as  $student)
+                                    @if (!in_array($student->id, $processedStudentIds)) <!-- Check if this student has been displayed already -->
+                                        @php
+                                            // Mark this student as processed by adding their ID to the array
+                                            $processedStudentIds[] = $student->id;
+                                        @endphp
+
+                                        <td>
+                                            @if($item->status == '1')
+                                                <span class="ti ti-check" data-bs-toggle="tooltip" title="Belum Diperiksa"></span>
+                                            @else
+                                                <span class="ti ti-checks text-success" data-bs-toggle="tooltip" title="Sudah Diperiksa"></span>
+                                            @endif
+                                        </td>
+
+                                        <td width="50%">
+                                            <div class="d-flex align-items-center">
+                                                <a href="#" class="avatar avatar-md">
+                                                    <!-- Check if student photo exists -->
+                                                    @if ($student->foto == '')
+                                                        <img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
+                                                    @else
+                                                        <img src="/storage/{{ $student->foto }}" class="img-fluid rounded-circle" alt="foto">
+                                                    @endif
+                                                </a>
+                                                <div class="ms-2">
+                                                    <p class="mb-0">{{ $student->nama }}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y | H:i') }}</td>
-                            
-                                    <!-- Button to view assignment with a modal trigger (displayed for every row) -->
-                                    <td>
-                                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#fileModal-{{ $item->student_id }}">
-                                            <span class="ti ti-eye"></span> Lihat Tugas
-                                        </button>
-                                    </td>
-                                @endif
-                            @endforeach
-                            <!-- Assignment date (displayed for every row, not tied to the student) -->
-                           
-                        </tr>
-                    @endforeach        
-                    @else
-                        <tr>
-                            <td colspan="3" class="text-center">Belum ada tugas yang dikumpulkan</td>
-                        </tr>
-                    @endif       
+                                        </td>
+
+                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y | H:i') }}</td>
+
+                                        <!-- Button to view assignment with a modal trigger -->
+                                        <td>
+                                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#fileModal-{{ $item->student_id }}">
+                                                <span class="ti ti-eye"></span> Lihat Tugas
+                                            </button>
+                                        </td>
+                                    @endif
+                                @endforeach
+                            </tr>
+                        @endforeach
+
+                        @empty($peserta)
+                            <tr>
+                                <td colspan="4" class="text-center">Belum ada tugas yang dikumpulkan</td>
+                            </tr>
+                        @endempty
+
                     </tbody>
                 </table>
              </div>
-          
+
         </div>
 
 
@@ -692,7 +701,7 @@
                         <a href="{{ Storage::url($file->path) }}" target="_blank" class="btn btn-primary btn-sm" download><span class="ti ti-download"></span></a></td>
                 </tr>
                 @endforeach
-                
+
                 <!-- Add more files here -->
                 </tbody>
             </table>
@@ -716,7 +725,7 @@
       filter = input.value.toUpperCase();
       table = document.getElementById("tabeltugas");
       tr = table.getElementsByTagName("tr");
-    
+
       // Loop through all table rows, and hide those who don't match the search query
       for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[1];
@@ -734,7 +743,7 @@
 <script>
     // Menyimpan tab aktif ke localStorage saat tab berubah
     const tabs = document.querySelectorAll('.nav-link');
-    
+
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             localStorage.setItem('activeTab', tab.id);

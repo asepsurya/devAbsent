@@ -36,26 +36,46 @@
             </div>
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <strong>Mendatang</strong>
-                    <h3 class="text-white"></h3>
-                    <div class="d-flex align-items-center">
-                        <div class="dropdown">
-                            <a href="#" class="btn btn-white btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="ti ti-dots-vertical fs-14"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right p-3">
-                                <li>
-                                    <a class="dropdown-item rounded-1" href="edit-teacher.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    <strong>Tugas Mendatang</strong>
+
+
                 </div>
                 <div class="card-body">
-                  <p>Tidak Ada tugas yang perlu diselesaikan</p>
+                    @php
+                    use Carbon\Carbon;
+
+                    // Mendapatkan tanggal hari ini dan 3 hari mendatang
+                    $today = Carbon::now()->startOfDay();
+                    $threeDaysAhead = Carbon::now()->addDays(3)->endOfDay();
+
+                    // Filter tugas yang due_date-nya antara hari ini dan 3 hari mendatang
+                    $upcomingTasks = $task->filter(function ($t) use ($today, $threeDaysAhead) {
+                        $dueDate = Carbon::parse($t->due_date);
+                        return $dueDate && $dueDate->between($today, $threeDaysAhead);
+                    });
+                @endphp
+
+                @if($upcomingTasks->isNotEmpty())
+                    @foreach ($upcomingTasks->sortBy('due_date')->where('type','task') as $i)
+                        <div class="notice-widget">
+                            <div class="d-flex align-items-center justify-content-between ">
+                                <div class="d-flex align-items-center overflow-hidden me-2">
+                                    <span class="bg-primary-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
+                                        <i class="ti ti-books fs-16"></i>
+                                    </span>
+                                    <div class="overflow-hidden">
+                                        <h6 class="text-truncate mb-1">{{ $i->judul ?? 'No Title' }}</h6>
+                                        <p><i class="ti ti-calendar me-2"></i>  Due Date: {{ $i->due_date }}</p>
+                                    </div>
+                                </div>
+                                <a href=""><i class="ti ti-chevron-right fs-16"></i></a>
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <p>No upcoming tasks.</p>
+                @endif
+
                 </div>
             </div>
         </div>
@@ -73,13 +93,13 @@
                                             <span class="badge position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle">{{ $item->comment->count() }}</span>
                                         </span>
                                     </a>
-                                    
+
                                     <a href="{{ route('classroom.detailTugas',[$item->id,$id]) }}" data-bs-toggle="tooltip" title="View task details">
                                         <span class="bg-soft-primary text-primary avatar avatar-md me-2 br-5 flex-shrink-0">
                                             <i class="ti ti-list-details fs-16"></i>
                                         </span>
                                     </a>
-                                    
+
                                 </div>
                                 <div class="mx-3">
                                     <h6 class="mb-1 fw-semibold">
@@ -93,9 +113,15 @@
                                         {{-- <a href="#" data-bs-toggle="modal" data-bs-target="#view_details">Tugas Pertemuan 2</a> --}}
                                     </h6>
                                     <div class="col my-3 ">
-                                        <h5><a href="{{ route('classroom.detailTugas',[$item->id,$id]) }}">{{ $item->judul }}</a></h5>
+                                        <h5>{{ $item->judul }}</h5>
                                         @if ($item->type == 'quiz')
-                                        Kunjungi link berikut ini untuk memulai,jangan lupa berdo'a terlebih dahulu sebelum dimulai :) <a href="{{ route('quiz',[$id,$item->id]) }}">{{ route('quiz',[$id,$item->id]) }}</a>
+                                        Kunjungi link berikut ini untuk memulai,jangan lupa berdo'a terlebih dahulu sebelum dimulai :)
+                                            @if($score && $score->where('status', '1')->where('task_id', $item->id)->where('student_id', auth()->user()->nomor)->count() > 0)
+                                                <button class="btn btn-success mt-2">Hore..! Kamu Sudah Mengikuti Quiz Ini </button>
+                                            @else
+                                                <a href="{{ route('quiz',[$id,$item->id]) }}">{{ route('quiz',[$id,$item->id]) }}</a>
+
+                                            @endif
                                         @else
                                             <p>{!! $item->description !!}</p>
                                         @endif
@@ -108,28 +134,21 @@
                                                         <div class="d-flex align-items-center">
                                                             <img src="{{ asset('asset/img/icon/qa.png') }}" alt="YouTube Icon" class="me-2" width="35">
                                                             <h5 class="text-nowrap">
-                                                                <a href="{{ route('quiz', [$id, $item->id]) }}" target="_blank">Soal Pilihan Ganda</a>
+                                                                @if($score && $score->where('status', '1')->where('task_id', $item->id)->where('student_id', auth()->user()->nomor)->count() > 0)
+                                                                    Soal Pilihan Ganda
+                                                                @else
+                                                                    <a href="{{ route('quiz',[$id,$item->id]) }}">Soal Pilihan Ganda</a>
+                                                                @endif
                                                             </h5>
-                                                        </div>
-                                                        <div class="d-flex align-items-center">
-
-                                                            <div class="dropdown">
-                                                                <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" class="dropset">
-                                                                    <i class="fa fa-ellipsis-v"></i>
-                                                                </a>
-                                                                <ul class="dropdown-menu">
-                                                                    <li>
-                                                                        <!-- Add a download link -->
-                                                                        <a class="dropdown-item">Download File</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex align-items-center justify-content-between mt-3">
                                                         <p class="text-primary mb-0 me-2">{{ $item->created_at->diffForHumans() }}</p>
                                                         <div>
+                                                         @if($score && $score->where('status', '1')->where('task_id', $item->id)->where('student_id', auth()->user()->nomor)->count() > 0)
+                                                         @else
                                                             <a href="{{ route('quiz', [$id, $item->id]) }}" class="btn btn-primary">Ayo Mulai!</a>
+                                                        @endif
                                                         </div>
                                                     </div>
                                                 </div>

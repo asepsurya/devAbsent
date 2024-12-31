@@ -168,7 +168,7 @@
                         <button type="submit" class="btn btn-primary w-100" id="submitBtn">Submit</button>
                     </div>
                 </form>
-               
+
                 <div class="alert alert-primary overflow-hidden p-0 m-3" role="alert">
                     <div class="p-3 bg-primary text-fixed-white d-flex justify-content-between">
                         <h3 class="alert-heading mb-0 text-fixed-white">Quiz Matematika</h3>
@@ -212,7 +212,7 @@
     </div>
 </div>
 
- 
+
 
 @section('javascript')
 <script>
@@ -333,12 +333,12 @@
                         text: 'Jawaban Anda akan dikirim secara otomatis.',
                         icon: 'warning',
                         showConfirmButton: false,
-                        timer: 3000 // Show alert for 3 seconds
+                        timer: 10000 // Show alert for 3 seconds
                     }).then(() => {
                         submitQuiz();
                     });
                 }
-            }, 3000);
+            }, 10000);
         }
 
         // If the page is reloaded, use the stored timer value
@@ -358,11 +358,10 @@
             }).then(() => {
                 // Wait for 3 seconds before submitting the form
                 setTimeout(function() {
-                    // Clear the timer data from localStorage when submitting the quiz
-                    localStorage.removeItem('quizTimer');
-
                     // Submit the form (replace 'finish' with the actual form id if different)
                     document.getElementById('finish').submit();
+                    // Clear the timer data from localStorage when submitting the quiz
+                    localStorage.removeItem('quizTimer');
                 }, 3000); // 3000ms = 3 seconds delay
             });
         }

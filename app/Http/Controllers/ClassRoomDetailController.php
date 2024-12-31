@@ -570,10 +570,7 @@ class ClassRoomDetailController extends Controller
             'finish_time'=>$request->finish_time,
         ]);
         toastr()->success('Terimakasih');
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect()->route('login');
     }
 
     public function detailTugas($task_id, $id_kelas){
