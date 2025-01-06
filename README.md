@@ -1,4 +1,6 @@
-<p align="center"><a href="https://absent.saktiproject.my.id" target="_blank"><img src="https://absent.saktiproject.my.id/asset/img/logo.png" width="400" alt="Absensi SAKTI Logo"></a></p>
+
+<p align="center"><a href="https://absent.saktiproject.my.id" target="_blank"><img src="https://drive.usercontent.google.com/download?id=1CC7oxC75oAwwW9hUiqjKEGAraOZ5u9B-&export=view&authuser=0" width="100%" alt="Absensi SAKTI Logo"></a></p>
+
 
 ## Tentang Absensi Sakti
 
