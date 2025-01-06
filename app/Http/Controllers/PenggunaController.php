@@ -28,7 +28,7 @@ class PenggunaController extends Controller
         }
         return view('pengguna.pesertadidik',[
             'title' => 'Peserta Didik',
-            'students'=>User::where('role','siswa')->with('student')->paginate(15)
+            'students'=>User::where('role','siswa')->with('student')->get()
         ]);
     }
     public function useremployeesIndex(request $request){

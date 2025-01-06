@@ -18,15 +18,18 @@ class ClassRoomController extends Controller
 
 
             if(auth()->user()->role == "siswa") {
-                // Fetching the ClassRoomPeople entry for the current student
-                $classRoomPeople = ClassRoomPeople::where('nis', auth()->user()->nomor)->first();
+                 // Get all ClassRoomPeople entries for the current student (not just the first one)
+                $classRoomPeople = ClassRoomPeople::where('nis', auth()->user()->nomor)->get();
 
-                if ($classRoomPeople) {
-                    // If the student exists in ClassRoomPeople, get the associated ClassRoom
-                    $data = $classRoomPeople->getClass()->with(['user', 'mapel', 'people'])->get();
+                // If there are matching entries for the student
+                if ($classRoomPeople->isNotEmpty()) {
+                    // Retrieve the associated classrooms for all the records
+                    $data = $classRoomPeople->flatMap(function ($classRoomPeopleEntry) {
+                        return $classRoomPeopleEntry->getClass()->with(['user', 'mapel', 'people'])->get();
+                    });
                 } else {
-                    // If no entry for the student, set data to an empty collection or handle as needed
-                    $data = collect();
+                    // If no entries for the student, set data to an empty collection
+                    $data = collect(); // Or handle as necessary (e.g., return an error message)
                 }
 
             } else {
@@ -47,11 +50,12 @@ class ClassRoomController extends Controller
     public function detail($id){
         return view('classroom.detail',[
             'title'=> 'Detail',
-            'myclass'=>ClassRoom::where('class_code',$id)->with('user')->get(),
+            'myclass'=>ClassRoom::where('class_code',$id)->with(['gtk','user'])->get(),
             'students'=>student::where('status','1')->get(),
             'class'=>Kelas::orderBy('id', 'DESC')->with(['jurusanKelas','jmlRombel'])->get(),
-            'peserta'=>ClassRoomPeople::where('id_kelas',$id)->with('peopleStudent')->get(),
-            'task'=>tasks::where('id_kelas',$id)->orderBy('id', 'DESC')->with(['media','links','user','comment'])->get(),
+            'peserta'=>ClassRoomPeople::where('id_kelas',$id)->with(['getScore','peopleStudent'])->get(),
+            'task'=>tasks::where('id_kelas',$id)->orderBy('id', 'DESC')->with(['media','links','user','user.gtk','comment'])->get(),
+            'duedate'=>tasks::upcomingTasks()->where('id_kelas',$id)->orderBy('due_date')->get(),
             'score'=>StudentScore::where(['student_id'=>auth()->user()->nomor])->get()
         ],compact('id'));
     }

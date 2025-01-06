@@ -219,10 +219,12 @@ class authController extends Controller
     }
     public function imageProfile(request $request){
 
-            $role = auth()->user()->role;
-            $base64Image = ($role == "walikelas" || $role == "guru")
-                ? $request->input('gambar')
-                : $request->input('foto');
+
+            if(auth()->user()->gtk){
+                $base64Image=  $request->input('gambar');
+            }else{
+                $base64Image =$request->input('foto');
+            }
 
             // Decode the image
             $imageParts = explode(';base64,', $base64Image);
@@ -250,7 +252,7 @@ class authController extends Controller
             }
 
             // Update the database with the new file path
-            if ($role == "walikelas" || $role == "guru") {
+            if (auth()->user()->gtk) {
                 gtk::where('nik', $request->id)->update(['gambar' => $fileName]);
             } else {
                 student::where('nis', $request->id)->update(['foto' => $fileName]);

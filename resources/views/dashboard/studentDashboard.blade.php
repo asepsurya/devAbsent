@@ -1,15 +1,150 @@
 @extends('layout.main')
+@section('css')
+<style>
+     .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            /* background-color: #fff; */
+
+            border-radius: 10px;
+
+            width: 100%; /* Make calendar full-width */
+            box-sizing: border-box; /* Include padding and borders in the width */
+        }
+
+        .calendar-day {
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 7px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background-color: #cce7ff;
+        }
+
+        .active-day {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            /* border: 2px solid #0056b3; */
+        }
+        html .darkmode .calendar-day, html[data-theme=dark] .calendar-day {
+            background-color: #1b1632;
+
+        }
+
+        html .darkmode .active-day, html[data-theme=dark] .active-day {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .calendar {
+                grid-template-columns: repeat(3, 1fr); /* Show 3 days per row on smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar {
+                grid-template-columns: repeat(2, 1fr); /* Show 2 days per row on very small screens */
+            }
+        }
+
+        #donutChart {
+            max-width: 100%;
+            max-height: 230px;
+            padding: 10px;
+        }
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+@endsection
 @section('container')
-<div class="d-md-flex d-block align-items-center justify-content-between mb-3">
+<div class="d-md-flex d-block align-items-center justify-content-between mb-3 border-bottom">
     <div class="my-auto mb-2">
-        <h3 class="page-title mb-1">Dashboard</h3>
+        <h3 class="page-title mb-1"><span class="ti ti-dashboard"></span> Halaman Beranda</h3>
+    </div>
+    <div class="d-md-flex d-block align-items-center justify-content-between mb-3 ">
+        <div class="my-auto mb-2">
+            {{-- <h3 class="page-title mb-1">Beranda</h3> --}}
+            <nav>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item">
+                        <a>Beranda</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Dashboard Siswa</li>
+                </ol>
+            </nav>
+        </div>
     </div>
 </div>
-
+@if(auth()->user()->rombelstudent || auth()->user()->rombelstudent)
+    <div class="col-xl-12 d-flex">
+        <div class="row flex-fill">
+            <div class="col-sm-6 col-xl-3 d-flex">
+                <a href="/classroom"
+                    class="card border-0 border-bottom border-primary flex-fill animate-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <span class="avatar avatar-md rounded bg-primary me-2"><i
+                                    class="ti ti-chalkboard fs-16"></i></span>
+                            <h6>Kelas Saya</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-xl-3 d-flex">
+                <a href="{{ route('absent_list', [auth()->user()->rombelstudent->id_kelas, auth()->user()->rombelstudent->nis]) }}" class="card border-0 border-bottom border-success flex-fill animate-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <span class="avatar avatar-md rounded bg-success me-2"><i
+                                    class="ti ti-list-details fs-16"></i></span>
+                            <h6>Daftar Hadir Kelas </h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-xl-3 d-flex">
+                <a href="{{ route('leassonView', auth()->user()->rombelstudent->id_kelas) }}"
+                    class="card border-0 border-bottom border-warning flex-fill animate-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <span class="avatar avatar-md rounded bg-warning me-2"><i
+                                    class="ti ti-calendar fs-16"></i></span>
+                            <h6>Jadwal Pelajaran</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-xl-3 d-flex">
+                <a href="{{ route('profileIndex',auth()->user()->nomor) }}"
+                    class="card border-0 border-bottom border-dark flex-fill animate-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <span class="avatar avatar-md rounded bg-dark me-2"><i
+                                    class="ti ti-user fs-16"></i></span>
+                            <h6>Profile Saya</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+@else
+<div class="alert alert-info">
+    <strong><span class="ti ti-info-circle"></span> Info:</strong> Anda belum bergabung dalam <u>kelas</u> manapun, silahkan hubungi admin untuk bergabung.
+</div>
+@endif
 <div class="row flex-fill">
     <div class="col-xl-6 d-flex">
-        <div class="flex-fill">
-            <div class="card bg-dark position-relative">
+        <div class="flex-fill" >
+            <div class="card bg-dark position-relative" >
                 <div class="card-body">
                     <div class="d-flex align-items-center row-gap-3 mb-3">
                         <div class="avatar avatar-xxl rounded flex-shrink-0 me-3">
@@ -77,7 +212,7 @@
                             <h6 class="text-white">Status</h6>
                             <span class="badge bg-success d-inline-flex align-items-center ms-2">{{ auth()->user()->status == '2' ?' Aktif' : 'Tidak Aktif'  }}</span>
                         </div>
-                        <a href="edit-student.html" class="btn btn-primary">Edit Profile</a>
+                        <a href="{{ route('profileIndex',auth()->user()->nomor) }}" class="btn btn-primary"><span class="ti ti-pencil"></span>Edit Profile</a>
                     </div>
                     <div class="student-card-bg">
                         <img src="https://preskool.dreamstechnologies.com/html/template/assets/img/bg/circle-shape.png" alt="Bg">
@@ -88,402 +223,139 @@
                 </div>
             </div>
             <div class="card flex-fill">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h4 class="card-title">Today’s Class</h4>
-                    {{-- <div class="d-inline-flex align-items-center class-datepick">
-                        <span class="icon"><i class="ti ti-chevron-left me-2"></i></span>
-                        <input type="text" class="form-control datetimepicker border-0" placeholder="16 May 2024">
-                        <span class="icon"><i class="ti ti-chevron-right"></i></span>
-                    </div> --}}
-                </div>
                 <div class="card-body">
-                    @foreach ($jadwal as $item)
+                    <div class="col mb-3">
+                        <div class="d-flex justify-content-between">
+                            <h4 class="mb-2">Kalender Mingguan</h4>
+                            <div>
+                                <strong>
+                                    <p id="clock"> </p>
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div id="weekly-calendar" class="calendar "></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card flex-fill">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h4 class="card-title">Kelas Hari Ini</h4>
+
+                </div>
+                <div class="card-body"  style="max-height: 200px; overflow-y: auto;">
+
                     @php
                         $day_number = date('N'); // Current day number (1 = Monday, 7 = Sunday)
                         $current_time = \Carbon\Carbon::now()->format('H:i'); // Current time in 'H:i' format
                     @endphp
-             
-                    @foreach ($item->jadwalStudent->where('day', $day_number)->sortBy('start') as $i)
-                        <div class="card mb-3">
-                            <div class="d-flex align-items-center justify-content-between flex-wrap p-3 pb-1">
-                                <div class="d-flex align-items-center flex-wrap mb-2">
-                                    <span class="avatar avatar-lg flex-shrink-0 rounded me-2">
-                                        @if(!empty($i->guru->gambar))
-                                            <img src="/storage/{{ $i->guru->gambar }}" alt="Profile">
+
+
+
+                   @foreach ($jadwal as $item)
+                        @php
+                            $day_number = date('N'); // Current day number (1 = Monday, 7 = Sunday)
+                            $current_time = \Carbon\Carbon::now()->format('H:i'); // Current time in 'H:i' format
+                        @endphp
+
+                        @if($item->jadwalStudent->where('day', $day_number)->count())
+                            @foreach ($item->jadwalStudent->where('day', $day_number)->sortBy('start') as $i)
+                                <div class="card mb-3">
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap p-3 pb-1">
+                                        <div class="d-flex align-items-center flex-wrap mb-2">
+                                            <span class="avatar avatar-lg flex-shrink-0 rounded me-2">
+                                                @if(!empty($i->guru->gambar))
+                                                    <img src="/storage/{{ $i->guru->gambar }}" alt="Profile">
+                                                @else
+                                                    <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Default Profile">
+                                                @endif
+                                            </span>
+                                            <div>
+                                                <h6 class="mb-1 {{ $current_time > $i->end ? 'text-decoration-line-through' : '' }}">
+                                                    @if ($i->mata_pelajaran)
+                                                        {{ $i->mata_pelajaran->nama ?? 'NULL' }}
+                                                    @else
+                                                        {{ $i->ref->ref ?? 'NULL' }}
+                                                    @endif
+                                                </h6>
+                                                <span><i class="ti ti-clock me-2"></i>{{ $i->start }} - {{ $i->end }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Badge based on current time -->
+                                        @if($current_time < $i->end)
+                                            <span class="badge badge-soft-danger shadow-none mb-2">
+                                                <i class="ti ti-circle-filled fs-8 me-1"></i>On going
+                                            </span>
                                         @else
-                                            <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Default Profile">
+                                            <span class="badge badge-soft-success shadow-none mb-2">
+                                                <i class="ti ti-circle-filled fs-8 me-1"></i>Completed
+                                            </span>
                                         @endif
-                                    </span>
-                                    <div>
-                                        <h6 class="mb-1 {{ $current_time > $i->end ? 'text-decoration-line-through' : '' }}">
-                                            @if ($i->mata_pelajaran)
-                                                 {{ $i->mata_pelajaran->nama ?? 'NULL' }}
-                                            @else
-                                                 {{ $i->ref->ref ?? 'NULL' }}
-                                            @endif
-                                           
-                                        </h6>
-                                        <span><i class="ti ti-clock me-2"></i>{{ $i->start }} - {{ $i->end }}</span>
                                     </div>
                                 </div>
-                
-                                @if($current_time < $i->end)
-                                    <span class="badge badge-soft-danger shadow-none mb-2">
-                                        <i class="ti ti-circle-filled fs-8 me-1"></i>On going
-                                    </span>
-                                @else
-                                    <span class="badge badge-soft-success shadow-none mb-2">
-                                        <i class="ti ti-circle-filled fs-8 me-1"></i>Completed
-                                    </span>
-                                @endif
+                            @endforeach
+                        @else
+                            <div class="m-5 d-flex justify-content-center">
+                                <p>Belum ada jadwal yang di atur untuk hari ini</p>
                             </div>
-                        </div>
-                    @endforeach
-                @endforeach
-                   
-                    
+                        @endif
+                   @endforeach
+
+
+
+
+
+
                 </div>
             </div>
         </div>
     </div>
 
-
-    <div class="col-xl-6 d-flex">
+    <div class="col-xl-6 ">
         <div class="card flex-fill">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h4 class="card-title">Attendance</h4>
-                <div class="card-dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle p-2" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <span><i class="ti ti-calendar-due"></i></span>
-                        This Week
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end" style="">
-                        <ul>
-                            <li>
-                                <a href="javascript:void(0);">This Week</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">Last Week</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">Last Month</a>
-                            </li>
-                        </ul>
-                    </div>
+                <h4 class="card-title"><span class="ti ti-chart-infographic"></span> Grafik Presensi Absensi</h4>
+                <div>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDetail-{{ auth()->user()->student->id_rfid }}"><span class="ti ti-list-details"></span></button>
                 </div>
             </div>
             <div class="card-body">
                 <div class="attendance-chart">
-                    <p class="mb-3"><i class="ti ti-calendar-heart text-primary me-2"></i>No of total working days <span
-                            class="fw-medium text-dark"> 28 Days</span></p>
+
                     <div class="border rounded p-3">
                         <div class="row">
                             <div class="col text-center border-end">
-                                <p class="mb-1">Present</p>
-                                <h5>25</h5>
+                                <p class="mb-1">Tepat Waktu</p>
+                                <h5>{{ $present }}</h5>
                             </div>
                             <div class="col text-center border-end">
-                                <p class="mb-1">Absent</p>
-                                <h5>2</h5>
+                                <p class="mb-1">Terlambat</p>
+                                <h5>{{ $late }}</h5>
                             </div>
                             <div class="col text-center">
-                                <p class="mb-1">Halfday</p>
-                                <h5>0</h5>
+                                <p class="mb-1">Absent</p>
+                                <h5>{{ $halfDay }}</h5>
                             </div>
                         </div>
                     </div>
-                    <div class="text-center">
-                        <div id="attendance_chart" style="min-height: 222.7px;">
-                            <div id="apexchartskv4j0h7c" class="apexcharts-canvas apexchartskv4j0h7c apexcharts-theme-"
-                                style="width: 434px; height: 222.7px;"><svg id="SvgjsSvg1293" width="434"
-                                    height="222.70000000000002" xmlns="http://www.w3.org/2000/svg" version="1.1"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev"
-                                    class="apexcharts-svg" xmlns:data="ApexChartsNS" transform="translate(0, 0)">
-                                    <foreignObject x="0" y="0" width="434" height="222.70000000000002">
-                                        <div class="apexcharts-legend apexcharts-align-center apx-legend-position-bottom"
-                                            xmlns="http://www.w3.org/1999/xhtml"
-                                            style="inset: auto 0px 1px; position: absolute; max-height: 127.5px;">
-                                            <div class="apexcharts-legend-series" rel="1" seriesname="Present"
-                                                data:collapsed="false" style="margin: 4px 5px;"><span
-                                                    class="apexcharts-legend-marker" rel="1" data:collapsed="false"
-                                                    style="height: 12px; width: 12px; left: 0px; top: 0px; border-radius: 100%; color: rgb(26, 190, 23); background: rgb(26, 190, 23) !important;"></span><span
-                                                    class="apexcharts-legend-text" rel="1" i="0"
-                                                    data:default-text="Present" data:collapsed="false"
-                                                    style="color: rgb(55, 61, 63); font-size: 12px; font-weight: 400; font-family: Helvetica, Arial, sans-serif;">Present</span>
-                                            </div>
-                                            <div class="apexcharts-legend-series" rel="2" seriesname="Late"
-                                                data:collapsed="false" style="margin: 4px 5px;"><span
-                                                    class="apexcharts-legend-marker" rel="2" data:collapsed="false"
-                                                    style="height: 12px; width: 12px; left: 0px; top: 0px; border-radius: 100%; color: rgb(17, 112, 228); background: rgb(17, 112, 228) !important;"></span><span
-                                                    class="apexcharts-legend-text" rel="2" i="1"
-                                                    data:default-text="Late" data:collapsed="false"
-                                                    style="color: rgb(55, 61, 63); font-size: 12px; font-weight: 400; font-family: Helvetica, Arial, sans-serif;">Late</span>
-                                            </div>
-                                            <div class="apexcharts-legend-series" rel="3" seriesname="HalfxDay"
-                                                data:collapsed="false" style="margin: 4px 5px;"><span
-                                                    class="apexcharts-legend-marker" rel="3" data:collapsed="false"
-                                                    style="height: 12px; width: 12px; left: 0px; top: 0px; border-radius: 100%; color: rgb(233, 237, 244); background: rgb(233, 237, 244) !important;"></span><span
-                                                    class="apexcharts-legend-text" rel="3" i="2"
-                                                    data:default-text="Half%20Day" data:collapsed="false"
-                                                    style="color: rgb(55, 61, 63); font-size: 12px; font-weight: 400; font-family: Helvetica, Arial, sans-serif;">Half
-                                                    Day</span></div>
-                                            <div class="apexcharts-legend-series" rel="4" seriesname="Absent"
-                                                data:collapsed="false" style="margin: 4px 5px;"><span
-                                                    class="apexcharts-legend-marker" rel="4" data:collapsed="false"
-                                                    style="height: 12px; width: 12px; left: 0px; top: 0px; border-radius: 100%; color: rgb(232, 38, 70); background: rgb(232, 38, 70) !important;"></span><span
-                                                    class="apexcharts-legend-text" rel="4" i="3"
-                                                    data:default-text="Absent" data:collapsed="false"
-                                                    style="color: rgb(55, 61, 63); font-size: 12px; font-weight: 400; font-family: Helvetica, Arial, sans-serif;">Absent</span>
-                                            </div>
-                                        </div>
-                                        <style type="text/css">
-                                            .apexcharts-legend {
-                                                display: flex;
-                                                overflow: auto;
-                                                padding: 0 10px;
-                                            }
-
-                                            .apexcharts-legend.apx-legend-position-bottom,
-                                            .apexcharts-legend.apx-legend-position-top {
-                                                flex-wrap: wrap
-                                            }
-
-                                            .apexcharts-legend.apx-legend-position-right,
-                                            .apexcharts-legend.apx-legend-position-left {
-                                                flex-direction: column;
-                                                bottom: 0;
-                                            }
-
-                                            .apexcharts-legend.apx-legend-position-bottom.apexcharts-align-left,
-                                            .apexcharts-legend.apx-legend-position-top.apexcharts-align-left,
-                                            .apexcharts-legend.apx-legend-position-right,
-                                            .apexcharts-legend.apx-legend-position-left {
-                                                justify-content: flex-start;
-                                            }
-
-                                            .apexcharts-legend.apx-legend-position-bottom.apexcharts-align-center,
-                                            .apexcharts-legend.apx-legend-position-top.apexcharts-align-center {
-                                                justify-content: center;
-                                            }
-
-                                            .apexcharts-legend.apx-legend-position-bottom.apexcharts-align-right,
-                                            .apexcharts-legend.apx-legend-position-top.apexcharts-align-right {
-                                                justify-content: flex-end;
-                                            }
-
-                                            .apexcharts-legend-series {
-                                                cursor: pointer;
-                                                line-height: normal;
-                                                display: flex;
-                                            }
-
-                                            .apexcharts-legend.apx-legend-position-bottom .apexcharts-legend-series,
-                                            .apexcharts-legend.apx-legend-position-top .apexcharts-legend-series {
-                                                align-items: center;
-                                            }
-
-                                            .apexcharts-legend-text {
-                                                position: relative;
-                                                font-size: 14px;
-                                            }
-
-                                            .apexcharts-legend-text *,
-                                            .apexcharts-legend-marker * {
-                                                pointer-events: none;
-                                            }
-
-                                            .apexcharts-legend-marker {
-                                                position: relative;
-                                                display: flex;
-                                                align-items: center;
-                                                justify-content: center;
-                                                cursor: pointer;
-                                                margin-right: 3px;
-                                            }
-
-                                            .apexcharts-legend-series.apexcharts-no-click {
-                                                cursor: auto;
-                                            }
-
-                                            .apexcharts-legend .apexcharts-hidden-zero-series,
-                                            .apexcharts-legend .apexcharts-hidden-null-series {
-                                                display: none !important;
-                                            }
-
-                                            .apexcharts-inactive-legend {
-                                                opacity: 0.45;
-                                            }
-                                        </style>
-                                    </foreignObject>
-                                    <g id="SvgjsG1295" class="apexcharts-inner apexcharts-graphical"
-                                        transform="translate(12, 0)">
-                                        <defs id="SvgjsDefs1294">
-                                            <clipPath id="gridRectMaskkv4j0h7c">
-                                                <rect id="SvgjsRect1296" width="418" height="194" x="-3" y="-3" rx="0"
-                                                    ry="0" opacity="1" stroke-width="0" stroke="none"
-                                                    stroke-dasharray="0" fill="#fff"></rect>
-                                            </clipPath>
-                                            <clipPath id="forecastMaskkv4j0h7c"></clipPath>
-                                            <clipPath id="nonForecastMaskkv4j0h7c"></clipPath>
-                                            <clipPath id="gridRectMarkerMaskkv4j0h7c">
-                                                <rect id="SvgjsRect1297" width="416" height="192" x="-2" y="-2" rx="0"
-                                                    ry="0" opacity="1" stroke-width="0" stroke="none"
-                                                    stroke-dasharray="0" fill="#fff"></rect>
-                                            </clipPath>
-                                        </defs>
-                                        <g id="SvgjsG1300" class="apexcharts-pie">
-                                            <g id="SvgjsG1301" transform="translate(0, 0) scale(1)">
-                                                <circle id="SvgjsCircle1302" r="55.709756097560984" cx="206" cy="94"
-                                                    fill="transparent"></circle>
-                                                <g id="SvgjsG1303" class="apexcharts-slices">
-                                                    <g id="SvgjsG1304" class="apexcharts-series apexcharts-pie-series"
-                                                        seriesName="Present" rel="1" data:realIndex="0">
-                                                        <path id="SvgjsPath1305"
-                                                            d="M 206 8.292682926829258 A 85.70731707317074 85.70731707317074 0 1 1 155.62250301083535 163.33867605447722 L 173.25462695704297 139.0701394354102 A 55.709756097560984 55.709756097560984 0 1 0 206 38.290243902439016 L 206 8.292682926829258 z "
-                                                            fill="rgba(26,190,23,1)" fill-opacity="1" stroke-opacity="1"
-                                                            stroke-linecap="butt" stroke-width="2" stroke-dasharray="0"
-                                                            class="apexcharts-pie-area apexcharts-donut-slice-0"
-                                                            index="0" j="0" data:angle="216" data:startAngle="0"
-                                                            data:strokeWidth="2" data:value="60"
-                                                            data:pathOrig="M 206 8.292682926829258 A 85.70731707317074 85.70731707317074 0 1 1 155.62250301083535 163.33867605447722 L 173.25462695704297 139.0701394354102 A 55.709756097560984 55.709756097560984 0 1 0 206 38.290243902439016 L 206 8.292682926829258 z "
-                                                            stroke="#ffffff"></path>
-                                                    </g>
-                                                    <g id="SvgjsG1306" class="apexcharts-series apexcharts-pie-series"
-                                                        seriesName="Late" rel="2" data:realIndex="1">
-                                                        <path id="SvgjsPath1307"
-                                                            d="M 155.62250301083535 163.33867605447722 A 85.70731707317074 85.70731707317074 0 0 1 136.66132394552278 144.37749698916465 L 160.92986056458983 126.74537304295703 A 55.709756097560984 55.709756097560984 0 0 0 173.25462695704297 139.0701394354102 L 155.62250301083535 163.33867605447722 z "
-                                                            fill="rgba(17,112,228,1)" fill-opacity="1"
-                                                            stroke-opacity="1" stroke-linecap="butt" stroke-width="2"
-                                                            stroke-dasharray="0"
-                                                            class="apexcharts-pie-area apexcharts-donut-slice-1"
-                                                            index="0" j="1" data:angle="18" data:startAngle="216"
-                                                            data:strokeWidth="2" data:value="5"
-                                                            data:pathOrig="M 155.62250301083535 163.33867605447722 A 85.70731707317074 85.70731707317074 0 0 1 136.66132394552278 144.37749698916465 L 160.92986056458983 126.74537304295703 A 55.709756097560984 55.709756097560984 0 0 0 173.25462695704297 139.0701394354102 L 155.62250301083535 163.33867605447722 z "
-                                                            stroke="#ffffff"></path>
-                                                    </g>
-                                                    <g id="SvgjsG1308" class="apexcharts-series apexcharts-pie-series"
-                                                        seriesName="HalfxDay" rel="3" data:realIndex="2">
-                                                        <path id="SvgjsPath1309"
-                                                            d="M 136.66132394552278 144.37749698916465 A 85.70731707317074 85.70731707317074 0 0 1 124.4874976033861 67.51498248210814 L 153.01687344220096 76.78473861337028 A 55.709756097560984 55.709756097560984 0 0 0 160.92986056458983 126.74537304295703 L 136.66132394552278 144.37749698916465 z "
-                                                            fill="rgba(233,237,244,1)" fill-opacity="1"
-                                                            stroke-opacity="1" stroke-linecap="butt" stroke-width="2"
-                                                            stroke-dasharray="0"
-                                                            class="apexcharts-pie-area apexcharts-donut-slice-2"
-                                                            index="0" j="2" data:angle="54" data:startAngle="234"
-                                                            data:strokeWidth="2" data:value="15"
-                                                            data:pathOrig="M 136.66132394552278 144.37749698916465 A 85.70731707317074 85.70731707317074 0 0 1 124.4874976033861 67.51498248210814 L 153.01687344220096 76.78473861337028 A 55.709756097560984 55.709756097560984 0 0 0 160.92986056458983 126.74537304295703 L 136.66132394552278 144.37749698916465 z "
-                                                            stroke="#ffffff"></path>
-                                                    </g>
-                                                    <g id="SvgjsG1310" class="apexcharts-series apexcharts-pie-series"
-                                                        seriesName="Absent" rel="4" data:realIndex="3">
-                                                        <path id="SvgjsPath1311"
-                                                            d="M 124.4874976033861 67.51498248210814 A 85.70731707317074 85.70731707317074 0 0 1 205.98504125131615 8.292684232226335 L 205.9902768133555 38.29024475094712 A 55.709756097560984 55.709756097560984 0 0 0 153.01687344220096 76.78473861337028 L 124.4874976033861 67.51498248210814 z "
-                                                            fill="rgba(232,38,70,1)" fill-opacity="1" stroke-opacity="1"
-                                                            stroke-linecap="butt" stroke-width="2" stroke-dasharray="0"
-                                                            class="apexcharts-pie-area apexcharts-donut-slice-3"
-                                                            index="0" j="3" data:angle="72" data:startAngle="288"
-                                                            data:strokeWidth="2" data:value="20"
-                                                            data:pathOrig="M 124.4874976033861 67.51498248210814 A 85.70731707317074 85.70731707317074 0 0 1 205.98504125131615 8.292684232226335 L 205.9902768133555 38.29024475094712 A 55.709756097560984 55.709756097560984 0 0 0 153.01687344220096 76.78473861337028 L 124.4874976033861 67.51498248210814 z "
-                                                            stroke="#ffffff"></path>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </g>
-                                        <line id="SvgjsLine1312" x1="0" y1="0" x2="412" y2="0" stroke="#b6b6b6"
-                                            stroke-dasharray="0" stroke-width="1" stroke-linecap="butt"
-                                            class="apexcharts-ycrosshairs"></line>
-                                        <line id="SvgjsLine1313" x1="0" y1="0" x2="412" y2="0" stroke-dasharray="0"
-                                            stroke-width="0" stroke-linecap="butt"
-                                            class="apexcharts-ycrosshairs-hidden"></line>
-                                    </g>
-                                    <g id="SvgjsG1298" class="apexcharts-datalabels-group"
-                                        transform="translate(0, 0) scale(1)"></g>
-                                    <g id="SvgjsG1299" class="apexcharts-datalabels-group"
-                                        transform="translate(0, 0) scale(1)"></g>
-                                </svg>
-                                <div class="apexcharts-tooltip apexcharts-theme-dark">
-                                    <div class="apexcharts-tooltip-series-group" style="order: 1;"><span
-                                            class="apexcharts-tooltip-marker"
-                                            style="background-color: rgb(26, 190, 23);"></span>
-                                        <div class="apexcharts-tooltip-text"
-                                            style="font-family: Helvetica, Arial, sans-serif; font-size: 12px;">
-                                            <div class="apexcharts-tooltip-y-group"><span
-                                                    class="apexcharts-tooltip-text-y-label"></span><span
-                                                    class="apexcharts-tooltip-text-y-value"></span></div>
-                                            <div class="apexcharts-tooltip-goals-group"><span
-                                                    class="apexcharts-tooltip-text-goals-label"></span><span
-                                                    class="apexcharts-tooltip-text-goals-value"></span></div>
-                                            <div class="apexcharts-tooltip-z-group"><span
-                                                    class="apexcharts-tooltip-text-z-label"></span><span
-                                                    class="apexcharts-tooltip-text-z-value"></span></div>
-                                        </div>
-                                    </div>
-                                    <div class="apexcharts-tooltip-series-group" style="order: 2;"><span
-                                            class="apexcharts-tooltip-marker"
-                                            style="background-color: rgb(17, 112, 228);"></span>
-                                        <div class="apexcharts-tooltip-text"
-                                            style="font-family: Helvetica, Arial, sans-serif; font-size: 12px;">
-                                            <div class="apexcharts-tooltip-y-group"><span
-                                                    class="apexcharts-tooltip-text-y-label"></span><span
-                                                    class="apexcharts-tooltip-text-y-value"></span></div>
-                                            <div class="apexcharts-tooltip-goals-group"><span
-                                                    class="apexcharts-tooltip-text-goals-label"></span><span
-                                                    class="apexcharts-tooltip-text-goals-value"></span></div>
-                                            <div class="apexcharts-tooltip-z-group"><span
-                                                    class="apexcharts-tooltip-text-z-label"></span><span
-                                                    class="apexcharts-tooltip-text-z-value"></span></div>
-                                        </div>
-                                    </div>
-                                    <div class="apexcharts-tooltip-series-group" style="order: 3;"><span
-                                            class="apexcharts-tooltip-marker"
-                                            style="background-color: rgb(233, 237, 244);"></span>
-                                        <div class="apexcharts-tooltip-text"
-                                            style="font-family: Helvetica, Arial, sans-serif; font-size: 12px;">
-                                            <div class="apexcharts-tooltip-y-group"><span
-                                                    class="apexcharts-tooltip-text-y-label"></span><span
-                                                    class="apexcharts-tooltip-text-y-value"></span></div>
-                                            <div class="apexcharts-tooltip-goals-group"><span
-                                                    class="apexcharts-tooltip-text-goals-label"></span><span
-                                                    class="apexcharts-tooltip-text-goals-value"></span></div>
-                                            <div class="apexcharts-tooltip-z-group"><span
-                                                    class="apexcharts-tooltip-text-z-label"></span><span
-                                                    class="apexcharts-tooltip-text-z-value"></span></div>
-                                        </div>
-                                    </div>
-                                    <div class="apexcharts-tooltip-series-group" style="order: 4;"><span
-                                            class="apexcharts-tooltip-marker"
-                                            style="background-color: rgb(232, 38, 70);"></span>
-                                        <div class="apexcharts-tooltip-text"
-                                            style="font-family: Helvetica, Arial, sans-serif; font-size: 12px;">
-                                            <div class="apexcharts-tooltip-y-group"><span
-                                                    class="apexcharts-tooltip-text-y-label"></span><span
-                                                    class="apexcharts-tooltip-text-y-value"></span></div>
-                                            <div class="apexcharts-tooltip-goals-group"><span
-                                                    class="apexcharts-tooltip-text-goals-label"></span><span
-                                                    class="apexcharts-tooltip-text-goals-value"></span></div>
-                                            <div class="apexcharts-tooltip-z-group"><span
-                                                    class="apexcharts-tooltip-text-z-label"></span><span
-                                                    class="apexcharts-tooltip-text-z-value"></span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="text-center my-3">
+                        <canvas id="donutChart" ></canvas>
                     </div>
                     <div class="bg-light-300 rounded border p-3 mb-0">
                         <div class="d-flex align-items-center justify-content-between flex-wrap mb-1">
-                            <h6 class="mb-2">Last 7 Days </h6>
-                            <p class="fs-12 mb-2">14 May 2024 - 21 May 2024</p>
+                            <h6 class="mb-2">Absensi minggu ini</h6>
+                            <p id="week-range" class="fs-12 mb-2"></p>
                         </div>
                         <div class="d-flex align-items-center rounded gap-1 flex-wrap">
-                            <a href="javascript:void(0);" class="badge badge-lg bg-success text-white">M</a>
-                            <a href="javascript:void(0);" class="badge badge-lg bg-success text-white">T</a>
-                            <a href="javascript:void(0);" class="badge badge-lg bg-success text-white">W</a>
-                            <a href="javascript:void(0);" class="badge badge-lg bg-success text-white">T</a>
-                            <a href="javascript:void(0);" class="badge badge-lg bg-danger text-white">F</a>
-                            <a href="javascript:void(0);" class="badge badge-lg bg-white border text-default">S</a>
-                            <a href="javascript:void(0);" class="badge badge-lg  bg-white border text-gray-1">S</a>
+                            <a href="javascript:void(0);" id="monday" class="badge badge-lg border">M</a>
+                            <a href="javascript:void(0);" id="tuesday" class="badge badge-lg border">T</a>
+                            <a href="javascript:void(0);" id="wednesday" class="badge badge-lg border">W</a>
+                            <a href="javascript:void(0);" id="thursday" class="badge badge-lg border">T</a>
+                            <a href="javascript:void(0);" id="friday" class="badge badge-lg border">F</a>
+                            <a href="javascript:void(0);" id="saturday" class="badge badge-lg border">S</a>
+                            <a href="javascript:void(0);" id="sunday" class="badge badge-lg border">S</a>
                         </div>
                     </div>
                 </div>
@@ -491,58 +363,383 @@
         </div>
     </div>
 
+   <div class="row">
+        <!-- Class Faculties -->
+        <div class="col-xl-12">
+            <div class="card flex-fill">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h4 class="card-title"><span class="ti ti-users"></span> Guru Pengajar Kelas </h4>
 
-    <div class="col-xl-12 d-flex">
-        <div class="row flex-fill">
-            <div class="col-sm-6 col-xl-3 d-flex">
-                <a href="student-fees.html"
-                    class="card border-0 border-bottom border-primary flex-fill animate-card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <span class="avatar avatar-md rounded bg-primary me-2"><i
-                                    class="ti ti-report-money fs-16"></i></span>
-                            <h6>Pay Fees</h6>
-                        </div>
                     </div>
-                </a>
-            </div>
-            <div class="col-sm-6 col-xl-3 d-flex">
-                <a href="student-result.html" class="card border-0 border-bottom border-success flex-fill animate-card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <span class="avatar avatar-md rounded bg-success me-2"><i
-                                    class="ti ti-hexagonal-prism-plus fs-16"></i></span>
-                            <h6>Exam Result</h6>
+                <div class="card-body">
+                    <div class=" owl-carousel owl-loaded owl-drag">
+                        <div class="owl-stage-outer">
+                            <div class="owl-stage"
+                              >
+                              @php
+                              $shownTeachers = []; // Array to keep track of teachers that have been shown
+                              $foundTeachers = false; // Flag to check if any teacher is found
+                          @endphp
+
+                          @if($jadwal->isEmpty())
+                              <p>No data found.</p>
+                          @else
+                              @foreach ($jadwal as $a)
+                                  @if($a->jadwalStudent->isEmpty())
+                                      <p>No data found.</p>
+                                  @else
+                                      @foreach ($a->jadwalStudent as $guru)
+                                          @if($guru->guru && !in_array($guru->guru->id, $shownTeachers))
+                                              @php
+                                                  $foundTeachers = true; // Mark that a teacher is found
+                                              @endphp
+                                              <div class="owl-item cloned" style="width:300px; margin-right: 15px;">
+                                                  <div class="card bg-light-100 mb-0">
+                                                      <div class="card-body">
+                                                          <div class="d-flex align-items-center mb-3">
+                                                              <a class="avatar avatar-lg rounded me-2">
+                                                                  @if(optional($guru->guru)->gambar)
+                                                                      <img src="/storage/{{ $guru->guru->gambar }}" alt="Img" >
+                                                                  @else
+                                                                      <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" >
+                                                                  @endif
+                                                              </a>
+                                                              <div>
+                                                                  <h6 class="mb-1 text-truncate">
+                                                                      <a >{{ $guru->guru->nama }}</a>
+                                                                  </h6>
+                                                                  <p>{{  $guru->mata_pelajaran->nama ?? ''}}</p>
+                                                              </div>
+                                                          </div>
+                                                          <div class="row gx-2">
+                                                              <div class="col-6">
+                                                                  <a href="mailto:{{ $guru->guru->Usergtk->email ?? '-' }}" target="_blank"
+                                                                      class="btn btn-outline-light bg-white d-flex align-items-center justify-content-center fw-semibold fs-12"><i
+                                                                          class="ti ti-mail me-2"></i>Email</a>
+                                                              </div>
+                                                              <div class="col-6">
+                                                                  <a href="https://wa.me/{{ $guru->guru->telp }}" target="_blank"
+                                                                      class="btn btn-outline-light bg-white d-flex align-items-center justify-content-center fw-semibold fs-12"><i
+                                                                          class="ti ti-brand-whatsapp me-2"></i>WhatsApp</a>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+
+                                              @php
+                                                  // Add the teacher's ID to the shownTeachers array
+                                                  $shownTeachers[] = $guru->guru->id;
+                                              @endphp
+                                          @endif
+                                      @endforeach
+                                  @endif
+                              @endforeach
+
+                              @if(!$foundTeachers)
+                                  <p>No teachers available.</p>
+                              @endif
+                          @endif
+
+                            </div>
                         </div>
+                        <div class="owl-dots disabled"></div>
                     </div>
-                </a>
-            </div>
-            <div class="col-sm-6 col-xl-3 d-flex">
-                <a href="student-time-table.html"
-                    class="card border-0 border-bottom border-warning flex-fill animate-card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <span class="avatar avatar-md rounded bg-warning me-2"><i
-                                    class="ti ti-calendar fs-16"></i></span>
-                            <h6>Calendar</h6>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-6 col-xl-3 d-flex">
-                <a href="student-leaves.html"
-                    class="card border-0 border-bottom border-dark flex-fill animate-card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <span class="avatar avatar-md rounded bg-dark me-2"><i
-                                    class="ti ti-calendar-share fs-16"></i></span>
-                            <h6>Attendance</h6>
-                        </div>
-                    </div>
-                </a>
+                </div>
             </div>
         </div>
+        <!-- /Class Faculties -->
+
     </div>
 
 </div>
+
+
+<div class="modal fade" id="modalDetail-{{ auth()->user()->student->id_rfid }}" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDetailLabel"><span class="ti ti-list-details"></span> Detail Presensi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body m-0 p-0" style="max-height: 200px; overflow-y: auto;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Masuk Jam</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if($hadir->count())
+                        @foreach ($hadir as $a)
+                            <tr  class="table-row">
+                                <td>{{ $a->tanggal }}</td>
+                                <td>{{ $a->entry }}</td>
+                                <td>
+                                    @php
+                                    $entryTime = \Carbon\Carbon::parse($a->entry); // Convert the entry time to Carbon instance
+                                    $estimasiWaktu = (int) app('settings')['estimasi_waktu_masuk']; // Ensure estimasi_waktu_masuk is an integer
+                                    $thresholdTime = \Carbon\Carbon::parse($jamMasuk); // The base threshold time (7:00 AM)
+                                    $twentyMinutesThreshold = $thresholdTime->copy()->addMinutes(20); // 7:20 AM, copied to avoid modification of the original threshold time
+                                    $estimasiThreshold = $thresholdTime->copy()->addMinutes($estimasiWaktu); // Entry time threshold considering estimated time
+                                @endphp
+
+                                @if($entryTime->lte($thresholdTime))
+                                    <span class="badge badge-warning"><span class="ti ti-info-circle"></span> Tepat Waktu</span>
+                                @elseif($entryTime->lte($twentyMinutesThreshold)) <!-- Entry time before or at 7:20 AM -->
+                                    <span class="badge badge-success"><span class="ti ti-info-circle"></span> Tepat Waktu</span>
+                                @elseif ($entryTime->lte($estimasiThreshold))  <!-- Entry time between 7:20 AM and the estimated time -->
+                                    <span class="badge badge-warning"><span class="ti ti-info-circle"></span> Setengah Hari</span>
+                                @else  <!-- Entry time after the estimated time -->
+                                    <span class="badge badge-danger"><span class="ti ti-info-circle"></span> Terlambat</span>
+                                @endif
+
+
+                                </td>
+                            </tr>
+                        @endforeach
+                        @else
+                        <tr>
+                            <td rowspan="3"> Anda belum melakukan Absensi</td>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal">Oke</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section('javascript')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var owl = $(".owl-carousel");
+
+        owl.owlCarousel({
+            loop: true,                // Loops the slides
+            margin: 15,                // Adjusts margin between items
+            nav: true,                 // Adds next/previous buttons
+            items: 3,                  // Number of items to show at once
+            autoplay: false,            // Enables autoplay
+            autoplayTimeout: 3000,     // Time between slides (in ms)
+            smartSpeed: 1000,          // Speed of the transition (in ms)
+            responsive: {
+                0: {
+                    items: 1          // 1 item at screen width 0px and up
+                },
+                600: {
+                    items: 2          // 2 items at screen width 600px and up
+                },
+                1000: {
+                    items: 3          // 3 items at screen width 1000px and up
+                }
+            }
+        });
+
+        // Reset to the first slide after the carousel finishes.
+        owl.on('changed.owl.carousel', function(event) {
+            if (event.item.index === event.item.count - 1) {
+                // Reset to first item after reaching the last one
+                owl.trigger('to.owl.carousel', [0, 1000]);
+            }
+        });
+    });
+</script>
+<script>
+     var body = document.body;
+     body.classList.add("mini-sidebar");
+</script>
+<script>
+    function getCurrentWeekRange() {
+    const currentDate = new Date(); // Get today's date
+
+    // Get the current day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+    const currentDay = currentDate.getDay();
+
+    // Calculate the difference to the previous Monday (start of the week)
+    const diffToMonday = currentDay === 0 ? 6 : currentDay - 1;
+    const startOfWeek = new Date(currentDate);  // Start with today's date
+    startOfWeek.setDate(currentDate.getDate() - diffToMonday);  // Set it to the previous Monday
+
+    // Calculate the end of the week (next Sunday)
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);  // Add 6 days to the start of the week to get Sunday
+
+    // Format the dates in 'dd MMM yyyy' format (e.g., "01 Jan 2025")
+    const formatDate = (date) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = date.toLocaleString('default', { month: 'short' });
+        const year = date.getFullYear();
+        return `${day} ${month} ${year}`;
+    };
+
+    // Get the formatted dates for the start and end of the week
+    const startFormatted = formatDate(startOfWeek);
+    const endFormatted = formatDate(endOfWeek);
+
+    // Display the week range in the <p> element
+    document.getElementById('week-range').textContent = `${startFormatted} - ${endFormatted}`;
+}
+
+// Call the function to display the current week's range
+getCurrentWeekRange();
+</script>
+<script>
+    const absenceData = @json($absenceData);
+
+    // Function to apply the correct badge color based on absence count
+    function updateBadgeColors() {
+        // Get today's date
+        const today = new Date();
+
+        // Loop over each day and apply the appropriate color based on absence data
+        Object.keys(absenceData).forEach(day => {
+            const badge = document.getElementById(day); // Get badge element by ID
+
+            // Convert the day to a JavaScript Date object for comparison
+            const date = new Date(today);  // Clone today's date
+            date.setDate(today.getDate() - (today.getDay() - getDayIndex(day))); // Set to the target day of the week (e.g., Monday)
+
+            // If the absence data for the day is greater than 0, mark as active (bg-success)
+            if (absenceData[day] > 0) {
+                badge.classList.add('bg-success', 'text-white');
+                badge.classList.remove('bg-danger', 'bg-white', 'text-default', 'text-gray-1');
+            } else if (absenceData[day] === 0) {
+                // If no attendance record for the day, mark as inactive (bg-white)
+                badge.classList.remove('bg-success', 'bg-danger', 'text-white');
+                badge.classList.add('bg-white', 'text-default');
+            }
+
+            // Add bg-danger if the date is before today
+
+        });
+    }
+
+    // Helper function to get index of the day (e.g., "monday" => 1, "sunday" => 7)
+    function getDayIndex(day) {
+        const dayNames = {
+            "monday": 1,
+            "tuesday": 2,
+            "wednesday": 3,
+            "thursday": 4,
+            "friday": 5,
+            "saturday": 6,
+            "sunday": 7
+        };
+        return dayNames[day.toLowerCase()];
+    }
+
+    // Call the function to update badge colors based on absence data
+    updateBadgeColors();
+</script>
+
+<script>
+    const ctx = document.getElementById('donutChart').getContext('2d');
+    const data = {
+        labels: ['Tepat Waktu', 'Terlambat', 'Absent'],
+        datasets: [{
+            data: [{{ $present }}, {{ $late }}, {{ $halfDay }}],
+            backgroundColor: ['rgb(17, 112, 228)', 'rgb(232, 38, 70)', 'rgb(26, 190, 23)'],
+            hoverOffset: 4
+        }]
+    };
+
+    const config = {
+        type: 'doughnut',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    enabled: true
+                }
+            },
+            cutout: '50%', // Adjusts the donut hole size
+        },
+    };
+
+    new Chart(ctx, config);
+</script>
+
+<script>
+    // Function to format the time
+function formatTime(hours, minutes, seconds) {
+    return (hours < 10 ? '0' : '') + hours + ':' +
+           (minutes < 10 ? '0' : '') + minutes + ':' +
+           (seconds < 10 ? '0' : '') + seconds;
+}
+
+// Function to update the clock
+function updateClock() {
+    var now = new Date();  // Get the current date and time
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var seconds = now.getSeconds();
+
+    // Format the time
+    var timeString = formatTime(hours, minutes, seconds);
+
+    // Set the time in the HTML element with ID 'clock'
+    document.getElementById('clock').innerText = timeString;
+}
+
+// Update the clock every 1000 milliseconds (1 second)
+setInterval(updateClock, 1000);
+
+// Initial call to display the time as soon as the page loads
+updateClock();
+
+function generateWeekCalendar() {
+const today = new Date();
+const currentDay = today.getDate(); // Get the current day of the month
+const startOfWeek = today.getDate() - today.getDay(); // Sunday is the first day of the week
+const weekDays = [];
+
+for (let i = 0; i < 7; i++) {
+    const day = new Date(today.getFullYear(), today.getMonth(), startOfWeek + i);
+    weekDays.push(day);
+}
+
+const calendarContainer = document.getElementById('weekly-calendar');
+calendarContainer.innerHTML = ''; // Clear previous calendar if any
+
+weekDays.forEach(day => {
+    const dayElement = document.createElement('div');
+    dayElement.classList.add('calendar-day'); // Add a class for each day
+
+    // Mark today as active
+    if (
+        day.getFullYear() === today.getFullYear() &&
+        day.getMonth() === today.getMonth() &&
+        day.getDate() === today.getDate()
+    ) {
+        dayElement.classList.add('active-day'); // Add active class for today
+    }
+
+    const dayName = day.toLocaleString('id-ID', { weekday: 'long' }); // Get the day name in Indonesian
+    const dayDate = day.getDate();
+
+    dayElement.innerHTML = `
+        <div class="day-name">${dayName}</div>
+        <div class="day-date">${dayDate}</div>
+    `;
+
+    calendarContainer.appendChild(dayElement);
+});
+}
+
+generateWeekCalendar();
+
+</script>
+
+@endsection
 @endsection

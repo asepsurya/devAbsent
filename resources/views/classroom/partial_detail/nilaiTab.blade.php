@@ -14,13 +14,13 @@
             <thead>
                 <tr>
                     <th class="border">Name</th>
-                    @foreach ($task as $item)
+                    @foreach ($task->where('type', '!=', 'pengumuman') as $item)
                         <th class="border">{{ \Str::limit($item->judul, 20) }}</th>
                     @endforeach
                     <th class="border">Total Score</th>
                 </tr>
             </thead>
-        
+
             <tbody>
                 @if ($peserta->count())
                     @foreach ($peserta as $item)
@@ -37,21 +37,21 @@
                                 </div>
                             </td>
                             <!-- Loop through tasks and show score for each -->
-                            @foreach ($task as $taskItem)
+                            @foreach ($task->where('type', '!=', 'pengumuman') as $taskItem)
                                 @php
                                     $score = $item->getScore->where('task_id', $taskItem->id)->first();
                                 @endphp
                                 <td class="border">{{ $score ? $score->nilai : '0' }}</td>
                             @endforeach
-        
+
                             <!-- Calculate the total score for the student -->
                             <td class="border">
                                 @php
-                                  
+
                                     $totalScore = $item->getScore->avg('nilai');
                                 @endphp
                                 <div class="badge badge-soft-success d-inline-flex align-items-center">{{ $totalScore ?? '0' }}</div>
-                                
+
                             </td>
                         </tr>
                     @endforeach
@@ -64,7 +64,7 @@
                 @endif
             </tbody>
         </table>
-        
+
     </div>
     {{-- <div class="card p-5">
         <div class="d-flex justify-content-center">

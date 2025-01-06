@@ -125,7 +125,7 @@
 
 <!-- FullCalendar 5.x JS -->
 <script>
-   document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var loadingEl = document.getElementById('loading');
     var noEventsEl = document.getElementById('no-events-message');  // A new div to show when there are no events

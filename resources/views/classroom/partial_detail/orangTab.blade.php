@@ -14,10 +14,18 @@
         <h4 class="mb-3">Guru Pengajar :</h4>
         <div class="bg-light-400 rounded-2 p-3 mb-3 border">
             <div class="d-flex align-items-center">
-                <a class="avatar avatar-lg flex-shrink-0"><img src="http://127.0.0.1:8000/asset/img/user-default.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                <a class="avatar avatar-lg flex-shrink-0">
+
+                        @if(optional($item->gtk)->gambar)
+                            <img src="/storage/{{ $item->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                        @else
+                            <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
+                        @endif
+                </a>
+                    {{-- <img src="http://127.0.0.1:8000/asset/img/user-default.jpg" class="img-fluid rounded-circle" alt="img"></a> --}}
                 <div class="ms-2">
-                    <h6 class="text-dark text-truncate mb-0"><a>Administrator</a></h6>
-                    <p>superAdmin.sakti@gmail.com</p>
+                    <h6 class="text-dark text-truncate mb-0"><a>{{ $item->user->nama }}</a></h6>
+                    <p>{{ $item->user->email }}</p>
                 </div>
             </div>
         </div>
@@ -53,7 +61,7 @@
 
                                 </td>
                                 @can('action')
-                                
+
                                 <td>
                                   <a href="#" class="btn btn-white btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -67,7 +75,7 @@
 
                                     </ul>
                                 </td>
-                                    
+
                                 @endcan
                             </tr>
 

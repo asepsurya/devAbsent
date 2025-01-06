@@ -198,13 +198,14 @@
             <form id="studentForm" action="{{ route('imageProfile') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="text" value="{{ auth()->user()->nomor }}" name="id" hidden >
-                @if(auth()->user()->role == "walikelas" || auth()->user()->role == "guru" )
-                <input type="text" name="oldImage" value="{{ $item->gambar }}" hidden>
+
+                @if(auth()->user()->gtk)
+                    <input type="text" name="oldImage" value="{{ $item->gambar }}" hidden>
                 @else
-                <input type="text" name="oldImage" value="{{ $item->foto }}" hidden >
+                    <input type="text" name="oldImage" value="{{ $item->foto }}" hidden >
                 @endif
 
-                @if(auth()->user()->role == "walikelas" || auth()->user()->role == "guru" )
+                @if(auth()->user()->gtk)
                     <input type="hidden" name="gambar" class="form-control"  id="croppedFoto" required>
                 @else
                     <input type="hidden" name="foto" class="form-control"  id="croppedFoto" required>

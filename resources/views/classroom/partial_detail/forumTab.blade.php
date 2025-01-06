@@ -10,60 +10,54 @@
 
     <div class="row">
         <div class="col-lg-3">
-            <div class="card">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <strong>Kode Kelas</strong>
-                    <h3 class="text-white"></h3>
-                    
-                </div>
-                <div class="card-body">
-                   <h1 class="text-primary">{{ $id }}</h1>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <strong>Tugas yang harus segera diselesaikan</strong>
-                    <span class="bg-success-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
-                        <i class="ti ti-alert-triangle fs-16"></i>     
-                    </span>
-                </div>
-                <div class="card-body">
-                    @php
-                    use Carbon\Carbon;
+            <div  style="position: sticky; top: 120px; z-index: 10;">
 
-                    // Mendapatkan tanggal hari ini dan 3 hari mendatang
-                    $today = Carbon::now()->startOfDay();
-                    $threeDaysAhead = Carbon::now()->addDays(3)->endOfDay();
+                <div class="card">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <strong>Kode Kelas</strong>
+                        <h3 class="text-white"></h3>
 
-                    // Filter tugas yang due_date-nya antara hari ini dan 3 hari mendatang
-                    $upcomingTasks = $task->filter(function ($t) use ($today, $threeDaysAhead) {
-                        $dueDate = Carbon::parse($t->due_date);
-                        return $dueDate && $dueDate->between($today, $threeDaysAhead);
-                    });
-                @endphp
+                    </div>
+                    <div class="card-body">
+                    <h1 class="text-primary">{{ $id }}</h1>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <strong>Tugas yang harus segera diselesaikan</strong>
+                        <span class="bg-success-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
+                            <i class="ti ti-alert-triangle fs-16"></i>
+                        </span>
+                    </div>
+                    <div class="card-body">
 
-                @if($upcomingTasks->count())
-                    @foreach ($upcomingTasks->sortBy('due_date')->where('type','task') as $i)
-                        <div class="notice-widget">
-                            <div class="d-flex align-items-center justify-content-between  ">
-                                <div class="d-flex align-items-center overflow-hidden me-2 mb-3">
-                                    <span class="bg-warning-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
-                                        <i class="ti ti-alert-triangle fs-16"></i>
-                                    </span>
-                                    <div class="overflow-hidden">
-                                        <h6 class="text-truncate mb-1">{{ $i->judul ?? 'No Title' }}</h6>
-                                        <p><i class="ti ti-calendar me-2"></i>  Due Date: {{ $i->due_date }}</p>
+                    @if($duedate->count())
+                        @foreach ($duedate as $i)
+                            <div class="notice-widget">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center overflow-hidden me-2 mb-3">
+                                        <span class="bg-warning-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
+                                            <i class="ti ti-alert-triangle fs-16"></i>
+                                        </span>
+                                        <div class="overflow-hidden">
+                                            <h6 class="text-truncate mb-1">{{ $i->judul ?? 'No Title' }}</h6>
+                                            <p><i class="ti ti-calendar me-2"></i> Due Date: {{ $i->due_date }}</p>
+                                        </div>
                                     </div>
+                                    <a href="{{ route('classroom.detailTugas',[$i->id,$id]) }}">
+                                        <i class="ti ti-chevron-right fs-16"></i>
+                                    </a>
                                 </div>
-                                <a href="{{ route('classroom.detailTugas',[$i->id,$id]) }}"><i class="ti ti-chevron-right fs-16"></i></a>
                             </div>
-                        </div>
-                    @endforeach
-                @else
-                    <p>No upcoming tasks.</p>
-                @endif
+                        @endforeach
+                    @else
+                        <p class="m-5">No upcoming tasks.</p>
+                    @endif
 
+
+                    </div>
                 </div>
+
             </div>
         </div>
 
@@ -73,7 +67,7 @@
                 <div class="accordion-item mb-3">
                     <h2 class="accordion-header" id="headingTwo">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                           <h4><span class="ti ti-pinned"></span> Tulis Pengumuman</h4> 
+                           <h4><span class="ti ti-pinned"></span> Tulis Pengumuman</h4>
                         </button>
                     </h="h2">
                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
@@ -96,7 +90,7 @@
                 </div>
             </div>
             @endif
-          
+
             @if($task->count())
                 @foreach ($task as $item)
                     <div class="card board-hover mb-3">
@@ -120,7 +114,14 @@
                                 <div class="mx-3">
                                     <h6 class="mb-1 fw-semibold">
                                         <div class="d-flex align-items-center">
-                                            <a class="avatar avatar-lg flex-shrink-0"><img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="img"></a>
+                                            <a class="avatar avatar-lg flex-shrink-0">
+                                            @if(optional($item->user->gtk)->gambar)
+                                                <img src="/storage/{{ $item->user->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                                            @else
+                                                <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
+                                            @endif
+                                            </a>
+
                                             <div class="ms-2">
                                                 <h6 class="text-dark text-truncate mb-0"><a>{{ $item->user->nama }}</a></h6>
                                                 <small class="text-muted">{{ $item->created_at->diffForHumans() }}</small>
@@ -143,11 +144,12 @@
                                             @endif
                                         </p>
                                         @else
-                                        <div class="mt-2 ">
+
+                                        <div class="mt-2 detail {{ $item->type == "pengumuman" ? 'alert alert-primary ' : ''}}" >
                                              {!! $item->description !!}
                                         </div>
-                                       
-                                           
+
+
                                         @endif
                                     </div>
                                     @if ($item->type == 'quiz')

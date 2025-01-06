@@ -117,9 +117,20 @@
                 <p class="text-dark">{{ $item->description }}</p>
                 <div class="bg-light-400 rounded-2 p-3 mb-3 border">
                     <div class="d-flex align-items-center">
-                        <a  class="avatar avatar-lg flex-shrink-0"><img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="img"></a>
+                        <a  class="avatar avatar-lg flex-shrink-0">
+
+                        @if(optional($item->user->gtk)->gambar)
+                            <img src="/storage/{{ $item->user->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                        @else
+                            <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
+                        @endif
+
+                        </a>
+                            {{-- <img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="img"></a> --}}
                         <div class="ms-2">
-                            <h6 class="text-dark text-truncate mb-0"><a>{{ $item->user->nama }}</a></h6>
+                            <h6 class="text-dark text-truncate mb-0"><a>
+                                {{ $item->user->nama }}
+                                </a></h6>
                             <p>{{ $item->user->email }}</p>
                         </div>
                     </div>
@@ -179,7 +190,11 @@
                                     <div class="bg-light-400 rounded-2 p-3 mb-3 border">
                                         <div class="d-flex align-items-center">
                                             <a  class="avatar avatar-lg flex-shrink-0">
-                                                <img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="img">
+                                                @if(optional(auth()->user()->gtk)->gambar)
+                                                    <img src="/storage/{{ auth()->user()->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                                                @else
+                                                    <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
+                                                @endif
                                             </a>
                                             <div class="ms-2">
                                                 <h6 class="text-dark text-truncate mb-0"><a >{{ $item->user->nama }}</a></h6>
@@ -248,7 +263,11 @@
                                     <div class="bg-light-400 rounded-2 p-3 mb-3 border">
                                         <div class="d-flex align-items-center">
                                             <a  class="avatar avatar-lg flex-shrink-0">
-                                                <img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="img">
+                                                @if(optional(auth()->user()->gtk)->gambar)
+                                                <img src="/storage/{{ auth()->user()->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                                            @else
+                                                <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
+                                            @endif
                                             </a>
                                             <div class="ms-2">
                                                 <h6 class="text-dark text-truncate mb-0"><a >{{ auth()->user()->nama }}</a></h6>

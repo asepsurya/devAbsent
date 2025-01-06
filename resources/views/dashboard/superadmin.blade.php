@@ -8,6 +8,138 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+   <style>
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            /* background-color: #fff; */
+
+            border-radius: 10px;
+
+            width: 100%; /* Make calendar full-width */
+            box-sizing: border-box; /* Include padding and borders in the width */
+        }
+
+        .calendar-day {
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background-color: #cce7ff;
+        }
+
+        .active-day {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            /* border: 2px solid #0056b3; */
+        }
+        html .darkmode .calendar-day, html[data-theme=dark] .calendar-day {
+            background-color: #1b1632;
+
+        }
+
+        html .darkmode .active-day, html[data-theme=dark] .active-day {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .calendar {
+                grid-template-columns: repeat(3, 1fr); /* Show 3 days per row on smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar {
+                grid-template-columns: repeat(2, 1fr); /* Show 2 days per row on very small screens */
+            }
+        }
+        #custom-slider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+
+            border-radius: 10px;
+            /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+        }
+
+        .icon-container .line {
+            width: 3px;
+            height: 50px;
+            background-color: #fff; /* Warna garis putih */
+            border-radius: 10px;
+        }
+
+        .text-container h4 {
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .text-container p {
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .image-container img {
+            max-height: 50px; /* Sesuaikan ukuran logo */
+        }
+
+        .slider-container {
+            position: relative;
+            height: 80px; /* Sesuaikan tinggi kontainer */
+            overflow: hidden;
+        }
+
+
+
+        .slider-item:nth-child(2) {
+            animation-delay: 5s; /* Memberi jeda untuk slide kedua */
+        }
+        .slider-item {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 100%; /* Mulai di luar tampilan */
+            animation: slideUp 10s infinite;
+            cursor: grab; /* Indicate draggable behavior */
+            transition: top 0.3s ease; /* Smooth transition when dragging */
+            }
+
+            @keyframes slideUp {
+            0% {
+                top: 100%; /* Mulai di bawah */
+            }
+            10% {
+                top: 0%; /* Naik ke posisi tampilan */
+            }
+            40% {
+                top: 0%; /* Tetap selama beberapa waktu */
+            }
+            45% {
+                top: 0%; /* Tetap selama beberapa waktu */
+            }
+            48% {
+                top: 0%; /* Tetap selama beberapa waktu */
+            }
+            50% {
+                top: -100%; /* Naik keluar tampilan */
+            }
+            100% {
+                top: -100%; /* Tetap di luar tampilan */
+            }
+            }
+
+
+
+   </style>
 @endsection
 <div class="row">
     <div class="col-md-12">
@@ -48,18 +180,48 @@
 <div class="row">
     <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
         <div class="my-auto mb-2">
-            <h3 class="page-title mb-1">Beranda</h3>
-            {{-- <nav>
+            {{-- <h3 class="page-title mb-1">Beranda</h3> --}}
+            <nav>
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item">
                         <a href="index.html">Beranda</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Beranda</li>
                 </ol>
-            </nav> --}}
+            </nav>
         </div>
     </div>
     {{-- Card --}}
+    <div class="slider-container rounded mb-3" style="background-color: #0b5d1e; position: relative;">
+        <!-- Slider items -->
+
+        <div id="custom-slider" class="d-flex align-items-center slider-item">
+            <div class="icon-container me-3">
+                <div class="line"></div>
+            </div>
+            <div>
+                <h4 class="text-white mb-1">Selamat Tahun Baru 2025!</h4>
+                <p class="text-light mb-0">Selalu bahagia & semua impian tercapai!</p>
+            </div>
+            <div class="image-container ms-auto">
+                <img src="{{ asset('asset/img/logo-white.png') }}" alt="2025 Logo" style="height: 50px;">
+            </div>
+        </div>
+        <div id="custom-slider" class="d-flex align-items-center slider-item">
+            <div class="icon-container me-3">
+                <div class="line"></div>
+            </div>
+            <div>
+                <h4 class="text-white mb-1">Semoga Tahun Baru membawa kebahagiaan!</h4>
+                <p class="text-light mb-0">Ayo wujudkan impianmu tahun ini!</p>
+            </div>
+            <div class="image-container ms-auto">
+                <img src="{{ asset('asset/img/logo-white.png') }}" alt="2025 Logo" style="height: 50px;">
+            </div>
+        </div>
+
+    </div>
+
     <div class="col-xxl-4 col-sm-4 d-flex">
         <div class="card flex-fill animate-card border-0">
             <div class="card-body">
@@ -196,10 +358,20 @@
         </div>
     </div>
     {{-- End Card --}}
+    <div class="col mb-3">
+        <div class="d-flex justify-content-between">
+            <h4 class="mb-2">Kalender Mingguan</h4>
+            <div>
+                <strong><p id="clock"> </p></strong>
+            </div>
+        </div>
+
+        <div id="weekly-calendar" class="calendar"></div>
+    </div>
 
     <div class="row ">
         {{-- Rombongan Belajar --}}
-        <div class="col-xxl-4 col-xl-6 d-flex">
+        <div class="col-xxl-6 col-xl-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-header  d-flex align-items-center justify-content-between">
                     <h4 class="card-title">Rombongan Belajar</h4>
@@ -234,7 +406,7 @@
         </div>
         {{-- End Rombongan Belajar --}}
         {{-- Riwayat Absen --}}
-        <div class="col-xxl-4 col-xl-6 d-flex">
+        <div class="col-xxl-6 col-xl-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-header  d-flex align-items-center justify-content-between">
                     <h4 class="card-title">Riwayat Absen RFID</h4>
@@ -249,135 +421,11 @@
                 </div>
             </div>
         </div>
-        {{-- End Riwayat Absen --}}
-        <div class="col-xxl-4 col-xxl-4 ">
-            <div class="card flex-fill">
-                <div class="card-header  d-flex align-items-center justify-content-between">
-                    <h4 class="card-title">Papan Pengumuman</h4>
-                    <a href="https://preskool.dreamstechnologies.com/html/template/notice-board.html" class="fw-medium">View All</a>
-                </div>
-                <div class="card-body">
-                    <div class="notice-widget">
-                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <div class="d-flex align-items-center overflow-hidden me-2 mb-2 mb-sm-0">
-                                <span class="bg-primary-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
-                                    <i class="ti ti-books fs-16"></i>
-                                </span>
-                                <div class="overflow-hidden">
-                                    <h6 class="text-truncate mb-1">New Syllabus Instructions</h6>
-                                    <p><i class="ti ti-calendar me-2"></i>Added on : 11 Mar 2024</p>
-                                </div>
-                            </div>
-                            <span class="badge bg-light text-dark"><i class="ti ti-clck me-1"></i>20
-                                Days</span>
-                        </div>
-                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <div class="d-flex align-items-center overflow-hidden me-2 mb-2 mb-sm-0">
-                                <span class="bg-success-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
-                                    <i class="ti ti-note fs-16"></i>
-                                </span>
-                                <div class="overflow-hidden">
-                                    <h6 class="text-truncate mb-1">World Environment Day Program.....!!!
-                                    </h6>
-                                    <p><i class="ti ti-calendar me-2"></i>Added on : 21 Apr 2024</p>
-                                </div>
-                            </div>
-                            <span class="badge bg-light text-dark"><i class="ti ti-clck me-1"></i>15
-                                Days</span>
-                        </div>
-                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <div class="d-flex align-items-center overflow-hidden me-2 mb-2 mb-sm-0">
-                                <span class="bg-danger-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
-                                    <i class="ti ti-bell-check fs-16"></i>
-                                </span>
-                                <div class="overflow-hidden">
-                                    <h6 class="text-truncate mb-1">Exam Preparation Notification!</h6>
-                                    <p><i class="ti ti-calendar me-2"></i>Added on : 13 Mar 2024</p>
-                                </div>
-                            </div>
-                            <span class="badge bg-light text-dark"><i class="ti ti-clck me-1"></i>12
-                                Days</span>
-                        </div>
-                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <div class="d-flex align-items-center overflow-hidden me-2 mb-2 mb-sm-0">
-                                <span class="bg-skyblue-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
-                                    <i class="ti ti-notes fs-16"></i>
-                                </span>
-                                <div class="overflow-hidden">
-                                    <h6 class="text-truncate mb-1">Online Classes Preparation</h6>
-                                    <p><i class="ti ti-calendar me-2"></i>Added on : 24 May 2024</p>
-                                </div>
-                            </div>
-                            <span class="badge bg-light text-dark"><i class="ti ti-clck me-1"></i>02
-                                Days</span>
-                        </div>
-                        <div class="d-sm-flex align-items-center justify-content-between mb-0">
-                            <div class="d-flex align-items-center overflow-hidden me-2 mb-2 mb-sm-0">
-                                <span class="bg-warning-transparent avatar avatar-md me-2 rounded-circle flex-shrink-0">
-                                    <i class="ti ti-package fs-16"></i>
-                                </span>
-                                <div class="overflow-hidden">
-                                    <h6 class="text-truncate mb-1">Exam Time Table Release</h6>
-                                    <p><i class="ti ti-calendar me-2"></i>Added on : 24 May 2024</p>
-                                </div>
-                            </div>
-                            <span class="badge bg-light text-dark"><i class="ti ti-clck me-1"></i>06
-                                Days</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+
     </div>
-    <div class="col ">
-    {{-- Agenda Sekolah --}}
-    <div class="card flex-fill ">
-        <div class="card-header d-flex align-items-center justify-content-between">
-            <h4 class="card-title">Agenda Sekolah</h4>
-            <div><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_event"> + Tambah Event / Kegiatan</button></div>
-        </div>
-        <div class="card-body">
-            <div id='calendar'></div>
-        </div>
-    </div>
-    {{-- End Agenda Sekolah --}}
-    <div class="modal fade" id="add_event" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Add Event</h4>
-                    <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="ti ti-x"></i>
-                    </button>
-                </div>
-                <form action="/addEventModal" method="POST">
-                    @csrf
-                    <div class="modal-body pb-0">
-                        <div class="mb-3">
-                            <label class="form-label">Event Title <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="title" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Start<span class="text-danger">*</span></label>
-                            <div class="cal-icon">
-                                <input class="form-control " type="date" name="start" required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">End<span class="text-danger">*</span></label>
-                            <div class="cal-icon">
-                                <input class="form-control" type="date" name="end" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Add Event</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+
+
 </div>
 </div>
 @section('javascript')
@@ -385,8 +433,79 @@
 <script src="{{ asset('asset/Plugins/countup/jquery.waypoints.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
 {{-- <script src="{{ asset('asset/Plugins/apexchart/apexcharts.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
 <script src="{{ asset('asset/Plugins/apexchart/chart-data.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script> --}}
+<script>
 
+</script>
+<script>
+            // Function to format the time
+        function formatTime(hours, minutes, seconds) {
+            return (hours < 10 ? '0' : '') + hours + ':' +
+                   (minutes < 10 ? '0' : '') + minutes + ':' +
+                   (seconds < 10 ? '0' : '') + seconds;
+        }
 
+        // Function to update the clock
+        function updateClock() {
+            var now = new Date();  // Get the current date and time
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+
+            // Format the time
+            var timeString = formatTime(hours, minutes, seconds);
+
+            // Set the time in the HTML element with ID 'clock'
+            document.getElementById('clock').innerText = timeString;
+        }
+
+        // Update the clock every 1000 milliseconds (1 second)
+        setInterval(updateClock, 1000);
+
+        // Initial call to display the time as soon as the page loads
+        updateClock();
+
+    function generateWeekCalendar() {
+        const today = new Date();
+        const currentDay = today.getDate(); // Get the current day of the month
+        const startOfWeek = today.getDate() - today.getDay(); // Sunday is the first day of the week
+        const weekDays = [];
+
+        for (let i = 0; i < 7; i++) {
+            const day = new Date(today.getFullYear(), today.getMonth(), startOfWeek + i);
+            weekDays.push(day);
+        }
+
+        const calendarContainer = document.getElementById('weekly-calendar');
+        calendarContainer.innerHTML = ''; // Clear previous calendar if any
+
+        weekDays.forEach(day => {
+            const dayElement = document.createElement('div');
+            dayElement.classList.add('calendar-day'); // Add a class for each day
+
+            // Mark today as active
+            if (
+                day.getFullYear() === today.getFullYear() &&
+                day.getMonth() === today.getMonth() &&
+                day.getDate() === today.getDate()
+            ) {
+                dayElement.classList.add('active-day'); // Add active class for today
+            }
+
+            const dayName = day.toLocaleString('id-ID', { weekday: 'long' }); // Get the day name in Indonesian
+            const dayDate = day.getDate();
+
+            dayElement.innerHTML = `
+                <div class="day-name">${dayName}</div>
+                <div class="day-date">${dayDate}</div>
+            `;
+
+            calendarContainer.appendChild(dayElement);
+        });
+    }
+
+    generateWeekCalendar();
+
+</script>
 <script>
     function refreshdata2(){
 

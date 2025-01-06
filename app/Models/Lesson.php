@@ -19,4 +19,7 @@ class Lesson extends Model
     public function ref(){
         return $this->belongsTo('App\Models\ref_jadwal','id_mapel','ref_ID');
     }
+    public function getKelas(){
+        return $this->belongsTo('App\Models\Kelas','id_rombel','id');
+    }
 }

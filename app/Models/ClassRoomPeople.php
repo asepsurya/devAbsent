@@ -18,5 +18,5 @@ class ClassRoomPeople extends Model
     public function getScore(){
         return $this->HasMany('App\Models\StudentScore','student_id','nis');
     }
-    
+
 }

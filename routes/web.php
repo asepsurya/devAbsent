@@ -88,6 +88,7 @@ Route::middleware('auth')->group(function () {
     // Role Permision untuk siswa
     Route::middleware('role:siswa')->group(function () {
         Route::get('/student/dashboard',[DashboardController::class,'Studentindex'])->name('dashboard.student');
+
     });
 
     Route::get('/absent/list/{id_kelas}/{nis}',[kelaslistController::class,'absent_list'])->name('absent_list');
@@ -186,7 +187,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/administrator',[penggunaController::class,'userAdministratorIndex'])->name('userAdministratorIndex');
     Route::post('/user/administratorAdd',[penggunaController::class,'userAdministratorAdd'])->name('userAdministratorAdd');
     Route::get('/user/students',[penggunaController::class,'userStudentsIndex'])->name('userStudentsIndex');
-    Route::get('/user/employees',[penggunaController::class,'useremployeesIndex'])->name('useremployeesIndex');
+    Route::get('/user/teacher',[penggunaController::class,'useremployeesIndex'])->name('useremployeesIndex');
     Route::get('/user/modules',[penggunaController::class,'usermodulesIndex']);
     Route::get('/user/permission/{id}',[penggunaController::class,'usermodulesPermission'])->name('usermodulesPermission');
     Route::post('/user/permission/change',[penggunaController::class,'usermodulesPermissionChange'])->name('usermodulesPermissionChange');

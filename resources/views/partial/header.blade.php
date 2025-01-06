@@ -219,8 +219,13 @@
                             @endif
                         @endif
 
+
                         @if(auth()->user()->role == "admin" || auth()->user()->role == "superadmin" )
+                            @if(Auth::user()->gtk)
+                            <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                            @else
                             <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                            @endif
                         @endif
 
                         </span>
@@ -266,9 +271,13 @@
                                        @endif
                                    @endif
 
-                                   @if(auth()->user()->role == "admin" || auth()->user()->role == "superadmin"  )
-                                       <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
-                                   @endif
+                                   @if(auth()->user()->role == "admin" || auth()->user()->role == "superadmin" )
+                                        @if(Auth::user()->gtk)
+                                        <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                        @else
+                                        <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                        @endif
+                                    @endif
 
                                 </span>
                                 <div>

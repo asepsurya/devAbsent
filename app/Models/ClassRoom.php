@@ -10,6 +10,9 @@ class ClassRoom extends Model
     public function user(){
         return $this->belongsTo('App\Models\user','auth','nomor');
     }
+    public function gtk(){
+        return $this->belongsTo('App\Models\gtk','auth','nik');
+    }
     public function mapel(){
         return $this->belongsTo('App\Models\Mapel','id_mapel','id');
     }

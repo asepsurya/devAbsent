@@ -65,7 +65,7 @@
 </div>
 @foreach ($gtks as $item )
 {{-- modal tambah Hari Libur --}}
-<div class="modal fade" id="add_holiday-{{ $item->id }}" aria-modal="true" role="dialog">
+<div class="modal fade my-modal" id="add_holiday-{{ $item->id }}" aria-modal="true" role="dialog" data-bs-config={backdrop:true}>
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -122,7 +122,7 @@
             </div>
             <form action="{{ route('changeRole') }}" method="POST">
                 @csrf
-    
+
                 <div class="modal-body">
                     <input type="text" name="id" value="{{ $item->id }}" hidden>
                     <div class="row">
@@ -150,6 +150,7 @@
 @endforeach
 
 @section('javascript')
+
 <script src="{{ asset('asset/js/DataTables.js') }}"></script>
 <script>
     $(function() {

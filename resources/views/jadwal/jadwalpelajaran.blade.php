@@ -1,6 +1,11 @@
 @extends('layout.main')
 @section('css')
-
+<style>
+    html .darkmode .nav-tabs li a,
+    html[data-theme=dark] .nav-tabs li a {
+        color: #0f0c1c;
+    }
+</style>
 @endsection
 @section('container')
 {{-- header --}}

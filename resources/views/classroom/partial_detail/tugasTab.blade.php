@@ -10,9 +10,9 @@
                         <span class="ti ti-circle-plus"></span> Buat
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li><a href="{{ route('classroom.tugas',$id) }}" class="dropdown-item" href="#"><span class="ti ti-clipboard-list"></span> Tugas / Pengumuman</a></li>
-                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addMateri"><span class="ti ti-clipboard-text"></span> Tugas Kuis Kelas</a></li>
-                      
+                        <li><a href="{{ route('classroom.tugas',$id) }}" class="dropdown-item" href="#"><span class="ti ti-clipboard-list"></span> Tugas</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addMateri"><span class="ti ti-text-plus"></span> Kuis Kelas</a></li>
+
                     </ul>
                 </div>
                 @endif
@@ -27,7 +27,7 @@
                     <div class="card board-hover mb-3">
                         <div class="card-body d-md-flex align-items-center justify-content-between pb-1">
                             <div class="d-flex align-items-center mb-3">
-                            
+
                                 <span class="bg-soft-primary text-primary avatar avatar-md me-2 br-5 flex-shrink-0">
                                     <i class="ti ti-question-mark fs-16"></i>
                                 </span>
@@ -57,7 +57,7 @@
                         <div class="card-body pb-1">
                             <div class="d-md-flex align-items-center justify-content-between">
                                 <div class="d-flex align-items-center mb-3">
-                                
+
                                     <span class="bg-soft-success text-success avatar avatar-md me-2 br-5 flex-shrink-0">
                                         <i class="ti ti-notification fs-16"></i>
                                     </span>
@@ -125,7 +125,7 @@
                                                     <h5 class="text-nowrap"><a href="javascript:void(0);">{{ Str::limit($media->name, 20, '...') }}</a></h5>
                                                     @endif
                                                 </div>
-                                               
+
                                             </div>
                                             <div class="d-flex align-items-center justify-content-start mt-3">
                                                 <p class="text-primary mb-0 me-2">{{ $media->created_at->diffForHumans() }}</p>
@@ -201,7 +201,7 @@
             <div class="d-flex justify-content-center">
                 <p>Belum membuat tugas apapun</p>
             </div>
-        </div> 
+        </div>
         @endif
     </div>
 </div>

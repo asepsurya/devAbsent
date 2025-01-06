@@ -28,6 +28,9 @@ class gtk extends Model
     public function MapelgtkList(){
         return $this->hasMany('App\Models\grupMapel','id_gtk','nik');
     }
+    public function leasson(){
+        return $this->hasMany('App\Models\Lesson','id_gtk','nik');
+    }
 
     public function absent(){
         return $this->belongsTo('App\Models\absent','id_rfid','id_rfid');

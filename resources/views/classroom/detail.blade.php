@@ -51,7 +51,7 @@
                         <div class="mb-3">
                             <label for="" class="form-label">Nama Quiz</label>
                             <input type="text" class="form-control" name="judul" placeholder="contoh : Quiz Matematika" value="{{ $item->judul }}">
-                        </div>        
+                        </div>
                         <div class="mb-3">
                             <label class="form-label">Durasi Pengerjaan</label>
                             <div class="d-flex justify-content-between">
@@ -393,8 +393,8 @@
     'wordcount', 'fullscreen', 'insertdatetime', 'media', 'table', 'code', 'codesample'
   ],
   toolbar: [
-    'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright | outdent indent | bullist numlist | blockquote | link image media | table | preview code | fullscreen',
-    'formatselect | fontselect fontsizeselect | forecolor backcolor | emoticons charmap'
+    'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright | outdent indent | bullist  | blockquote | link image media  fullscreen',
+
   ],
     setup: function(editor) {
         editor.on('change', function() {
@@ -406,18 +406,12 @@
 
 <script>
     tinymce.init({
-    selector: '.myeditor', // Your textarea class or ID
-    menubar: false,
+    selector: '.myeditorView', // Your textarea class or ID
+     menubar: false,
     statusbar: false,
-
-    plugins: [
-    'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace',
-    'wordcount', 'fullscreen', 'insertdatetime', 'media', 'table', 'code', 'codesample'
-    ],
-    toolbar: [
-        'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright | outdent indent | bullist numlist | blockquote | link image media | table | preview code | fullscreen',
-        'formatselect | fontselect fontsizeselect | forecolor backcolor | emoticons charmap'
-    ],
+    toolbar: false,
+    width:'750px',
+    height:'500px',
     setup: function(editor) {
         editor.on('change', function() {
         tinymce.triggerSave(); // Save the content to the textarea before submitting
@@ -425,5 +419,7 @@
     }
     });
 </script>
+
+
 @endsection
 @endsection

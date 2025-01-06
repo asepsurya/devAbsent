@@ -585,7 +585,7 @@ class ClassRoomDetailController extends Controller
                 'task'=>tasks::where(['id_kelas'=>$id_kelas,'id'=>$task_id])->orderBy('id', 'DESC')->with(['media','links','user'])->get(),
                 'comments'=>$comments,
                 'peserta'=> fileTugas::where('task_id',$task_id)->with('student')->get(),
-                'score'=>StudentScore::where(['task_id'=> $task_id])->get()
+                'score'=>StudentScore::where(['task_id'=> $task_id])->with('StudentScore')->get()
         ],compact('task_id','id_kelas','files'));
     }
 
@@ -596,7 +596,7 @@ class ClassRoomDetailController extends Controller
         // Check if the record exists
         if ($cek) {
             // Get the file path
-            $path = $cek->file_path;   
+            $path = $cek->file_path;
             // Delete the file from storage
             if (Storage::exists($path)) {
                 Storage::delete($path);
@@ -609,41 +609,41 @@ class ClassRoomDetailController extends Controller
         }
 
         return redirect()->back();
-       
+
     }
 
     public function linkdelete(request $request){
         // Get the task_id and link to delete from the request
     $taskId = $request->input('task_id');
     $linkToDelete = $request->input('link');
-    
+
     // Find the task by task_id (corrected typo: fisrt() -> first())
     $task = taskslink::where('task_id', $taskId)->first();
-    
+
     if ($task) {
         // Ensure youtube_link is an array or decoded JSON column
         $links = json_decode($task->youtube_link, true); // Decode JSON into an array (if it's stored as JSON)
-        
+
         if (is_array($links)) {
             // Filter out the link that needs to be deleted
             $updatedLinks = array_filter($links, function ($link) use ($linkToDelete) {
                 return $link !== $linkToDelete;
             });
-            
+
             // Reindex the array to fix keys (optional but good practice)
             $updatedLinks = array_values($updatedLinks);
-            
+
             // Update the youtube_link field with the updated links
             $task->update(['youtube_link' => json_encode($updatedLinks)]); // Re-encode to JSON
-            
+
             // Return a success response
             return response()->json(['success' => true]);
         }
-        
+
         // If the youtube_link is not an array or invalid, return error
         return response()->json(['success' => false, 'message' => 'Invalid links data'], 400);
     }
-    
+
     // If the task was not found, return an error response
     return response()->json(['success' => false, 'message' => 'Task not found'], 404);
     }

@@ -117,9 +117,10 @@
 
                 <li>
                     <ul>
-                        @can('akademik', 'lisensi', 'gtk', 'rfid', 'verifikasi_pengguna')
+                        @if(auth()->user()->canAny(['akademik', 'lisensi', 'gtk', 'rfid', 'verifikasi_pengguna']))
                             <h6 class="submenu-hdr"><span>Master Data</span></h6>
-                        @endcan
+                         @endif
+
 
                         @can('akademik')
                             <li class="submenu">
@@ -297,7 +298,7 @@
                                             <li><a href="/user/administrator" class="{{ Request::is('user/administrator') ? 'active' : ''}}">Administrator</a></li>
                                             <li><a href="/user/students" class="{{ Request::is('user/students') ? 'active' : ''}}">Peserta Didik</a></li>
                                             <li><a href="/user/teacher" class="{{ Request::is('user/teacher') ? 'active' : ''}}">Guru</a></li>
-                                            <li><a href="/user/administration" class="{{ Request::is('user/administration') ? 'active' : ''}}">Administrasi</a></li>
+
                                         </ul>
                                     </li>
                                 </ul>

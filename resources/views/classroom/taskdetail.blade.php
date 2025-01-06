@@ -271,7 +271,14 @@
                                             <div class="mx-3">
                                                 <h6 class="mb-1 fw-semibold">
                                                     <div class="d-flex align-items-center">
-                                                        <a class="avatar avatar-lg flex-shrink-0"><img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="img"></a>
+                                                        <a class="avatar avatar-lg flex-shrink-0">
+                                                            @if(optional($item->user->gtk)->gambar)
+                                                            <img src="/storage/{{ $item->user->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                                                            @else
+                                                                <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
+                                                            @endif
+                                                        </a>
+
                                                         <div class="ms-2">
                                                             <h6 class="text-dark text-truncate mb-0"><a>{{ $item->user->nama }}</a></h6>
                                                             <small class="text-muted">{{ $item->created_at->diffForHumans() }}</small>
@@ -470,10 +477,12 @@
                                                 @foreach ($files as $file)
                                                 <li class="d-flex justify-content-start align-items-center mb-2">
                                                     <!-- Delete Button (on the left) -->
+                                                    @if($file->status != 2)
                                                     <a href="/file-tugas/{{ $file->id }}" class="btn btn-danger btn-sm me-2"
                                                        onclick="return confirm('Are you sure you want to delete this file?')">
                                                        <span class="ti ti-trash-x"></span>
                                                     </a>
+                                                    @endif
 
                                                     <!-- File details (on the right) -->
                                                     <div class="ml-2">
@@ -657,7 +666,7 @@
                             <td colspan="4" class="text-center">Belum ada tugas yang dikumpulkan</td>
                         </tr>
                         @endif
-                    
+
                     </tbody>
                 </table>
              </div>
@@ -718,10 +727,10 @@
                     @php
                         $scoreRecord = $score->where('student_id',$file->student_id)->first()->nilai ?? '';  // Get the 'nilai' of the first record
                     @endphp
-                    
-                    <input type="number" class="form-control" name="score" placeholder="1-100" 
-                    value="{{ $scoreRecord }}" min="1" max="100">       
-                </div>          
+
+                    <input type="number" class="form-control" name="score" placeholder="1-100"
+                    value="{{ $scoreRecord }}" min="1" max="100">
+                </div>
             <button type="submit" class="btn btn-primary w-100" >Selesai</button>
             </div>
         </form>
