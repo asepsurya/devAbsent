@@ -292,6 +292,24 @@
                                     </div>
                                 </div>
                             </div>
+                            <div
+                                class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
+                                <div class="row align-items-center flex-fill">
+                                    <div class="col-xxl-8 col-lg-6">
+                                        <div class="mb-3">
+                                            <h6>Toleransi Waktu</h6>
+                                            <p>Diisi dengan toleransi waktu keterlambatan absensi (menit)</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-4 col-lg-6">
+                                        <div class="mb-3">
+                                            @foreach ($settings->where('key','estimasi_waktu_masuk') as $estimasi_waktu_masuk )
+                                            <input type="number" class="form-control" placeholder="Toleransi waktu absensi" name="estimasi_waktu_masuk" value="{{ $estimasi_waktu_masuk->value }}">
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
