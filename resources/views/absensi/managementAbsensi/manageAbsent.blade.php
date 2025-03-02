@@ -85,7 +85,7 @@
                         </select>
                         {{-- for get --}}
 
-                        <input type="text" name="gtk" value="{{ old('gtk') }}" class="gtk" hidden>
+                        <input type="text" name="gtk" value="{{ old('gtk') }}" class="gtk" hidden >
                         <button class="btn btn-primary mt-3"><span class="ti ti-search"></span> Pilih Mata Pelajaran</button>
                 </form>
             </div>
@@ -370,7 +370,7 @@
                         cache : false,
 
                         success: function(msg){
-                            $('.gtk').val(msg);
+                            $('.gtk').val(msg.c);
                         },
                         error: function(data) {
                             console.log('error:',data)

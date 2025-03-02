@@ -1,6 +1,16 @@
 @extends('layout.main')
 @section('css')
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<style>
 
+    table.dataTable thead th, table.dataTable thead td {
+        border-bottom: 1px solid #e9edf4;
+    }
+    table.dataTable.no-footer {
+         border-bottom: 1px solid #e9edf4;
+    }
+</style>
 @endsection
 @section('container')
 
@@ -76,19 +86,15 @@
     <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
         <h4 class="mb-3">Laporan Absensi RFID</h4>
         <div class="d-flex align-items-center flex-wrap">
-            <div class="input-icon-start mb-3 me-2 position-relative">
-                <span class="icon-addon">
-                    <i class="ti ti-search"></i>
-                </span>
-                <input type="text" class="form-control" placeholder="Cari Siswa.." id="myInput" onkeyup="myFunction()">
-            </div>
+
+
             <a class="btn btn-outline-light bg-white mb-3 mx-1" href="/export/RFIDstudents?month={{ request('month') }}&year={{ request('year')}}&type=cetak"  target="_BLANK"><span class="ti ti-printer"></span> Cetak</a>
             <a href="/export/RFIDstudents?month={{ request('month') }}&year={{ request('year') }}"><button class="btn btn-outline-light bg-white mb-3">Exsport PDF</button></a>
         </div>
     </div>
     <div class="card-body p-0">
 
-        <div class="table-responsive">
+        <div class="table-responsive p-3">
             <table class="table table-bordered table-striped mb-0" id="myTable">
                 <thead>
                     <tr class="text-center">
@@ -212,10 +218,16 @@
 
                         </tr>
                     @endforeach
+
                 </tbody>
             </table>
         </div>
+
     </div>
+    {{-- <div class="p-2">
+        {{ $students->links() }}
+    </div> --}}
+
 </div>
 <div class="accordions-items-seperate mt-2" id="accordionSpacingExample">
     <div class="accordion-item">
@@ -261,7 +273,20 @@
         }
     }
 </script>
-<script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#myTable').DataTable({
+            "paging": true,         // Enable pagination
+            "searching": true,      // Enable searching
+            "ordering": true,       // Enable column ordering
+            "lengthChange": true,   // Allow users to change the number of records per page
+            "info": true,           // Display table information (e.g., "Showing 1 to 10 of 50 entries")
+            "autoWidth": false,     // Disable auto column width calculation
+            "responsive": true      // Enable responsive design for mobile view
+        });
+    });
+</script>
+{{-- <script>
     const selectBox = document.getElementById('yearSelect');
     const currentYear = new Date().getFullYear();
     const startYear = 2000; // Start year
@@ -272,7 +297,7 @@
       option.textContent = year;
       selectBox.appendChild(option);
     }
-  </script>
+  </script> --}}
 <script>
     // Enable popovers for elements with the data-bs-toggle="popover" attribute
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));

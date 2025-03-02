@@ -289,6 +289,7 @@ Route::post('/getdesa',[RegionController::class,'getdesa'])->name('getdesa');
 Route::post('/getsemester',[RegionController::class,'getsemester'])->name('getsemester');
 Route::post('/getwalikelas',[RegionController::class,'getwalikelas'])->name('getwalikelas');
 Route::post('/getgtk',[RegionController::class,'getgtk'])->name('getgtk');
+Route::post('/getmapel',[RegionController::class,'getmapel'])->name('getmapel');
 
 
 Route::get('/fullcalender',[FullCalenderController::class,'index']);
@@ -309,7 +310,7 @@ Route::get('/export/RFIDteachers', [PDFController::class, 'generatePDFRFIDteache
 Route::get('/export/jadwal/{id_kelas}', [PDFController::class, 'generateJadwal'])->name('export.jadwal');
 Route::get('/export/score/{id}', [PDFController::class, 'generateScore'])->name('export.score');
 
-Route::get('/report/absentrfid/student', [reportController::class, 'reportRFIDStudent']);
+Route::get('/report/absentrfid/student', [reportController::class, 'reportRFIDStudent'])->name('reportRFIDStudent');
 Route::get('/report/absentrfid/teacher', [reportController::class, 'reportRFIDTeacher']);
 Route::get('/report/absent/students', [reportController::class, 'reportAbsentStudent']);
 

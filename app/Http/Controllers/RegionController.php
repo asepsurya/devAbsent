@@ -64,7 +64,8 @@ class RegionController extends Controller
         }
         return [
             'a' => $option,
-            'b' => $nama
+            'b' => $nama,
+            'c' => $nik
         ];
     }
 
@@ -74,6 +75,20 @@ class RegionController extends Controller
             return $i->semester ;
         }
 
+    }
+
+    public function getmapel(request $request){
+        $id_kelas = $request->id_kelas;
+
+        $option = "<option value=''> Pilih Mata Pelajaran </option>";
+        $mapels = grupMapel::where('id_kelas',$id_kelas)->with('mata_pelajaran')->get();
+
+        foreach($mapels as $mapel){
+            $namaMapel =  $mapel->mata_pelajaran->nama ?? 'Belum Diatur';
+            $gtk = $mapel->guru->nama ?? 'Belum Diatur';
+            $option.= "<option value='$mapel->id_mapel'  > $namaMapel - $gtk  </option>";
+        }
+        echo $option;
     }
 
 }
