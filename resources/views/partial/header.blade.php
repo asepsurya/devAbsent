@@ -55,7 +55,7 @@
                 </a>
             </div>
             {{-- notification --}}
-            <div class="pe-1 notification-item" id="notification_item">
+            {{-- <div class="pe-1 notification-item" id="notification_item">
                 <a href="#" class="btn btn-outline-light bg-white btn-icon position-relative me-1" id="notification_popup">
                     <i class="ti ti-bell"></i>
                     <span class="notification-status-dot"></span>
@@ -160,15 +160,15 @@
                         <a href="https://preskool.dreamstechnologies.com/html/template/activities.html" class="btn btn-primary w-100">View All</a>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             {{-- message --}}
-            <div class="pe-1">
+            {{-- <div class="pe-1">
 
                 <a href="https://preskool.dreamstechnologies.com/html/template/chat.html" class="btn btn-outline-light bg-white btn-icon position-relative me-1">
                     <i class="ti ti-brand-hipchat"></i>
                     <span class="chat-status-dot"></span>
                 </a>
-            </div>
+            </div> --}}
             <div class="pe-1">
               <a href="" class="btn btn-outline-light bg-white  position-relative "><span class="ti ti-key"></span> Ubah Password</a>
             </div>

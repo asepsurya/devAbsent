@@ -140,13 +140,13 @@ Route::middleware('auth')->group(function () {
     Route::Post('/akademik/datainduk/tahunajarUpdate',[DataIndukController::class,'dataIndukTahunajarUpdate'])->name('dataIndukTahunajarUpdate');
     Route::get('/akademik/datainduk/tahunajarDelete{id}',[DataIndukController::class,'dataIndukTahunajarDelete'])->name('dataIndukTahunajarDelete');
 
-    Route::get('/akademik/pengaturan/mapel',[PengaturanAkademik::class,'pengaturanMapel'])->name('pengaturanMapel');
+    Route::get('/class/leasson/mapel',[PengaturanAkademik::class,'pengaturanMapel'])->name('pengaturanMapel');
     Route::post('/akademik/pengaturan/mapel/import',[PengaturanAkademik::class,'pengaturanMapelImport'])->name('pengaturanMapelImport');
     Route::post('/akademik/pengaturan/mapelAdd',[PengaturanAkademik::class,'pengaturanMapelAdd'])->name('pengaturanMapelAdd');
     Route::post('/akademik/pengaturan/mapelUpdate',[PengaturanAkademik::class,'pengaturanMapelUpdate'])->name('pengaturanMapelUpdate');
     Route::get('/akademik/pengaturan/mapelDelete{id}',[PengaturanAkademik::class,'pengaturanMapelDelete'])->name('pengaturanMapelDelete');
 
-    Route::get('/akademik/pengaturan/subject_teachers',[PengaturanAkademik::class,'subject_teachers'])->name('subject_teachers');
+    Route::get('/class/leasson/subject_teachers',[PengaturanAkademik::class,'subject_teachers'])->name('subject_teachers');
     Route::post('/akademik/pengaturan/subject_teachersUpdate',[PengaturanAkademik::class,'subject_teachersUpdate'])->name('subject_teachersUpdate');
 
     // rombel
@@ -230,6 +230,7 @@ Route::middleware('auth')->group(function () {
 
     // Apps Config Controller
     Route::get('/setelan/aplikasi', [AppsConfigController::class, 'app'])->name('setelan.app');
+    Route::get('/setelan/sistem', [AppsConfigController::class, 'sistem'])->name('setelan.sistem');
     Route::get('/setelan/customize', [AppsConfigController::class, 'customize'])->name('setelan.customize');
     Route::post('/setelan/aplikasi/change', [AppsConfigController::class, 'appChange'])->name('setelan.appChange');
     Route::post('/setelan/schooltime', [AppsConfigController::class, 'schoolTime'])->name('setelan.schoolTime');

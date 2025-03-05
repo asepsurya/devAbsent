@@ -255,15 +255,28 @@ class AbsensiController extends Controller
          if(request('kelas') == "all"){
             $data = rombel::where('status','1')->with(['rombelStudent','rombelAbsent','notRFID'])->paginate(10)->appends(request()->query());
          }
+         
+            $getKelas = Kelas::where('id', request('kelas'))->first();
 
+            // Pastikan data kelas ada
+            if ($getKelas) {
+                // Gabungkan string dengan benar
+                // Pastikan untuk mengakses nama_jurusan dengan benar
+                $namakelas = $getKelas->nama_kelas . ' - ' . ($getKelas->jurusanKelas ? $getKelas->jurusanKelas->nama_jurusan : 'No Jurusan') . ' ' . $getKelas->sub_kelas;
+            } else {
+                $namakelas = null; // Jika tidak ada data, set $kelas menjadi null
+            }
+
+         
+                
         return view('absensi.managementAbsensi.manageAbsent',[
             'title'=>'Absensi Siswa',
             'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'DESC')->get(),
             'kelas'=>Kelas::where('status','1')->with('jurusanKelas')->get(),
             'rombel'=>$data,
-            'mapel'=> Lesson::where(['status'=>'1','id_rombel'=>request('kelas')])->with(['mata_pelajaran','guru'])->get(),
-            'absent'=>absentMapel::where(['tanggal'=>request('tanggal'),'id_mapel'=>request('mapel')])->get(),
-        ]);
+            'mapel'=> grupMapel::where(['status'=>'2','id_kelas'=>request('kelas')])->with(['mata_pelajaran','guru'])->get(),
+            'absent'=>absentMapel::where(['tanggal'=>request('tanggal'),'id_mapel'=>request('id_mapel')])->get(),
+        ],compact('namakelas'));
     }
 
 }

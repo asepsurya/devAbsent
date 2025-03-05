@@ -1,5 +1,13 @@
 @extends('layout.main')
 @section('container')
+@section('css')
+<style>
+    html .darkmode .nav-tabs li a,
+    html[data-theme=dark] .nav-tabs li a {
+        color: #0f0c1c;
+    }
+</style>
+@endsection
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
     <div class="my-auto mb-2">
@@ -37,7 +45,7 @@
 
 <div class="tab-content">
     <div class="tab-pane active show" id="orders" role="tabpanel">
-        <div class="col-xxl-5 col-xl-12 d-flex">
+        <div class="col">
             <div class="bg-white position-relative flex-fill border p-3 mb-3">
                 <div class="card-body">
                     <div class="d-flex align-items-center row-gap-3">

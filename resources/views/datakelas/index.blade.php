@@ -75,7 +75,7 @@
 
                             <td>
                                 @if(Request::is('class/list'))
-                                <a href="{{ route('absensiClassManagement') }}?mapel=&tahun=&kelas={{ $item->id }}&tanggal={{ date('d/m/Y') }}"
+                                <a href="{{ route('absensiClassManagement') }}?mapel=&tahun=&kelas={{ $item->id }}"
                                     class="link-primary">{{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan
                                     }} {{ $item->sub_kelas }}</a>
                                 @elseif(Request::is('class/time'))

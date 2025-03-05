@@ -28,6 +28,38 @@
     <link href="{{ asset('landing/css/theme.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
     <link rel="stylesheet" href="{{ asset('asset/css/customlanding.css') }}">
+    <style>
+      /* Gallery style */
+      .instagram-feed {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 16px;
+          margin: 0 auto;
+          padding: 20px;
+          max-width: 1000px;
+      }
+      .post {
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .post img {
+          width: 100%;
+          height: auto;
+          display: block;
+      }
+      .post p {
+          padding: 10px;
+          font-size: 14px;
+          color: #333;
+          margin: 0;
+          text-align: center;
+      }
+      .post a {
+          display: block;
+      }
+  </style>
   </head>
   <body>
     <!-- ===============================================-->
@@ -248,25 +280,39 @@
               <h1 class="display-3 fw-bold">Berita Terbaru</h1>
             </div>
           </div>
+        
+
           <div class="row">
-            <div class="col-md-4 mb-5 mb-md-0"><img class="img-fluid shadow-sm" src="{{ asset('landing/img/gallery/feature-1.png') }}" alt="" />
-              <div class="mt-3 text-center text-md-start">
-                <h4 class="display-6 fs-2 fs-lg-3 fw-bold">All You Need to Start</h4>
-                <p class="mb-0">Add WooCommerce plugin to any WordPress site and set up a new store in minutes.</p><a class="btn btn-link ps-0" href="#" role="button"> Ecommerce Wordpress ›</a>
-              </div>
-            </div>
-            <div class="col-md-4 mb-5 mb-md-0"><img class="img-fluid shadow-sm" src="{{ asset('landing/img/gallery/feature-2.png') }}" alt="" />
-              <div class="mt-3 text-center text-md-start">
-                <h4 class="display-6 fs-2 fs-lg-3 fw-bold">Customize and Extend</h4>
-                <p class="mb-0">From subscriptions to gym classes to luxury cars, WooCommerce is fully customizable.</p><a class="btn btn-link ps-0" href="#" role="button"> Browse Extensions › </a>
-              </div>
-            </div>
-            <div class="col-md-4 mb-5 mb-md-0"><img class="img-fluid shadow-sm" src="{{ asset('landing/img/gallery/feature-3.png') }}" alt="" />
-              <div class="mt-3 text-center text-md-start">
-                <h4 class="display-6 fs-2 fs-lg-3 fw-bold">Active Community</h4>
-                <p class="mb-0">WooCommerce is one of the fastest-growing eCommerce communities. </p><a class="btn btn-link ps-0" href="#" role="button"> Check our Forums ›</a>
-              </div>
-            </div>
+            @if (!empty($feed->data) && count($feed->data) > 0)
+            @foreach($feed->data as $index => $post)
+            @if ($index < 3) <!-- Limit to 3 posts -->
+                <div class="col-md-4 mb-5 mb-md-0">
+                    <img class="img-fluid shadow-sm rounded" src="{{ $post->media_url }}" alt="" />
+                    <div class="mt-3 text-center text-md-start">
+                        <h5 class="display-6 fs-2 fs-lg-3 fw-bold">
+                            <!-- Display the username -->
+                            @ {{ $username }}
+                        </h5>
+                        <p class="mb-0">{{ \Illuminate\Support\Str::limit($post->caption, 100) }}</p>
+                        <a class="btn btn-link ps-0" href="{{ $post->permalink }}" target="_BLANK" role="button"> Lebih Lanjut... ›</a>
+                    </div>
+                </div>
+                @endif
+                @endforeach
+                @else
+                @if(isset($feed->error) && $feed->error->code == 400)
+                <div class="col-12 text-center">
+                    <p class="h4 text-danger">Akses tidak dijinkan atau kode autentikasi salah. Coba lagi nanti.</p>
+                </div>
+                @else
+                <div class="col-12 text-center">
+                    <p class="h4 text-danger">Data tidak ditemukan atau terjadi kesalahan. Coba lagi nanti.</p>
+                </div>
+                @endif
+                @endif
+
+        
+       
           </div>
         </div><!-- end of .container-->
 

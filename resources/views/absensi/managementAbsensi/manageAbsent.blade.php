@@ -5,7 +5,12 @@
     .btn-check:checked+.btn, .btn.active, .btn.show, .btn.show:hover, .btn:first-child:active, :not(.btn-check)+.btn:active{
         background-color: #cdcdcd;
     }
+    html .darkmode .nav-tabs li a,
+    html[data-theme=dark] .nav-tabs li a {
+        color: #0f0c1c;
+    }
 </style>
+
 @endsection
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
@@ -35,16 +40,15 @@
             aria-selected="false" role="tab" tabindex="-1"><span class="ti ti-users"></span> Absensi</a>
     </li>
     <li class="nav-item" role="presentation">
-        <a class="nav-link " href="{{ route('presensiClassStudent',request('kelas')) }}?filter=today&id_mapel={{ request('mapel') }}&tahun={{ request('tahun') }}&kelas={{ request('kelas') }}&tanggal={{ request('tanggal') }}" aria-selected="true"
+        <a class="nav-link " href="{{ route('presensiClassStudent',request('kelas')) }}?filter=today&id_mapel={{ request('id_mapel') }}&tahun={{ request('tahun') }}&kelas={{ request('kelas') }}&tanggal={{ request('tanggal') }}" aria-selected="true"
             role="tab"><span class="ti ti-list"></span> Presensi Absensi Kelas </a>
     </li>
 </ul>
-
 <div class="tab-content">
     <div class="tab-pane active show" id="orders" role="tabpanel">
         <div class="bg-white p-3 border rounded-1 d-flex align-items-center justify-content-between flex-wrap mb-4 pb-0">
            <div >
-          <h3>Management Absensi Kelas</h3>
+          <h3>Management Absensi Kelas {{ $namakelas }} </h3>
            </div>
             <div class="d-flex align-items-center flex-wrap">
                 <div class="d-flex align-items-center bg-white  p-1 mb-3 me-2">
@@ -62,8 +66,12 @@
             <div class="card-body">
                 <form action="{{ route('absensiClassManagement') }}" method="get">
                     <div class="mb-3">
+                        <label for="tanggal" class="form-label">Tanggal Absensi</label>
+                        <input type="text" name="tanggal" class="form-control datetimepickerCustom" placeholder="DD/MM/YYYY" value="{{ request('tanggal') ? request('tanggal') : date('d/m/Y') }}">
+                    </div>
+                    <div class="mb-3">
                         <label for="tahun" class="form-label">Tahun Pelajaran</label>
-                        <select name="tahun" id="tahun" class="select" onchange="this.form.submit()">
+                        <select name="tahun" id="tahun" class="form-control select" >
                             @foreach ($tahunAjar as $item )
                             <option value="{{ $item->id }}" {{ $item->id == request('tahun') ? 'selected' : '' }}>{{ $item->tahun_pelajaran }} - {{ $item->semester }}</option>
                             @endforeach
@@ -73,20 +81,22 @@
                         <label for="mapel" class="form-label">Mata Pelajaran / Guru Ajar:</label>
 
                         <input type="text" name="kelas" value="{{ request('kelas') }}" hidden>
-                        <input type="text" name="tanggal" value="{{ date('d/m/Y') }}" hidden>
-                        <select name="mapel" id="mapel" class="mapel" >
+                        
+                        <select name="id_mapel" id="mapel" class="mapel" >
                             <option value="">-Pilih Mata Pelajaran-</option>
-                            @foreach ($mapel as $item )
-                            @if($item->mata_pelajaran && $item->guru)
-                            <option value="{{ $item->id_mapel }}" {{ $item->id_mapel == request('mapel') ? 'selected' : '' }}>{{ $item->mata_pelajaran->nama }} - {{ $item->guru->nama }} {{ $item->guru->id_gtk }}
-                            </option>
-                            @endif
+
+                            @foreach ($mapel as $item)
+                                @if($item->mata_pelajaran && $item->guru)
+                                    <option value="{{ $item->id_mapel }}" {{ request('id_mapel') == $item->id_mapel ? 'selected' : '' }}>
+                                        {{ $item->mata_pelajaran->nama }} - {{ $item->guru->nama }} ({{ $item->guru->nik }})
+                                    </option>
+                                @endif
                             @endforeach
+
                         </select>
                         {{-- for get --}}
-
-                        <input type="text" name="gtk" value="{{ old('gtk') }}" class="gtk" hidden >
-                        <button class="btn btn-primary mt-3"><span class="ti ti-search"></span> Pilih Mata Pelajaran</button>
+                        <input type="text" name="gtk" value="{{ request('gtk') }}" class="gtk" hidden >
+                        <button class="btn btn-primary mt-3"><span class="ti ti-search"></span> Lakukan Absensi</button>
                 </form>
             </div>
         </div>
@@ -126,38 +136,38 @@
                                         <td class="text-primary">{{ $item->nis }}</td>
                                         <td>{{ $item->rombelStudent->nama }}</td>
 
-                                        <td class="border">
-                                            <div class="form-check form-check-md">
+                                        <td class="border ">
+                                            <div class="form-check form-check-md d-flex justify-content-center align-items-center">
                                                 <input class="form-check-input a" value="H" type="radio" name="status[{{ $item->nis }}]"
                                                 id="h-{{ $item->id }}"
-                                                @if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('mapel'))->first()->status == 'H') checked @endif>
+                                                @if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('id_mapel'))->first()->status == 'H') checked @endif>
                                             </div>
                                         </td>
                                         <td class="border">
-                                            <div class="form-check form-check-md">
+                                            <div class="form-check form-check-md d-flex justify-content-center align-items-center">
                                                 <input class="form-check-input a" value="S" type="radio" name="status[{{ $item->nis }}]"
                                                 id="s-{{ $item->id }}"
 
-                                                @if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('mapel'))->first()->status == 'S') checked @endif>
+                                                @if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('id_mapel'))->first()->status == 'S') checked @endif>
                                             </div>
                                         </td>
                                         <td class="border">
-                                            <div class="form-check form-check-md">
+                                            <div class="form-check form-check-md d-flex justify-content-center align-items-center">
                                                 <input class="form-check-input a" value="I" type="radio" name="status[{{ $item->nis }}]"
                                                 id="i-{{ $item->id }}"
-                                                @if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('mapel'))->first()->status == 'I') checked @endif>
+                                                @if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('id_mapel'))->first()->status == 'I') checked @endif>
                                             </div>
                                         </td>
                                         <td class="border">
-                                            <div class="form-check form-check-md">
+                                            <div class="form-check form-check-md d-flex justify-content-center align-items-center">
                                                 <input class="form-check-input a" value="A" type="radio" name="status[{{ $item->nis }}]"
                                                 id="a-{{ $item->id }}"
-                                                @if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('mapel'))->first()->status == 'A') checked @endif>
+                                                @if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('id_mapel'))->first()->status == 'A') checked @endif>
                                             </div>
                                         </td>
                                         <td hidden >
 
-                                            <input type="text" name="id_mapel[]" value="{{ request('mapel') }}">
+                                            <input type="text" name="id_mapel[]" value="{{ request('id_mapel') }}">
                                             <input type="text" name="id_kelas[]" value="{{ request('kelas') }}">
                                             <input type="text" name="nis[]" value="{{ $item->nis }}">
                                             <input type="text" name="id_gtk"  id="id_gtk" class="gtk" value="{{ request('gtk') }}">
@@ -304,7 +314,7 @@
                             @endif
                             @endforeach
                             <div class="mb-3 ket" id="">
-                                <label class="form-label">Keterangan</label>
+                                <label class="form-label">Keterangan1</label>
                                 <textarea rows="4" class="form-control keterangan" name="keterangan"
                                     placeholder="Keterangan Sakit/izin/Tidak Hadir">@foreach ($item->rombelAbsentClass as $ky ){{ $ky->tanggal == request('tanggal') ? $ky->keterangan  ? $ky->keterangan : '' : '' }} @endforeach</textarea>
                             </div>

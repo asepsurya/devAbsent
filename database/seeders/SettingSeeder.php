@@ -27,7 +27,8 @@ class SettingSeeder extends Seeder
             ['key'=>'register','value'=>'true'],
             ['key'=>'start_school','value'=>'07:00'],
             ['key'=>'waktu_mapel','value'=>'45'],
-            ['key'=>'estimasi_waktu_masuk','value'=>'10'],
+            ['key'=>'instagram_userID','value'=>'-'],
+            ['key'=>'instagram_access_token','value'=>'-'],
 
        ];
        Setting::insert($settingData);

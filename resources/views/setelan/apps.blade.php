@@ -20,8 +20,9 @@
 <div class="row">
     <div class="col-xxl-2 col-xl-3">
         <div class="pt-3 d-flex flex-column list-group mb-4">
-            <a href="{{ route('setelan.app') }}" class="d-block rounded active p-2">Pengaturan Sekolah</a>
-            <a href="{{ route('setelan.customize') }}" class="d-block rounded p-2">Pengaturan Tampilan</a>
+            <a href="{{ route('setelan.app') }}" class="d-block rounded active p-2">> Pengaturan Sekolah</a>
+            <a href="{{ route('setelan.sistem') }}" class="d-block rounded p-2">> Pengaturan Sistem</a>
+            <a href="{{ route('setelan.customize') }}" class="d-block rounded p-2">> Pengaturan Tampilan</a>
         </div>
     </div>
     <div class="col-xxl-10 col-xl-9">
@@ -271,27 +272,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
-                                <div class="row align-items-center flex-fill">
-                                    <div class="col-xxl-8 col-lg-6">
-                                        <div class="mb-3">
-                                            <h6>Register Page</h6>
-                                            <p>Tampilkan Halaman Register..? Fitur ini untuk membatasi pendaftaran atau Registrasi di halaman <a href="/register" target="_BLANK" class="text-primary">Register</a></p>
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-4 col-lg-6">
-                                        <div class="mb-3">
-                                            @foreach ($settings->where('key','register') as $register )
-                                            <select name="register" id="register" class="form-control select">
-                                                <option value="true" {{ $register->value == 'true' ? 'selected' : '' }}>YA</option>
-                                                <option value="false" {{ $register->value == 'false' ? 'selected' : '' }}>Tidak</option>
-                                            </select>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div
                                 class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
                                 <div class="row align-items-center flex-fill">

@@ -389,24 +389,32 @@ class DataIndukController extends Controller
     }
     // Tahun Pelajaran
     public function dataIndukTahunajarAdd(request $request){
+
+        TahunPelajaran::where('status', 1)->update(['status' => 2]);
+        $status = ($request->status == 1) ? 1 : 2;
+
         TahunPelajaran::create([
             'tahun_pelajaran'=>$request->tahun_pelajaran,
             'semester'=>$request->semester,
-            'status'=>$request->status,
+            'status'=>$status,
         ]);
         toastr()->success('Data Berhasil disimpan');
         return redirect()->back();
     }
 
     public function dataIndukTahunajarUpdate(request $request){
+        TahunPelajaran::where('status', 1)->update(['status' => 2]);
+        $status = ($request->status == 1) ? 1 : 2;
+
         TahunPelajaran::where('id',$request->id)->update([
             'tahun_pelajaran'=>$request->tahun_pelajaran,
             'semester'=>$request->semester,
-            'status'=>$request->status,
+            'status'=>$status,
         ]);
         toastr()->success('Data Berhasil diubah');
         return redirect()->back();
     }
+    
     public function dataIndukTahunajarDelete($id){
         TahunPelajaran::where('id',$id)->delete();
         toastr()->success('Data Berhasil dihapus');
