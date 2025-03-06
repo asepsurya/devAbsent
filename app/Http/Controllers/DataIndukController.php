@@ -19,14 +19,15 @@ use App\Models\TahunPelajaran;
 use App\Exports\StudentsExport;
 use App\Imports\StudentsImport;
 use App\Models\model_has_roles;
-use Illuminate\Support\Facades\Validator;
 use App\Imports\UserStudentImport;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\MyRolesStudentImport;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class DataIndukController extends Controller
 {
@@ -52,6 +53,14 @@ class DataIndukController extends Controller
             'provinsi'=>Province::all()
         ]);
     }
+    public function dataIndukStudentCard(){
+        $data = student::where('id',request('data'))->get();
+        foreach($data as $item){ $nama = $item->nama; }
+       return view('akdemik.datainduk.card.studentCard',[
+            'data'=>$data
+       ],compact('nama'));
+    }
+
     public function dataIndukJurusan(){
         return view('akdemik.datainduk.jurusan',[
             'title'=>'Jurusan',

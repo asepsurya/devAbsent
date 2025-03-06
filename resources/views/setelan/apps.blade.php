@@ -67,99 +67,16 @@
                                 <div class="row align-items-center flex-fill">
                                     <div class="col-xxl-8 col-lg-6">
                                         <div class="mb-3">
-                                            <h6>Slogan</h6>
-                                            <p>Jelaskan secara singkat tentang <code>Moto</code> Sekolah atau Instansi.</p>
+                                            <h6>Nama Yayasan</h6>
+                                            <p>Yayasan adalah organisasi non-profit yang didirikan untuk tujuan sosial, pendidikan, kemanusiaan, keagamaan, atau kegiatan lain yang bermanfaat bagi masyarakat. </p>
                                         </div>
                                     </div>
                                     <div class="col-xxl-4 col-lg-6">
                                         <div class="mb-3">
-                                            @foreach ($settings->where('key','slogan') as $slogan)
-                                            <input type="text" class="form-control" placeholder="Enter School Name" name="slogan" value="{{ $slogan->value }}">
-
+                                            @foreach ($settings->where('key','nama_yayasan') as $nama_yayasan)
+                                                 <input type="text" class="form-control"  name="nama_yayasan" value="{{ $nama_yayasan->value }}">
                                             @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div
-                                class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
-                                <div class="row align-items-center flex-fill">
-                                    <div class="col-xxl-6 col-lg-6">
-                                        <div class="mb-3">
-                                            <h6>Logo Sekolah</h6>
-                                            <p class="description">
-                                                Logo Sekolah atau Instansi. <code>512 × 512</code> piksel.	</p>
-                                                <img src="{{ asset('asset/img/pic logo.png') }}" alt="" >
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-6 col-lg-6">
-                                        @foreach ($settings->where('key','site_logo') as $logo )
-                                        <div class="mb-3 ">
-                                            <div class="d-flex justify-content-bettween">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <input type="text" name="logoOld" value="{{ $logo->value }}" hidden>
-                                                        @if ($logo->value == "")
-                                                            <img src="{{ asset('asset/img/default-logo.png') }}" alt="logo" width="90px">
-                                                        @else
-                                                            <img src="/storage/{{ $logo->value }}" alt="" width="90px" class="mx-2" alt="logo">
-                                                        @endif
 
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <input type="file" name="site_logo" class="form-control" placeholder="Enter School Name">
-                                        </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                            <div
-                                class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
-                                <div class="row align-items-center flex-fill">
-                                    <div class="col-xxl-8 col-lg-6">
-                                        <div class="mb-3">
-                                            <h6>Ikon Situs</h6>
-                                            <p class="description">
-                                                Ikon Situs adalah yang Anda lihat di tab browser, bar bookmark, dan dalam aplikasi Absensi Sakti. Harus berbentuk persegi dan setidaknya <code>512 × 512</code> piksel.	</p>
-                                            <img src="{{ asset('asset/img/browser.png') }}" alt="">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-4 col-lg-6">
-                                        <div class="mb-3">
-                                            <div class="d-flex justify-content-bettween">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    @foreach ($settings->where('key','site_fav') as $fav)
-                                                        <input type="text" name="favOld" value="{{ $fav->value }}" hidden>
-                                                        @if ($fav->value == "")
-                                                            <img src="{{ asset('asset/img/default-logo.png') }}" alt="logo" width="90px">
-                                                        @else
-                                                            <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
-                                                        @endif
-
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                            </div>
-                                            <input type="file" class="form-control" name="site_fav" placeholder="Enter School Name" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div
-                                class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
-                                <div class="row align-items-center flex-fill">
-                                    <div class="col-xxl-8 col-lg-6">
-                                        <div class="mb-3">
-                                            <h6>Alamat Situs ( URL )</h6>
-                                            <p>Default alamat Situs ini</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-4 col-lg-6">
-                                        <div class="mb-3">
-                                            <input type="text" class="form-control" placeholder="Enter Phone Number" value="{{ (isset($_SERVER['HTTPS']) ? "https://" : "http://"). $_SERVER['HTTP_HOST'] }}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -242,7 +159,7 @@
                                 <div class="row align-items-center flex-fill">
                                     <div class="col-xxl-8 col-lg-6">
                                         <div class="mb-3">
-                                            <h6>Kepala Sekolah</h6>
+                                            <h6>Nama Kepala Sekolah</h6>
                                             <p>Nama lengkap berikut gelar Kepala Sekolah atau Instansi</p>
                                         </div>
                                     </div>
@@ -267,13 +184,27 @@
                                     <div class="col-xxl-4 col-lg-6">
                                         <div class="mb-3">
                                             @foreach ($settings->where('key','headmasterid') as $headmasterid )
-                                            <input type="text" class="form-control" placeholder="Nomor Registrasi Kepala Sekolah" name="headmasterid" value="{{ $headmasterid->value }}">
+                                            <input type="text" class="form-control" placeholder="Nomor Registrasi Kepala Sekolah" name="headmasterid" value="{{ $headmasterid->value ?? ''}}">
                                             @endforeach
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
+                                <div class="row align-items-center flex-fill">
+                                    <div class="col-xxl-8 col-lg-6">
+                                        <div class="mb-3">
+                                            <h6>Jabatan</h6>
+                                            <p>Jabatan yang bertanggung jawab</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-4 col-lg-6">
+                                        @foreach ($settings->where('key','signature_position') as $signature_position )
+                                            <input type="text" class="form-control"  name="signature_position" value="{{ $signature_position->value }}">
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
                             <div
                                 class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
                                 <div class="row align-items-center flex-fill">
@@ -292,6 +223,95 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div
+                                class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
+                                <div class="row align-items-center flex-fill">
+                                    <div class="col-xxl-8 col-lg-6">
+                                        <div class="mb-3">
+                                            <h6>Slogan</h6>
+                                            <p>Jelaskan secara singkat tentang <code>Moto</code> Sekolah atau Instansi.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-4 col-lg-6">
+                                        <div class="mb-3">
+                                            @foreach ($settings->where('key','slogan') as $slogan)
+                                            <input type="text" class="form-control" placeholder="Enter School Name" name="slogan" value="{{ $slogan->value }}">
+
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
+                                <div class="row align-items-center flex-fill">
+                                    <div class="col-xxl-6 col-lg-6">
+                                        <div class="mb-3">
+                                            <h6>Logo Sekolah</h6>
+                                            <p class="description">
+                                                Logo Sekolah atau Instansi. <code>512 × 512</code> piksel.	</p>
+                                                <img src="{{ asset('asset/img/pic logo.png') }}" alt="" >
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6 col-lg-6">
+                                        @foreach ($settings->where('key','site_logo') as $logo )
+                                        <div class="mb-3 ">
+                                            <div class="d-flex justify-content-bettween">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <input type="text" name="logoOld" value="{{ $logo->value }}" hidden>
+                                                        @if ($logo->value == "")
+                                                            <img src="{{ asset('asset/img/default-logo.png') }}" alt="logo" width="90px">
+                                                        @else
+                                                            <img src="/storage/{{ $logo->value }}" alt="" width="90px" class="mx-2" alt="logo">
+                                                        @endif
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="file" name="site_logo" class="form-control" placeholder="Enter School Name">
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
+                                <div class="row align-items-center flex-fill">
+                                    <div class="col-xxl-8 col-lg-6">
+                                        <div class="mb-3">
+                                            <h6>Ikon Situs</h6>
+                                            <p class="description">
+                                                Ikon Situs adalah yang Anda lihat di tab browser, bar bookmark, dan dalam aplikasi Absensi Sakti. Harus berbentuk persegi dan setidaknya <code>512 × 512</code> piksel.	</p>
+                                            <img src="{{ asset('asset/img/browser.png') }}" alt="">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-4 col-lg-6">
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-bettween">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    @foreach ($settings->where('key','site_fav') as $fav)
+                                                        <input type="text" name="favOld" value="{{ $fav->value }}" hidden>
+                                                        @if ($fav->value == "")
+                                                            <img src="{{ asset('asset/img/default-logo.png') }}" alt="logo" width="90px">
+                                                        @else
+                                                            <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
+                                                        @endif
+
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <input type="file" class="form-control" name="site_fav" placeholder="Enter School Name" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
                         </div>
                     </div>
                 </div>

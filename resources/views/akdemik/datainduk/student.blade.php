@@ -31,9 +31,7 @@
                 <i class="ti ti-file-export me-2"></i>Export
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3 " style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 41px);" data-popper-placement="bottom-end">
-                <li>
-                    <a href="javascript:void(0)"  class="dropdown-item rounded-1"><i class="ti ti-swipe me-2"></i>Cetak Kartu Siswa</a>
-                </li>
+               
                 <li>
                     <a href="javascript:void(0)" onclick="exportPDF()" class="dropdown-item rounded-1"><i class="ti ti-file me-2"></i>Export
                         as PDF</a>
@@ -97,11 +95,7 @@
             <table class="table no-footer stripe hover " id="myTable">
                 <thead>
                     <tr>
-                        <th>
-                            <div class="form-check form-check-md">
-                                <input type="checkbox" class="form-check-input" id="select-all">
-                            </div>
-                        </th>
+                        <th>#</th>
                         <th></th>
                         <th>NIS</th>
                         <th>Nama Peserta Didik</th>
@@ -109,7 +103,6 @@
                         <th>Tempat Lahir</th>
                         <th>Tanggal Lahir</th>
                         <th>Rombongan Belajar</th>
-
                         <th>Status</th>
                         <th>Tanggal Masuk</th>
                     </tr>
@@ -118,19 +111,6 @@
         </div>
 
 
-    </div>
-    <div class="card-footer">
-        <div class="row">
-            <div class="col-xl-10 d-flex ">
-                <i class="ti ti-arrows-up-right  mx-3 my-3"></i>
-                <select name="action" class="form-control select">
-                    <option value="">Hapus</option>
-                    <option value="">Cetak Kartu Siswa</option>
-                </select>
-                <button class="btn btn-primary mx-2">Go!</button>
-            </div>
-
-        </div>
     </div>
 </div>
 @foreach ($students as $item )
@@ -218,15 +198,12 @@
             serverSide: true,
             ajax: '{!! route('dataIndukStudent') !!}', // memanggil route yang menampilkan data json
             columns: [
-                {
-                    data: null,
+                { // mengambil & menampilkan kolom sesuai tabel database
+                    data: 'DT_RowIndex',
                     sortable: false,
-                    searchable: false,
-                    render: function(data, type, row) {
-                        return `<div class="form-check form-check-md">
-                                    <input class="form-check-input" type="checkbox" name="nis[]" value="${row.nis}">
-                                </div>`;
-                    }
+                    target:[1],
+                    searchable:false,
+                    name: 'DT_RowIndex'
                 },
                 {
                     data: 'id',
@@ -234,9 +211,10 @@
                     render: function(data, type, row, meta){
                         if(type === 'display'){
                             data = '<div class="hstack gap-2 fs-15">'+
+                                '<a  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cetak Kartu Siswa" href="/akademik/datainduk/studentcard?data='+data+'" target="_BLANK" class="btn btn-icon btn-sm btn-soft-success rounded-pill"><i class="ti ti-cards"></i></a>'+
                                 '<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit" href="/akademik/datainduk/studentEdit/'+data+'"  class="btn btn-icon btn-sm btn-soft-info rounded-pill">'+
                                     '<i class="ti ti-pencil-minus"></i></a>'+
-                                '<a  data-bs-toggle="modal" data-bs-target="#delete-modal-'+data+'" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i class="ti ti-trash"></i></a>'+
+                                '<a  data-bs-toggle="modal" data-bs-target="#delete-modal-'+data+'" class="btn btn-icon btn-sm btn-soft-danger rounded-pill" data-bs-toggle="tooltip" title="Delete"><i class="ti ti-trash"></i></a>'+
                             '</div>'
 
                         }

@@ -119,6 +119,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/akademik/datainduk/studentImport',[DataIndukController::class,'studentImport'])->name('studentImport');
     Route::get('/akademik/datainduk/student/import',[DataIndukController::class,'studentIndex'])->name('studentIndex');
     Route::get('/akademik/datainduk/studentEksportExcel',[DataIndukController::class,'studentEksportExcel'])->name('studentEksportExcel');
+    Route::get('/akademik/datainduk/studentcard',[DataIndukController::class,'dataIndukStudentCard'])->name('dataIndukStudentCard');
 
     Route::get('/akademik/datainduk/jurusan',[DataIndukController::class,'dataIndukJurusan']);
     Route::post('/akademik/datainduk/jurusanAdd',[DataIndukController::class,'dataIndukJurusanAdd'])->name('dataIndukJurusanAdd');
@@ -232,6 +233,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/setelan/aplikasi', [AppsConfigController::class, 'app'])->name('setelan.app');
     Route::get('/setelan/sistem', [AppsConfigController::class, 'sistem'])->name('setelan.sistem');
     Route::get('/setelan/card', [AppsConfigController::class, 'card'])->name('setelan.card');
+    Route::get('/bg-back/reset/', [AppsConfigController::class, 'reset'])->name('setelan.reset');
     Route::get('/setelan/customize', [AppsConfigController::class, 'customize'])->name('setelan.customize');
     Route::post('/setelan/aplikasi/change', [AppsConfigController::class, 'appChange'])->name('setelan.appChange');
     Route::post('/setelan/schooltime', [AppsConfigController::class, 'schoolTime'])->name('setelan.schoolTime');

@@ -296,7 +296,7 @@
                     </video>
                 @else
                     <!-- If it's an image -->
-                    <img class="img-fluid shadow-sm rounded" src="{{ $post->media_url }}" alt="" />
+                    <img class="img-fluid shadow-sm rounded" src="{{ $post->media_url }}" alt="" loading="lazy"/>
                 @endif
 
                 <div class="mt-3 text-center text-md-start">

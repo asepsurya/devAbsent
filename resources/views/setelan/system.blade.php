@@ -21,7 +21,8 @@
     <div class="col-xxl-2 col-xl-3">
         <div class="pt-3 d-flex flex-column list-group mb-4">
             <a href="{{ route('setelan.app') }}" class="d-block rounded  p-2">> Pengaturan Sekolah</a>
-            <a href="{{ route('setelan.sistem') }}" class="d-block rounded active p-2">> Pengaturan Sistem</a>
+            <a href="{{ route('setelan.card') }}" class="d-block rounded p-2">> Pengaturan Kartu</a>
+            <a href="{{ route('setelan.sistem') }}" class="d-block rounded  active p-2">> Pengaturan Sistem</a>
             <a href="{{ route('setelan.customize') }}" class="d-block rounded p-2">> Pengaturan Tampilan</a>
         </div>
     </div>
