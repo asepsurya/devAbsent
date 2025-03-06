@@ -16,6 +16,12 @@ class AppsConfigController extends Controller
             'settings'=>Setting::get(['key','value'])
         ]);
     }
+    Public function card(){
+        return view('setelan.card',[
+            'title'=> 'Pengaturan Layout Kartu',
+            'settings'=>Setting::get(['key','value'])
+        ]);
+    }
     Public function sistem(){
         return view('setelan.system',[
             'title'=> 'Pengaturan Aplikasi',
@@ -65,7 +71,7 @@ class AppsConfigController extends Controller
                     Setting::where('key', 'fax')->update(['value' => $request->fax]);
                     Setting::where('key', 'headmaster')->update(['value' => $request->headmaster]);
                     Setting::where('key', 'headmasterid')->update(['value' => $request->headmasterid]);
-                }     
+                }
 
         });
 
@@ -78,7 +84,7 @@ class AppsConfigController extends Controller
         }else{
             return redirect()->route('setelan.app')->with('status', 'success Update');
         }
-      
+
 
     }
 

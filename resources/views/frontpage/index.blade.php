@@ -206,7 +206,7 @@
               </div>
             </div>
             @else
-            <form class="d-flex py-3 py-lg-0"><a class="btn btn-sm p-2 px-2 btn-info  me-2" href="/login" role="button"><span class="ti ti-login"></span> Masuk Aplikasi</a>
+            <form class="d-flex py-3 py-lg-0"><a class="btn btn-sm p-2 px-2 btn-info rounded-pill  me-2" href="/login" role="button"><span class="ti ti-login"></span> Masuk Aplikasi</a>
             </form>
             @endif
           </div>
@@ -280,23 +280,35 @@
               <h1 class="display-3 fw-bold">Berita Terbaru</h1>
             </div>
           </div>
-        
+
 
           <div class="row">
             @if (!empty($feed->data) && count($feed->data) > 0)
             @foreach($feed->data as $index => $post)
             @if ($index < 3) <!-- Limit to 3 posts -->
-                <div class="col-md-4 mb-5 mb-md-0">
+            <div class="col-md-4 mb-5 mb-md-0">
+                <!-- Check if the media is an image or a video -->
+                @if(Str::contains($post->media_url, '.mp4') || Str::contains($post->media_url, '.mov'))
+                    <!-- If it's a video -->
+                    <video class="img-fluid shadow-sm rounded" controls>
+                        <source src="{{ $post->media_url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                @else
+                    <!-- If it's an image -->
                     <img class="img-fluid shadow-sm rounded" src="{{ $post->media_url }}" alt="" />
-                    <div class="mt-3 text-center text-md-start">
-                        <h5 class="display-6 fs-2 fs-lg-3 fw-bold">
-                            <!-- Display the username -->
-                            @ {{ $username }}
-                        </h5>
-                        <p class="mb-0">{{ \Illuminate\Support\Str::limit($post->caption, 100) }}</p>
-                        <a class="btn btn-link ps-0" href="{{ $post->permalink }}" target="_BLANK" role="button"> Lebih Lanjut... ›</a>
-                    </div>
+                @endif
+
+                <div class="mt-3 text-center text-md-start">
+                    <h5 class="display-6 fs-2 fw-bold">
+                        <!-- Display the username -->
+                        @ {{ $username }}
+                    </h5>
+                    <p class="mb-0">{{ \Illuminate\Support\Str::limit($post->caption, 100) }}</p>
+                    <a class="btn btn-link ps-0" href="{{ $post->permalink }}" target="_BLANK" role="button"> Lebih Lanjut... ›</a>
                 </div>
+            </div>
+
                 @endif
                 @endforeach
                 @else
@@ -311,8 +323,8 @@
                 @endif
                 @endif
 
-        
-       
+
+
           </div>
         </div><!-- end of .container-->
 

@@ -23,8 +23,8 @@ class InstagramService
 
     public function getFeed($userId)
     {
-        $url = "https://graph.instagram.com/{$userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token={$this->accessToken}";
-        
+        $url = "https://graph.instagram.com/{$userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token={$this->accessToken}" ;
+
         try {
             $response = $this->client->get($url);
 
@@ -38,7 +38,7 @@ class InstagramService
         } catch (RequestException $e) {
             // Tangani error terkait request, seperti token invalid atau masalah koneksi
             $message = $e->getMessage();
-            
+
             // Cek apakah error berasal dari Instagram API (kode 400 atau 401 biasanya terkait dengan masalah autentikasi)
             if ($e->getResponse()) {
                 $statusCode = $e->getResponse()->getStatusCode();
@@ -56,11 +56,11 @@ class InstagramService
      public function getUsername($userId)
      {
          $url = "https://graph.instagram.com/{$userId}?fields=username&access_token={$this->accessToken}";
-         
+
          try {
              $response = $this->client->get($url);
              $data = json_decode($response->getBody()->getContents());
-             
+
              return $data->username ?? null;  // Return username if available
          } catch (\Exception $e) {
              // Handle errors and throw a descriptive message

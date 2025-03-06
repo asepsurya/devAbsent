@@ -231,6 +231,7 @@ Route::middleware('auth')->group(function () {
     // Apps Config Controller
     Route::get('/setelan/aplikasi', [AppsConfigController::class, 'app'])->name('setelan.app');
     Route::get('/setelan/sistem', [AppsConfigController::class, 'sistem'])->name('setelan.sistem');
+    Route::get('/setelan/card', [AppsConfigController::class, 'card'])->name('setelan.card');
     Route::get('/setelan/customize', [AppsConfigController::class, 'customize'])->name('setelan.customize');
     Route::post('/setelan/aplikasi/change', [AppsConfigController::class, 'appChange'])->name('setelan.appChange');
     Route::post('/setelan/schooltime', [AppsConfigController::class, 'schoolTime'])->name('setelan.schoolTime');

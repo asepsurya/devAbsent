@@ -32,6 +32,9 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3 " style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 41px);" data-popper-placement="bottom-end">
                 <li>
+                    <a href="javascript:void(0)"  class="dropdown-item rounded-1"><i class="ti ti-swipe me-2"></i>Cetak Kartu Siswa</a>
+                </li>
+                <li>
                     <a href="javascript:void(0)" onclick="exportPDF()" class="dropdown-item rounded-1"><i class="ti ti-file me-2"></i>Export
                         as PDF</a>
                 </li>
@@ -94,7 +97,11 @@
             <table class="table no-footer stripe hover " id="myTable">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>
+                            <div class="form-check form-check-md">
+                                <input type="checkbox" class="form-check-input" id="select-all">
+                            </div>
+                        </th>
                         <th></th>
                         <th>NIS</th>
                         <th>Nama Peserta Didik</th>
@@ -110,6 +117,20 @@
             </table>
         </div>
 
+
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-xl-10 d-flex ">
+                <i class="ti ti-arrows-up-right  mx-3 my-3"></i>
+                <select name="action" class="form-control select">
+                    <option value="">Hapus</option>
+                    <option value="">Cetak Kartu Siswa</option>
+                </select>
+                <button class="btn btn-primary mx-2">Go!</button>
+            </div>
+
+        </div>
     </div>
 </div>
 @foreach ($students as $item )
@@ -196,12 +217,16 @@
             order: [[1, 'desc']],
             serverSide: true,
             ajax: '{!! route('dataIndukStudent') !!}', // memanggil route yang menampilkan data json
-            columns: [{ // mengambil & menampilkan kolom sesuai tabel database
-                    data: 'DT_RowIndex',
+            columns: [
+                {
+                    data: null,
                     sortable: false,
-                    target:[1],
-                    searchable:false,
-                    name: 'DT_RowIndex'
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return `<div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox" name="nis[]" value="${row.nis}">
+                                </div>`;
+                    }
                 },
                 {
                     data: 'id',
