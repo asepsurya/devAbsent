@@ -55,10 +55,10 @@ class DataIndukController extends Controller
     }
     public function dataIndukStudentCard(){
         $data = student::where('id',request('data'))->get();
-        foreach($data as $item){ $nama = $item->nama; }
+        foreach($data as $item){ $nama = $item->nama;$nis=$item->nis; }
        return view('akdemik.datainduk.card.studentCard',[
             'data'=>$data
-       ],compact('nama'));
+       ],compact('nama','nis'));
     }
 
     public function dataIndukJurusan(){

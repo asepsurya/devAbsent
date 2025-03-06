@@ -17,8 +17,8 @@
         }
 
         .card-container-back {
-            width: 8.56cm;
-            height: 5.398cm;
+            height: 8.56cm;
+            width: 5.398cm;
             background: url('{{ app("settings")["studentBG_back_default"] == "" ? asset("asset/img/card/Back-bg-default.png") : "/storage/" .app("settings")["studentBG_back_default"] }}') no-repeat center center;
             background-size: cover;
             border-radius: 10px;
@@ -121,7 +121,7 @@
         }
         @media print {
             @page {
-                size: 18cm 7cm; /* Set custom size in inches */
+                size: 18cm 10cm; /* Set custom size in inches */
                 margin: 10px; /* Set margins */
             }
         }
@@ -185,9 +185,27 @@
         </div>
         {{-- back --}}
         <div class="card-container-back border shadow p-2">
-            <div class="card-body d-flex justify-content-center align-items-center py-5" style="margin-top: -10px;">
-                <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" alt="Stempel" width="110px" style="margin-top: -5px;">
+            <div class="card-body d-flex justify-content-center align-items-center pt-5" style="margin-top: -10px;">
+                <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" alt="Stempel" width="60px" style="margin-top: -5px;"><br>
+                
             </div>
+            <center>
+                <b style="font-size: 15px; ">
+                    {{ app('settings')['site_name'] }}
+                </b>
+                
+                <div class="photo me-2 mt-1" style="background: url('{{ $item->foto ? asset('storage/'.$item->foto) : asset('asset/img/user-default.jpg') }}') no-repeat center center; background-size: cover; width:80px;height:100px;border-radius:10px;"></div>
+                <div style="width:120px;line-height: 1.0; margin-top:3px;"  >
+                    <p class="border-bottom border-dark p-1" style="font-size:12px; margin-bottom:-1px; text-transform: uppercase;">
+                        {{ strtoupper($nama) }}
+                    </p>
+                    <p class="pt-1" style="font-size:12px; margin-bottom:-1px;">
+                        {{ $nis }}
+                    </p>
+                </div>
+                
+            </center>
+          
         </div>
     </div>
     <script>
