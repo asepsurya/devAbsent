@@ -1,5 +1,34 @@
 @extends('layout.main')
 @section('container')
+@section('css')
+<style>
+    .save-btn {
+        position: fixed;
+        bottom: 20px;
+        /* Posisi dari bawah */
+        right: 20px;
+        /* Posisi dari kanan */
+        width: 60px;
+        /* Lebar tombol */
+        height: 60px;
+        /* Tinggi tombol */
+        padding: 0;
+        /* Menghapus padding untuk membuat tombol menjadi bulat sempurna */
+        font-size: 24px;
+        /* Ukuran font */
+        display: flex;
+        align-items: center;
+        /* Menyelaraskan teks di tengah */
+        justify-content: center;
+        /* Menyelaraskan teks di tengah */
+        border-radius: 50%;
+        /* Membuat tombol menjadi bulat */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        /* Efek bayangan */
+    }
+
+</style>
+@endsection
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3 border-bottom">
     <div class="my-auto mb-2">
@@ -20,10 +49,10 @@
 <div class="row">
     <div class="col-xxl-2 col-xl-3">
         <div class="pt-3 d-flex flex-column list-group mb-4">
-            <a href="{{ route('setelan.app') }}" class="d-block rounded  p-2">> Pengaturan Sekolah</a>
-            <a href="{{ route('setelan.card') }}" class="d-block rounded p-2">> Pengaturan Kartu</a>
-            <a href="{{ route('setelan.sistem') }}" class="d-block rounded  active p-2">> Pengaturan Sistem</a>
-            <a href="{{ route('setelan.customize') }}" class="d-block rounded p-2">> Pengaturan Tampilan</a>
+            <a href="{{ route('setelan.app') }}" class="d-block rounded   p-2"><i class="ti ti-school"></i> Pengaturan Sekolah</a>
+            <a href="{{ route('setelan.card') }}" class="d-block rounded  p-2"><i class="ti ti-cards"></i> Pengaturan Kartu</a>
+            <a href="{{ route('setelan.sistem') }}" class="d-block rounded active p-2"><i class="ti ti-assembly"></i> Pengaturan Sistem</a>
+            <a href="{{ route('setelan.customize') }}" class="d-block rounded p-2"><i class="ti ti-device-desktop-analytics"></i> Pengaturan Tampilan</a>
         </div>
     </div>
     <div class="col-xxl-10 col-xl-9">
@@ -120,7 +149,7 @@
                             <div class="d-flex justify-content-center">
                                 <a class="btn btn-outline-light bg-white " href="https://socialfeed.quadlayers.com/" target="_blank"><i class="ti ti-link" ></i> Get Access</a>
                             </div>
-                            
+                            <button class="btn btn-primary save-btn"><i class="ti ti-device-floppy"></i></button>
                         </div>
                     </div>
                 </div>

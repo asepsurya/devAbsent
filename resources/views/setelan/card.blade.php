@@ -1,6 +1,34 @@
 @extends('layout.main')
 @section('container')
 @section('css')
+<style>
+    .save-btn {
+        position: fixed;
+        bottom: 20px;
+        /* Posisi dari bawah */
+        right: 20px;
+        /* Posisi dari kanan */
+        width: 60px;
+        /* Lebar tombol */
+        height: 60px;
+        /* Tinggi tombol */
+        padding: 0;
+        /* Menghapus padding untuk membuat tombol menjadi bulat sempurna */
+        font-size: 24px;
+        /* Ukuran font */
+        display: flex;
+        align-items: center;
+        /* Menyelaraskan teks di tengah */
+        justify-content: center;
+        /* Menyelaraskan teks di tengah */
+        border-radius: 50%;
+        /* Membuat tombol menjadi bulat */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        /* Efek bayangan */
+    }
+
+</style>
+
 <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
 @endsection
 {{-- header --}}
@@ -23,10 +51,10 @@
 <div class="row">
     <div class="col-xxl-2 col-xl-3">
         <div class="pt-3 d-flex flex-column list-group mb-4">
-            <a href="{{ route('setelan.app') }}" class="d-block rounded  p-2">> Pengaturan Sekolah</a>
-            <a href="{{ route('setelan.card') }}" class="d-block rounded active p-2">> Pengaturan Kartu</a>
-            <a href="{{ route('setelan.sistem') }}" class="d-block rounded  p-2">> Pengaturan Sistem</a>
-            <a href="{{ route('setelan.customize') }}" class="d-block rounded p-2">> Pengaturan Tampilan</a>
+            <a href="{{ route('setelan.app') }}" class="d-block rounded p-2"><i class="ti ti-school"></i> Pengaturan Sekolah</a>
+            <a href="{{ route('setelan.card') }}" class="d-block rounded active p-2"><i class="ti ti-cards"></i> Pengaturan Kartu</a>
+            <a href="{{ route('setelan.sistem') }}" class="d-block rounded  p-2"><i class="ti ti-assembly"></i> Pengaturan Sistem</a>
+            <a href="{{ route('setelan.customize') }}" class="d-block rounded p-2"><i class="ti ti-device-desktop-analytics"></i> Pengaturan Tampilan</a>
         </div>
     </div>
     <div class="col-xxl-10 col-xl-9">
@@ -171,7 +199,7 @@
                                         <div class="row align-items-center flex-fill">
                                             <div class="col-xxl-8 col-lg-6">
                                                 <div class="mb-3">
-                                                    <h6>Background Depan</h6>
+                                                    <h6>Background Depan (Lanscape)</h6>
                                                     <p>Background Depan yang digunakan untuk menampilkan background kartu.Rekomendasi Size <code> width: 8.56 cm; height: 5.398 cm;</code></p>
                                                 </div>
                                             </div>
@@ -205,7 +233,7 @@
                                         <div class="row align-items-center flex-fill">
                                             <div class="col-xxl-8 col-lg-6">
                                                 <div class="mb-3">
-                                                    <h6>Background Belakang</h6>
+                                                    <h6>Background Belakang (Portait)</h6>
                                                     <p>Background Belakang yang digunakan untuk menampilkan background kartu. Rekomendasi Size <code> height: 8.56cm;
                                                         width: 5.398cm;</code></p>
                                                 </div>
@@ -238,14 +266,79 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="tab2" role="tabpanel">
-                                    <h3>Tab 2 Content</h3>
-                                    <p>This is the content for the second tab.</p>
+                                    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
+                                            <div class="row align-items-center flex-fill">
+                                                <div class="col-xxl-8 col-lg-6">
+                                                    <div class="mb-3">
+                                                        <h6>Background Depan (Portait)</h6>
+                                                        <p>Background Depan yang digunakan untuk menampilkan background kartu.Rekomendasi Size <code> width: 5.398 cm; height:  8.56 cm;</code></p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-4 col-lg-6 mb-2">
+                                                    <div class="d-flex justify-content-bettween">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                            @foreach ($settings->where('key','gtkBG_front_default') as $fav)
+                                                                <input type="text" name="bg_old" value="{{ $fav->value }}" hidden>
+                                                                @if ($fav->value == "")
+                                                                    <a href="{{ asset('asset/img/card/Back-front-gtk-default.png') }}" data-lightbox="image1" data-title="Front Background">
+                                                                        <img src="{{ asset('asset/img/card/Back-front-gtk-default.png') }}" alt="front" width="90px">
+                                                                    </a>
+    
+                                                                @else
+                                                                <a href="/storage/{{ $fav->value }}" data-lightbox="image1" data-title="Front Background">
+                                                                    <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
+                                                                </a>
+                                                                @endif
+                                                            @endforeach
+                                                            <p><center><a href="/bg-back/reset?section=front&auth=gtk" id="reset">Reset Default</a></center></p>
+                                                            </div>
+    
+                                                        </div>
+                                                    </div>
+                                                        <input type="file" class="form-control"  name="gtkBG_front_default">
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
+                                            <div class="row align-items-center flex-fill">
+                                                <div class="col-xxl-8 col-lg-6">
+                                                    <div class="mb-3">
+                                                        <h6>Background Belakang (Portait)</h6>
+                                                        <p>Background Belakang yang digunakan untuk menampilkan background kartu. Rekomendasi Size <code> width: 5.398 cm; height:  8.56 cm;</code></p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-4 col-lg-6 mb-3">
+                                                    <div class="d-flex justify-content-bettween">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                            @foreach ($settings->where('key','gtkBG_back_default') as $fav)
+                                                                <input type="text" name="bg_old" value="{{ $fav->value }}" hidden>
+                                                                @if ($fav->value == "")
+                                                                    <a href="{{ asset('asset/img/card/Back-back-gtk-default.png') }}" data-lightbox="image2" data-title="Back Background">
+                                                                        <img src="{{ asset("asset/img/card/Back-back-gtk-default.png") }}" alt="logo" width="90px">
+                                                                    </a>
+                                                                @else
+                                                                <a href="/storage/{{ $fav->value }}" data-lightbox="image2" data-title="Back Background">
+                                                                    <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
+                                                                </a>
+                                                                @endif
+                                                            @endforeach
+                                                            <p><a href="/bg-back/reset?section=back&auth=gtk" id="reset">Reset Default</a></p>
+                                                            </div>
+                                                        </div>
+    
+                                                    </div>
+                                                    <input type="file" class="form-control"  name="gtkBG_back_default">
+    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-
-
-
+                            <button class="btn btn-primary save-btn"><i class="ti ti-device-floppy"></i></button>
                         </div>
                     </div>
                 </div>

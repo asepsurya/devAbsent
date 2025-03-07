@@ -38,6 +38,8 @@ class SettingSeeder extends Seeder
             ['key'=>'signature_stamp','value'=>''],
             ['key'=>'studentBG_front_default','value'=>''],
             ['key'=>'studentBG_back_default','value'=>''],
+            ['key'=>'gtkBG_front_default','value'=>''],
+            ['key'=>'gtkBG_back_default','value'=>''],
 
 
 

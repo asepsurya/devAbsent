@@ -252,6 +252,12 @@
                                     <i class="ti ti-calendar"></i><span>Kalender Akademik</span>
                                 </a>
                             </li>
+                            <li class="{{ Request::is('kalender') ? 'active' : ''}}">
+                                <a href="/kalender">
+                                    <i class="ti ti-cards"></i><span>Mesin Kartu</span>
+                                </a>
+                            </li>
+                            
                         @endcan
 
                         @can('Setelan Hari Libur')

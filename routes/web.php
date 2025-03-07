@@ -120,6 +120,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/akademik/datainduk/student/import',[DataIndukController::class,'studentIndex'])->name('studentIndex');
     Route::get('/akademik/datainduk/studentEksportExcel',[DataIndukController::class,'studentEksportExcel'])->name('studentEksportExcel');
     Route::get('/akademik/datainduk/studentcard',[DataIndukController::class,'dataIndukStudentCard'])->name('dataIndukStudentCard');
+    Route::post('/akademik/datainduk/studentcardmulti',[DataIndukController::class,'dataIndukStudentCardmulti'])->name('dataIndukStudentCardmulti');
 
     Route::get('/akademik/datainduk/jurusan',[DataIndukController::class,'dataIndukJurusan']);
     Route::post('/akademik/datainduk/jurusanAdd',[DataIndukController::class,'dataIndukJurusanAdd'])->name('dataIndukJurusanAdd');
@@ -229,7 +230,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/class/leasson/hari/update',[setelanHariController::class,'update'])->name('leasson.update');
     Route::get('/class/leasson/hari/delete/{id}',[setelanHariController::class,'delete'])->name('leasson.delete');
 
-
     // Apps Config Controller
     Route::get('/setelan/aplikasi', [AppsConfigController::class, 'app'])->name('setelan.app');
     Route::get('/setelan/sistem', [AppsConfigController::class, 'sistem'])->name('setelan.sistem');
@@ -285,16 +285,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/save-preview-data', [ExcelPreviewController::class, 'savePreviewData'])->name('save.preview.data');
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
+
+    Route::post('/getsemester',[RegionController::class,'getsemester'])->name('getsemester');
+    Route::post('/getwalikelas',[RegionController::class,'getwalikelas'])->name('getwalikelas');
+    Route::post('/getgtk',[RegionController::class,'getgtk'])->name('getgtk');
+    Route::post('/getmapel',[RegionController::class,'getmapel'])->name('getmapel');
 });
 Route::post('/logout',[authController::class,'logout'])->name('logout');
 // route Regency Administrasi
 Route::post('/getkabupaten',[RegionController::class,'getkabupaten'])->name('getkabupaten');
 Route::post('/getkecamatan',[RegionController::class,'getkecamatan'])->name('getkecamatan');
 Route::post('/getdesa',[RegionController::class,'getdesa'])->name('getdesa');
-Route::post('/getsemester',[RegionController::class,'getsemester'])->name('getsemester');
-Route::post('/getwalikelas',[RegionController::class,'getwalikelas'])->name('getwalikelas');
-Route::post('/getgtk',[RegionController::class,'getgtk'])->name('getgtk');
-Route::post('/getmapel',[RegionController::class,'getmapel'])->name('getmapel');
 
 
 Route::get('/fullcalender',[FullCalenderController::class,'index']);

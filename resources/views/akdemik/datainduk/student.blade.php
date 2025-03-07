@@ -2,6 +2,8 @@
 @section('container')
 @section('css')
 <link rel="stylesheet" href="{{ asset('asset/css/DataTables.css') }}">
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.all.min.js"></script>
 @endsection
 
 {{-- header --}}
@@ -20,6 +22,11 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
+        <div class="pe-1 mb-2">
+            <button type="button" class="btn btn-outline-light bg-white  me-1" data-bs-toggle="modal" data-bs-target="#studentModal">
+                <i class="ti ti-printer"></i> Cetak Kartu Siswa
+            </button>
+        </div>
         <div class="pe-1 mb-2">
             <a href="#" class="btn btn-outline-light bg-white  me-1"
                 data-bs-toggle="modal" data-bs-target="#import">
@@ -46,7 +53,9 @@
         <div class="mb-2">
             <a href="{{ route('dataIndukStudentAddIndex') }}" class="btn btn-primary d-flex align-items-center"><i
                     class="ti ti-square-rounded-plus me-2"></i> Peserta Didik</a>
+                  
         </div>
+       
     </div>
 </div>
 {{-- End Header --}}
@@ -172,16 +181,203 @@
         </div>
     </div>
 </div>
-
+@include('akdemik.datainduk.card.modalcard');
 @section('javascript')
 <script src="{{ asset('asset/js/DataTables.js') }}"></script>
+<!-- Custom Script -->
 
 <script>
     function exportPDF() {
         window.open("{{ route('export.students') }}", '_blank');
     }
 </script>
+<script>
+    $(document).ready(function() {
+        // Hancurkan instance DataTable yang ada sebelumnya jika ada
+        if ($.fn.dataTable.isDataTable('#studentTable')) {
+            $('#studentTable').DataTable().destroy();
+        }
 
+        if ($.fn.dataTable.isDataTable('#myTable')) {
+            $('#myTable').DataTable().destroy();
+        }
+
+        // Memanggil AJAX sekali untuk mendapatkan data
+        $.ajax({
+            url: '{!! route('dataIndukStudent') !!}', // Pastikan URL ini mengembalikan JSON
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                // Data untuk tabel pertama (studentTable)
+                $('#studentTable').DataTable({
+                    data: response.data,  // data dari AJAX response
+                    processing: true,
+                     // Set the height for scrolling (adjust as needed)
+                   
+                    order: [[1, 'desc']],
+                    columns: [
+                        { // Checkbox column to select rows
+                            data: 'id',
+                            sortable: false,
+                            searchable: false,
+                            render: function(data, type, row, meta) {
+                                return '<div class="form-check form-check-md"><input type="checkbox" name="id[]" class="select-row form-check-input" value="'+ row.id +'"></div>';
+                            },
+                            targets: 0
+                        },
+                        {
+                            data: 'nis',
+                            name: 'nis'
+                        },
+                        {
+                            data:'nama',
+                            name: 'nama'
+                        },
+
+                        {
+                            data: 'gender',
+                            render: function(data, type, row, meta){
+                                if(data === 'L'){
+                                    data = 'Laki - Laki'
+                                }else{
+                                    data = 'Perempuan'
+                                }
+                                return data;
+                            },
+                            targets: -1
+                        },
+                       
+                    ]
+                });
+
+                // Data untuk tabel kedua (myTable)
+                $('#myTable').DataTable({
+                    data: response.data,  // data dari AJAX response
+                    processing: true,
+                    order: [[1, 'desc']],
+                    columns: [
+                        { // mengambil & menampilkan kolom sesuai tabel database
+                            data: 'DT_RowIndex',
+                            sortable: false,
+                            target:[1],
+                            searchable:false,
+                            name: 'DT_RowIndex'
+                        },
+                        {
+                            data: 'id',
+                            sortable: false,
+                            render: function(data, type, row, meta){
+                                if(type === 'display'){
+                                    data = '<div class="hstack gap-2 fs-15">'+
+                                        '<a  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cetak Kartu Siswa" href="/akademik/datainduk/studentcard?data='+data+'" target="_BLANK" class="btn btn-icon btn-sm btn-soft-success rounded-pill"><i class="ti ti-cards"></i></a>'+
+                                        '<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit" href="/akademik/datainduk/studentEdit/'+data+'"  class="btn btn-icon btn-sm btn-soft-info rounded-pill">'+
+                                            '<i class="ti ti-pencil-minus"></i></a>'+
+                                        '<a  data-bs-toggle="modal" data-bs-target="#delete-modal-'+data+'" class="btn btn-icon btn-sm btn-soft-danger rounded-pill" data-bs-toggle="tooltip" title="Delete"><i class="ti ti-trash"></i></a>'+
+                                    '</div>'
+
+                                }
+                                return data;
+                            },
+                            targets: -1
+                        },
+                        {
+                            data: 'nis',
+                            name: 'nis'
+                        },
+                        {
+                            data: 'nama',
+                            render: function(data, type, row, meta) {
+                                let avatarImage = ''; // Initialize the avatar image HTML
+
+                                // Check if there is a valid 'gambar' or not
+                                if (row.foto && row.foto !== '') {
+                                    avatarImage = '<img src="/storage/' + row.foto + '" class="img-fluid rounded-circle" alt="foto">';
+                                } else {
+                                    // If no custom image exists, use initials as avatar
+                                        // Split the name into initials
+                                        let initials = data.split(' ').map(word => word.charAt(0).toUpperCase()).join('');
+
+                                        // Create a circle with the initials inside
+                                        avatarImage = '<div class="avatar avatar-md" style="background-color: #506ee4; display: flex; justify-content: center; align-items: center; border-radius: 50%;">' +
+                                                        '<span style="color: white; font-size: 10px; font-weight: bold;">' + initials + '</span>' +
+                                                    '</div>';
+                                }
+
+                                // Build and return the complete HTML for the column
+                                return '<div class="d-flex align-items-center">' +
+                                        '<a href="#" class="avatar avatar-md">' +
+                                            avatarImage +
+                                        '</a>' +
+                                        '<div class="ms-2">' +
+                                            '<p class="mb-0">' + data + '</p>' +
+                                        '</div>' +
+                                    '</div>';
+                            }
+                        },
+
+                        {
+                            data: 'gender',
+                            render: function(data, type, row, meta){
+                                if(data === 'L'){
+                                    data = 'Laki - Laki'
+                                }else{
+                                    data = 'Perempuan'
+                                }
+                                return data;
+                            },
+                            targets: -1
+                        },
+                        {
+                            data: 'tempat_lahir',
+                            name: 'tempat_lahir'
+                        },
+                        {
+                            data: 'tanggal_lahir',
+                            name: 'tanggal_lahir'
+                        },
+                        {
+                            data: 'rombel',
+                            render:function(data){
+                            if(data){
+                                data = data
+                            }else{
+                                data = 'belum disetel'
+                            }
+                            return data;
+                            }
+                        },
+                        {
+                            data: 'status',
+                            render:function(data){
+                            if(data === '1'){
+                                data = '<span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>'
+                            }else{
+                                data = '<span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak Aktif</span>'
+                            }
+                            return data;
+                        }
+                        },
+                        {
+                            data: 'tanggal_masuk',
+                            render:function(data){
+                            if(data){
+                                data = data
+                            }else{
+                                data = 'Belum disetel'
+                            }
+                            return data;
+                        }
+                        },
+                    ]
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching data: " + error);
+            }
+        });
+    });
+</script>
+{{-- 
 <script>
     $(function() {
         var table = new DataTable('#myTable', {
@@ -315,7 +511,7 @@
 
 
     });
-</script>
+</script> --}}
 
 {{-- <script>
     function myFunction() {

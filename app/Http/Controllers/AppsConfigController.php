@@ -66,7 +66,7 @@ class AppsConfigController extends Controller
                         Setting::where('key', 'signature_stamp')->update(['value' => $logoPath]);
                     }
 
-                      // untuk Background front
+                      // untuk Background back
                       if ($request->file('studentBG_back_default')) {
                         // Delete old logo and favicon files if they exist
                          if ($request->bg_old) {
@@ -85,6 +85,28 @@ class AppsConfigController extends Controller
                          $logoPath = $request->file('studentBG_front_default')->store('config');
                          Setting::where('key', 'studentBG_front_default')->update(['value' => $logoPath]);
                      }
+
+                        
+                     // untuk Background front
+                     if ($request->file('gtkBG_front_default')) {
+                        // Delete old logo and favicon files if they exist
+                         if ($request->bg_old) {
+                             Storage::delete($request->bg_old);
+                         }
+                         $logoPath = $request->file('gtkBG_front_default')->store('config');
+                         Setting::where('key', 'gtkBG_front_default')->update(['value' => $logoPath]);
+                     }
+
+                      // untuk Background back
+                      if ($request->file('gtkBG_back_default')) {
+                        // Delete old logo and favicon files if they exist
+                         if ($request->bg_old) {
+                             Storage::delete($request->bg_old);
+                         }
+                         $logoPath = $request->file('gtkBG_back_default')->store('config');
+                         Setting::where('key', 'gtkBG_back_default')->update(['value' => $logoPath]);
+                     }
+
 
 
                 }else{
@@ -117,6 +139,8 @@ class AppsConfigController extends Controller
                     Setting::where('key', 'headmasterid')->update(['value' => $request->headmasterid]);
                     Setting::where('key', 'nama_yayasan')->update(['value' => $request->nama_yayasan]);
                     Setting::where('key', 'signature_position')->update(['value' => $request->signature_position]);
+                   
+
                 }
             
         });
@@ -137,12 +161,22 @@ class AppsConfigController extends Controller
     }
  
     public function reset(){
-        if(request('section' ) === 'front'){
-            Setting::where('key', 'studentBG_front_default')->update(['value' => '']);
+        if(request('auth') == 'gtk'){
+            if(request('section' ) === 'front'){
+                Setting::where('key', 'gtkBG_front_default')->update(['value' => '']);
+            }
+            if(request('section')=== 'back'){
+                Setting::where('key', 'gtkBG_back_default')->update(['value' => '']);
+            }
+        }else{
+            if(request('section' ) === 'front'){
+                Setting::where('key', 'studentBG_front_default')->update(['value' => '']);
+            }
+            if(request('section')=== 'back'){
+                Setting::where('key', 'studentBG_back_default')->update(['value' => '']);
+            }
         }
-        if(request('section')=== 'back'){
-            Setting::where('key', 'studentBG_back_default')->update(['value' => '']);
-        }
+       
         Artisan::call('optimize:clear');
         return redirect()->back();
     }

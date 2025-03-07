@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kartu Pelajar {{ $nama }}</title>
+    <title>Kartu Pelajar
+    </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .card-container {
@@ -123,6 +124,7 @@
     </style>
 </head>
 <body>
+    @foreach ($data as $item )
     <div class="d-flex">
         {{-- front --}}
         <div class="card-container border shadow p-2 me-2">
@@ -145,7 +147,7 @@
             </div>
 
             <div class="d-flex">
-                @foreach ($data as $item )
+                
                 <div class="d-flex justify-content-bettween px-2">
                     
                     <div class="content me-3">
@@ -167,7 +169,7 @@
                     </div>                 
                 </div>
                 <div class="photo me-2" style="background: url('{{ $item->foto ? asset('storage/'.$item->foto) : asset('asset/img/user-default.jpg') }}') no-repeat center center; background-size: cover;"></div>
-                @endforeach
+               
             </div>
             <div class="footer">
 
@@ -198,10 +200,10 @@
                 <div class="photo me-2 mt-1" style="background: url('{{ $item->foto ? asset('storage/'.$item->foto) : asset('asset/img/user-default.jpg') }}') no-repeat center center; background-size: cover; width:80px;height:100px;border-radius:10px;"></div>
                 <div style="width:120px;line-height: 1.0; margin-top:3px;"  >
                     <p class="border-bottom border-dark p-1" style="font-size:12px; margin-bottom:-1px; text-transform: uppercase;">
-                        {{ strtoupper($nama) }}
+                        {{ strtoupper($item->nama) }}
                     </p>
                     <p class="pt-1" style="font-size:12px; margin-bottom:-1px;">
-                        {{ $nis }}
+                        {{ $item->nis }}
                     </p>
                 </div>
                 
@@ -209,6 +211,7 @@
           
         </div>
     </div>
+    @endforeach
     <script>
         window.onload = function() {
             // Simulate saving some data (could be to localStorage, server, etc.)

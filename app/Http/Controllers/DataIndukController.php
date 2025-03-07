@@ -50,15 +50,25 @@ class DataIndukController extends Controller
         return view('akdemik.datainduk.student',[
             'title'=>'Peserta Didik',
             'students'=>student::orderBy('nama', 'ASC')->get(['id','nis']),
-            'provinsi'=>Province::all()
+            'provinsi'=>Province::all(),
+           
         ]);
     }
     public function dataIndukStudentCard(){
-        $data = student::where('id',request('data'))->get();
-        foreach($data as $item){ $nama = $item->nama;$nis=$item->nis; }
+       $data = student::where('id',request('data'))->get();
+       foreach($data as $item){ $nama = $item->nama;$nis=$item->nis; }
        return view('akdemik.datainduk.card.studentCard',[
             'data'=>$data
        ],compact('nama','nis'));
+    }
+
+    public function dataIndukStudentCardmulti(request $request){
+  
+        $data = student::whereIn('id',$request->id)->get();
+       
+        return view('akdemik.datainduk.card.printCardStudent',[
+            'data'=>$data
+       ]);
     }
 
     public function dataIndukJurusan(){

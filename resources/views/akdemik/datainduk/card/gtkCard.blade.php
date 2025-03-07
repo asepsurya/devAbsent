@@ -7,10 +7,11 @@
     <title>Kartu Nama {{ $nama }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+     
         .card-container {
             height: 8.56cm;
             width: 5.398cm;
-            background: url('{{ app("settings")["studentBG_back_default"] == "" ? asset("asset/img/card/Back-back-gtk-default.png") : "/storage/" .app("settings")["studentBG_back_default"] }}') no-repeat center center;
+            background: url('{{ app("settings")["gtkBG_back_default"] == "" ? asset("asset/img/card/Back-back-gtk-default.png") : "/storage/" .app("settings")["gtkBG_back_default"] }}') no-repeat center center;
             background-size: cover;
             border-radius: 10px;
             padding: 10px;
@@ -20,7 +21,7 @@
         .card-container-back {
             height: 8.56cm;
             width: 5.398cm;
-            background: url('{{ app("settings")["studentBG_back_default"] == "" ? asset("asset/img/card/Back-front-gtk-default.png") : "/storage/" .app("settings")["studentBG_back_default"] }}') no-repeat center center;
+            background: url('{{ app("settings")["gtkBG_front_default"] == "" ? asset("asset/img/card/Back-front-gtk-default.png") : "/storage/" .app("settings")["gtkBG_front_default"] }}') no-repeat center center;
             background-size: cover;
             border-radius: 10px;
             padding: 10px;
