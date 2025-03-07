@@ -31,7 +31,7 @@ class SettingSeeder extends Seeder
             ['key'=>'estimasi_waktu_masuk','value'=>'45'],
             ['key'=>'instagram_userID','value'=>'9478774795468483'],
             ['key'=>'instagram_access_token','value'=>'IGAAHKoYxeZA3JBZAFBTdTBEWXpkeVhEQS1mV096WUNxSXhWWHhqVklsUmcwSEdzQXRmZAV80UjcyZAC1xRTVGV2h2RHpNSE9iTVJRVDg1aFc3YV82SkVSVEFLYU5CaUVGWVdrWnVvb2pSMHFBcF9GZAWZAxSFhB'],
-            ['key'=>'signature_city','value'=>''],
+            ['key'=>'signature_city','value'=>'Tasikmalaya'],
             ['key'=>'signature_position','value'=>'Kepala Sekolah'],
             ['key'=>'signature_date','value'=>'03/06/2025'],
             ['key'=>'signature','value'=>''],
@@ -40,7 +40,7 @@ class SettingSeeder extends Seeder
             ['key'=>'studentBG_back_default','value'=>''],
 
 
-            ['key'=>'signature_position','value'=>'Kepala Sekolah'],
+
 
 
        ];

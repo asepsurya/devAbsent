@@ -9,7 +9,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
 class barcodeController extends Controller
-{   
+{
     public function generateQRCode($code)
     {
         // Generate QR code image
@@ -30,7 +30,7 @@ class barcodeController extends Controller
         return response()->json(['url' => url('qrcodes/' . $code . '.png')]);
     }
     public function card(){
-        return view('akdemik.datainduk.card.studentCard');
+        return view('akdemik.datainduk.card.gtkCard');
     }
 
 

@@ -233,6 +233,9 @@
                                     '<i class="ti ti-dots-vertical fs-14"></i>'+
                                     '</a>'+
                             '<ul class="dropdown-menu dropdown-menu-right p-3" style="">'+
+                                '<li>'+
+                                    '<a class="dropdown-item rounded-1" href="/gtk/cetak?data='+row.id+'" target="_BLANK" ><i class="ti ti-menu me-2"></i>Cetak Kartu</a>'+
+                                    '</li>'+
                                  '<li>'+
                                     '<a class="dropdown-item rounded-1" href="/gtk/update/'+ row.id +'" ><i class="ti ti-menu me-2"></i>Edit</a>'+
                                     '</li>'+

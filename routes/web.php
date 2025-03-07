@@ -169,6 +169,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/gtk/import/index',[GTKController::class,'GTKimportIndex'])->name('GTKimportIndex');
     Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
     Route::post('/gtk/dataIndukGTKfoto',[GTKController::class,'GTKfoto'])->name('GTKfoto');
+    Route::get('/gtk/cetak',[GTKController::class,'card'])->name('card');
     // route rfid
     Route::get('/rfid',[rfidController::class,'rfid'])->name('rfid');
     Route::get('/rfid/delete{id}',[rfidController::class,'rfidDelete'])->name('rfidDelete');

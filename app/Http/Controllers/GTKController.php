@@ -33,6 +33,14 @@ class GTKController extends Controller
 
         ]);
     }
+    public function card(){
+        $data = gtk::where('id',request('data'))->with('JenisGTK')->get();
+        foreach($data as $item){ $nama = $item->nama;$nik=$item->nik; }
+        return view('akdemik.datainduk.card.gtkCard',[
+            'title'=>'Kartu Nama ',
+            'data'=>$data
+        ],compact('nama','nik'));
+    }
     public function employmenttypesIndex(){
         return view('GTK.jenis',[
             'title'=>'Jenis Guru dan Tenaga Kependidikan',

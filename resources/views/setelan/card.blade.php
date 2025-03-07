@@ -70,8 +70,8 @@
                                     </div>
                                 </div>
                             </div>
-                       
-                            
+
+
                             <div class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
                                 <div class="row align-items-center flex-fill">
                                     <div class="col-xxl-8 col-lg-6">
@@ -155,76 +155,96 @@
                             <div class="alert alert-info" role="alert">
                                 Bagian ini bertujuan untuk menghubungkan postingan Instagram ke dalam aplikasi. Dengan mengintegrasikan Instagram ke aplikasi, pengguna dapat melihat, berinteraksi, atau berkongsi kandungan dari Instagram secara langsung dalam aplikasi ini.
                               </div>
-                              <div class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
-                                <div class="row align-items-center flex-fill">
-                                    <div class="col-xxl-8 col-lg-6">
-                                        <div class="mb-3">
-                                            <h6>Background Depan</h6>
-                                            <p>Background Depan yang digunakan untuk menampilkan background kartu.Rekomendasi Size <code> width: 8.56 cm; height: 5.398 cm;</code></p>
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-4 col-lg-6 mb-2">
-                                        <div class="d-flex justify-content-bettween">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                @foreach ($settings->where('key','studentBG_front_default') as $fav)
-                                                    <input type="text" name="bg_old" value="{{ $fav->value }}" hidden>
-                                                    @if ($fav->value == "")
-                                                        <a href="{{ asset('asset/img/card/bg-front-default.jpg') }}" data-lightbox="image1" data-title="Front Background">
-                                                            <img src="{{ asset('asset/img/card/bg-front-default.jpg') }}" alt="logo" width="90px">
-                                                        </a>
-                                                
-                                                    @else
-                                                    <a href="/storage/{{ $fav->value }}" data-lightbox="image1" data-title="Front Background">
-                                                        <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
-                                                    </a>
-                                                    @endif
-                                                @endforeach
-                                                <p><center><a href="/bg-back/reset?section=front" id="reset">Reset Default</a></center></p>
-                                                </div>
-                                               
-                                            </div>
-                                        </div>
-                                            <input type="file" class="form-control"  name="studentBG_front_default">
-                                        </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
-                                <div class="row align-items-center flex-fill">
-                                    <div class="col-xxl-8 col-lg-6">
-                                        <div class="mb-3">
-                                            <h6>Background Belakang</h6>
-                                            <p>Background Belakang yang digunakan untuk menampilkan background kartu. Rekomendasi Size <code> width: 8.56cm;
-                                                height: 5.398cm;</code></p>
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-4 col-lg-6 mb-3">
-                                        <div class="d-flex justify-content-bettween">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                @foreach ($settings->where('key','studentBG_back_default') as $fav)
-                                                    <input type="text" name="bg_old" value="{{ $fav->value }}" hidden>
-                                                    @if ($fav->value == "")
-                                                        <a href="{{ asset('asset/img/card/Back-bg-default.png') }}" data-lightbox="image2" data-title="Back Background">
-                                                            <img src="{{ asset("asset/img/card/Back-bg-default.png") }}" alt="logo" width="90px">
-                                                        </a>
-                                                    @else
-                                                    <a href="/storage/{{ $fav->value }}" data-lightbox="image2" data-title="Back Background">
-                                                        <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
-                                                    </a>
-                                                    @endif
-                                                @endforeach
-                                                <p><a href="/bg-back/reset?section=back" id="reset">Reset Default</a></p>
+
+                              <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab">Desain Kartu untuk Siswa</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab">Desain Kartu untuk Guru</button>
+                                </li>
+                            </ul>
+                            <!-- Tab Content -->
+                            <div class="tab-content mt-3" id="myTabContent">
+                                <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
+                                        <div class="row align-items-center flex-fill">
+                                            <div class="col-xxl-8 col-lg-6">
+                                                <div class="mb-3">
+                                                    <h6>Background Depan</h6>
+                                                    <p>Background Depan yang digunakan untuk menampilkan background kartu.Rekomendasi Size <code> width: 8.56 cm; height: 5.398 cm;</code></p>
                                                 </div>
                                             </div>
-                                            
+                                            <div class="col-xxl-4 col-lg-6 mb-2">
+                                                <div class="d-flex justify-content-bettween">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                        @foreach ($settings->where('key','studentBG_front_default') as $fav)
+                                                            <input type="text" name="bg_old" value="{{ $fav->value }}" hidden>
+                                                            @if ($fav->value == "")
+                                                                <a href="{{ asset('asset/img/card/bg-front-default.jpg') }}" data-lightbox="image1" data-title="Front Background">
+                                                                    <img src="{{ asset('asset/img/card/bg-front-default.jpg') }}" alt="logo" width="90px">
+                                                                </a>
+
+                                                            @else
+                                                            <a href="/storage/{{ $fav->value }}" data-lightbox="image1" data-title="Front Background">
+                                                                <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
+                                                            </a>
+                                                            @endif
+                                                        @endforeach
+                                                        <p><center><a href="/bg-back/reset?section=front" id="reset">Reset Default</a></center></p>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                    <input type="file" class="form-control"  name="studentBG_front_default">
+                                                </div>
                                         </div>
-                                        <input type="file" class="form-control"  name="studentBG_back_default">
-                                        
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
+                                        <div class="row align-items-center flex-fill">
+                                            <div class="col-xxl-8 col-lg-6">
+                                                <div class="mb-3">
+                                                    <h6>Background Belakang</h6>
+                                                    <p>Background Belakang yang digunakan untuk menampilkan background kartu. Rekomendasi Size <code> height: 8.56cm;
+                                                        width: 5.398cm;</code></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-4 col-lg-6 mb-3">
+                                                <div class="d-flex justify-content-bettween">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                        @foreach ($settings->where('key','studentBG_back_default') as $fav)
+                                                            <input type="text" name="bg_old" value="{{ $fav->value }}" hidden>
+                                                            @if ($fav->value == "")
+                                                                <a href="{{ asset('asset/img/card/Back-bg-default.png') }}" data-lightbox="image2" data-title="Back Background">
+                                                                    <img src="{{ asset("asset/img/card/Back-bg-default.png") }}" alt="logo" width="90px">
+                                                                </a>
+                                                            @else
+                                                            <a href="/storage/{{ $fav->value }}" data-lightbox="image2" data-title="Back Background">
+                                                                <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
+                                                            </a>
+                                                            @endif
+                                                        @endforeach
+                                                        <p><a href="/bg-back/reset?section=back" id="reset">Reset Default</a></p>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <input type="file" class="form-control"  name="studentBG_back_default">
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="tab-pane fade" id="tab2" role="tabpanel">
+                                    <h3>Tab 2 Content</h3>
+                                    <p>This is the content for the second tab.</p>
+                                </div>
                             </div>
-                          
+
+
+
 
                         </div>
                     </div>
