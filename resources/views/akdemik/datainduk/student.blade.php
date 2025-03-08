@@ -38,7 +38,7 @@
                 <i class="ti ti-file-export me-2"></i>Export
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3 " style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 41px);" data-popper-placement="bottom-end">
-               
+
                 <li>
                     <a href="javascript:void(0)" onclick="exportPDF()" class="dropdown-item rounded-1"><i class="ti ti-file me-2"></i>Export
                         as PDF</a>
@@ -53,9 +53,9 @@
         <div class="mb-2">
             <a href="{{ route('dataIndukStudentAddIndex') }}" class="btn btn-primary d-flex align-items-center"><i
                     class="ti ti-square-rounded-plus me-2"></i> Peserta Didik</a>
-                  
+
         </div>
-       
+
     </div>
 </div>
 {{-- End Header --}}
@@ -181,7 +181,7 @@
         </div>
     </div>
 </div>
-@include('akdemik.datainduk.card.modalcard');
+@include('akdemik.datainduk.card.modalcard')
 @section('javascript')
 <script src="{{ asset('asset/js/DataTables.js') }}"></script>
 <!-- Custom Script -->
@@ -213,7 +213,7 @@
                     data: response.data,  // data dari AJAX response
                     processing: true,
                      // Set the height for scrolling (adjust as needed)
-                   
+
                     order: [[1, 'desc']],
                     columns: [
                         { // Checkbox column to select rows
@@ -246,7 +246,7 @@
                             },
                             targets: -1
                         },
-                       
+
                     ]
                 });
 
@@ -377,7 +377,7 @@
         });
     });
 </script>
-{{-- 
+{{--
 <script>
     $(function() {
         var table = new DataTable('#myTable', {

@@ -145,7 +145,7 @@
                                             Pengaturan<span class="menu-arrow"></span>
                                         </a>
                                         <ul class="mx-3">
-                                          
+
                                             <li><a href="/akademik/pengaturan/walikelas" class="{{ Request::is('akademik/pengaturan/walikelas') ? 'active' : ''}}">Wali Kelas</a></li>
                                             <li><a href="/akademik/pengaturan/rombel" class="{{ Request::is('akademik/pengaturan/rombel') ? 'active' : ''}}">Rombongan Belajar</a></li>
                                         </ul>
@@ -239,7 +239,7 @@
                                 <li><a href="/class/leasson" class="{{ Request::is('class/leasson/list*') ? 'active' : ''}}">Setel Jadwal</a></li>
                                 <li><a href="/class/leasson/reference" class="{{ Request::is('class/leasson/reference') ? 'active' : ''}}">Setelan Referensi</a></li>
                                 <li><a href="/class/leasson/hari" class="{{ Request::is('class/leasson/hari') ? 'active' : ''}}">Hari Efektif</a></li>
-                                
+
                             </ul>
 
 
@@ -252,12 +252,8 @@
                                     <i class="ti ti-calendar"></i><span>Kalender Akademik</span>
                                 </a>
                             </li>
-                            <li class="{{ Request::is('kalender') ? 'active' : ''}}">
-                                <a href="/kalender">
-                                    <i class="ti ti-cards"></i><span>Mesin Kartu</span>
-                                </a>
-                            </li>
-                            
+
+
                         @endcan
 
                         @can('Setelan Hari Libur')

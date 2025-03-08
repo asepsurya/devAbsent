@@ -33,7 +33,7 @@
             margin-bottom: 10px;
         }
 
-        .photo {  
+        .photo {
             width: 60px;
             height: 70px;
             margin-top: -15px;
@@ -88,7 +88,7 @@
             position: absolute;
             left: auto;
             right: 40px;
-            bottom: -8px;
+            bottom: 2px;
         }
 
         .content p {
@@ -120,98 +120,117 @@
             /* Mengurangi jarak sebelum teks kepala sekolah */
 
         }
-    
+
     </style>
 </head>
 <body>
-    @foreach ($data as $item )
-    <div class="d-flex">
+    <div class="row g-2 d-flex justify-content-center">
+        @foreach ($data as $item )
         {{-- front --}}
         <div class="card-container border shadow p-2 me-2">
             <div class="d-flex justify-content-between">
                 <div class="me-2">
-                    <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" alt="logo" width="40px" style="margin-top: -5px;">
+                    <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}"
+                        alt="logo" width="40px" style="margin-top: -5px;">
                 </div>
                 <div class="header">
                     <p>{{ app('settings')['nama_yayasan'] }}<br>
                         <strong style="font-size: 9px">{{ app('settings')['site_name'] }}</strong><br>
-                        <div class="alamat">
-                            <p style="font-size: 7px;">{{ app('settings')['address'] }}</p>
-                            <p style="font-size: 7px;">Email : <span class="text-primary">{{ app('settings')['email'] }}</span> Telp : {{ app('settings')['phone'] }}</p>
-                        </div>
+                    <div class="alamat">
+                        <p style="font-size: 7px;">{{ app('settings')['address'] }}</p>
+                        <p style="font-size: 7px;">Email : <span class="text-primary">{{ app('settings')['email'] }}</span>
+                            Telp : {{ app('settings')['phone'] }}</p>
+                    </div>
 
                 </div>
                 <div class="ms-2">
-                    <img src="{{ asset('asset/img/card/Logo_OSIS.svg.png') }}" alt="Stempel" width="35px" style="margin-top: -5px;">
+                    <img src="{{ asset('asset/img/card/Logo_OSIS.svg.png') }}" alt="Stempel" width="35px"
+                        style="margin-top: -5px;">
                 </div>
             </div>
 
             <div class="d-flex">
-                
+
                 <div class="d-flex justify-content-bettween px-2">
-                    
+
                     <div class="content me-3">
                         <p><strong>Nama Siswa &nbsp;&nbsp;&nbsp;:</strong> {{ strtoupper($item->nama) }}</p>
                         <p><strong>Nomor Induk&nbsp;:</strong> {{ $item->nis }}</p>
-                        <p><strong>TTL <span class="ms-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :</span></strong> {{ $item->tempat_lahir }},{{ \Carbon\Carbon::parse($item->tanggal_lahir)->locale('id')->format('d F Y') }}</p>                        
+                        <p><strong>TTL <span class="ms-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :</span></strong>
+                            {{ $item->tempat_lahir }},{{
+                            \Carbon\Carbon::parse($item->tanggal_lahir)->locale('id')->format('d F Y') }}</p>
                         <p><strong>Agama <span class="ms-3">&nbsp;&nbsp;&nbsp;:</span></strong> {{ $item->agama }}</p>
-                        <p><strong>Alamat<span class="ms-3">&nbsp;&nbsp;&nbsp;&nbsp;:</span></strong> {{ ucwords(strtolower($item->alamat)) ?? '' }} 
-                            <p> 
-                                Kec. {{ ucwords(strtolower($item->kecamatan->name ?? '')) }}, 
-                                Kel. {{ ucwords(strtolower($item->desa->name ?? '')) }} 
-                                {{ ucwords(strtolower($item->kota->name ?? '')) }}
-                            </p>
+                        <p><strong>Alamat<span class="ms-3">&nbsp;&nbsp;&nbsp;&nbsp;:</span></strong> {{
+                            ucwords(strtolower($item->alamat)) ?? '' }}
+                        <p>
+                            Kec. {{ ucwords(strtolower($item->kecamatan->name ?? '')) }},
+                            Kel. {{ ucwords(strtolower($item->desa->name ?? '')) }}
+                            {{ ucwords(strtolower($item->kota->name ?? '')) }}
+                        </p>
                         </p>
                     </div>
                     <div class="content2">
                         <p><strong>JK &nbsp;&nbsp;&nbsp;&nbsp;:</strong> {{ $item->gender }}</p>
                         <p><strong>Gol Darah &nbsp;&nbsp;:</strong> - </p>
-                    </div>                 
+                    </div>
                 </div>
-                <div class="photo me-2" style="background: url('{{ $item->foto ? asset('storage/'.$item->foto) : asset('asset/img/user-default.jpg') }}') no-repeat center center; background-size: cover;"></div>
-               
+                <div class="photo me-2"
+                    style="background: url('{{ $item->foto ? asset('storage/'.$item->foto) : asset('asset/img/user-default.jpg') }}') no-repeat center center; background-size: cover;">
+                </div>
+
             </div>
             <div class="footer">
 
-                <p>{{ app('settings')['signature_city'] == '' ? 'Tasikmalaya' : app('settings')['signature_city'] }}  , {{ app('settings')['signature_date'] == '' ? date("D/MM/YYYY") : app('settings')['signature_date'] }}<p>
-                        <p> {{ app('settings')['signature_position'] }}</p>
-                        <img src="{{ app('settings')['signature'] == '' ? asset('asset/img/card/signature_default.png') : '/storage/'.app('settings')['signature']  }}" alt="Tanda Tangan" class="signature">
-                        <p><b>{{ app('settings')['headmaster'] == '' ? 'JHON DOE' : app('settings')['headmaster'] }}</b></p>
-                       
-                        @if(app('settings')['headmasterid'] !== '')
-                            <p><b>NIP : {{ app('settings')['headmasterid'] }}</b></p>
-                        @endif
-                        <img src="{{ app('settings')['signature_stamp'] == '' ? asset('asset/img/card/signature_stamp.png') : '/storage/'.app('settings')['signature_stamp']  }}" alt="Stempel" class="stamp">
+                <p>{{ app('settings')['signature_city'] == '' ? 'Tasikmalaya' : app('settings')['signature_city'] }} , {{
+                    app('settings')['signature_date'] == '' ? date("D/MM/YYYY") : app('settings')['signature_date'] }}
+                <p>
+                <p> {{ app('settings')['signature_position'] }}</p>
+                <img src="{{ app('settings')['signature'] == '' ? asset('asset/img/card/signature_default.png') : '/storage/'.app('settings')['signature']  }}"
+                    alt="Tanda Tangan" class="signature">
+                <p><b>{{ app('settings')['headmaster'] == '' ? 'JHON DOE' : app('settings')['headmaster'] }}</b></p>
+
+                @if(app('settings')['headmasterid'] !== '')
+                <p><b>NIP : {{ app('settings')['headmasterid'] }}</b></p>
+                @endif
+                <img src="{{ app('settings')['signature_stamp'] == '' ? asset('asset/img/card/signature_stamp.png') : '/storage/'.app('settings')['signature_stamp']  }}"
+                    alt="Stempel" class="stamp">
 
             </div>
             <div class="berlaku"><i> *) Berlaku selama menjadi siswa</i></div>
         </div>
-        {{-- back --}}
-        <div class="card-container-back border shadow p-2">
+        @endforeach
+        @foreach ($data as $item)
+        <div class="card-container-back border shadow p-2 me-2">
             <div class="card-body d-flex justify-content-center align-items-center pt-5" style="margin-top: -10px;">
-                <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" alt="Stempel" width="60px" style="margin-top: -5px;"><br>
-                
+                <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}"
+                    alt="Stempel" width="60px" style="margin-top: -5px;"><br>
+
             </div>
             <center>
                 <b style="font-size: 15px; ">
                     {{ app('settings')['site_name'] }}
                 </b>
-                
-                <div class="photo me-2 mt-1" style="background: url('{{ $item->foto ? asset('storage/'.$item->foto) : asset('asset/img/user-default.jpg') }}') no-repeat center center; background-size: cover; width:80px;height:100px;border-radius:10px;"></div>
-                <div style="width:120px;line-height: 1.0; margin-top:3px;"  >
-                    <p class="border-bottom border-dark p-1" style="font-size:12px; margin-bottom:-1px; text-transform: uppercase;">
+
+                <div class="photo me-2 mt-1"
+                    style="background: url('{{ $item->foto ? asset('storage/'.$item->foto) : asset('asset/img/user-default.jpg') }}') no-repeat center center; background-size: cover; width:80px;height:100px;border-radius:10px;">
+                </div>
+                <div style="width:120px;line-height: 1.0; margin-top:3px;">
+                    <p class="border-bottom border-dark p-1"
+                        style="font-size:12px; margin-bottom:-1px; text-transform: uppercase;">
                         {{ strtoupper($item->nama) }}
                     </p>
                     <p class="pt-1" style="font-size:12px; margin-bottom:-1px;">
                         {{ $item->nis }}
                     </p>
                 </div>
-                
+
             </center>
-          
+
         </div>
+        @endforeach
     </div>
-    @endforeach
+
+
     <script>
         window.onload = function() {
             // Simulate saving some data (could be to localStorage, server, etc.)

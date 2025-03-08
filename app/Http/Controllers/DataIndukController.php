@@ -51,7 +51,7 @@ class DataIndukController extends Controller
             'title'=>'Peserta Didik',
             'students'=>student::orderBy('nama', 'ASC')->get(['id','nis']),
             'provinsi'=>Province::all(),
-           
+
         ]);
     }
     public function dataIndukStudentCard(){
@@ -63,9 +63,9 @@ class DataIndukController extends Controller
     }
 
     public function dataIndukStudentCardmulti(request $request){
-  
+
         $data = student::whereIn('id',$request->id)->get();
-       
+
         return view('akdemik.datainduk.card.printCardStudent',[
             'data'=>$data
        ]);
@@ -433,7 +433,7 @@ class DataIndukController extends Controller
         toastr()->success('Data Berhasil diubah');
         return redirect()->back();
     }
-    
+
     public function dataIndukTahunajarDelete($id){
         TahunPelajaran::where('id',$id)->delete();
         toastr()->success('Data Berhasil dihapus');

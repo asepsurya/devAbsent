@@ -2,7 +2,8 @@
 @section('container')
 @section('css')
 <link rel="stylesheet" href="{{ asset('asset/css/DataTables.css') }}">
-
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.all.min.js"></script>
 @endsection
 {{-- header --}}
 <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
@@ -18,17 +19,13 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
+
         <div class="pe-1 mb-2">
-            <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh">
-                <i class="ti ti-refresh"></i>
-            </a>
-        </div>
-        <div class="pe-1 mb-2">
-            <button type="button" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                data-bs-placement="top" aria-label="Print" data-bs-original-title="Print">
-                <i class="ti ti-printer"></i>
-            </button>
+            <div class="pe-1 mb-2 mt-2">
+                <button type="button" class="btn btn-outline-light bg-white  me-1" data-bs-toggle="modal" data-bs-target="#gtkModal">
+                    <i class="ti ti-printer"></i> Cetak Kartu
+                </button>
+            </div>
         </div>
         <div class="pe-1 mb-2">
             <a href="#" class="btn btn-outline-light bg-white  me-1" data-bs-toggle="modal" data-bs-target="#import">
@@ -189,6 +186,7 @@
         </div>
     </div>
 </div>
+@include('GTK.gtkAction.modalcard')
 @endforeach
 @section('javascript')
 
@@ -309,6 +307,63 @@
                     return data;
                    }
                 },
+
+
+
+
+            ]
+        });
+
+
+    });
+
+    $(function() {
+        var table = new DataTable('#tabelguru', {
+            layout:{
+                topEnd:{
+                    search:{
+                        placeholder:'',
+                        text:'<span class="ti ti-search"></span> _INPUT_'
+                    }
+                }
+            },
+            processing: true,
+            order: [[1, 'desc']],
+            serverSide: true,
+            ajax: '{!! route('GTKall') !!}', // memanggil route yang menampilkan data json
+            columns: [
+
+                 { // Checkbox column to select rows
+                            data: 'id',
+                            sortable: false,
+                            searchable: false,
+                            render: function(data, type, row, meta) {
+                                return '<div class="form-check form-check-md"><input type="checkbox" name="id[]" class="select-row form-check-input" value="'+ row.id +'"></div>';
+                            },
+                            targets: 0
+                        },
+
+                {
+                    data: 'nik',
+                    name: 'nik'
+                },
+                {
+                    data: 'nama',
+                    name: 'nama'
+                },
+                {
+                    data: 'gender',
+                    render: function(data, type, row, meta){
+                        if(data === 'L'){
+                            data = 'Laki - Laki'
+                        }else{
+                            data = 'Perempuan'
+                        }
+                        return data;
+                    },
+                    targets: -1
+                },
+
 
 
 

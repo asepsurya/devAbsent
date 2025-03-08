@@ -41,6 +41,15 @@ class GTKController extends Controller
             'data'=>$data
         ],compact('nama','nik'));
     }
+
+    public function cardmulti(request $request){
+        $data = gtk::whereIn('id',$request->id)->get();
+
+        return view('GTK.gtkAction.printCardGTK',[
+            'data'=>$data
+       ]);
+    }
+
     public function employmenttypesIndex(){
         return view('GTK.jenis',[
             'title'=>'Jenis Guru dan Tenaga Kependidikan',

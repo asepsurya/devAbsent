@@ -116,7 +116,7 @@
                                 Bagian ini bertujuan untuk menghubungkan postingan Instagram ke dalam aplikasi. Dengan mengintegrasikan Instagram ke aplikasi, pengguna dapat melihat, berinteraksi, atau berkongsi kandungan dari Instagram secara langsung dalam aplikasi ini.
                               </div>
                             <div class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
-                                <div class="row align-items-center flex-fill"> 
+                                <div class="row align-items-center flex-fill">
                                     <div class="col-xxl-8 col-lg-6">
                                         <div class="mb-3">
                                             <h6>INSTAGRAM USER ID</h6>
@@ -141,13 +141,13 @@
                                     </div>
                                     <div class="col-xxl-4 col-lg-6 mb-3">
                                         @foreach ($settings->where('key','instagram_access_token') as $accessToken )
-                                            <textarea name="access_token" name="access_token"  cols="30" rows="10" class="form-control">{{ $accessToken->value }}</textarea>   
+                                            <textarea name="access_token" name="access_token"  cols="30" rows="10" class="form-control">{{ $accessToken->value }}</textarea>
                                         @endforeach
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center">
-                                <a class="btn btn-outline-light bg-white " href="https://socialfeed.quadlayers.com/" target="_blank"><i class="ti ti-link" ></i> Get Access</a>
+                                <a class="btn btn-outline-light bg-white " href="https://developers.facebook.com/async/registration/dialog/?src=default" target="_blank"><i class="ti ti-link" ></i> Get Access</a>
                             </div>
                             <button class="btn btn-primary save-btn"><i class="ti ti-device-floppy"></i></button>
                         </div>
