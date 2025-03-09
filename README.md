@@ -28,14 +28,13 @@ Mesin yang digunakan untuk aplikasi ini terdapat dua jenis, menggunakan idcard d
 
 ***Setup Database***
 
-1. Buat database baru dengan nama `saktiabsensi`
-2. Import file `saktiabsensi.sql` ke database yang telah dibuat
+Buat database baru dengan nama `saktiabsensi`
 
 ***Setup Aplikasi***
 
 1. Clone repository
    ```bash
-   git clone https://github.com/asepsurya/Aplikasi-Absensi-SAKTI.git
+   git clone https://github.com/asepsurya/Aplikasi-Absensi-SAKTI.git saktiabsensi
    ```
 2. Buat file .env
    ```bash
@@ -63,16 +62,27 @@ Mesin yang digunakan untuk aplikasi ini terdapat dua jenis, menggunakan idcard d
    php artisan migrate:fresh --seed
    ```
 7. Membuat link storage agar diakses public
+   Local
    ```bash
    php artisan storage:link
    ```
-8. Jalankan website
+   Hosting Multi Domain
+   ```bash
+   ln -s /home/username/domains/domain.my.id/public_html/app/saktiabsensi/storage/app/public /home/username/domains/domain.my.id/public_html/app/saktiabsensi/storage 
+   ```
+9. Jalankan website
+   Local
    ```bash
    php artisan serve
    ```
-9. Buka di browser
+11. Buka di browser
+   Local
    ```bash
    http://127.0.0.1:8000
+   ```
+   Hosting
+   ```bash
+   https://domain.my.id
    ```
 
 ***Login User***
