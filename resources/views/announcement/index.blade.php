@@ -53,9 +53,12 @@
                 <a href="javascript:void(0);" data-bs-toggle="modal"  data-bs-target="#edit-{{ $item->id }}" class="text-primary border rounded p-1 badge me-1 primary-btn-hover">
                     <i class="ti ti-edit-circle fs-16"></i>
                 </a>
-                <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-modal" class="text-danger border rounded p-1 badge danger-btn-hover">
+
+                <a href="/announcements/delete{{ $item->id }}"
+                    class="text-danger border rounded p-1 badge danger-btn-hover"
+                    onclick="return confirm('Are you sure you want to delete this item?');">
                     <i class="ti ti-trash-x fs-16"></i>
-                </a>
+                 </a>
             </div>
         </div>
     </div>
@@ -123,8 +126,8 @@
                                     <label class="form-label">Message To</label>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label class="checkboxs mb-1">
-                                                <input type="checkbox" value="admin" name="recived[]">
+                                            <label class="checkboxs mb-1" hidden>
+                                                <input type="checkbox" value="admin" name="recived[]" checked >
                                                 <span class="checkmarks"></span>
                                                 admin
                                             </label>

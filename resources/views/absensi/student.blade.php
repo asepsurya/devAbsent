@@ -116,7 +116,7 @@
                     <tr >
                         <th width="1%" class="border">#</th>
                         <th width="1%"></th>
-                        <th width="3%">RFID</th>
+                        <th width="3%">NIS</th>
                         <th width="50%">Nama Lengkap</th>
                         <th class="border text-center" >H</th>
                         <th class="border text-center">S</th>
@@ -136,11 +136,12 @@
                                     <td class="border">{{ $no++ }}.</td>
                                     <td class="border">
                                         <div class="form-check form-check-md">
-                                            <input class="form-check-input mydata" name="data[]" value="{{ $item->id_rfid ?: $item->nis }}" type="checkbox">
+                                            <input class="form-check-input mydata" name="data[]" value="{{  $item->nis }}" type="checkbox">
                                         </div>
                                     </td>
-                                    <td class="text-primary">{{ $item->id_rfid }}</td>
-                                    <td>{{ $item->rombelStudent->nama }}</td>
+                                    <td class="text-primary">{{ $item->nis }}</td>
+
+                                    <td>{{ $item->rombelStudent->nama ?? $item->nama }}</td>
                                     <td class="border" >
                                         <div class="form-check form-check-md d-flex justify-content-center">
                                             <input class="form-check-input a" value="H" type="radio" name="status[{{ $item->id }}]" id="h-{{ $item->id }}"
@@ -198,7 +199,9 @@
                                         </div>
                                     </td>
                                     <td hidden >
-                                        <input type="text" name="id_rfid[{{ $item->id }}]" value="{{ $item->id_rfid }}">
+                                        <input type="text" name="id_rfid[{{ $item->id }}]" value="{{ $item->id_rfid  }}">
+                                        <input type="text" name="id_rfidMulti[]" value="{{ $item->id_rfid  }}">
+                                        <input type="text" name="nis[{{ $item->id }}]" value="{{ $item->nis  }}">
                                         <input type="text" name="tanggal" value="{{ request('tanggal') }}">
                                     </td>
                                     <td>
@@ -249,7 +252,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><span class="ti ti-user"></span>{{ $item->rombelStudent->nama }}</h4>
+                <h4 class="modal-title"><span class="ti ti-user"></span>{{ $item->rombelStudent->nama ?? $item->nama }}</h4>
                 <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
@@ -259,8 +262,8 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col d-flex justify-content-center mb-3">
-                            @if($item->rombelStudent->foto)
-                            <img src="/storage/{{ $item->rombelStudent->foto }}"
+                            @if($item->rombelStudent->foto ?? $item->foto)
+                            <img src="/storage/{{ $item->rombelStudent->foto ?? $item->foto}}"
                                 class="avatar avatar-xxxl me-4 img-thumbnail rounded-pill" alt="foto">
                             @else
                             <img src="{{ asset('asset/img/user-default.jpg') }}"
@@ -282,13 +285,20 @@
                                     <div class="mb-3">
                                         <label class="form-label">RFID <span class="ti ti-nfc"></span></label>
                                         <input type="text" class="form-control" name="id_rfid"
-                                            value="{{ $item->id_rfid ?: $item->nis }}" readonly required>
+                                            value="{{ $item->id_rfid }}" readonly required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6" hidden>
+                                    <div class="mb-3" >
+                                        <label class="form-label">RFID <span class="ti ti-nfc"></span></label>
+                                        <input type="text" class="form-control" name="nis"
+                                            value="{{ $item->nis }}" readonly required>
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Nama Lengkap</label>
-                                <input type="text" class="form-control" name="nama" value="{{ $item->rombelStudent->nama }}" readonly>
+                                <input type="text" class="form-control" name="nama" value="{{ $item->rombelStudent->nama ?? $item->nama}}" readonly>
                             </div>
 
                             <div class="mb-3">

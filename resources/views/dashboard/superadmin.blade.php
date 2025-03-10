@@ -96,6 +96,7 @@
             position: relative;
             height: 80px; /* Sesuaikan tinggi kontainer */
             overflow: hidden;
+            color:white;
         }
 
 
@@ -137,7 +138,35 @@
             }
             }
 
+            .slider-bullets {
+    position: absolute;
+    bottom: 10px;  /* Adjust the position */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
 
+.bullet {
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.bullet.active {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.bullet:hover {
+    opacity: 1;
+    transform: scale(1.3);
+}
 
    </style>
 @endsection
@@ -192,35 +221,74 @@
         </div>
     </div>
     {{-- Card --}}
-    <div class="slider-container rounded mb-3" style="background-color: #0b5d1e; position: relative;">
-        <!-- Slider items -->
 
-        <div id="custom-slider" class="d-flex align-items-center slider-item">
-            <div class="icon-container me-3">
-                <div class="line"></div>
-            </div>
-            <div>
-                <h4 class="text-white mb-1">Selamat Tahun Baru 2025!</h4>
-                <p class="text-light mb-0">Selalu bahagia & semua impian tercapai!</p>
-            </div>
-            <div class="image-container ms-auto">
-                <img src="{{ asset('asset/img/logo-white.png') }}" alt="2025 Logo" style="height: 50px;">
-            </div>
-        </div>
-        <div id="custom-slider" class="d-flex align-items-center slider-item">
-            <div class="icon-container me-3">
-                <div class="line"></div>
-            </div>
-            <div>
-                <h4 class="text-white mb-1">Semoga Tahun Baru membawa kebahagiaan!</h4>
-                <p class="text-light mb-0">Ayo wujudkan impianmu tahun ini!</p>
+
+    @if($pengumuman->count())
+    <div class="slider-container rounded mb-3" style="background: url('{{ asset('asset/img/bg-announcement.jpg') }}'); no-repeat center center; background-size: cover; position: relative; color: white;">
+        <!-- Slider items -->
+        @foreach ($pengumuman as $item )
+        <div id="custom-slider" class="d-flex align-items-center {{  $pengumuman->count() > 1 ? 'slider-item' : ''  }} ">
+
+
+            <div class="mt-2 ms-5">
+                 <a data-bs-toggle="modal"  data-bs-target="#view_details-{{ $item->id }}" ><h3 class="text-white  " >{{ $item->title }}</h3></a>
+                 <div class="d-flex">
+                    <p class="text-light mb-0 text-white">{!! \Str::limit($item->content, 100) !!}</p>
+                 </div>
+
             </div>
             <div class="image-container ms-auto">
                 <img src="{{ asset('asset/img/logo-white.png') }}" alt="2025 Logo" style="height: 50px;">
             </div>
         </div>
+        @endforeach
+    </div>
+    @foreach ($pengumuman  as $item)
+    <div class=" modal fade " id="view_details-{{ $item->id }}" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ $item->title }}</h4>
+                    <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ti ti-x"></i>
+                    </button>
+                </div>
+                <div class="modal-body pb-0">
+
+                    <p>
+                        <div class="bg-light p-3 pb-2 rounded">
+                            {!! $item->content !!}
+                        </div>
+                    </p>
+                    <div class="mb-3">
+                        <label class="form-label d-block">Message To</label>
+                        @foreach (json_decode($item->recived) as $a)
+                            <span class="badge badge-soft-primary me-2">{{ ucfirst($a) }}</span>
+                         @endforeach
+
+                    </div>
+                    <div class="border-top pt-3">
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="d-flex align-items-center me-4 mb-3">
+                                <span class="avatar avatar-sm bg-light me-1"><i class="ti ti-calendar text-default fs-14"></i></span>Added on: {{ \Carbon\Carbon::parse($item->date)->format('d M y') }}
+
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="avatar avatar-sm bg-light me-1"><i class="ti ti-user text-default fs-14"></i></span>Added By
+                                : {{ $item->author }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /View Details -->
 
     </div>
+    @endforeach
+    @endif
+
+
 
     <div class="col-xxl-4 col-sm-4 d-flex">
         <div class="card flex-fill animate-card border-0">
@@ -434,6 +502,60 @@
 {{-- <script src="{{ asset('asset/Plugins/apexchart/apexcharts.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
 <script src="{{ asset('asset/Plugins/apexchart/chart-data.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script> --}}
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('.slider-item'); // All slides
+    const bullets = document.querySelectorAll('.bullet'); // All bullets
+    const sliderContainer = document.querySelector('.slider-container'); // The entire slider container
+    let currentIndex = 0; // The current active slide index
+
+    // Set the first bullet as active initially
+    function updateActiveBullet(index) {
+        bullets.forEach((bullet, i) => {
+            if (i === index) {
+                bullet.classList.add('active');
+            } else {
+                bullet.classList.remove('active');
+            }
+        });
+    }
+
+    // Function to change the slide to the given index
+    function changeSlide(index) {
+        // Hide the current slide
+        slides[currentIndex].style.top = '100%';
+
+        // Show the next slide
+        slides[index].style.top = '0%';
+
+        // Update the current index
+        currentIndex = index;
+        updateActiveBullet(currentIndex);
+    }
+
+    // Set initial active bullet
+    updateActiveBullet(currentIndex);
+
+    // Auto slide every 5 seconds (optional)
+    setInterval(() => {
+        let nextIndex = (currentIndex + 1) % slides.length; // Move to next slide
+        changeSlide(nextIndex);
+    }, 5000); // Change every 5 seconds
+
+    // Clicking on the slider container to move to the next slide
+    sliderContainer.addEventListener('click', function() {
+        let nextIndex = (currentIndex + 1) % slides.length; // Move to the next slide
+        changeSlide(nextIndex);
+    });
+
+    // Clicking a bullet to navigate to a specific slide
+    bullets.forEach((bullet, index) => {
+        bullet.addEventListener('click', function() {
+            changeSlide(index);
+        });
+    });
+});
+
+
 
 </script>
 <script>

@@ -75,4 +75,10 @@ class AnnouncementController extends Controller
         toastr()->success('Pengumuman Berhasil diperbarui');
         return redirect()->back();
       }
+
+      public function delete($id){
+        Announcement::where('id',$id)->delete();
+        toastr()->success('Pengumuman Berhasil dihapus');
+        return redirect()->back();
+      }
 }

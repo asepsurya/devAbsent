@@ -32,7 +32,7 @@
             margin-bottom: 10px;
         }
 
-        .photo {  
+        .photo {
             width: 60px;
             height: 70px;
             margin-top: -15px;
@@ -87,7 +87,7 @@
             position: absolute;
             left: auto;
             right: 40px;
-            bottom: -8px;
+            bottom: 3px;
         }
 
         .content p {
@@ -119,7 +119,7 @@
             /* Mengurangi jarak sebelum teks kepala sekolah */
 
         }
-    
+
     </style>
 </head>
 <body>
@@ -147,16 +147,16 @@
             <div class="d-flex">
                 @foreach ($data as $item )
                 <div class="d-flex justify-content-bettween px-2">
-                    
+
                     <div class="content me-3">
                         <p><strong>Nama Siswa &nbsp;&nbsp;&nbsp;:</strong> {{ strtoupper($item->nama) }}</p>
                         <p><strong>Nomor Induk&nbsp;:</strong> {{ $item->nis }}</p>
-                        <p><strong>TTL <span class="ms-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :</span></strong> {{ $item->tempat_lahir }},{{ \Carbon\Carbon::parse($item->tanggal_lahir)->locale('id')->format('d F Y') }}</p>                        
+                        <p><strong>TTL <span class="ms-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :</span></strong> {{ $item->tempat_lahir }},{{ \Carbon\Carbon::parse($item->tanggal_lahir)->locale('id')->format('d F Y') }}</p>
                         <p><strong>Agama <span class="ms-3">&nbsp;&nbsp;&nbsp;:</span></strong> {{ $item->agama }}</p>
-                        <p><strong>Alamat<span class="ms-3">&nbsp;&nbsp;&nbsp;&nbsp;:</span></strong> {{ ucwords(strtolower($item->alamat)) ?? '' }} 
-                            <p> 
-                                Kec. {{ ucwords(strtolower($item->kecamatan->name ?? '')) }}, 
-                                Kel. {{ ucwords(strtolower($item->desa->name ?? '')) }} 
+                        <p><strong>Alamat<span class="ms-3">&nbsp;&nbsp;&nbsp;&nbsp;:</span></strong> {{ ucwords(strtolower($item->alamat)) ?? '' }}
+                            <p>
+                                Kec. {{ ucwords(strtolower($item->kecamatan->name ?? '')) }},
+                                Kel. {{ ucwords(strtolower($item->desa->name ?? '')) }}
                                 {{ ucwords(strtolower($item->kota->name ?? '')) }}
                             </p>
                         </p>
@@ -164,7 +164,7 @@
                     <div class="content2">
                         <p><strong>JK &nbsp;&nbsp;&nbsp;&nbsp;:</strong> {{ $item->gender }}</p>
                         <p><strong>Gol Darah &nbsp;&nbsp;:</strong> - </p>
-                    </div>                 
+                    </div>
                 </div>
                 <div class="photo me-2" style="background: url('{{ $item->foto ? asset('storage/'.$item->foto) : asset('asset/img/user-default.jpg') }}') no-repeat center center; background-size: cover;"></div>
                 @endforeach
@@ -175,7 +175,7 @@
                         <p> {{ app('settings')['signature_position'] }}</p>
                         <img src="{{ app('settings')['signature'] == '' ? asset('asset/img/card/signature_default.png') : '/storage/'.app('settings')['signature']  }}" alt="Tanda Tangan" class="signature">
                         <p><b>{{ app('settings')['headmaster'] == '' ? 'JHON DOE' : app('settings')['headmaster'] }}</b></p>
-                       
+
                         @if(app('settings')['headmasterid'] !== '')
                             <p><b>NIP : {{ app('settings')['headmasterid'] }}</b></p>
                         @endif
@@ -188,13 +188,13 @@
         <div class="card-container-back border shadow p-2">
             <div class="card-body d-flex justify-content-center align-items-center pt-5" style="margin-top: -10px;">
                 <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" alt="Stempel" width="60px" style="margin-top: -5px;"><br>
-                
+
             </div>
             <center>
                 <b style="font-size: 15px; ">
                     {{ app('settings')['site_name'] }}
                 </b>
-                
+
                 <div class="photo me-2 mt-1" style="background: url('{{ $item->foto ? asset('storage/'.$item->foto) : asset('asset/img/user-default.jpg') }}') no-repeat center center; background-size: cover; width:80px;height:100px;border-radius:10px;"></div>
                 <div style="width:120px;line-height: 1.0; margin-top:3px;"  >
                     <p class="border-bottom border-dark p-1" style="font-size:12px; margin-bottom:-1px; text-transform: uppercase;">
@@ -204,9 +204,9 @@
                         {{ $nis }}
                     </p>
                 </div>
-                
+
             </center>
-          
+
         </div>
     </div>
     <script>

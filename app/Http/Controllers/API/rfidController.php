@@ -83,6 +83,7 @@ class rfidController extends Controller
                         $status = "ENTRY";
                         absent::create([
                             'tanggal'=>date('d/m/Y'),
+                            'uid'=> $item->rfidStudent->nis ?? $item->rfidGTK->nik ,
                             'id_rfid'=>$item->id_rfid,
                             'entry'=> $timenow,
                             'status'=>'H'

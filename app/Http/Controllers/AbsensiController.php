@@ -20,10 +20,10 @@ class AbsensiController extends Controller
             $data =  rombel::where([
                 'id_tahun_pelajaran'=> request('tahun'),
                 'id_kelas'=>request('kelas'),
-                ])->whereNotNull('id_rfid')->with(['rombelStudent','rombelAbsent','notRFID'])->paginate(10)->appends(request()->query());
+                ])->whereNotNull('id_rfid')->with(['rombelStudent','rombelAbsent','notRFID'])->paginate(100)->appends(request()->query());
          }
          if(request('kelas') == "all"){
-            $data = rombel::where('status','1')->whereNotNull('id_rfid')->with(['rombelStudent','rombelAbsent','notRFID'])->paginate(10)->appends(request()->query());
+            $data = student::where('status','1')->with(['rombelAbsent','notRFID'])->paginate(30)->appends(request()->query());
          }
 
         return view('absensi.student',[
@@ -37,30 +37,28 @@ class AbsensiController extends Controller
         ]);
     }
     public function absensiTeacher(request $request){
-
+        // ->whereNotNull('id_rfid')
         return view('absensi.teacher',[
             'title'=>'Absensi Guru dan Tenaga Kependidikan',
-            'gtk'=>gtk::where(['status'=>'1'])->whereNotNull('id_rfid')->with('absent','rombelAbsent')->get(),
+            'gtk'=>gtk::where(['status'=>'1'])->with('absent','rombelAbsent')->get(),
             'absentTanggal'=>absent::where(['tanggal'=>request('tanggal','absent')])->get(),
         ]);
     }
 
     public function absensiTeacherAdd(request $request){
-        if($request->id_rfid == NULL && $request->data == NULL){
-            toastr()->warning('Oopss..!! Ada RFID yang Belum disetel');
-            return redirect()->back();
-        }else{
+
             if($request->type == 'single'){
-                foreach ($request->id_rfid as $id_rfid) {
+                foreach ($request->nik as $nik) {
                   // Find the index of the current RFID in the data array
-                  $index = array_search($id_rfid, $request->id_rfid ?? null);
+                  $index = array_search($nik, $request->nik ?? null);
                   // Check for existing attendance record
-                  $existingAttendance = absent::where(['tanggal' => $request->tanggal, 'id_rfid' => $id_rfid])->first();
+                  $existingAttendance = absent::where(['tanggal' => $request->tanggal, 'uid' => $nik])->first();
 
                   // Prepare data for updating or creating
                   $attendanceData = [
                       "tanggal" => $request->tanggal,
-                      "id_rfid" => $id_rfid ,
+                      "uid" => $nik ,
+                      "id_rfid" => $request->id_rfid [$index] ,
                       "entry" => date('H:i'),
                       "out" => $request->out, // Make sure to add this to your form if necessary
                       "status" => $request->status[$index] ?? '', // Use the index to find the status
@@ -75,24 +73,25 @@ class AbsensiController extends Controller
                       absent::create($attendanceData);
                   }
                   // Update the last absent date for the student
-                  gtk::where('id_rfid', $id_rfid)->update(['last_absent' => $request->tanggal]);
+                  gtk::where('nik', $nik)->update(['last_absent' => $request->tanggal]);
                 }
               }elseif ($request->type == 'ubahKeterangan'){
 
-                  absent::where(['tanggal'=>$request->tanggal,'id_rfid'=>$request->id_rfid])
+                  absent::where(['tanggal'=>$request->tanggal,'uid'=>$request->nik])
                   ->update(['keterangan'=>$request->keterangan]);
 
               }else{
-                  foreach ($request->data as $id_rfid) {
+                  foreach ($request->data as $nik) {
                       // Find the index of the current RFID in the data array
-                      $index = array_search($id_rfid, $request->data);
+                      $index = array_search($nik, $request->data);
                       // Check for existing attendance record
-                      $existingAttendance = absent::where(['tanggal' => $request->tanggal, 'id_rfid' => $id_rfid])->first();
+                      $existingAttendance = absent::where(['tanggal' => $request->tanggal, 'uid' => $nik])->first();
 
                       // Prepare data for updating or creating
                       $attendanceData = [
                           "tanggal" => $request->tanggal,
-                          "id_rfid" => $id_rfid,
+                          "uid" => $nik,   // Ensure to use the correct index,
+                          "id_rfid" => isset($request->id_rfidMulti[$index]) ? $request->id_rfidMulti[$index] : '',
                           "entry" => date('H:i'),
                           "out" => $request->out, // Make sure to add this to your form if necessary
                           "status" => $request->Mstatus ?? 'A', // Use the index to find the status
@@ -107,27 +106,28 @@ class AbsensiController extends Controller
                           absent::create($attendanceData);
                       }
                       // Update the last absent date for the student
-                      gtk::where('id_rfid', $id_rfid)->update(['last_absent' => $request->tanggal]);
+                      gtk::where('nik', $nik)->update(['last_absent' => $request->tanggal]);
                   }
               }
               toastr()->success('Berhasil Disimpan');
               return redirect()->back();
-        }
+
     }
     public function absensiStudentAdd(Request $request)
     {
 
         if($request->type == 'single'){
-          foreach ($request->id_rfid as $id_rfid) {
+          foreach ($request->nis as $nis) {
             // Find the index of the current RFID in the data array
-            $index = array_search($id_rfid, $request->id_rfid);
+            $index = array_search($nis, $request->nis);
             // Check for existing attendance record
-            $existingAttendance = absent::where(['tanggal' => $request->tanggal, 'id_rfid' => $id_rfid])->first();
+            $existingAttendance = absent::where(['tanggal' => $request->tanggal, 'uid' => $nis])->first();
 
             // Prepare data for updating or creating
             $attendanceData = [
                 "tanggal" => $request->tanggal,
-                "id_rfid" => $id_rfid,
+                "uid" => $nis,
+                "id_rfid" => $request->id_rfid[$index],
                 "entry" => date('H:i'),
                 "out" => $request->out, // Make sure to add this to your form if necessary
                 "status" => $request->status[$index] ?? '', // Use the index to find the status
@@ -142,24 +142,26 @@ class AbsensiController extends Controller
                 absent::create($attendanceData);
             }
             // Update the last absent date for the student
-            gtk::where('id_rfid', $id_rfid)->update(['last_absent' => $request->tanggal]);
+            student::where('nis', $nis)->update(['last_absent' => $request->tanggal]);
           }
         }elseif ($request->type == 'ubahKeterangan'){
 
-            absent::where(['tanggal'=>$request->tanggal,'id_rfid'=>$request->id_rfid])
+            absent::where(['tanggal'=>$request->tanggal,'nis'=>$request->nis])
             ->update(['keterangan'=>$request->keterangan]);
 
         }else{
-            foreach ($request->data as $id_rfid) {
+
+            foreach ($request->data as $nis) {
                 // Find the index of the current RFID in the data array
-                $index = array_search($id_rfid, $request->data);
+                $index = array_search($nis, $request->data);
                 // Check for existing attendance record
-                $existingAttendance = absent::where(['tanggal' => $request->tanggal, 'id_rfid' => $id_rfid])->first();
+                $existingAttendance = absent::where(['tanggal' => $request->tanggal, 'uid' => $nis])->first();
 
                 // Prepare data for updating or creating
                 $attendanceData = [
                     "tanggal" => $request->tanggal,
-                    "id_rfid" => $id_rfid,
+                    "uid" => $nis,
+                    "id_rfid" => isset($request->id_rfidMulti[$index]) ? $request->id_rfidMulti[$index] : '',  // Ensure to use the correct index
                     "entry" => date('H:i'),
                     "out" => $request->out, // Make sure to add this to your form if necessary
                     "status" => $request->Mstatus ?? 'A', // Use the index to find the status
@@ -174,7 +176,7 @@ class AbsensiController extends Controller
                     absent::create($attendanceData);
                 }
                 // Update the last absent date for the student
-                gtk::where('id_rfid', $id_rfid)->update(['last_absent' => $request->tanggal]);
+                 student::where('nis', $nis)->update(['last_absent' => $request->tanggal]);
             }
         }
         toastr()->success('Berhasil Disimpan');
@@ -255,7 +257,7 @@ class AbsensiController extends Controller
          if(request('kelas') == "all"){
             $data = rombel::where('status','1')->with(['rombelStudent','rombelAbsent','notRFID'])->paginate(10)->appends(request()->query());
          }
-         
+
             $getKelas = Kelas::where('id', request('kelas'))->first();
 
             // Pastikan data kelas ada
@@ -267,8 +269,8 @@ class AbsensiController extends Controller
                 $namakelas = null; // Jika tidak ada data, set $kelas menjadi null
             }
 
-         
-                
+
+
         return view('absensi.managementAbsensi.manageAbsent',[
             'title'=>'Absensi Siswa',
             'tahunAjar'=>TahunPelajaran::where(['status'=>'1'])->orderBy('id', 'DESC')->get(),

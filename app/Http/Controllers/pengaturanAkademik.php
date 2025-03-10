@@ -55,18 +55,25 @@ class pengaturanAkademik extends Controller
     }
 
     public function pengaturanWalikelasAdd(request $request){
-        walikelas::create([
-            'id_tahun_pelajaran'=>$request->tahun,
-            'id_kelas'=>$request->kelas,
-            'id_gtk'=>$request->id_gtk
-        ]);
+        $walikelas = walikelas::where(['id_tahun_pelajaran'=>$request->tahun,
+        'id_kelas'=>$request->kelas])->get();
+        if($walikelas->count()){
+            toastr()->warning('Kelas sudah memiliki walikeas');
+            return redirect()->back();
+        }else{
+            walikelas::create([
+                'id_tahun_pelajaran'=>$request->tahun,
+                'id_kelas'=>$request->kelas,
+                'id_gtk'=>$request->id_gtk
+            ]);
 
-          User::where('nomor',$request->id_gtk)->update(['role'=>'walikelas']);
-          $cekid = User::where('nomor',$request->id_gtk)->get();
-          foreach($cekid as $key){
-              $getid = $key->id;
-              DB::table('model_has_roles')->where('model_id','=', $getid)->update(array('role_id'=>'1'));
-          }
+              User::where('nomor',$request->id_gtk)->update(['role'=>'walikelas']);
+              $cekid = User::where('nomor',$request->id_gtk)->get();
+              foreach($cekid as $key){
+                  $getid = $key->id;
+                  DB::table('model_has_roles')->where('model_id','=', $getid)->update(array('role_id'=>'1'));
+              }
+        }
         toastr()->success('Data Berhasil disimpan');
         return redirect()->back();
     }
@@ -100,11 +107,11 @@ class pengaturanAkademik extends Controller
         $searchTerm = $request->get('search'); // Get the search term from the request
         $tahunAjar = $request->get('id_tahun_pelajaran');
         $kelasTujuan = $request->get('id_kelas_tujuan');
-    
+
         // Filter the data based on the search term
         $query = rombel::where('id_tahun_pelajaran', $tahunAjar)
                         ->where('id_kelas', $kelasTujuan)->with('rombelStudent');
-    
+
          if ($searchTerm) {
             $query->where(function($query) use ($searchTerm) {
                 $query->where('nis', 'like', "%{$searchTerm}%")
@@ -113,14 +120,14 @@ class pengaturanAkademik extends Controller
                     });
             });
         }
-        
+
         $students = $query->get(); // Adjust pagination as needed
-      
-        return DataTables::of($students) 
-        ->addColumn('nama', function (rombel $item) { 
+
+        return DataTables::of($students)
+        ->addColumn('nama', function (rombel $item) {
             return $item->rombelStudent->nama; // Access the 'nama' from the related model
              })->addIndexColumn() ->make(true);
-            
+
     }
 
     public function dataAwalSiswa(request $request){
@@ -138,7 +145,7 @@ class pengaturanAkademik extends Controller
                     ->where('id_tahun_pelajaran', $request->input('tahunAjarAsal'))
                     ->get();
             }
-    
+
             // Return data as DataTables response
             return DataTables::of($data)
                 ->addColumn('nama', function ($item) use ($request) {
@@ -152,7 +159,7 @@ class pengaturanAkademik extends Controller
                 })
                 ->addIndexColumn() // Add an index column
                 ->make(true); // Return the DataTable JSON response
-        }  
+        }
 
     }
 

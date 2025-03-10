@@ -169,7 +169,9 @@
     html[data-theme=dark] .fc-theme-standard .fc-scrollgrid  {
         border: 1px solid #1b1632;
     }
-
+    #custom-slider {
+        padding: 6px;
+    }
 
 </style>
 @endsection
@@ -191,35 +193,71 @@
                         </nav>
                     </div>
                 </div>
-            <div class="slider-container rounded mb-3" style="background-color: #0b5d1e; position: relative;">
-                <!-- Slider items -->
+                @if($pengumuman->count())
+                <div class="slider-container rounded mb-3" style="background: url('{{ asset('asset/img/bg-announcement.jpg') }}'); no-repeat center center; background-size: cover; position: relative; color: white;">
+                    <!-- Slider items -->
+                    @foreach ($pengumuman as $item )
+                    <div id="custom-slider" class="d-flex align-items-center {{  $pengumuman->count() > 1 ? 'slider-item' : ''  }} ">
 
-                <div id="custom-slider" class="d-flex align-items-center slider-item">
-                    <div class="icon-container me-3">
-                        <div class="line"></div>
-                    </div>
-                    <div>
-                        <h4 class="text-white mb-1">Selamat Tahun Baru 2025!</h4>
-                        <p class="text-light mb-0">Selalu bahagia & semua impian tercapai!</p>
-                    </div>
-                    <div class="image-container ms-auto">
-                        <img src="{{ asset('asset/img/logo-white.png') }}" alt="2025 Logo" style="height: 50px;">
-                    </div>
-                </div>
-                <div id="custom-slider" class="d-flex align-items-center slider-item">
-                    <div class="icon-container me-3">
-                        <div class="line"></div>
-                    </div>
-                    <div>
-                        <h4 class="text-white mb-1">Semoga Tahun Baru membawa kebahagiaan!</h4>
-                        <p class="text-light mb-0">Ayo wujudkan impianmu tahun ini!</p>
-                    </div>
-                    <div class="image-container ms-auto">
-                        <img src="{{ asset('asset/img/logo-white.png') }}" alt="2025 Logo" style="height: 50px;">
-                    </div>
-                </div>
 
-            </div>
+                        <div class="mt-2 ms-5">
+                             <a data-bs-toggle="modal"  data-bs-target="#view_details-{{ $item->id }}" ><h3 class="text-white  " >{{ $item->title }}</h3></a>
+                             <div class="d-flex">
+                                <p class="text-light mb-0 text-white">{!! \Str::limit($item->content, 100) !!}</p>
+                             </div>
+
+                        </div>
+                        <div class="image-container ms-auto">
+                            <img src="{{ asset('asset/img/logo-white.png') }}" alt="2025 Logo" style="height: 50px;">
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @foreach ($pengumuman  as $item)
+                <div class=" modal fade " id="view_details-{{ $item->id }}" aria-modal="true" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">{{ $item->title }}</h4>
+                                <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="ti ti-x"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body pb-0">
+
+                                <p>
+                                    <div class="bg-light p-3 pb-2 rounded">
+                                        {!! $item->content !!}
+                                    </div>
+                                </p>
+                                <div class="mb-3">
+                                    <label class="form-label d-block">Message To</label>
+                                    @foreach (json_decode($item->recived) as $a)
+                                        <span class="badge badge-soft-primary me-2">{{ ucfirst($a) }}</span>
+                                     @endforeach
+
+                                </div>
+                                <div class="border-top pt-3">
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="d-flex align-items-center me-4 mb-3">
+                                            <span class="avatar avatar-sm bg-light me-1"><i class="ti ti-calendar text-default fs-14"></i></span>Added on: {{ \Carbon\Carbon::parse($item->date)->format('d M y') }}
+
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <span class="avatar avatar-sm bg-light me-1"><i class="ti ti-user text-default fs-14"></i></span>Added By
+                                            : {{ $item->author }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /View Details -->
+
+                </div>
+                @endforeach
+                @endif
+
 
             @if(auth()->user()->gtk->id_kelas == '' || auth()->user()->gtk->id_rfid == '')
             <div class="alert alert-info">

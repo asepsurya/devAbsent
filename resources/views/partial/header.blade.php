@@ -170,7 +170,7 @@
                 </a>
             </div> --}}
             <div class="pe-1">
-              <a href="" class="btn btn-outline-light bg-white  position-relative "><span class="ti ti-key"></span> Ubah Password</a>
+              <a data-bs-toggle="modal" data-bs-target="#changePassword" class="btn btn-outline-light bg-white  position-relative "><span class="ti ti-key"></span> Ubah Password</a>
             </div>
             {{-- user --}}
 

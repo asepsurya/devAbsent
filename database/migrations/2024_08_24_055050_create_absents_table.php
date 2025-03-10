@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('absents', function (Blueprint $table) {
             $table->id();
             $table->string('tanggal');
-            $table->string('id_rfid');
+            $table->string('uid');
+            $table->string('id_rfid')->nullable();
             $table->string('entry')->nullable();
             $table->string('out')->nullable();
             $table->string('status')->nullable();

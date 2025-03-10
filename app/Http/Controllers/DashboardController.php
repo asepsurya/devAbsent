@@ -13,6 +13,7 @@ use App\Models\rombel;
 use App\Models\student;
 use App\Models\ClassRoom;
 use App\Models\inOutTime;
+use App\Models\Announcement;
 use Illuminate\Http\Request;
 use App\Models\absentsHistory;
 use Illuminate\Support\Facades\Http;
@@ -102,9 +103,13 @@ class DashboardController extends Controller
             // Map the full day name to lowercase and set the corresponding absence data
             $absenceData[strtolower($day)] = 1; // Mark as "active" (1) for that day
         }
+        $pengumuman = Announcement::where('recived', 'like', '%guru%')
+        ->get();
         return view('dashboard.studentDashboard',[
             'title'=>'Dashboard',
             'jadwal'=>student::where('nis',auth()->user()->nomor)->with(['absent','absentRFID'])->get(),
+            'pengumuman' =>  $pengumuman
+
         ], compact('present', 'late', 'halfDay', 'absent','absenceData','hadir','jamMasuk'));
     }
 
@@ -193,11 +198,17 @@ class DashboardController extends Controller
         $response = Http::get($url);
         $data = $response->json(); // Assuming the API returns an array of data.
 
+
+        $pengumuman = Announcement::where('recived', 'like', '%guru%')
+        ->get();
+
         return view('dashboard.teacher',[
             'title'=>'Dashboard',
             'classRoom'=>ClassRoom::where('auth',auth()->user()->nomor)->get(),
             'events'=>Event::all(),
-            'tasks'=>tasks::where('created_by',auth()->user()->nomor)->get()
+            'tasks'=>tasks::where('created_by',auth()->user()->nomor)->get(),
+            'pengumuman' => $pengumuman
+
         ],compact('present', 'late', 'halfDay', 'absent','absenceData','hadir','jamMasuk','jadwal','data', 'currentYear'));
     }
     public function walikelasDashboard(){
@@ -289,7 +300,9 @@ class DashboardController extends Controller
             'title'=>'Dashboard',
             'classRoom'=>ClassRoom::where('auth',auth()->user()->nomor)->get(),
             'events'=>Event::all(),
-            'tasks'=>tasks::where('created_by',auth()->user()->nomor)->get()
+            'tasks'=>tasks::where('created_by',auth()->user()->nomor)->get(),
+            'pengumuman' => Announcement::latest()->take(2)->get()
+
         ],compact('present', 'late', 'halfDay', 'absent','absenceData','hadir','jamMasuk','jadwal','data', 'currentYear'));
     }
     public function superadmin(){
@@ -315,6 +328,8 @@ class DashboardController extends Controller
             // absen
             'absenEntryCount'=>AbsentsHistory::where('status', 'ENTRY')->whereDate('created_at', Carbon::today())->count(),
             'absenOutCount'=>absentsHistory::where('status', 'EXIT')->whereDate('created_at', Carbon::today())->count(),
+           'pengumuman' => Announcement::latest()->take(2)->get()
+
         ]);
     }
 }

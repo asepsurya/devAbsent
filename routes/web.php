@@ -192,7 +192,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/administratorAdd',[penggunaController::class,'userAdministratorAdd'])->name('userAdministratorAdd');
     Route::get('/user/students',[penggunaController::class,'userStudentsIndex'])->name('userStudentsIndex');
     Route::get('/user/teacher',[penggunaController::class,'useremployeesIndex'])->name('useremployeesIndex');
-    Route::get('/user/modules',[penggunaController::class,'usermodulesIndex']);
+    Route::get('/modules',[penggunaController::class,'usermodulesIndex']);
     Route::get('/user/permission/{id}',[penggunaController::class,'usermodulesPermission'])->name('usermodulesPermission');
     Route::post('/user/permission/change',[penggunaController::class,'usermodulesPermissionChange'])->name('usermodulesPermissionChange');
     Route::get('/user/user_privileges',[penggunaController::class,'user_privilegesIndex']);
@@ -247,6 +247,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
     Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
     Route::post('/announcements/update', [AnnouncementController::class, 'update'])->name('announcements.update');
+    Route::get('/announcements/delete{id}', [AnnouncementController::class, 'delete'])->name('announcements.delete');
 
     // class Room
     Route::get('/classroom', [ClassRoomController::class, 'index'])->name('classroom.index');

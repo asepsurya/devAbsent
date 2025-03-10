@@ -50,4 +50,11 @@ class student extends Model
         return $this->hasMany('App\Models\Lesson','id_rombel','id_kelas');
     }
 
+    public function notRFID(){
+        return $this->hasMany('App\Models\absent','uid','nis');
+    }
+    public function rombelAbsent(){
+        return $this->hasMany('App\Models\absent','uid','nis');
+    }
+
 }

@@ -7,7 +7,7 @@
     <title>Kartu Nama {{ $nama }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-     
+
         .card-container {
             height: 8.56cm;
             width: 5.398cm;
@@ -153,7 +153,7 @@
 
                 <p style="font-size:6px;color:#ffa406;">Nama Lengkap :</p>
                 <p style="font-size:11px;"><b>{{ $item->nama }}</b></p>
-                <p style="font-size:10px;">{{ $item->JenisGTK->nama }}</p>
+                <p style="font-size:10px;">{{ $item->JenisGTK->nama ?? 'Guru'}}</p>
                 <p style="font-size:6px;color:white;margin-top:-10px !important;">{{ (isset($_SERVER['HTTPS']) ? "" : ""). $_SERVER['HTTP_HOST'] }}</p>
 
 

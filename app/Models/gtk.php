@@ -33,13 +33,13 @@ class gtk extends Model
     }
 
     public function absent(){
-        return $this->belongsTo('App\Models\absent','id_rfid','id_rfid');
+        return $this->belongsTo('App\Models\absent','nik','uid');
     }
     public function absentRFID(){
         return $this->Hasmany('App\Models\absent','id_rfid','id_rfid');
     }
     public function rombelAbsent(){
-        return $this->hasMany('App\Models\absent','id_rfid','id_rfid');
+        return $this->hasMany('App\Models\absent','uid','nik');
     }
     public function JenisGTK(){
         return $this->belongsTo('App\Models\JenisGTK','id_jenis_gtk','id');

@@ -312,6 +312,13 @@
                                         <a href="{{ route('setelan.app') }}"><i class="ti ti-settings"></i><span>Pengaturan Aplikasi</span></a>
                                     </li>
                                 </ul>
+                                @if(auth()->user()->role == 'superadmin')
+                                <ul>
+                                    <li class="{{ Request::is('modules*') ? 'active' : ''}}">
+                                        <a href="/modules"><i class="ti ti-users"></i><span>Pengaturan Hak Akses</span></a>
+                                    </li>
+                                </ul>
+                                @endif
                             </li>
                         @endcan
                     </ul>

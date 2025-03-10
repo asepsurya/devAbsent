@@ -59,6 +59,51 @@
             max-height: 230px;
             padding: 10px;
         }
+        .slider-container {
+            position: relative;
+            height: 80px; /* Sesuaikan tinggi kontainer */
+            overflow: hidden;
+            color:white;
+        }
+
+
+
+        .slider-item:nth-child(2) {
+            animation-delay: 5s; /* Memberi jeda untuk slide kedua */
+        }
+        .slider-item {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 100%; /* Mulai di luar tampilan */
+            animation: slideUp 10s infinite;
+            cursor: grab; /* Indicate draggable behavior */
+            transition: top 0.3s ease; /* Smooth transition when dragging */
+            }
+
+            @keyframes slideUp {
+            0% {
+                top: 100%; /* Mulai di bawah */
+            }
+            10% {
+                top: 0%; /* Naik ke posisi tampilan */
+            }
+            40% {
+                top: 0%; /* Tetap selama beberapa waktu */
+            }
+            45% {
+                top: 0%; /* Tetap selama beberapa waktu */
+            }
+            48% {
+                top: 0%; /* Tetap selama beberapa waktu */
+            }
+            50% {
+                top: -100%; /* Naik keluar tampilan */
+            }
+            100% {
+                top: -100%; /* Tetap di luar tampilan */
+            }
+            }
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -84,6 +129,71 @@
         </div>
     </div>
 </div>
+@if($pengumuman->count())
+<div class="slider-container rounded mb-3" style="background: url('{{ asset('asset/img/bg-announcement.jpg') }}'); no-repeat center center; background-size: cover; position: relative; color: white;">
+    <!-- Slider items -->
+    @foreach ($pengumuman as $item )
+    <div id="custom-slider" class="d-flex align-items-center {{  $pengumuman->count() > 1 ? 'slider-item' : ''  }} ">
+
+
+        <div class="mt-4 ms-5">
+             <a data-bs-toggle="modal"  data-bs-target="#view_details-{{ $item->id }}" ><h3 class="text-white  " >{{ $item->title }}</h3></a>
+             <div class="d-flex">
+                <p class="text-light mb-0 text-white">{!! \Str::limit($item->content, 100) !!}</p>
+             </div>
+
+        </div>
+        <div class="image-container ms-auto me-2">
+            <img src="{{ asset('asset/img/logo-white.png') }}" alt="2025 Logo" style="height: 50px;">
+        </div>
+    </div>
+    @endforeach
+</div>
+@foreach ($pengumuman  as $item)
+<div class=" modal fade " id="view_details-{{ $item->id }}" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ $item->title }}</h4>
+                <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+            <div class="modal-body pb-0">
+
+                <p>
+                    <div class="bg-light p-3 pb-2 rounded">
+                        {!! $item->content !!}
+                    </div>
+                </p>
+                <div class="mb-3">
+                    <label class="form-label d-block">Message To</label>
+                    @foreach (json_decode($item->recived) as $a)
+                        <span class="badge badge-soft-primary me-2">{{ ucfirst($a) }}</span>
+                     @endforeach
+
+                </div>
+                <div class="border-top pt-3">
+                    <div class="d-flex align-items-center flex-wrap">
+                        <div class="d-flex align-items-center me-4 mb-3">
+                            <span class="avatar avatar-sm bg-light me-1"><i class="ti ti-calendar text-default fs-14"></i></span>Added on: {{ \Carbon\Carbon::parse($item->date)->format('d M y') }}
+
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="avatar avatar-sm bg-light me-1"><i class="ti ti-user text-default fs-14"></i></span>Added By
+                            : {{ $item->author }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /View Details -->
+
+</div>
+@endforeach
+@endif
+
 @if(auth()->user()->rombelstudent || auth()->user()->rombelstudent)
     <div class="col-xl-12 d-flex">
         <div class="row flex-fill">
