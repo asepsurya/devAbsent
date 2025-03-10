@@ -121,6 +121,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/akademik/datainduk/studentEksportExcel',[DataIndukController::class,'studentEksportExcel'])->name('studentEksportExcel');
     Route::get('/akademik/datainduk/studentcard',[DataIndukController::class,'dataIndukStudentCard'])->name('dataIndukStudentCard');
     Route::post('/akademik/datainduk/studentcardmulti',[DataIndukController::class,'dataIndukStudentCardmulti'])->name('dataIndukStudentCardmulti');
+    Route::get('/akademik/lulusan',[DataIndukController::class,'lulusan'])->name('dataIndukStudentlulusan');
 
     Route::get('/akademik/datainduk/jurusan',[DataIndukController::class,'dataIndukJurusan']);
     Route::post('/akademik/datainduk/jurusanAdd',[DataIndukController::class,'dataIndukJurusanAdd'])->name('dataIndukJurusanAdd');
@@ -321,6 +322,7 @@ Route::get('/export/score/{id}', [PDFController::class, 'generateScore'])->name(
 Route::get('/report/absentrfid/student', [reportController::class, 'reportRFIDStudent'])->name('reportRFIDStudent');
 Route::get('/report/absentrfid/teacher', [reportController::class, 'reportRFIDTeacher']);
 Route::get('/report/absent/students', [reportController::class, 'reportAbsentStudent']);
+Route::get('/report/absent/kelas', [PDFController::class, 'reportAbsentKelas'])->name('absentKelas');
 
 Route::get('/qr/{code}', [barcodeController::class, 'generateQRCode'])->name('qr.generate');
 Route::get('/card', [barcodeController::class, 'card'])->name('card');

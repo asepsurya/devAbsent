@@ -57,4 +57,8 @@ class student extends Model
         return $this->hasMany('App\Models\absent','uid','nis');
     }
 
+    public function tahun_lulus(){
+        return $this->belongsTo('App\Models\TahunPelajaran','id_tahun_ajar','id');
+    }
+
 }

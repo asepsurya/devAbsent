@@ -150,7 +150,14 @@
                                             <li><a href="/akademik/pengaturan/rombel" class="{{ Request::is('akademik/pengaturan/rombel') ? 'active' : ''}}">Rombongan Belajar</a></li>
                                         </ul>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('dataIndukStudentlulusan') }}" class="  {{ Request::is('akademik/lulusan') ? 'active' : ''}}">
+                                            Data Lulusan
+                                        </a>
+                                    </li>
+                                   
                                 </ul>
+
                             </li>
                         @endcan
                         @can('gtk')
@@ -236,9 +243,9 @@
                                 <li><a href="/akademik/datainduk/mapel" class="{{ Request::is('akademik/datainduk/mapel') ? 'active' : ''}}">Tambah</a></li>
                                 <li><a href="/class/leasson/mapel" class="{{ Request::is('class/leasson/mapel') ? 'active' : ''}}">Setel Mata Pelajaran</a></li>
                                 <li><a href="/class/leasson/subject_teachers" class="{{ Request::is('class/leasson/subject_teachers') ? 'active' : ''}}">Guru Mata Pelajaran</a></li>
-                                <li><a href="/class/leasson" class="{{ Request::is('class/leasson/list*') ? 'active' : ''}}">Setel Jadwal</a></li>
                                 <li><a href="/class/leasson/reference" class="{{ Request::is('class/leasson/reference') ? 'active' : ''}}">Setelan Referensi</a></li>
                                 <li><a href="/class/leasson/hari" class="{{ Request::is('class/leasson/hari') ? 'active' : ''}}">Hari Efektif</a></li>
+                                <li><a href="/class/leasson" class="{{ Request::is('class/leasson/list*') ? 'active' : ''}}">Setel Jadwal</a></li>
 
                             </ul>
 

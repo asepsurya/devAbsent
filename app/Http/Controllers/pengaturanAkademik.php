@@ -216,14 +216,29 @@ class pengaturanAkademik extends Controller
                         toastr()->error('Mohon Periksa Kembali Kelas Tujuan untuk NIS ' . $nis);
                         return redirect()->back()->withInput();
                     } else {
-                        // Update the rombel and student records
-                        rombel::where('nis', $nis)->update([
-                            'id_kelas' => $request->id_kelas,
-                            'id_tahun_pelajaran' => $request->id_tahun_pelajaran,
-                        ]);
-                        student::where('nis', $nis)->update([
-                            'id_kelas' => $request->id_kelas,
-                        ]);
+                        
+                        if($request->id_kelas === 'lulusan'){
+                            rombel::where('nis', $nis)->update([
+                                'id_tahun_pelajaran' => $request->id_tahun_pelajaran,
+                                'id_kelas' => $request->id_kelas,
+                                'status' => '3',
+                            ]);
+                            student::where('nis', $nis)->update([
+                                'status' => '3',
+                            ]);
+                        }else{
+                            // Update the rombel and student records
+                            rombel::where('nis', $nis)->update([
+                                'id_kelas' => $request->id_kelas,
+                                'id_tahun_pelajaran' => $request->id_tahun_pelajaran,
+                            ]);
+                            student::where('nis', $nis)->update([
+                                'id_tahun_ajar' => $request->id_tahun_pelajaran,
+                                'id_kelas' => $request->id_kelas,
+                                
+                            ]);
+
+                        }
                         toastr()->success('Data untuk NIS ' . $nis . ' berhasil dipindahkan');
                     }
                 }
@@ -244,6 +259,7 @@ class pengaturanAkademik extends Controller
                 ]);
 
                 student::where('nis', $nis)->update([
+                    'id_tahun_ajar' => $request->id_tahun_pelajaran,
                     'id_kelas' => $request->id_kelas,
                 ]);
 

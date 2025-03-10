@@ -222,7 +222,7 @@
                         if(type === 'display'){
                             data =
                             '<div class="d-flex align-items-center">'+
-                            '<a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="ti ti-printer"></i></a>'+
+                            '<a href="/gtk/cetak?data='+row.id+'" target="_BLANK"  class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="ti ti-printer"></i></a>'+
                             '<a  href="https://wa.me/'+row.telp+'" target="_blank" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="ti ti-brand-whatsapp"></i></a>'+
 
 
@@ -231,9 +231,7 @@
                                     '<i class="ti ti-dots-vertical fs-14"></i>'+
                                     '</a>'+
                             '<ul class="dropdown-menu dropdown-menu-right p-3" style="">'+
-                                '<li>'+
-                                    '<a class="dropdown-item rounded-1" href="/gtk/cetak?data='+row.id+'" target="_BLANK" ><i class="ti ti-menu me-2"></i>Cetak Kartu</a>'+
-                                    '</li>'+
+                                
                                  '<li>'+
                                     '<a class="dropdown-item rounded-1" href="/gtk/update/'+ row.id +'" ><i class="ti ti-menu me-2"></i>Edit</a>'+
                                     '</li>'+

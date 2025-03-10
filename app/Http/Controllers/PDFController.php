@@ -6,6 +6,7 @@ use PDF;
 use TCPDF;
 use Carbon\Carbon;
 use App\Models\gtk;
+use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\User;
 use App\Models\Event;
@@ -165,36 +166,106 @@ class PDFController extends Controller
         //return $pdf->download('export-students-' . Carbon::now()->format('YmdHis') . '.pdf');
     }
     public function generatePDFRFIDstudents(){
-        if(request('type') == "cetak"){
-            return view('exportPDF.ReportAbsesiRfid',[
-            'created' => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
-            'students' => student::with('absentRFID')->get(),
-            'holiday'=>Event::all()
-            ]);
-        }else{
+        // Get the current date and time
+    $created = Carbon::now()->translatedFormat('l, d F Y H:i:s');
 
+    // Fetch data
+    $students = Student::with('absentRFID')->get();
+    $holidays = Event::all();
 
+    // Check if 'type' request is "cetak"
+    if (request('type') == "cetak") {
+        // Return the view as HTML for printing
+        return view('exportPDF.ReportAbsesiRfid', [
+            'created' => $created,
+            'students' => $students,
+            'holiday' => $holidays
+        ]);
+    } else {
+        // Prepare data for the PDF
         $data = [
-            'created' => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
-            'students' => student::with('absentRFID')->get(),
-            'holiday'=>Event::all()
+            'created' => $created,
+            'students' => $students,
+            'holiday' => $holidays
         ];
+
+        // Set DOMPDF options
         $options = new Options();
-        $options->set('image-cache', storage_path('app/pdf_cache'));
+        $options->set('image-cache', storage_path('app/pdf_cache'));  // Enable image caching
+        $options->set('isHtml5ParserEnabled', true);  // Enable HTML5 parser
+        $options->set('isPhpEnabled', true);  // Enable PHP functions (for handling images)
+        $options->set('image-dpi', 150);  // Change DPI for better image quality
 
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isPhpEnabled', true);
-        $options->set('image-cache', true); // Enable caching for images
-        $options->set('image-dpi', 150); // Change DPI (dots per inch)
+        // Initialize Dompdf with the specified options
+        $dompdf = new Dompdf($options);
 
-        $pdf = PDF::loadView('exportPDF.ReportAbsesiRfid', $data);
-        $pdf->setPaper('A4', 'landscape');
-        $pdf->render();
-        // Tampilkan di browser
-        return $pdf->stream('Absensi_Siswa_' . Carbon::now()->format('Ymd') . '-' . rand(1000, 9999) . '.pdf');
+        // Load the view with the data and render the HTML content
+        $htmlContent = view('exportPDF.ReportAbsesiRfid', $data)->render();
 
-        }
+        // Load HTML content into DOMPDF
+        $dompdf->loadHtml($htmlContent);
 
+        // Set paper size and orientation (A4 landscape)
+        $dompdf->setPaper('A4', 'landscape');
+
+        // Render the PDF (first pass: load HTML, second pass: render the PDF)
+        $dompdf->render();
+
+        // Output the PDF to the browser for download
+        return $dompdf->stream('Absensi_Siswa_' . Carbon::now()->format('Ymd') . '-' . rand(1000, 9999) . '.pdf');
+    }
+    
+    
+    }
+    public function reportAbsentKelas(){
+           // Get the current date and time
+            $created = Carbon::now()->translatedFormat('l, d F Y H:i:s');
+
+            // Fetch data
+            $students = Student::with('absentRFID')->get();
+            $holidays = Event::all();
+
+            // Check if 'type' request is "cetak"
+            if (request('type') == "cetak") {
+                // Return the view as HTML for printing
+                return view('exportPDF.ReportAbsesiRfid', [
+                    'created' => $created,
+                    'students' => $students,
+                    'holiday' => $holidays
+                ]);
+            } else {
+                // Prepare data for the PDF
+                $data = [
+                    'created' => $created,
+                    'students' => $students,
+                    'holiday' => $holidays
+                ];
+
+                // Set DOMPDF options
+                $options = new Options();
+                $options->set('image-cache', storage_path('app/pdf_cache'));  // Enable image caching
+                $options->set('isHtml5ParserEnabled', true);  // Enable HTML5 parser
+                $options->set('isPhpEnabled', true);  // Enable PHP functions (for handling images)
+                $options->set('image-dpi', 150);  // Change DPI for better image quality
+
+                // Initialize Dompdf with the specified options
+                $dompdf = new Dompdf($options);
+
+                // Load the view with the data and render the HTML content
+                $htmlContent = view('exportPDF.ReportAbsesiKelas', $data)->render();
+
+                // Load HTML content into DOMPDF
+                $dompdf->loadHtml($htmlContent);
+
+                // Set paper size and orientation (A4 landscape)
+                $dompdf->setPaper('A4', 'landscape');
+
+                // Render the PDF (first pass: load HTML, second pass: render the PDF)
+                $dompdf->render();
+
+                // Output the PDF to the browser for download
+                return $dompdf->stream('Absensi_Siswa_' . Carbon::now()->format('Ymd') . '-' . rand(1000, 9999) . '.pdf');
+            }
     }
 
     public function generateJadwal($id_kelas)

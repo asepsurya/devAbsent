@@ -99,7 +99,7 @@
                 <thead>
                     <tr class="text-center">
                         <td rowspan="2">#</td>
-                        <td rowspan="2" class="text-center"><p>RFID</p></td>
+                        <td rowspan="2" class="text-center"><p>Nomor Induk</p></td>
                         <td rowspan="2" class="text-center"><p>NAMA</p></td>
                         @php
                             $thisMonth = \Carbon\Carbon::now()->format('F'); // Current month name
@@ -138,7 +138,7 @@
                     @foreach ($students as $data => $absentData)
                         <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
-                            <td>{{ $absentData->id_rfid }}</td>
+                            <td>{{ $absentData->nis }}</td>
                             <td>{{ $absentData->nama }}</td>
 
                             @foreach (range(1, $daysInMonth) as $day2)

@@ -55,7 +55,7 @@
                 <a id="addRowRef" class="btn btn-primary mb-3 ">+ Tambah Referensi</a>
             </div>
             <input class="id_kelas" value="{{ $id }}" name="id_kelas" hidden >
-            <table class="table  input-table table table-nowrap mb-0" id="draggable-table">
+            <table class="table  input-table table-nowrap mb-0" id="draggable-table">
                 <thead>
                     <tr>
                         <th class="bg-light-400">#</th>

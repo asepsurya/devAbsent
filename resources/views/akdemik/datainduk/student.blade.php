@@ -351,6 +351,8 @@
                             render:function(data){
                             if(data === '1'){
                                 data = '<span class="badge badge-soft-success d-inline-flex align-items-center">Aktif</span>'
+                            }else if(data === '3'){
+                                data = '<span class="badge badge-soft-success d-inline-flex align-items-center">Lulus</span>'
                             }else{
                                 data = '<span class="badge badge-soft-danger d-inline-flex align-items-center">Tidak Aktif</span>'
                             }

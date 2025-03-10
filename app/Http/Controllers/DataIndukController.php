@@ -33,7 +33,9 @@ class DataIndukController extends Controller
 {
     public function dataIndukStudent(request $request) {
         if ($request->ajax()) {
-            $model = student::orderBy('id', 'DESC')->with(['rombelstudent','getKelas']);
+            $model = student::whereIn('status', ['1', '2'])
+                ->orderBy('id', 'DESC')
+                ->with(['rombelstudent', 'getKelas']);
             return DataTables::eloquent($model)
             ->addColumn('rombel', function (student $item) {
                 if($item->getKelas == NULL){
@@ -60,6 +62,39 @@ class DataIndukController extends Controller
        return view('akdemik.datainduk.card.studentCard',[
             'data'=>$data
        ],compact('nama','nis'));
+    }
+
+    public function lulusan(request $request){
+        if ($request->ajax()) {
+            $model = student::where('status','3')->orderBy('nama', 'DESC')->with(['rombelstudent','getKelas']);
+            return DataTables::eloquent($model)
+            ->addColumn('rombel', function (student $item) {
+                if($item->getKelas == NULL){
+                    return 'Belum Disetel';
+                }else{
+                    $a = $item->getKelas->nama_kelas;
+                    $b = $item->getKelas->jurusanKelas->nama_jurusan;
+                    $c =  $item->getKelas->sub_kelas;
+                    return $a.' '.$b.' '.$c;
+                }       
+             })->addColumn('tahun_lulus', function (student $item) {
+                if($item->tahun_lulus == NULL){
+                    return 'Belum Disetel';
+                }else{
+                    $a = $item->tahun_lulus->tahun_pelajaran;
+                    $b = $item->tahun_lulus->semester;
+                    
+                    return $a.' - '.$b;
+                }
+            }) ->addIndexColumn()->toJson();
+
+        }
+        return view('akdemik.datainduk.lulusan',[
+            'title'=>'Lulusan',
+            'students'=>student::where('status','3')->orderBy('nama', 'ASC')->get(['id','nis']),
+            'provinsi'=>Province::all(),
+
+        ]);
     }
 
     public function dataIndukStudentCardmulti(request $request){

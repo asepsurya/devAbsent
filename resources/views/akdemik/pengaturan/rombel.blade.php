@@ -150,10 +150,10 @@
                                 <div>
                                     <div class="col mb-2">
                                         <label class="form-label">Tahun Pelajaran</label>
-                                        <select name="id_tahun_pelajaran" id="tahunAjar" class="form-control tahunAjarTujuan">
+                                        <select name="id_tahun_pelajaran" id="tahunAjar" class="form-control tahunAjarTujuan" >
                                             <option value="" selected>-- Pilih Kelas --</option>
                                             @foreach ($tahunAjar as $item)
-                                                <option value="{{ $item->id }}" {{ $item->id == request('id_tahun_pelajaran') ? 'selected' : '' }}>
+                                                <option value="{{ $item->id }}" selected>
                                                     {{ $item->tahun_pelajaran }} - {{ $item->semester }}
                                                 </option>
                                             @endforeach
@@ -168,6 +168,10 @@
                                                     {{ $item->nama_kelas }} - {{ $item->jurusanKelas->nama_jurusan }} {{ $item->sub_kelas }}
                                                 </option>
                                             @endforeach
+                                            <optgroup label=" -- siswa yang sudah lulus --">
+                                                <option value="lulusan" {{ 'lulusan' == request('id_kelas_tujuan') ? 'selected' : '' }}>Kelas Lulusan</option>
+                                            </optgroup>
+                                         
                                         </select>
                                     </div>
                                 </div>
