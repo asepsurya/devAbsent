@@ -28,9 +28,10 @@ class DashboardController extends Controller
 
     public function Studentindex(){
 
-                // Get the authenticated user's RFID ID
-        $userId = auth()->user()->student->id_rfid ?? 'NULL';
-     // Get the attendance records for this RFID
+        // Get the authenticated user's RFID ID
+        $userId = auth()->user()->student->id_rfid ;
+
+        // Get the attendance records for this RFID
         $attendanceRecords = absent::where('id_rfid', $userId)->get();
 
         // Initialize counters for attendance status
@@ -51,30 +52,32 @@ class DashboardController extends Controller
         $thresholdTime = Carbon::parse($jamMasuk); // 07:00 AM for "Present"
         $twentyMinutesThreshold = Carbon::parse($jamMasuk)->addMinutes($estimasiWaktu); // 07:20 AM for "Present" window
 
+        if($userId !== ''){
+            // Check each attendance record and calculate status
+            foreach ($attendanceRecords as $record) {
+                // Parse the entry time
+                $entryTime = Carbon::parse($record->entry);
 
-        // Check each attendance record and calculate status
-        foreach ($attendanceRecords as $record) {
-            // Parse the entry time
-            $entryTime = Carbon::parse($record->entry);
+                if ($entryTime->lte($thresholdTime)) {
+                    // If entry time is on or before 7:00 AM, mark as "Present"
+                    $present++;
+                } elseif ($entryTime->lte($twentyMinutesThreshold)) {
+                    // If entry time is between 7:00 AM and 7:20 AM, still mark as "Present"
+                    $present++;
+                } elseif ($entryTime->lte($thresholdTime->addMinutes($estimasiWaktu))) {
+                    // If the entry time is within 30 minutes after 7:00 AM, mark as "Half Day"
+                    $halfDay++;
+                } else {
+                    // If the entry time is more than 30 minutes after 7:00 AM, mark as "Late"
+                    $late++;
+                }
 
-            if ($entryTime->lte($thresholdTime)) {
-                // If entry time is on or before 7:00 AM, mark as "Present"
-                $present++;
-            } elseif ($entryTime->lte($twentyMinutesThreshold)) {
-                // If entry time is between 7:00 AM and 7:20 AM, still mark as "Present"
-                $present++;
-            } elseif ($entryTime->lte($thresholdTime->addMinutes($estimasiWaktu))) {
-                // If the entry time is within 30 minutes after 7:00 AM, mark as "Half Day"
-                $halfDay++;
-            } else {
-                // If the entry time is more than 30 minutes after 7:00 AM, mark as "Late"
-                $late++;
+                // Check if the user is absent (no entry time)
+                if (!$record->entry) {
+                    $absent++;
+                }
             }
 
-            // Check if the user is absent (no entry time)
-            if (!$record->entry) {
-                $absent++;
-            }
         }
 
         // Get the current date and the start and end of this week
@@ -85,24 +88,28 @@ class DashboardController extends Controller
         // Fetch the attendance records for the authenticated user for this week
         $hadir = absent::where('id_rfid', auth()->user()->student->id_rfid ?? 'NULL')
                         ->get();
+        if(auth()->user()->student->id_rfid !== ''){
+            // Initialize absence data for the week (all days set to 0 by default)
+            $absenceData = [
+                'monday' => 0, 'tuesday' => 0, 'wednesday' => 0,
+                'thursday' => 0, 'friday' => 0, 'saturday' => 0, 'sunday' => 0
+            ];
 
-        // Initialize absence data for the week (all days set to 0 by default)
-        $absenceData = [
-            'monday' => 0, 'tuesday' => 0, 'wednesday' => 0,
-            'thursday' => 0, 'friday' => 0, 'saturday' => 0, 'sunday' => 0
-        ];
+            // Loop through the attendance records and update the absenceData
+            foreach ($hadir as $record) {
+                // Convert the "tanggal" field to Carbon instance using the d/m/Y format
+                $date = Carbon::createFromFormat('d/m/Y', $record->tanggal);
 
-        // Loop through the attendance records and update the absenceData
-        foreach ($hadir as $record) {
-            // Convert the "tanggal" field to Carbon instance using the d/m/Y format
-            $date = Carbon::createFromFormat('d/m/Y', $record->tanggal);
+                // Get the full day name (e.g., 'Monday', 'Tuesday')
+                $day = $date->format('l'); // Get the full day name (e.g., 'Monday')
 
-            // Get the full day name (e.g., 'Monday', 'Tuesday')
-            $day = $date->format('l'); // Get the full day name (e.g., 'Monday')
-
-            // Map the full day name to lowercase and set the corresponding absence data
-            $absenceData[strtolower($day)] = 1; // Mark as "active" (1) for that day
+                // Map the full day name to lowercase and set the corresponding absence data
+                $absenceData[strtolower($day)] = 1; // Mark as "active" (1) for that day
+            }
+        }else{
+            $absenceData = '';
         }
+
         $pengumuman = Announcement::where('recived', 'like', '%guru%')
         ->get();
         return view('dashboard.studentDashboard',[
@@ -115,7 +122,7 @@ class DashboardController extends Controller
 
     public function teacherDashboard(){
                   // Get the authenticated user's RFID ID
-        $userId = auth()->user()->student->id_rfid ?? 'NULL';
+        $userId = auth()->user()->gtk->id_rfid ?? 'NULL';
          // Get the attendance records for this RFID
         $attendanceRecords = absent::where('id_rfid', $userId)->get();
 
@@ -213,7 +220,7 @@ class DashboardController extends Controller
     }
     public function walikelasDashboard(){
            // Get the authenticated user's RFID ID
-           $userId = auth()->user()->student->id_rfid ?? 'NULL';
+           $userId = auth()->user()->gtk->id_rfid ?? 'NULL';
            // Get the attendance records for this RFID
           $attendanceRecords = absent::where('id_rfid', $userId)->get();
 

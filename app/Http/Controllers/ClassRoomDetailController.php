@@ -358,10 +358,16 @@ class ClassRoomDetailController extends Controller
         $task = tasks::where('id', $task_id)->first();
         $name = $task ? $task->judul : null;
 
+        $userId = auth()->user()->nomor; // Pastikan ini sesuai dengan database
+        $CekUpAnswer = StudentScore::where('task_id', $task_id)
+            ->where('student_id', $userId)
+            ->first();
+
         return view('classroom.work.quiz.quizList', [
             'title' => 'My Quiz',
             'name_task' => $name,
             'quest' => question::where('task_id', $task_id)->orderBy('id', 'DESC')->get(),
+            'CekUpAnswer'=>$CekUpAnswer
         ], compact('id_kelas','task_id'));
 
     }
@@ -417,7 +423,7 @@ class ClassRoomDetailController extends Controller
             'pilihan_c' => 'required|string',
             'pilihan_d' => 'required|string',
             'pilihan_e' => 'nullable|string',
-            'jawaban' => 'required|in:pilihan_a,pilihan_b,pilihan_c,pilihan_d,pilihan_e',
+            'jawaban' => 'required|in:A,B,C,D,E',
             'task_id' => 'required|integer',
             'id' => 'required|integer', // ID of the question to update
         ]);
@@ -571,7 +577,7 @@ class ClassRoomDetailController extends Controller
             'finish_time'=>$request->finish_time,
         ]);
         toastr()->success('Terimakasih');
-        return redirect()->route('login');
+        return redirect()->route('index');
     }
 
     public function detailTugas($task_id, $id_kelas){

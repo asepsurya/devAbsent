@@ -143,17 +143,6 @@
                         @endif
                        @endif
 
-                       @if( auth()->user()->role == "walikelas")
-                           @if(Auth::user()->gtk == NULL)
-                               <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
-                           @else
-                           @if(Auth::user()->gtk->gambar == "" )
-                               <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
-                           @else
-                               <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
-                           @endif
-                           @endif
-                       @endif
 
                        @if(auth()->user()->role == "admin")
                            <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>

@@ -143,8 +143,7 @@
         <h4 class="mb-3">Laporan Absensi Siswa</h4>
         <div class="d-flex align-items-center flex-wrap">
 
-            <button class="btn btn-outline-light bg-white mb-3 mx-1"><span class="ti ti-printer"></span> Cetak</button>
-            <a href="/export/RFIDstudents?month={{ request('month') }}&year={{ request('year') }}" " class="btn btn-outline-light bg-white mb-3" target="_blank">Exsport PDF</a>
+            <a href="/report/absent/kelas?month={{ request('month') }}&year={{ request('year') }}"  class="btn btn-outline-light bg-white mb-3" target="_blank">Exsport PDF</a>
         </div>
     </div>
     <div class="card-body p-0">

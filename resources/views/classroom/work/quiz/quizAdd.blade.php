@@ -28,9 +28,9 @@
 </div>
 {{-- End Header --}}
 
-<div class="card flex-fill bg-info " style="background-image: url('http://127.0.0.1:8000/asset/img/shape-05.png'); background-size: cover; background-position: center;">
+<div class="card flex-fill bg-info " style="background-image: url('{{ asset('asset/img/shape-05.png') }}); background-size: cover; background-position: center;">
     <div class="card-body pt-5">
-        <h1 class="text-white mb-1 "><span class="ti ti-clipboard-list"></span>Tambah Tugas</h1>
+        <h1 class="text-white mb-1 "><span class="ti ti-clipboard-list"></span>Tambah Pertanyaan</h1>
     </div>
 </div>
 <form action="{{ route('classroom.quizAdd') }}" method="POST">
@@ -93,7 +93,7 @@
             </div>
             <div class="py-2 me-2">
                 <div class="mb-3">
-               
+
                     <input type="text" value="{{ $task_id }}" name="task_id" hidden >
                 </div>
                 <div class="mb-3">
