@@ -56,7 +56,7 @@
 
 @endsection
 @section('container')
-    @if(isset($CekUpAnswer) && $CekUpAnswer->count())
+    @if($CekUpAnswer->count() === 0)
     <div class="row">
         <div class="col-md-9">
             <form action="{{ route('quiz.submit') }}" method="post" id="quizForm">

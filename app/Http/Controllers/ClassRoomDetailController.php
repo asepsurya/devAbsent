@@ -359,15 +359,11 @@ class ClassRoomDetailController extends Controller
         $name = $task ? $task->judul : null;
 
         $userId = auth()->user()->nomor; // Pastikan ini sesuai dengan database
-        $CekUpAnswer = StudentScore::where('task_id', $task_id)
-            ->where('student_id', $userId)
-            ->first();
-
         return view('classroom.work.quiz.quizList', [
             'title' => 'My Quiz',
             'name_task' => $name,
             'quest' => question::where('task_id', $task_id)->orderBy('id', 'DESC')->get(),
-            'CekUpAnswer'=>$CekUpAnswer
+
         ], compact('id_kelas','task_id'));
 
     }
@@ -461,6 +457,10 @@ class ClassRoomDetailController extends Controller
         $questions = question::where('task_id',$task_id)->get();  // Adjust based on your query logic
         $questionsAnswer = studentAnswer::where('student_id',$studentId)->get();  // Adjust based on your query logic
 
+        $CekUpAnswer = StudentScore::where('task_id', $task_id)
+        ->where('student_id', $studentId)
+        ->get();
+
         $studentScore = StudentScore::where('student_id',$studentId)->first();
         return view('classroom.work.quiz.quiz',[
             'title'=>'Quiz',
@@ -469,7 +469,7 @@ class ClassRoomDetailController extends Controller
             'time'=>$time->poin
 
 
-        ],compact('task_id','questions', 'studentAnswers','studentScore'));
+        ],compact('task_id','questions', 'studentAnswers','studentScore','CekUpAnswer'));
     }
 
     public function quizSubmit(request $request){
