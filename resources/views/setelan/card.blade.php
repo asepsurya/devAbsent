@@ -134,7 +134,7 @@
                                                         @if ($signature->value == "")
                                                             <img src="{{ asset('asset/img/card/signature_default.png') }}" alt="signature" width="90px">
                                                         @else
-                                                            <img src="/storage/{{ $signature->value }}" alt="" width="90px" class="mx-2" alt="logo">
+                                                            <img src="{{ asset('storage/' . $signature->value) }}" alt="" width="90px" class="mx-2" alt="logo">
                                                         @endif
 
                                                     </div>
@@ -164,7 +164,7 @@
                                                         @if ($signature_stamp->value == "")
                                                             <img src="{{ asset('asset/img/card/signature_stamp.png') }}" alt="signature_stamp" width="90px">
                                                         @else
-                                                            <img src="/storage/{{ $signature_stamp->value }}" alt="" width="90px" class="mx-2" alt="logo">
+                                                            <img src="{{ asset('storage/' .  $signature_stamp->value) }}" alt="" width="90px" class="mx-2" alt="logo">
                                                         @endif
 
                                                     </div>
@@ -215,8 +215,8 @@
                                                                 </a>
 
                                                             @else
-                                                            <a href="/storage/{{ $fav->value }}" data-lightbox="image1" data-title="Front Background">
-                                                                <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
+                                                            <a href="{{ asset('storage/' .  $fav->value) }}" data-lightbox="image1" data-title="Front Background">
+                                                                <img src="{{ asset('storage/' . $fav->value) }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
                                                             </a>
                                                             @endif
                                                         @endforeach
@@ -249,8 +249,8 @@
                                                                     <img src="{{ asset("asset/img/card/Back-bg-default.png") }}" alt="logo" width="90px">
                                                                 </a>
                                                             @else
-                                                            <a href="/storage/{{ $fav->value }}" data-lightbox="image2" data-title="Back Background">
-                                                                <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
+                                                            <a href="{{ asset('storage/' . $fav->value) }}" data-lightbox="image2" data-title="Back Background">
+                                                                <img src="{{ asset('storage/'. $fav->value ) }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
                                                             </a>
                                                             @endif
                                                         @endforeach
@@ -285,16 +285,16 @@
                                                                     <a href="{{ asset('asset/img/card/Back-front-gtk-default.png') }}" data-lightbox="image1" data-title="Front Background">
                                                                         <img src="{{ asset('asset/img/card/Back-front-gtk-default.png') }}" alt="front" width="90px">
                                                                     </a>
-    
+
                                                                 @else
-                                                                <a href="/storage/{{ $fav->value }}" data-lightbox="image1" data-title="Front Background">
-                                                                    <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
+                                                                <a href="{{ asset('storage/' .  $fav->value) }}" data-lightbox="image1" data-title="Front Background">
+                                                                    <img src="{{ asset('storage/' . $fav->value) }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
                                                                 </a>
                                                                 @endif
                                                             @endforeach
                                                             <p><center><a href="/bg-back/reset?section=front&auth=gtk" id="reset">Reset Default</a></center></p>
                                                             </div>
-    
+
                                                         </div>
                                                     </div>
                                                         <input type="file" class="form-control"  name="gtkBG_front_default">
@@ -320,18 +320,18 @@
                                                                         <img src="{{ asset("asset/img/card/Back-back-gtk-default.png") }}" alt="logo" width="90px">
                                                                     </a>
                                                                 @else
-                                                                <a href="/storage/{{ $fav->value }}" data-lightbox="image2" data-title="Back Background">
-                                                                    <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
+                                                                <a href="{{ asset('storage/' . $fav->value) }}" data-lightbox="image2" data-title="Back Background">
+                                                                    <img src="{{ asset('storage/' . $fav->value ) }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
                                                                 </a>
                                                                 @endif
                                                             @endforeach
                                                             <p><a href="/bg-back/reset?section=back&auth=gtk" id="reset">Reset Default</a></p>
                                                             </div>
                                                         </div>
-    
+
                                                     </div>
                                                     <input type="file" class="form-control"  name="gtkBG_back_default">
-    
+
                                                 </div>
                                             </div>
                                         </div>

@@ -81,7 +81,7 @@
                         <label for="mapel" class="form-label">Mata Pelajaran / Guru Ajar:</label>
 
                         <input type="text" name="kelas" value="{{ request('kelas') }}" hidden>
-                        
+
                         <select name="id_mapel" id="mapel" class="mapel" >
                             <option value="">-Pilih Mata Pelajaran-</option>
 
@@ -235,7 +235,7 @@
                     <div class="row">
                         <div class="col d-flex justify-content-center mb-3">
                             @if($item->rombelStudent->foto)
-                            <img src="/storage/{{ $item->rombelStudent->foto }}"
+                                <img src="{{ asset('storage/' . optional($item->rombelStudent)->foto) }}"
                                 class="avatar avatar-xxxl me-4 img-thumbnail rounded-pill" alt="foto">
                             @else
                             <img src="{{ asset('asset/img/user-default.jpg') }}"

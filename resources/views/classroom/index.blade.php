@@ -120,7 +120,7 @@
                         <a  class="avatar avatar-lg flex-shrink-0">
 
                         @if(optional($item->user->gtk)->gambar)
-                            <img src="/storage/{{ $item->user->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                            <img src="{{ asset('storage/' . $item->user->gtk->gambar) }}" alt="Img" class="img-fluid rounded-circle">
                         @else
                             <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
                         @endif
@@ -191,7 +191,7 @@
                                         <div class="d-flex align-items-center">
                                             <a  class="avatar avatar-lg flex-shrink-0">
                                                 @if(optional(auth()->user()->gtk)->gambar)
-                                                    <img src="/storage/{{ auth()->user()->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                                                    <img src="{{ asset('storage/' . auth()->user()->gtk->gambar) }}" alt="Img" class="img-fluid rounded-circle">
                                                 @else
                                                     <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
                                                 @endif
@@ -264,7 +264,7 @@
                                         <div class="d-flex align-items-center">
                                             <a  class="avatar avatar-lg flex-shrink-0">
                                                 @if(optional(auth()->user()->gtk)->gambar)
-                                                <img src="/storage/{{ auth()->user()->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                                                <img src="{{ asset('storage/' . auth()->user()->gtk->gambar) }}" alt="Img" class="img-fluid rounded-circle">
                                             @else
                                                 <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
                                             @endif

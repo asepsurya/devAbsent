@@ -116,7 +116,7 @@
                                         <div class="d-flex align-items-center">
                                             <a class="avatar avatar-lg flex-shrink-0">
                                             @if(optional($item->user->gtk)->gambar)
-                                                <img src="/storage/{{ $item->user->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                                                <img src="{{ asset('storage/'. $item->user->gtk->gambar) }}" alt="Img" class="img-fluid rounded-circle">
                                             @else
                                                 <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
                                             @endif
@@ -193,13 +193,13 @@
                                                         <div class="d-flex align-items-center">
                                                             @if(isset($media->exstention) && $media->exstention == 'pdf')
                                                                 <img src="{{ asset('asset/img/icon/pdf-02.svg') }}" alt="PDF Icon" class="me-2">
-                                                                <h5 class="text-nowrap"><a href="/storage/{{ $media->file_path }}" target="_blank" >{{ Str::limit($media->name, 20, '...') }}</a></h5>
+                                                                <h5 class="text-nowrap"><a href="{{ asset('storage/' . $media->file_path ) }}" target="_blank" >{{ Str::limit($media->name, 20, '...') }}</a></h5>
                                                             @elseif(isset($media->exstention) && in_array($media->exstention, ['doc', 'docx']))
                                                                 <img src="{{ asset('asset/img/icon/doc.png') }}" alt="Document Icon" class="me-2" width="50px">
-                                                                <h5 class="text-nowrap"><a href="/storage/{{$media->file_path }}" download="{{ $media->name }}">{{ Str::limit($media->name, 20, '...') }}</a></h5>
+                                                                <h5 class="text-nowrap"><a href="{{ asset('storage/' . $media->file_path ) }}" download="{{ $media->name }}">{{ Str::limit($media->name, 20, '...') }}</a></h5>
                                                             @else
                                                                 <img src="{{ asset('asset/img/icon/word.png') }}" alt="Default Icon" class="me-2" width="50px">
-                                                                <h5 class="text-nowrap"><a href="/storage/{{$media->file_path }}" download>{{ Str::limit($media->name, 20, '...') }}</a></h5>
+                                                                <h5 class="text-nowrap"><a href="{{ asset('storage/' . $media->file_path) }}" download>{{ Str::limit($media->name, 20, '...') }}</a></h5>
                                                             @endif
                                                         </div>
                                                         <div class="d-flex align-items-center">
@@ -209,7 +209,7 @@
                                                                     <i class="fa fa-ellipsis-v"></i>
                                                                 </a>
                                                                 <ul class="dropdown-menu">
-                                                                    <li><a href="/storage/{{$media->file_path }}" download="{{ $media->name }}" class="dropdown-item">Download File</a></li>
+                                                                    <li><a href="{{ asset('storage/' . $media->file_path) }}" download="{{ $media->name }}" class="dropdown-item">Download File</a></li>
                                                                 </ul>
                                                             </div>
                                                         </div>

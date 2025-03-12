@@ -96,9 +96,9 @@
                         </div>
                         @enderror
                     </div>
-        
+
                 </div>
-        
+
                 <div class="col-lg-6">
                     <div class="mb-2">
                         <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
@@ -153,7 +153,7 @@
                         @enderror
                     </div>
                 </div>
-        
+
             </div>
             <div class="col">
                 <label class="form-label">Nomor Telepon (WhatsApp) <span class="text-danger">*</span></label>
@@ -168,16 +168,16 @@
             </div>
         </div>
         <div id="sectionTwo">
-        
+
             <div class="mb-2">
                 <label class="form-label">Jenis GTK <span class="text-danger">*</span></label>
                 <select name="id_jenis_gtk" id="id_jenis_gtk"
                     class="form-control select2   @error('id_jenis_gtk') is-invalid @enderror" required>
-        
+
                     @foreach ($jnsGTK as $item2 )
                          <option value="{{ $item2->id }}" {{ $item2->id == $item->id_jenis_gtk ? 'selected' : '' }}>{{ $item2->nama }}</option>
                     @endforeach
-        
+
                 </select>
                 @error('jns_gtk')
                 <div class="invalid-feedback">
@@ -185,7 +185,7 @@
                 </div>
                 @enderror
             </div>
-        
+
             <div class="col">
                 <div class="mb-2">
                     <label class="form-label">Alamat</label>
@@ -199,7 +199,7 @@
                     @enderror
                 </div>
             </div>
-        
+
             <div class="row">
                 <div class="col-lg-6">
                     <div class="mb-2">
@@ -232,7 +232,7 @@
                         </div>
                         @enderror
                     </div>
-        
+
                 </div>
                 <div class="col-lg-6">
                     <div class="mb-2">
@@ -288,7 +288,7 @@
                         </div>
                         @enderror
                     </div>
-        
+
                     <div class="mb-2">
                         <label class="form-label">Tanggal Masuk</label>
                         <div class="input-icon position-relative">
@@ -319,19 +319,23 @@
             <div class="p-3">
                     <div class="col d-flex justify-content-center">
                         @if ($item->gambar)
-                        <a href="/storage/{{ $item->gambar }}" data-lightbox="image-{{ $item->id }}" data-title="Profile Photo">
-                            <img src="/storage/{{ $item->gambar }}" class="avatar avatar-xxxl" alt="foto">
-                        </a>
+                        <a href="{{ asset('storage/' . $item->gambar) }}"
+                            data-lightbox="image-{{ $item->id }}"
+                            data-title="Profile Photo">
+                             <img src="{{ asset('storage/' . $item->gambar) }}"
+                                  class="avatar avatar-xxxl"
+                                  alt="foto">
+                         </a>
                         @else
                         <img src="{{ asset('asset/img/user-default.jpg') }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto">
                     @endif
-                       
+
                         </div>
                         <div class="d-flex justify-content-center">
                             <a class="btn btn-outline-light bg-white mt-3 " data-toggle="modal" data-target="#fileUploadModal"><span class="ti ti-upload"></span>Change Image</a>
                         </div>
-                       
-              
+
+
                     <div class="my-2">
                         <label for="form-label">RFID</label>
                         <select name="id_rfid" id="id_rfid" class="form-control select2">
@@ -482,7 +486,7 @@
     const submitBtn = document.getElementById('submit-btn');
     const croppedFotoInput = document.getElementById('croppedFoto');
     let cropper;
-    
+
     // Handle image input change
     imageInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -493,7 +497,7 @@
           preview.style.display = 'block';
           cropBtn.style.display = 'inline';
           submitBtn.disabled = true;
-    
+
           // Initialize cropper
           if (cropper) cropper.destroy();
           cropper = new Cropper(preview, {
@@ -505,14 +509,14 @@
         reader.readAsDataURL(file);
       }
     });
-    
+
     // Handle cropping
     cropBtn.addEventListener('click', () => {
       const canvas = cropper.getCroppedCanvas({
         width: 463,  // Set width to 463px
         height: 451, // Set height to 451px
       });
-    
+
       // Convert to Blob and Base64
       canvas.toBlob((blob) => {
         const reader = new FileReader();
@@ -526,7 +530,7 @@
         reader.readAsDataURL(blob);
       }, 'image/jpeg', 1.0); // Set image quality to 100%
     });
-    
+
     </script>
 
 <script>

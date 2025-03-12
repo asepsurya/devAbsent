@@ -273,7 +273,7 @@
                                                     <div class="d-flex align-items-center">
                                                         <a class="avatar avatar-lg flex-shrink-0">
                                                             @if(optional($item->user->gtk)->gambar)
-                                                            <img src="/storage/{{ $item->user->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                                                            <img src="{{ asset('storage/' . $item->user->gtk->gambar) }}" alt="Img" class="img-fluid rounded-circle">
                                                             @else
                                                                 <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
                                                             @endif
@@ -347,13 +347,13 @@
                                                                     <div class="d-flex align-items-center">
                                                                         @if(isset($media->exstention) && $media->exstention == 'pdf')
                                                                             <img src="{{ asset('asset/img/icon/pdf-02.svg') }}" alt="PDF Icon" class="me-2">
-                                                                            <h5 class="text-nowrap"><a href="/storage/{{ $media->file_path }}" target="_blank" >{{ Str::limit($media->name, 20, '...') }}</a></h5>
+                                                                            <h5 class="text-nowrap"><a href="{{ asset('storage/' . $media->file_path) }}" target="_blank" >{{ Str::limit($media->name, 20, '...') }}</a></h5>
                                                                         @elseif(isset($media->exstention) && in_array($media->exstention, ['doc', 'docx']))
                                                                             <img src="{{ asset('asset/img/icon/doc.png') }}" alt="Document Icon" class="me-2" width="50px">
-                                                                            <h5 class="text-nowrap"><a href="/storage/{{$media->file_path }}" download="{{ $media->name }}">{{ Str::limit($media->name, 20, '...') }}</a></h5>
+                                                                            <h5 class="text-nowrap"><a href="{{ asset('storage/' . $media->file_path) }}" download="{{ $media->name }}">{{ Str::limit($media->name, 20, '...') }}</a></h5>
                                                                         @else
                                                                             <img src="{{ asset('asset/img/icon/word.png') }}" alt="Default Icon" class="me-2" width="50px">
-                                                                            <h5 class="text-nowrap"><a href="/storage/{{$media->file_path }}" download>{{ Str::limit($media->name, 20, '...') }}</a></h5>
+                                                                            <h5 class="text-nowrap"><a href="{{ asset('storage/'  . $media->file_path) }}" download>{{ Str::limit($media->name, 20, '...') }}</a></h5>
                                                                         @endif
                                                                     </div>
                                                                     <div class="d-flex align-items-center">
@@ -363,7 +363,7 @@
                                                                                 <i class="fa fa-ellipsis-v"></i>
                                                                             </a>
                                                                             <ul class="dropdown-menu">
-                                                                                <li><a href="/storage/{{$media->file_path }}" download="{{ $media->name }}" class="dropdown-item">Download File</a></li>
+                                                                                <li><a href="{{ asset('storage/' . $media->file_path) }}" download="{{ $media->name }}" class="dropdown-item">Download File</a></li>
                                                                             </ul>
                                                                         </div>
                                                                     </div>
@@ -575,7 +575,10 @@
                             $foto = $user->student ? $user->student->foto : ($user->gtk ? $user->gtk->gambar : null);
                         @endphp
 
-                        <img src="{{ $foto ? '/storage/' . $foto : asset('asset/img/user-default.jpg') }}" class="rounded-circle me-3" alt="avatar" width="50">
+                        <img src="{{ $foto ? asset('storage/' . $foto) : asset('asset/img/user-default.jpg') }}"
+                        class="rounded-circle me-3"
+                        alt="avatar" width="50">
+
 
                         <button id="emojiPickerButton" class="btn ">😊</button>
                         <input type="text" id="commentInput" name="comment" class="form-control me-2  p-2" placeholder="Tulis komentar..." style="border-radius:50px;">
@@ -639,7 +642,7 @@
                                                         @if ($student->foto == '')
                                                             <img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
                                                         @else
-                                                            <img src="/storage/{{ $student->foto }}" class="img-fluid rounded-circle" alt="foto">
+                                                            <img src="{{ asset('storage/' .  $student->foto ) }}" class="img-fluid rounded-circle" alt="foto">
                                                         @endif
                                                     </a>
                                                     <div class="ms-2">
@@ -919,30 +922,27 @@ function addCommentToSection(commentData) {
     const newComment = document.createElement('div');
     newComment.classList.add('d-flex', 'align-items-start', 'mb-3');
     let $link;
-
+    let assetPath = "{{ asset('') }}"; // Base asset UR
 
     // Memeriksa gtkFoto
     if (commentData.gtkFoto && commentData.gtkFoto.gambar) {
-        // Jika gtkFoto ada dan memiliki gambar
         if (commentData.gtkFoto.gambar == null || commentData.gtkFoto.gambar === '') {
-            // Jika gambar pada gtkFoto kosong atau null, gunakan gambar default
-            $link = '/asset/img/user-default.jpg';  // Gambar default
+            // Jika gambar kosong atau null, gunakan gambar default
+            $link = assetPath + 'asset/img/user-default.jpg';
         } else {
-            // Jika gambar ada, tampilkan gambar gtkFoto
-            $link = '/storage/' + commentData.gtkFoto.gambar;
+            // Jika ada gambar, gunakan storage path
+            $link = assetPath + 'storage/' + commentData.gtkFoto.gambar;
         }
     } else if (commentData.studentFoto && commentData.studentFoto.foto) {
         // Jika gtkFoto tidak ada, periksa studentFoto
         if (commentData.studentFoto.foto == null || commentData.studentFoto.foto === '') {
-            // Jika gambar pada studentFoto kosong atau null, gunakan gambar default
-            $link = '/asset/img/user-default.jpg';  // Gambar default
+            $link = assetPath + 'asset/img/user-default.jpg';
         } else {
-            // Jika gambar ada, tampilkan gambar studentFoto
-            $link = '/storage/' + commentData.studentFoto.foto;
+            $link = assetPath + 'storage/' + commentData.studentFoto.foto;
         }
     } else {
-        // Fallback ke gambar default jika keduanya tidak ada
-        $link = '/asset/img/user-default.jpg';  // Gambar default
+        // Jika keduanya tidak ada, gunakan gambar default
+        $link = assetPath + 'asset/img/user-default.jpg';
     }
 
     // Create the new comment element

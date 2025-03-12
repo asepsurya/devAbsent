@@ -17,7 +17,7 @@
                 <a class="avatar avatar-lg flex-shrink-0">
 
                         @if(optional($item->gtk)->gambar)
-                            <img src="/storage/{{ $item->gtk->gambar }}" alt="Img" class="img-fluid rounded-circle">
+                            <img src="{{ asset('storage/'. $item->gtk->gambar) }}" alt="Img" class="img-fluid rounded-circle">
                         @else
                             <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" class="img-fluid rounded-circle">
                         @endif
@@ -48,7 +48,7 @@
                                             @if ( $item->peopleStudent->foto =='')
                                                 <img src="{{ asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
                                             @else
-                                                <img src="/storage/{{ $item->peopleStudent->foto }}" class="img-fluid rounded-circle" alt="foto">
+                                                <img src="{{ asset('storage/' . $item->peopleStudent->foto) }}" class="img-fluid rounded-circle" alt="foto">
                                             @endif
                                         </a>
                                         <div class="ms-2">

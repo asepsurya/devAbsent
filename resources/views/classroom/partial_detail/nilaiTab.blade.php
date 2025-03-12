@@ -30,7 +30,7 @@
                                 <div class="d-flex align-items-center">
                                     <a href="#" class="avatar avatar-md">
                                         <!-- Check if the student has a photo, if not use default -->
-                                        <img src="{{ $item->peopleStudent->foto ? '/storage/' . $item->peopleStudent->foto : asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
+                                        <img src="{{ $item->peopleStudent->foto ? asset('storage/'. $item->peopleStudent->foto) : asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
                                     </a>
                                     <div class="ms-2">
                                         <p class="mb-0">{{ $item->peopleStudent->nama }}</p>

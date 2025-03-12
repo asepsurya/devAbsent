@@ -97,7 +97,7 @@
                                         $user = auth()->user();
                                         $foto = $user->student ? $user->student->foto : ($user->gtk ? $user->gtk->gambar : null);
                                     @endphp
-                                    <img src="{{ $foto ? '/storage/' . $foto : asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="avatar" >
+                                    <img src="{{ $foto ? asset('storage/'. $foto)  : asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="avatar" >
                                     </a>
                                     <div class="ms-2">
                                         <h6 class="text-dark text-truncate mb-0"><a>{{ $user->nama }}</a></h6>

@@ -293,7 +293,7 @@
                                                         @if ($logo->value == "")
                                                             <img src="{{ asset('asset/img/default-logo.png') }}" alt="logo" width="90px">
                                                         @else
-                                                            <img src="/storage/{{ $logo->value }}" alt="" width="90px" class="mx-2" alt="logo">
+                                                            <img src="{{ asset('storage/' . $logo->value) }}" alt="" width="90px" class="mx-2" alt="logo">
                                                         @endif
 
                                                     </div>
@@ -327,7 +327,7 @@
                                                         @if ($fav->value == "")
                                                             <img src="{{ asset('asset/img/default-logo.png') }}" alt="logo" width="90px">
                                                         @else
-                                                            <img src="/storage/{{ $fav->value }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
+                                                            <img src="{{ asset('storage/' . $fav->value ) }}"  alt="" width="90px" class="mx-2" alt="Fav_logo">
                                                         @endif
 
                                                     @endforeach
@@ -340,7 +340,7 @@
                                 </div>
                             </div>
                             <button class="btn btn-primary save-btn"><i class="ti ti-device-floppy"></i></button>
-                            
+
                         </div>
                     </div>
                 </div>

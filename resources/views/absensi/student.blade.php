@@ -263,8 +263,9 @@
                     <div class="row">
                         <div class="col d-flex justify-content-center mb-3">
                             @if($item->rombelStudent->foto ?? $item->foto)
-                            <img src="/storage/{{ $item->rombelStudent->foto ?? $item->foto}}"
+                                <img src="{{ asset('storage/' . (optional($item->rombelStudent)->foto ?? $item->foto)) }}"
                                 class="avatar avatar-xxxl me-4 img-thumbnail rounded-pill" alt="foto">
+
                             @else
                             <img src="{{ asset('asset/img/user-default.jpg') }}"
                                 class="avatar avatar-xxxl me-4 img-thumbnail rounded-pill" alt="foto">
