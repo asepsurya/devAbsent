@@ -259,7 +259,7 @@
                 @endif
 
 
-            @if(auth()->user()->gtk->id_kelas == '' || auth()->user()->gtk->id_rfid == '')
+            @if(auth()->user()->gtk->id_rfid === '')
             <div class="alert alert-info">
                 <strong><span class="ti ti-info-circle"></span> Info:</strong> Anda belum Tertaut ke <u>RFID</u> manapun, silahkan hubungi admin untuk bergabung.
             </div>
@@ -281,7 +281,7 @@
                                                    @if(Auth::user()->gtk->gambar == "" )
                                                        <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                                    @else
-                                                       <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                                       <img src="{{ asset('storage/'.Auth::user()->gtk->gambar) }}" alt='Img' class='img-fluid'>
                                                    @endif
                                                 @endif
                                                @endif
@@ -293,7 +293,7 @@
                                                    @if(Auth::user()->gtk->gambar == "" )
                                                        <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                                    @else
-                                                       <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                                       <img src="{{ asset('storage/'.Auth::user()->gtk->gambar) }}" alt='Img' class='img-fluid'>
                                                    @endif
                                                    @endif
                                                @endif
@@ -455,7 +455,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-center my-3 ">
-                                        <canvas id="donutChart" ></canvas>
+                                        <canvas id="donutChart" width="100" height="100"></canvas>
                                     </div>
                                 </div>
                             </div>

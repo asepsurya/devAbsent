@@ -56,7 +56,7 @@
 
 @endsection
 @section('container')
-
+    @if($CekUpAnswer->count() === 0)
     <div class="row">
         <div class="col-md-9">
             <form action="{{ route('quiz.submit') }}" method="post" id="quizForm">
@@ -190,29 +190,36 @@
             </div>
         </div>
     </div>
-
-
-
-<!-- Modal HTML Structure -->
-<div class="modal fade" id="startModal" tabindex="-1" aria-labelledby="startModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="startModalLabel">Quiz Starting</h5>
-        </div>
-        <div class="modal-body ">
-            <div class="p-5">
-                <center><h3>Are you ready to start the quiz?</h3></center>
+    <!-- Modal HTML Structure -->
+    <div class="modal fade" id="startModal" tabindex="-1" aria-labelledby="startModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="startModalLabel">Quiz Starting</h5>
+            </div>
+            <div class="modal-body ">
+                <div class="p-5">
+                    <center><h3>Are you ready to start the quiz?</h3></center>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary w-100" id="startQuizButton">Start Quiz</button>
             </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary w-100" id="startQuizButton">Start Quiz</button>
         </div>
-      </div>
     </div>
-</div>
-
-
+    @else
+    <script>
+        Swal.fire({
+            title: "Pemberitahuan",
+            text: "Anda sudah mengikuti tugas ini",
+            icon: "info",
+            confirmButtonText: "OK"
+        }).then(() => {
+            window.history.back(); // Kembali ke halaman sebelumnya
+        });
+    </script>
+    @endif
 
 @section('javascript')
 <script>
@@ -314,8 +321,9 @@
             const totalTime = {{ $time }} * 60;  // in seconds
 
             // Get the remaining time from localStorage if it exists
-            let timer = localStorage.getItem(quizTimer) ? parseInt(localStorage.getItem(quizTimer)) : totalTime;
+            let timer = localStorage.getItem('quizTimer') ? parseInt(localStorage.getItem('quizTimer')) : totalTime;
             const finishtime = document.getElementById('finish_time');
+
             const timerInterval = setInterval(function() {
                 const minutes = Math.floor(timer / 60);
                 const seconds = timer % 60;
@@ -324,7 +332,7 @@
                 timer--;
 
                 // Save remaining time to localStorage
-                localStorage.setItem(quizTimer, timer);
+                localStorage.setItem('quizTimer', timer);
 
                 if (timer < 0) {
                     clearInterval(timerInterval);
@@ -333,13 +341,14 @@
                         text: 'Jawaban Anda akan dikirim secara otomatis.',
                         icon: 'warning',
                         showConfirmButton: false,
-                        timer: 10000 // Show alert for 3 seconds
+                        timer: 3000 // Show alert for 3 seconds
                     }).then(() => {
                         submitQuiz();
                     });
                 }
-            }, 10000);
+            }, 1000); // Set interval ke 1 detik
         }
+
 
         // If the page is reloaded, use the stored timer value
         if (localStorage.getItem(quizTimer)) {
@@ -376,6 +385,11 @@
     element.classList.remove('blank-page');
     element.classList.remove('content');
     });
+</script>
+<script>
+    var body = document.body;
+    body.classList.add("mini-sidebar");
+
 </script>
 @endsection
 @endsection

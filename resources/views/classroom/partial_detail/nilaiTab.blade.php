@@ -14,10 +14,11 @@
             <thead>
                 <tr>
                     <th class="border">Name</th>
+                    <th class="border">Total Score</th>
                     @foreach ($task->where('type', '!=', 'pengumuman') as $item)
                         <th class="border">{{ \Str::limit($item->judul, 20) }}</th>
                     @endforeach
-                    <th class="border">Total Score</th>
+
                 </tr>
             </thead>
 
@@ -29,12 +30,20 @@
                                 <div class="d-flex align-items-center">
                                     <a href="#" class="avatar avatar-md">
                                         <!-- Check if the student has a photo, if not use default -->
-                                        <img src="{{ $item->peopleStudent->foto ? '/storage/' . $item->peopleStudent->foto : asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
+                                        <img src="{{ $item->peopleStudent->foto ? asset('storage/'. $item->peopleStudent->foto) : asset('asset/img/user-default.jpg') }}" class="img-fluid rounded-circle" alt="foto">
                                     </a>
                                     <div class="ms-2">
                                         <p class="mb-0">{{ $item->peopleStudent->nama }}</p>
                                     </div>
                                 </div>
+                            </td>
+                            <td class="border">
+                                @php
+
+                                    $totalScore = $item->getScore->avg('nilai');
+                                @endphp
+                                <div class="badge badge-soft-success d-inline-flex align-items-center">{{ $totalScore ?? '0' }}</div>
+
                             </td>
                             <!-- Loop through tasks and show score for each -->
                             @foreach ($task->where('type', '!=', 'pengumuman') as $taskItem)
@@ -45,14 +54,7 @@
                             @endforeach
 
                             <!-- Calculate the total score for the student -->
-                            <td class="border">
-                                @php
 
-                                    $totalScore = $item->getScore->avg('nilai');
-                                @endphp
-                                <div class="badge badge-soft-success d-inline-flex align-items-center">{{ $totalScore ?? '0' }}</div>
-
-                            </td>
                         </tr>
                     @endforeach
                 @else

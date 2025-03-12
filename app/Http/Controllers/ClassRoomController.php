@@ -32,11 +32,19 @@ class ClassRoomController extends Controller
                     $data = collect(); // Or handle as necessary (e.g., return an error message)
                 }
 
-            } else {
+             }
+
+             else if (auth()->user()->role == "superadmin" || auth()->user()->role == "admin" ) {
                 // For other roles, fetch the classrooms with 'user', 'mapel', and 'people' relationships
-                $data = ClassRoom::where(['auth' => auth()->user()->nomor, 'archive' => $archive])
+                $data = ClassRoom::where(['archive' => $archive])
                     ->with(['people', 'mapel', 'user'])
                     ->get();
+            }
+            else {
+               // For other roles, fetch the classrooms with 'user', 'mapel', and 'people' relationships
+               $data = ClassRoom::where(['auth' => auth()->user()->nomor, 'archive' => $archive])
+                   ->with(['people', 'mapel', 'user'])
+                   ->get();
             }
 
 

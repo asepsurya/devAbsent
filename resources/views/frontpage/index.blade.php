@@ -14,9 +14,9 @@
     <!--    Favicons-->
     <!-- ===============================================-->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('asset/img/logo-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo']) }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo']) }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo'])  }}">
     <link rel="manifest" href="{{ asset('landing/img/favicons/manifest.json') }}">
     <meta name="msapplication-TileImage" content="{{ asset('landing/img/favicons/mstile-150x150.png') }}">
     <meta name="theme-color" content="#ffffff">
@@ -69,7 +69,8 @@
       <nav class="navbar navbar-expand-lg navbar-light fixed-top nav user-menu" data-navbar-on-scroll="data-navbar-on-scroll" style="border-bottom:1px solid #e7e7e7">
         <div class="container-fluid">
             <div class="d-flex ">
-            <a class="navbar-brand" href="/"><img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" alt=""  width="50px"/></a>
+            <a class="navbar-brand" href="/"><img src="{{ !empty(app('settings')['site_logo']) ? asset('storage/' . app('settings')['site_logo']) : asset('asset/img/default-logo.png') }}" alt="" width="50px"/></a>
+
             <h5 class=" mt-3">{{ app('settings')['site_name'] }}</h5>
             </div>
             <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +99,7 @@
                             @if(Auth::user()->student->foto == "" )
                                 <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
                             @else
-                                <img src="/storage/{{ Auth::user()->student->foto }}" alt='Img' class='img-fluid'>
+                                <img src="{{ asset('storage/' . Auth::user()->student->foto) }}" alt="Img" class="img-fluid">
                             @endif
                          @endif
                         @endif
@@ -110,7 +111,7 @@
                             @if(Auth::user()->gtk->gambar == "" )
                                 <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                             @else
-                                <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                <img src="{{ asset('storage/'. Auth::user()->gtk->gambar )}}" alt='Img' class='img-fluid'>
                             @endif
                          @endif
                         @endif
@@ -122,7 +123,7 @@
                             @if(Auth::user()->gtk->gambar == "" )
                                 <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                             @else
-                                <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                <img src="{{ asset('storage/'. Auth::user()->gtk->gambar ) }}" alt='Img' class='img-fluid'>
                             @endif
                             @endif
                         @endif
@@ -138,22 +139,11 @@
                            @if(Auth::user()->gtk->gambar == "" )
                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                            @else
-                               <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                               <img src="{{ asset('storage/'. Auth::user()->gtk->gambar )}}" alt='Img' class='img-fluid'>
                            @endif
                         @endif
                        @endif
 
-                       @if( auth()->user()->role == "walikelas")
-                           @if(Auth::user()->gtk == NULL)
-                               <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
-                           @else
-                           @if(Auth::user()->gtk->gambar == "" )
-                               <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
-                           @else
-                               <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
-                           @endif
-                           @endif
-                       @endif
 
                        @if(auth()->user()->role == "admin")
                            <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
@@ -482,9 +472,10 @@ function refreshdata() {
                             '<div class="d-flex justify-content-center mb-3">' +
                                 // Check if 'data.foto' is not null or undefined
                                 (data.foto ?
-                                    '<img src="/storage/' + data.foto + '" class="avatar me-4 avatar-rounded" style="width: 150px; height: 150px;" alt="foto">' :
-                                    '<img src="{{ asset("asset/img/user-default.jpg") }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto">'
+                                    `<img src="{{ asset('storage') }}/${data.foto}" class="avatar me-4 avatar-rounded" style="width: 150px; height: 150px;" alt="foto">` :
+                                    `<img src="{{ asset('asset/img/user-default.jpg') }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto">`
                                 ) +
+
                             '</div>' +
                             '<div class="p-3">' +
                                 '<div class="mb-3"><label>NIS</label><input class="form-control" value="' + data.id + '" disabled></div>' +
@@ -593,7 +584,8 @@ setInterval(refreshdata, 5000);
                                 if (!item.student.foto || item.student.foto.trim() === '') {
                                   content += '<img src="{{ asset("asset/img/user-default.jpg") }}" class="img-fluid rounded-circle" alt="foto">';
                                 } else {
-                                  content += '<img src="/storage/' + item.student.foto + '" class="img-fluid rounded-circle" alt="foto">';
+                                    content += `<img src="{{ asset('storage/') }}/${item.student.foto}" class="img-fluid rounded-circle" alt="foto">`;
+
                                 }
                 content +=     '</a>' +
                               '<div class="ms-2">' +
@@ -608,7 +600,7 @@ setInterval(refreshdata, 5000);
                                 if (!item.gtk.gambar || item.gtk.gambar.trim() === '') {
                                   content += '<img src="{{ asset("asset/img/user-default.jpg") }}" class="img-fluid rounded-circle" alt="foto">';
                                 } else {
-                                  content += '<img src="/storage/' + item.gtk.gambar + '" class="img-fluid rounded-circle" alt="foto">';
+                                  content += '<img src="{{ asset("storage/' + item.gtk.gambar + '") }}" class="img-fluid rounded-circle" alt="foto">';
                                 }
                 content +=     '</a>' +
                               '<div class="ms-2">' +

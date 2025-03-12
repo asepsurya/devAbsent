@@ -10,7 +10,7 @@
     <meta name="author" content="Dreams technologies - Bootstrap Admin Template">
     <meta name="robots" content="noindex, nofollow">
     <title>{{ app('settings')['site_name'] }} | {{ $title }}</title>
-    <link rel="shortcut icon" type="image/x-icon" href="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo'])}}">
     <script src="{{ asset('asset/js/lightDark.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <link rel="stylesheet" href="{{ asset('asset/css/boostrap.min.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.2/feather.min.js"

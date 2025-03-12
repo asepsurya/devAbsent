@@ -12,7 +12,8 @@
     <meta name="robots" content="noindex, nofollow">
 
     <title>{{ app('settings')['site_name'] }} | {{ $title }}</title>
-    <link rel="shortcut icon" type="image/x-icon" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_fav']  }}">
+    <link rel="shortcut icon" type="image/x-icon"
+      href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_fav']) }}">
     {{-- <script src="{{ asset('asset/js/jquery-3.7.1.min.js') }}"></script> --}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     {{-- <script src="{{ asset('asset/js/theme.js') }}"></script> --}}

@@ -212,7 +212,7 @@
 
                         @php
                             // Check if there is an attendance record for this date
-                            $attendance = $absentData->absentRFID->firstWhere('tanggal', $date);
+                            $attendance = $absentData->absentMapel->firstWhere('tanggal', $date);
                         @endphp
 
                         <td @if ($attendance)
@@ -249,28 +249,28 @@
 
                     {{-- Attendance Summary Columns (H, S, I, A counts) --}}
                     <td class="text-center">
-                        {{ $absentData->absentRFID->filter(function($item) {
+                        {{ $absentData->absentMapel->filter(function($item) {
                             return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
                                 ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'H';
                         })->count() }}
                     </td>
 
                     <td class="text-center">
-                        {{ $absentData->absentRFID->filter(function($item) {
+                        {{ $absentData->absentMapel->filter(function($item) {
                             return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
                                 ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'S';
                         })->count() }}
                     </td>
 
                     <td class="text-center">
-                        {{ $absentData->absentRFID->filter(function($item) {
+                        {{ $absentData->absentMapel->filter(function($item) {
                             return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
                                 ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'I';
                         })->count() }}
                     </td>
 
                     <td class="text-center">
-                        {{ $absentData->absentRFID->filter(function($item) {
+                        {{ $absentData->absentMapel->filter(function($item) {
                             return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
                                 ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'A';
                         })->count() }}

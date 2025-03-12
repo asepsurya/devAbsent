@@ -58,13 +58,13 @@
                             <a href="student-details.html" class="avatar avatar-lg flex-shrink-0">
                             @if($item->rfidStudent)
                                 @if($item->rfidStudent->foto != NULL )
-                                    <img src="/storage/{{ $item->rfidStudent->foto }}" alt='Img' class='img-fluid rounded-circle'>
+                                    <img src="{{ asset('storage/' . $item->rfidStudent->foto) }}" alt='Img' class='img-fluid rounded-circle'>
                                 @else
                                     <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluidimg-fluid rounded-circle'>
                                 @endif
                             @elseif ($item->rfidGTK)
                                 @if($item->rfidGTK->gambar != '' )
-                                    <img src="/storage/{{ $item->rfidGTK->gambar }}" alt='Img' class='img-fluid rounded-circle'>
+                                    <img src="{{ asset('storage/' . $item->rfidGTK->gambar) }}" alt='Img' class='img-fluid rounded-circle'>
                                 @else
                                     <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluidimg-fluid rounded-circle'>
                                 @endif

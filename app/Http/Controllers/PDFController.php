@@ -214,15 +214,15 @@ class PDFController extends Controller
         // Output the PDF to the browser for download
         return $dompdf->stream('Absensi_Siswa_' . Carbon::now()->format('Ymd') . '-' . rand(1000, 9999) . '.pdf');
     }
-    
-    
+
+
     }
     public function reportAbsentKelas(){
            // Get the current date and time
             $created = Carbon::now()->translatedFormat('l, d F Y H:i:s');
 
             // Fetch data
-            $students = Student::with('absentRFID')->get();
+            $students = Student::with('absentMapel')->get();
             $holidays = Event::all();
 
             // Check if 'type' request is "cetak"

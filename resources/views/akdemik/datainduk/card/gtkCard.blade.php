@@ -11,7 +11,7 @@
         .card-container {
             height: 8.56cm;
             width: 5.398cm;
-            background: url('{{ app("settings")["gtkBG_back_default"] == "" ? asset("asset/img/card/Back-back-gtk-default.png") : "/storage/" .app("settings")["gtkBG_back_default"] }}') no-repeat center center;
+            background:url('{{ empty(app("settings")["gtkBG_back_default"]) ? asset("asset/img/card/Back-back-gtk-default.png"): asset("storage/" . app("settings")["gtkBG_back_default"]) }}') no-repeat center center;
             background-size: cover;
             border-radius: 10px;
             padding: 10px;
@@ -21,7 +21,7 @@
         .card-container-back {
             height: 8.56cm;
             width: 5.398cm;
-            background: url('{{ app("settings")["gtkBG_front_default"] == "" ? asset("asset/img/card/Back-front-gtk-default.png") : "/storage/" .app("settings")["gtkBG_front_default"] }}') no-repeat center center;
+            background: url('{{ empty(app("settings")["gtkBG_front_default"]) ? asset("asset/img/card/Back-front-gtk-default.png"): asset("storage/" . app("settings")["gtkBG_front_default"]) }}') no-repeat center center;
             background-size: cover;
             border-radius: 10px;
             padding: 10px;
@@ -133,7 +133,7 @@
         <div class="card-container-back border shadow p-2 me-2">
             <div class="d-flex justify-content-between">
                 <div class="me-2">
-                    <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" alt="logo" width="44px" style="margin-top: -3px;">
+                    <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo'] ) }}" alt="logo" width="44px" style="margin-top: -3px;">
                 </div>
                 <div class="header">
                     <p>{{ app('settings')['nama_yayasan'] }}<br>
@@ -162,7 +162,7 @@
         </div>
         <div class="card-container border shadow p-2 me-2">
             <div class=" mx-5" style="margin-top:100px">
-                <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}" alt="logo" width="100px">
+                <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo'] ) }}" alt="logo" width="100px">
             </div>
             <p style="font-size:7px;color:white;margin-top:60px !important;margin-right:-10px;float:right;transform: rotate(90deg);">{{ (isset($_SERVER['HTTPS']) ? "" : ""). $_SERVER['HTTP_HOST'] }}</p>
         </div>

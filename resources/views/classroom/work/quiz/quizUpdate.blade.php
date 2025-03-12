@@ -63,11 +63,11 @@
                     <div class="mb-3">
                         <label for="" class="form-label">Jawaban Benar</label>
                         <select name="jawaban" class="select">
-                            <option value="pilihan_a" {{ $item->jawaban == 'pilihan_a' ?'selected':'' }}>A</option>
-                            <option value="pilihan_b" {{ $item->jawaban == 'pilihan_b' ?'selected':'' }}>B</option>
-                            <option value="pilihan_c" {{ $item->jawaban == 'pilihan_c' ?'selected':'' }}>C</option>
-                            <option value="pilihan_d" {{ $item->jawaban == 'pilihan_d' ?'selected':'' }}>D</option>
-                            <option value="pilihan_e" {{ $item->jawaban == 'pilihan_e' ?'selected':'' }}>E</option>
+                            <option value="A" {{ $item->jawaban == 'A' ?'selected':'' }}>A</option>
+                            <option value="B" {{ $item->jawaban == 'B' ?'selected':'' }}>B</option>
+                            <option value="C" {{ $item->jawaban == 'C' ?'selected':'' }}>C</option>
+                            <option value="D" {{ $item->jawaban == 'D' ?'selected':'' }}>D</option>
+                            <option value="E" {{ $item->jawaban == 'E' ?'selected':'' }}>E</option>
                         </select>
                     </div>
                 </div>

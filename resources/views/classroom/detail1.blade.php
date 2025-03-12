@@ -195,7 +195,7 @@
                                                         <img src="{{ asset('asset/img/user-default.jpg') }}"
                                                         class="img-fluid rounded-circle" alt="foto">
                                                     @else
-                                                        <img src="/storage/{{ $item->foto }}"
+                                                        <img src="{{ asset('storage/' . $item->foto) }}"
                                                         class="img-fluid rounded-circle" alt="foto">
                                                     @endif
 

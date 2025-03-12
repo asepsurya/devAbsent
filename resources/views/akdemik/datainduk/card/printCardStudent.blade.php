@@ -10,7 +10,7 @@
         .card-container {
             width: 8.56cm;
             height: 5.398cm;
-            background: url('{{ asset("asset/img/card/bg-front-default.jpg") }}') no-repeat center center;
+            background: url('{{ empty(app("settings")["studentBG_front_default"]) ? asset("asset/img/card/bg-front-default.jpg"): asset("storage/" . app("settings")["studentBG_front_default"]) }}') no-repeat center center;
             background-size: cover;
             border-radius: 10px;
             padding: 10px;
@@ -20,7 +20,7 @@
         .card-container-back {
             height: 8.56cm;
             width: 5.398cm;
-            background: url('{{ app("settings")["studentBG_back_default"] == "" ? asset("asset/img/card/Back-bg-default.png") : "/storage/" .app("settings")["studentBG_back_default"] }}') no-repeat center center;
+            background: url('{{ empty(app("settings")["studentBG_back_default"]) ? asset("asset/img/card/Back-bg-default.png"): asset("storage/" . app("settings")["studentBG_back_default"]) }}') no-repeat center center;
             background-size: cover;
             border-radius: 10px;
             padding: 10px;
@@ -40,8 +40,8 @@
         }
 
         .content {
-            width: 80%;
-            font-size: 7.7px;
+            width: 85%;
+            font-size: 7.5px;
             line-height: 1.2;
 
         }
@@ -131,7 +131,7 @@
         <div class="card-container border shadow p-2 me-2">
             <div class="d-flex justify-content-between">
                 <div class="me-2">
-                    <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}"
+                    <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' .app('settings')['site_logo'] ) }}"
                         alt="logo" width="40px" style="margin-top: -5px;">
                 </div>
                 <div class="header">
@@ -186,14 +186,14 @@
                     app('settings')['signature_date'] == '' ? date("D/MM/YYYY") : app('settings')['signature_date'] }}
                 <p>
                 <p> {{ app('settings')['signature_position'] }}</p>
-                <img src="{{ app('settings')['signature'] == '' ? asset('asset/img/card/signature_default.png') : '/storage/'.app('settings')['signature']  }}"
+                <img src="{{ app('settings')['signature'] == '' ? asset('asset/img/card/signature_default.png') : asset('storage/'. app('settings')['signature'])  }}"
                     alt="Tanda Tangan" class="signature">
                 <p><b>{{ app('settings')['headmaster'] == '' ? 'JHON DOE' : app('settings')['headmaster'] }}</b></p>
 
                 @if(app('settings')['headmasterid'] !== '')
                 <p><b>NIP : {{ app('settings')['headmasterid'] }}</b></p>
                 @endif
-                <img src="{{ app('settings')['signature_stamp'] == '' ? asset('asset/img/card/signature_stamp.png') : '/storage/'.app('settings')['signature_stamp']  }}"
+                <img src="{{ app('settings')['signature_stamp'] == '' ? asset('asset/img/card/signature_stamp.png') : asset('storage/' . app('settings')['signature_stamp']) }}"
                     alt="Stempel" class="stamp">
 
             </div>
@@ -203,7 +203,7 @@
         @foreach ($data as $item)
         <div class="card-container-back border shadow p-2 me-2">
             <div class="card-body d-flex justify-content-center align-items-center pt-5" style="margin-top: -10px;">
-                <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : '/storage/'.app('settings')['site_logo']  }}"
+                <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo'] )}}"
                     alt="Stempel" width="60px" style="margin-top: -5px;"><br>
 
             </div>
