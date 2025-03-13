@@ -40,15 +40,11 @@ Route::get('/listabsents',[landingController::class,'listabsents'])->name('lista
 // Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
 Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
 
+Route::get('/generate', function(){
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    echo 'ok';
+ });
 
-route::get('sss',function(){
-    // memberikan Permission
-    $user= User::FindorFail(413);
-    // $user->class/leasson/view;
-    // hapus Permission
-    // $user->revokePermissionTo('delete student');
-
-});
 Route::get('/role',[authController::class,'role'])->name('role');
 Route::get('/role/create',[authController::class,'create'])->middleware('role:walikelas');
 
