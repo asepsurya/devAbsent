@@ -40,10 +40,6 @@ Route::get('/listabsents',[landingController::class,'listabsents'])->name('lista
 // Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
 Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
 
-Route::get('/generate', function(){
-    \Illuminate\Support\Facades\Artisan::call('storage:link');
-    echo 'ok';
- });
 
 Route::get('/role',[authController::class,'role'])->name('role');
 Route::get('/role/create',[authController::class,'create'])->middleware('role:walikelas');
