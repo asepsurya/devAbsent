@@ -281,7 +281,7 @@
                                                    @if(Auth::user()->gtk->gambar == "" )
                                                        <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                                    @else
-                                                       <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                                       <img src="{{ asset('storage/'.Auth::user()->gtk->gambar) }}" alt='Img' class='img-fluid'>
                                                    @endif
                                                 @endif
                                                @endif
@@ -293,7 +293,7 @@
                                                    @if(Auth::user()->gtk->gambar == "" )
                                                        <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                                    @else
-                                                       <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                                       <img src="{{ asset('storage/'.Auth::user()->gtk->gambar) }}" alt='Img' class='img-fluid'>
                                                    @endif
                                                    @endif
                                                @endif

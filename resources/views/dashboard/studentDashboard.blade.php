@@ -266,7 +266,7 @@
                            @if(Auth::user()->student->foto == "" )
                                <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
                            @else
-                               <img src="/storage/{{ Auth::user()->student->foto }}" alt='Img' class='img-fluid'>
+                                <img src="{{ asset('storage/' . Auth::user()->student->foto) }}" alt="Img" class="img-fluid">
                            @endif
                         @endif
                        @endif
@@ -278,7 +278,7 @@
                            @if(Auth::user()->gtk->gambar == "" )
                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                            @else
-                               <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                            <img src="{{ asset('storage/' . Auth::user()->gtk->gambar) }}" alt="Img" class="img-fluid">
                            @endif
                         @endif
                        @endif
@@ -290,7 +290,7 @@
                            @if(Auth::user()->gtk->gambar == "" )
                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                            @else
-                               <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                            <img src="{{ asset('storage/' . Auth::user()->gtk->gambar) }}" alt="Img" class="img-fluid">
                            @endif
                            @endif
                        @endif
@@ -376,7 +376,7 @@
                                         <div class="d-flex align-items-center flex-wrap mb-2">
                                             <span class="avatar avatar-lg flex-shrink-0 rounded me-2">
                                                 @if(!empty($i->guru->gambar))
-                                                    <img src="/storage/{{ $i->guru->gambar }}" alt="Profile">
+                                                    <img src="{{ asset('storage/' . $i->guru->gambar) }}" alt="Profile">
                                                 @else
                                                     <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Default Profile">
                                                 @endif
@@ -509,7 +509,7 @@
                                                           <div class="d-flex align-items-center mb-3">
                                                               <a class="avatar avatar-lg rounded me-2">
                                                                   @if(optional($guru->guru)->gambar)
-                                                                      <img src="/storage/{{ $guru->guru->gambar }}" alt="Img" >
+                                                                      <img src="{{ asset('storage/'.$guru->guru->gambar) }}" alt="Img" >
                                                                   @else
                                                                       <img src="{{ asset('asset/img/user-default.jpg') }}" alt="Img" >
                                                                   @endif

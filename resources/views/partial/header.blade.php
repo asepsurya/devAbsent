@@ -190,7 +190,7 @@
                             @if(Auth::user()->student->foto == "" )
                                 <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
                             @else
-                                <img src="/storage/{{ Auth::user()->student->foto }}" alt='Img' class='img-fluid'>
+                                <img src="{{ asset('storage/'. Auth::user()->student->foto) }}" alt='Img' class='img-fluid'>
                             @endif
                          @endif
                         @endif
@@ -202,7 +202,7 @@
                             @if(Auth::user()->gtk->gambar == "" )
                                 <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                             @else
-                                <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                <img src="{{ asset('storage/'. Auth::user()->gtk->gambar) }}" alt='Img' class='img-fluid'>
                             @endif
                          @endif
                         @endif
@@ -214,7 +214,7 @@
                             @if(Auth::user()->gtk->gambar == "" )
                                 <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                             @else
-                                <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                <img src="{{ asset('/storage' . Auth::user()->gtk->gambar ) }}" alt='Img' class='img-fluid'>
                             @endif
                             @endif
                         @endif
@@ -222,7 +222,7 @@
 
                         @if(auth()->user()->role == "admin" || auth()->user()->role == "superadmin" )
                             @if(Auth::user()->gtk)
-                            <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                            <img src="{{ asset('storage/'. Auth::user()->gtk->gambar) }}" alt='Img' class='img-fluid'>
                             @else
                             <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                             @endif
@@ -242,7 +242,7 @@
                                        @if(Auth::user()->student->foto == "" )
                                            <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
                                        @else
-                                           <img src="/storage/{{ Auth::user()->student->foto }}" alt='Img' class='img-fluid'>
+                                           <img src="{{ asset('storage/'. Auth::user()->student->foto) }}" alt='Img' class='img-fluid'>
                                        @endif
                                     @endif
                                    @endif
@@ -254,7 +254,7 @@
                                        @if(Auth::user()->gtk->gambar == "" )
                                            <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                        @else
-                                           <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                           <img src="{{ asset('storage/' . Auth::user()->gtk->gambar ) }}" alt='Img' class='img-fluid'>
                                        @endif
                                     @endif
                                    @endif
@@ -266,14 +266,14 @@
                                        @if(Auth::user()->gtk->gambar == "" )
                                            <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                        @else
-                                           <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                           <img src="{{ asset('storage/' . Auth::user()->gtk->gambar) }}" alt='Img' class='img-fluid'>
                                        @endif
                                        @endif
                                    @endif
 
                                    @if(auth()->user()->role == "admin" || auth()->user()->role == "superadmin" )
                                         @if(Auth::user()->gtk)
-                                        <img src="/storage/{{ Auth::user()->gtk->gambar }}" alt='Img' class='img-fluid'>
+                                        <img src="{{ asset('storage/' . Auth::user()->gtk->gambar) }}" alt='Img' class='img-fluid'>
                                         @else
                                         <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                         @endif

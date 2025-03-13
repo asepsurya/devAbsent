@@ -145,7 +145,7 @@
                                                     <img src="{{ asset('asset/img/user-default.jpg') }}"
                                                     class="img-fluid rounded-circle" alt="foto">
                                                 @else
-                                                    <img src="/storage/{{ $item->foto }}"
+                                                    <img src="{{ asset('storage/' . $item->foto ) }}"
                                                     class="img-fluid rounded-circle" alt="foto">
                                                 @endif
 
@@ -209,7 +209,7 @@
                                     <td width="95%">
                                         <div class="d-flex align-items-center">
                                             <a href="#" class="avatar avatar-md">
-                                                <img src="{{ asset('asset/img/user-default.jpg') }}"
+                                                <img src="{{ asset('asset/img/default-class.jpg') }}"
                                                     class="img-fluid rounded-circle" alt="foto">
                                             </a>
                                             <div class="ms-2">

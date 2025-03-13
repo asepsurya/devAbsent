@@ -191,8 +191,11 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col d-flex justify-content-center mb-3">
-                            <img src="{{ $item->rombelStudent->foto ? '/storage/' . $item->rombelStudent->foto : asset('asset/img/user-default.jpg') }}"
-                                class="avatar avatar-xxxl me-4 img-thumbnail rounded-pill" alt="foto">
+                            <img src="{{ optional($item->rombelStudent)->foto
+                            ? asset('storage/' . $item->rombelStudent->foto)
+                            : asset('assets/img/user-default.jpg') }}"
+                        class="avatar avatar-xxxl me-4 img-thumbnail rounded-pill" alt="foto">
+
                         </div>
                         <div class="col-md-12">
                             <input type="hidden" name="type" value="ubahKeterangan">

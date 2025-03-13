@@ -257,8 +257,8 @@
                 <div class="row">
                     <div class="d-flex justify-content-center my-2">
                     @if ($item->foto)
-                        <a href="/storage/{{ $item->foto }}" data-lightbox="image-{{ $item->id }}" data-title="Profile Photo">
-                            <img src="/storage/{{ $item->foto }}" class="avatar avatar-xxxl" alt="foto">
+                        <a href="{{ asset('storage/'. $item->foto) }}" data-lightbox="image-{{ $item->id }}" data-title="Profile Photo">
+                            <img src="{{ asset('storage/' . $item->foto ) }}" class="avatar avatar-xxxl" alt="foto">
                         </a>
                         @else
                         <img src="{{ asset('asset/img/user-default.jpg') }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto">
