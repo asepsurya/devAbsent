@@ -39,16 +39,6 @@ Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
 // Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
 Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
-
-
-route::get('sss',function(){
-    // memberikan Permission
-    $user= User::FindorFail(413);
-    // $user->class/leasson/view;
-    // hapus Permission
-    // $user->revokePermissionTo('delete student');
-
-});
 Route::get('/role',[authController::class,'role'])->name('role');
 Route::get('/role/create',[authController::class,'create'])->middleware('role:walikelas');
 
