@@ -31,23 +31,22 @@ use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ExcelPreviewController;
 use App\Http\Controllers\FullCalenderController;
+use App\Http\Controllers\plugin\pluginController;
 use App\Http\Controllers\verifikasiUserController;
 use App\Http\Controllers\ClassRoomDetailController;
+
 use App\Http\Controllers\setelanHari\setelanHariController;
 
 Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
 // Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
 Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
-
 Route::get('/role',[authController::class,'role'])->name('role');
 Route::get('/role/create',[authController::class,'create'])->middleware('role:walikelas');
-
 // register Route
 Route::middleware(['statusRegister'])->group(function () {
     Route::get('/register',[authController::class,'registerIndex']);
 });
-
 Route::middleware('guest')->group(function () {
     // route Auth
     Route::get('/login',[authController::class,'loginIndex'])->middleware('guest')->name('login');
@@ -107,8 +106,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/akademik/datainduk/studentEditAction',[DataIndukController::class,'dataIndukStudentEdit'])->name('dataIndukStudentEdit');
     Route::post('/akademik/datainduk/studentfoto',[DataIndukController::class,'dataIndukStudentfoto'])->name('dataIndukStudentfoto');
     Route::get('/akademik/datainduk/studentDelete{id}',[DataIndukController::class,'studentDelete'])->name('studentDelete');
-    Route::post('/akademik/datainduk/studentImport',[DataIndukController::class,'studentImport'])->name('studentImport');
-    Route::get('/akademik/datainduk/student/import',[DataIndukController::class,'studentIndex'])->name('studentIndex');
+   
     Route::get('/akademik/datainduk/studentEksportExcel',[DataIndukController::class,'studentEksportExcel'])->name('studentEksportExcel');
     Route::get('/akademik/datainduk/studentcard',[DataIndukController::class,'dataIndukStudentCard'])->name('dataIndukStudentCard');
     Route::post('/akademik/datainduk/studentcardmulti',[DataIndukController::class,'dataIndukStudentCardmulti'])->name('dataIndukStudentCardmulti');
@@ -159,8 +157,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/gtk/update/{id}',[GTKController::class,'GTKupdateIndex'])->name('GTKupdateIndex');
     Route::post('/gtk/updateAction',[GTKController::class,'GTKupdate'])->name('GTKupdate');
     Route::get('/gtk/deleteAction{id}',[GTKController::class,'GTKdelete'])->name('GTKdelete');
-    Route::post('/gtk/import/index',[GTKController::class,'GTKimportIndex'])->name('GTKimportIndex');
-    Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
+   
     Route::post('/gtk/dataIndukGTKfoto',[GTKController::class,'GTKfoto'])->name('GTKfoto');
     Route::get('/gtk/cetak',[GTKController::class,'card'])->name('card');
     Route::post('/gtk/cetakmulti',[GTKController::class,'cardmulti'])->name('cardmulti');
@@ -284,6 +281,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/getwalikelas',[RegionController::class,'getwalikelas'])->name('getwalikelas');
     Route::post('/getgtk',[RegionController::class,'getgtk'])->name('getgtk');
     Route::post('/getmapel',[RegionController::class,'getmapel'])->name('getmapel');
+    Route::get('/plugin',[PluginController::class,'index'])->name('plugin.index');
+    
+    Route::post('/gtk/import/index',[GTKController::class,'GTKimportIndex'])->name('GTKimportIndex');
+    Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
+
+
+    // Menampilkan form import plugin
+    Route::get('/plugin/import', [PluginController::class, 'showImportForm'])->name('pluginImportForm');
+    // Proses import plugin
+    Route::post('/plugin/import', [PluginController::class, 'importPlugin'])->name('pluginImport');
+
+
 });
 Route::post('/logout',[authController::class,'logout'])->name('logout');
 // route Regency Administrasi
@@ -321,5 +330,9 @@ Route::get('/class/time', [inOutTimeController::class, 'indexClass'])->name('ind
 Route::post('/class/time/update', [inOutTimeController::class, 'classTimeUpdate'])->name('time.update');
 
 
-
-
+// Routes dari Plugin
+use App\Http\Controllers\plugin\PluginStudentController;
+Route::middleware('auth')->group(function () {
+    Route::post('/akademik/datainduk/studentImport', [PluginStudentController::class, 'studentImport'])->name('studentImport');
+    Route::get('/akademik/datainduk/student/import', [PluginStudentController::class, 'studentIndex'])->name('studentIndex');
+});

@@ -45,8 +45,14 @@
                                 </a>
                             </li>
                         @endif
+                        <li class="{{ Request::is('plugin') ? 'active' : ''}}">
+                            <a href="{{ route('plugin.index') }}">
+                                <i class="ti ti-plug"></i><span>Plugin</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
+               
 
                 @if(auth()->user()->role == 'siswa')
                     <li>
