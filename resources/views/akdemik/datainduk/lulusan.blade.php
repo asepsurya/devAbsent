@@ -120,41 +120,7 @@
 </div>
 @endforeach
 
-<div class="modal fade effect-sign " id="import" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered text-center" role="document">
-        <div class="modal-content modal-content-demo">
 
-            <div class="modal-header">
-                <h4 class="modal-title">Import Data Peserta Didik</h4><button aria-label="Close" class="btn-close"
-                    data-bs-dismiss="modal"></button>
-            </div>
-            <div class="alert alert-primary overflow-hidden p-0 m-2" role="alert">
-                <div class="p-3 bg-primary text-fixed-white d-flex justify-content-between">
-                    <h6 class="aletr-heading mb-0 text-fixed-white">Informasi Singkat</h6>
-
-                </div>
-
-                <div class="p-2" align="left">
-                    <p class="my-1">Berikut ini informasi yang harus diperhatikan :</p>
-                    <p class="my-1 mx-2">1. Untuk Contoh Format Dokumen anda bisa download di link ini. <a href="{{ asset('asset/import_sample/Data Siswa Sample.xlsx') }}" target="_blank" rel="noopener noreferrer"> Download </a> </p>
-                    <p class="my-1 mx-2">2. File yang di Import Harus bertype .xlsx atau type file Excel</p>
-
-                </div>
-            </div>
-            <form id="fileUploadForm" action="{{ route('studentImport') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body text-start">
-                    <input type="file" name="file" class="form-control" required>
-
-
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary w-100"><span class="ti ti-cloud-upload"></span> Import Data</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 @include('akdemik.datainduk.card.modalcard')
 @section('javascript')
 <script src="{{ asset('asset/js/DataTables.js') }}"></script>
