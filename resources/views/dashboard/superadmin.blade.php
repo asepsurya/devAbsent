@@ -192,9 +192,7 @@
                             if ($hour < 12) { $ucapan = "Selamat Pagi!" ; } elseif ($hour < 18) { $ucapan = "Selamat Siang!" ; } else { $ucapan= "Selamat Malam!"
                                 ; } @endphp
                             <h1 class="text-white me-2">{{ $ucapan }}, {{ auth()->user()->nama }}</h1>
-                            <a href="https://preskool.dreamstechnologies.com/html/template/profile.html"
-                                class="avatar avatar-sm img-rounded bg-gray-800 dark-hover"><i
-                                    class="ti ti-edit text-white"></i></a>
+
                         </div>
                         <p class="text-white"><i>"Jadilah cahaya yang menerangi jalan, karena setiap usaha yang tulus akan berbuah hasil!"</i></p>
                     </div>
@@ -230,7 +228,7 @@
         <div id="custom-slider" class="d-flex align-items-center {{  $pengumuman->count() > 1 ? 'slider-item' : ''  }} ">
 
 
-            <div class="mt-2 ms-5">
+            <div class="mt-1 ms-3">
                  <a data-bs-toggle="modal"  data-bs-target="#view_details-{{ $item->id }}" ><h3 class="text-white  " >{{ $item->title }}</h3></a>
                  <div class="d-flex">
                     <p class="text-light mb-0 text-white">{!! \Str::limit($item->content, 100) !!}</p>
@@ -497,10 +495,11 @@
 </div>
 </div>
 @section('javascript')
-<script src="{{ asset('asset/Plugins/countup/jquery.counterup.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
-<script src="{{ asset('asset/Plugins/countup/jquery.waypoints.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
-{{-- <script src="{{ asset('asset/Plugins/apexchart/apexcharts.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
-<script src="{{ asset('asset/Plugins/apexchart/chart-data.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script> --}}
+<!-- Waypoints.js (Diperlukan oleh CounterUp) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+
+<!-- CounterUp.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const slides = document.querySelectorAll('.slider-item'); // All slides
@@ -508,19 +507,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const sliderContainer = document.querySelector('.slider-container'); // The entire slider container
     let currentIndex = 0; // The current active slide index
 
+    if (slides.length === 0 || bullets.length === 0 || !sliderContainer) {
+
+        return; // Stop execution if required elements are missing
+    }
+
     // Set the first bullet as active initially
     function updateActiveBullet(index) {
         bullets.forEach((bullet, i) => {
-            if (i === index) {
-                bullet.classList.add('active');
-            } else {
-                bullet.classList.remove('active');
-            }
+            bullet.classList.toggle('active', i === index);
         });
     }
 
     // Function to change the slide to the given index
     function changeSlide(index) {
+        if (!slides[currentIndex] || !slides[index]) {
+            console.warn("Slide index out of bounds.");
+            return;
+        }
+
         // Hide the current slide
         slides[currentIndex].style.top = '100%';
 
@@ -537,13 +542,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Auto slide every 5 seconds (optional)
     setInterval(() => {
-        let nextIndex = (currentIndex + 1) % slides.length; // Move to next slide
+        let nextIndex = (currentIndex + 1) % slides.length;
         changeSlide(nextIndex);
-    }, 5000); // Change every 5 seconds
+    }, 5000);
 
     // Clicking on the slider container to move to the next slide
     sliderContainer.addEventListener('click', function() {
-        let nextIndex = (currentIndex + 1) % slides.length; // Move to the next slide
+        let nextIndex = (currentIndex + 1) % slides.length;
         changeSlide(nextIndex);
     });
 
@@ -554,8 +559,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-
 
 </script>
 <script>

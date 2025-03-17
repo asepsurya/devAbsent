@@ -7,12 +7,11 @@ use App\Http\Controllers\GTKController;
 use App\Http\Controllers\PDFController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\authController;
-use App\Http\Controllers\EventController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\reportController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\barcodeController;
-use App\Http\Controllers\CommentController;
+
 use App\Http\Controllers\landingController;
 use App\Http\Controllers\leassonController;
 use App\Http\Controllers\lisensiController;
@@ -21,7 +20,6 @@ use App\Http\Controllers\API\rfidController;
 use App\Http\Controllers\HolidaysController;
 use App\Http\Controllers\pengaturanAkademik;
 use App\Http\Controllers\PenggunaController;
-use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataIndukController;
 use App\Http\Controllers\FileTugasController;
@@ -29,13 +27,12 @@ use App\Http\Controllers\inOutTimeController;
 use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
-use App\Http\Controllers\ExcelPreviewController;
-use App\Http\Controllers\FullCalenderController;
-use App\Http\Controllers\plugin\pluginController;
-use App\Http\Controllers\verifikasiUserController;
-use App\Http\Controllers\ClassRoomDetailController;
 
-use App\Http\Controllers\setelanHari\setelanHariController;
+use App\Http\Controllers\FullCalenderController;
+use App\Http\Controllers\verifikasiUserController;
+use App\Http\Controllers\plugin\config\deletePluginController;
+use App\Http\Controllers\plugin\config\pluginController;
+use App\Http\Controllers\plugin\config\statusPluginController;
 
 Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
@@ -106,7 +103,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/akademik/datainduk/studentEditAction',[DataIndukController::class,'dataIndukStudentEdit'])->name('dataIndukStudentEdit');
     Route::post('/akademik/datainduk/studentfoto',[DataIndukController::class,'dataIndukStudentfoto'])->name('dataIndukStudentfoto');
     Route::get('/akademik/datainduk/studentDelete{id}',[DataIndukController::class,'studentDelete'])->name('studentDelete');
-   
+
     Route::get('/akademik/datainduk/studentEksportExcel',[DataIndukController::class,'studentEksportExcel'])->name('studentEksportExcel');
     Route::get('/akademik/datainduk/studentcard',[DataIndukController::class,'dataIndukStudentCard'])->name('dataIndukStudentCard');
     Route::post('/akademik/datainduk/studentcardmulti',[DataIndukController::class,'dataIndukStudentCardmulti'])->name('dataIndukStudentCardmulti');
@@ -157,7 +154,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/gtk/update/{id}',[GTKController::class,'GTKupdateIndex'])->name('GTKupdateIndex');
     Route::post('/gtk/updateAction',[GTKController::class,'GTKupdate'])->name('GTKupdate');
     Route::get('/gtk/deleteAction{id}',[GTKController::class,'GTKdelete'])->name('GTKdelete');
-   
+
     Route::post('/gtk/dataIndukGTKfoto',[GTKController::class,'GTKfoto'])->name('GTKfoto');
     Route::get('/gtk/cetak',[GTKController::class,'card'])->name('card');
     Route::post('/gtk/cetakmulti',[GTKController::class,'cardmulti'])->name('cardmulti');
@@ -206,8 +203,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/class/leasson/reference',[leassonController::class,'leassonTime'])->name('leasson.reference');
 
-
-
     Route::post('/file-tugas', [FileTugasController::class, 'store'])->name('filetugas.store');
     Route::get('/file-tugas/{file_id}', [FileTugasController::class, 'destroy'])->name('filetugas.delete');
     Route::post('/file-tugas/verifikasi', [FileTugasController::class, 'verifikasi'])->name('filetugas.verifikasi');
@@ -228,23 +223,108 @@ Route::middleware('auth')->group(function () {
     Route::get('/setelan/customize', [AppsConfigController::class, 'customize'])->name('setelan.customize');
     Route::post('/setelan/aplikasi/change', [AppsConfigController::class, 'appChange'])->name('setelan.appChange');
     Route::post('/setelan/schooltime', [AppsConfigController::class, 'schoolTime'])->name('setelan.schoolTime');
-    Route::get('/kalender',[FullCalenderController::class,'kalender']);
-    Route::get('/events', [EventController::class, 'index']);  // Fetch events
-    Route::post('/events/create', [EventController::class, 'create']);  // Create new event
-    Route::get('/events/{id}', [EventController::class, 'destroy']);
+
 
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
     Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
     Route::post('/announcements/update', [AnnouncementController::class, 'update'])->name('announcements.update');
     Route::get('/announcements/delete{id}', [AnnouncementController::class, 'delete'])->name('announcements.delete');
 
+
+    Route::post('/getsemester',[RegionController::class,'getsemester'])->name('getsemester');
+    Route::post('/getwalikelas',[RegionController::class,'getwalikelas'])->name('getwalikelas');
+    Route::post('/getgtk',[RegionController::class,'getgtk'])->name('getgtk');
+    Route::post('/getmapel',[RegionController::class,'getmapel'])->name('getmapel');
+
+
+    Route::post('/gtk/import/index',[GTKController::class,'GTKimportIndex'])->name('GTKimportIndex');
+    Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
+
+
+    // Menampilkan form import plugin
+    Route::get('/plugin',[PluginController::class,'index'])->name('plugin.index');
+    Route::get('/plugin/import', [PluginController::class, 'showImportForm'])->name('pluginImportForm');
+    // Proses import plugin
+    Route::post('/plugin/import', [PluginController::class, 'importPlugin'])->name('pluginImport');
+    Route::get('/plugin/delete{id}', [deletePluginController::class, 'deletePlugin'])->name('deletePlugin');
+    Route::get('/plugin/status', [statusPluginController::class, 'statusPlugin'])->name('sttatusPlugin');
+
+});
+Route::post('/logout',[authController::class,'logout'])->name('logout');
+// route Regency Administrasi
+Route::post('/getkabupaten',[RegionController::class,'getkabupaten'])->name('getkabupaten');
+Route::post('/getkecamatan',[RegionController::class,'getkecamatan'])->name('getkecamatan');
+Route::post('/getdesa',[RegionController::class,'getdesa'])->name('getdesa');
+
+
+// route export
+Route::get('/export/users', [PDFController::class, 'generatePDFUserAll'])->name('export.users');
+Route::get('/export/users/admin', [PDFController::class, 'generatePDFUserAdmin'])->name('export.userAdmin');
+Route::get('/export/users/walikelas', [PDFController::class, 'generatePDFUserWalikelas'])->name('export.userWalikelas');
+Route::get('/export/users/gtks', [PDFController::class, 'generatePDFUserGuru'])->name('export.userGuru');
+Route::get('/export/users/students', [PDFController::class, 'generatePDFUserSiswa'])->name('export.userSiswa');
+
+Route::get('/export/gtks', [PDFController::class, 'generatePDFGTKAll'])->name('export.gtks');
+Route::get('/export/students', [PDFController::class, 'generatePDFSiswaAll'])->name('export.students');
+Route::get('/export/RFIDstudents', [PDFController::class, 'generatePDFRFIDstudents'])->name('export.RFIDstudents');
+Route::get('/export/RFIDteachers', [PDFController::class, 'generatePDFRFIDteachers'])->name('export.RFIDstudents');
+Route::get('/export/jadwal/{id_kelas}', [PDFController::class, 'generateJadwal'])->name('export.jadwal');
+Route::get('/export/score/{id}', [PDFController::class, 'generateScore'])->name('export.score');
+
+Route::get('/report/absentrfid/student', [reportController::class, 'reportRFIDStudent'])->name('reportRFIDStudent');
+Route::get('/report/absentrfid/teacher', [reportController::class, 'reportRFIDTeacher']);
+Route::get('/report/absent/students', [reportController::class, 'reportAbsentStudent']);
+Route::get('/report/absent/kelas', [PDFController::class, 'reportAbsentKelas'])->name('absentKelas');
+
+Route::get('/qr/{code}', [barcodeController::class, 'generateQRCode'])->name('qr.generate');
+Route::get('/card', [barcodeController::class, 'card'])->name('card');
+Route::get('/class/time', [inOutTimeController::class, 'indexClass'])->name('index.class');
+Route::post('/class/time/update', [inOutTimeController::class, 'classTimeUpdate'])->name('time.update');
+
+/* */
+ /* */
+/* */
+// Routes dari Plugin plugin276856
+use App\Http\Controllers\plugin\PluginStudentController;
+Route::middleware('auth')->group(function () {
+    Route::get('/akademik/plugin/import', [PluginStudentController::class, 'dataImport'])->name('dataImport');
+    Route::post('/akademik/datainduk/studentImport', [PluginStudentController::class, 'studentImport'])->name('studentImport');
+    Route::get('/akademik/datainduk/student/import', [PluginStudentController::class, 'studentIndex'])->name('studentIndex');
+});
+// End dari Plugin
+
+// Routes dari Plugin plugin866153
+use App\Http\Controllers\plugin\EventController;
+Route::middleware('auth')->group(function () {
+    Route::get('/kalender',[EventController::class,'kalender']);
+    Route::get('/events', [EventController::class, 'events']);  // Fetch events
+    Route::post('/events/create', [EventController::class, 'create']);  // Create new event
+    Route::get('/events/{id}', [EventController::class, 'destroy']);
+
+    Route::get('/fullcalender',[EventController::class,'index']);
+    Route::post('/fullcalenderAjax',[EventController::class,'ajax']);
+    Route::post('/addEventModal',[EventController::class,'addEventModal']);
+});
+// End dari Plugin
+
+/* */
+/* */
+/* */
+/* */
+// Routes dari Plugin plugin993523
+
+use App\Http\Controllers\plugin\CommentController;
+use App\Http\Controllers\plugin\ExcelPreviewController;
+use App\Http\Controllers\plugin\ClassRoomDetailController;
+
+Route::middleware('auth')->group(function () {
     // class Room
-    Route::get('/classroom', [ClassRoomController::class, 'index'])->name('classroom.index');
-    Route::post('/classroom/add', [ClassRoomController::class, 'add'])->name('classroom.add');
-    Route::post('/classroom/update', [ClassRoomController::class, 'update'])->name('classroom.update');
-    Route::get('/classroom/archive/{id}', [ClassRoomController::class, 'archive'])->name('classroom.archive');
-    Route::get('/classroom/detail/{id}', [ClassRoomController::class, 'detail'])->name('classroom.detail');
-    Route::get('/classroom/recommend', [ClassRoomController::class, 'recommend'])->name('classroom.recommend');
+    Route::get('/classroom', [ClassRoomDetailController::class, 'index'])->name('classroom.index');
+    Route::post('/classroom/add', [ClassRoomDetailController::class, 'add'])->name('classroom.add');
+    Route::post('/classroom/update', [ClassRoomDetailController::class, 'update'])->name('classroom.update');
+    Route::get('/classroom/archive/{id}', [ClassRoomDetailController::class, 'archive'])->name('classroom.archive');
+    Route::get('/classroom/detail/{id}', [ClassRoomDetailController::class, 'detail'])->name('classroom.detail');
+    Route::get('/classroom/recommend', [ClassRoomDetailController::class, 'recommend'])->name('classroom.recommend');
 
     Route::post('/classroom/detail/adduser', [ClassRoomDetailController::class, 'adduser'])->name('classroom.adduser');
     Route::post('/classroom/detail/adduserClass', [ClassRoomDetailController::class, 'adduserClass'])->name('classroom.adduserClass');
@@ -277,62 +357,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
 
-    Route::post('/getsemester',[RegionController::class,'getsemester'])->name('getsemester');
-    Route::post('/getwalikelas',[RegionController::class,'getwalikelas'])->name('getwalikelas');
-    Route::post('/getgtk',[RegionController::class,'getgtk'])->name('getgtk');
-    Route::post('/getmapel',[RegionController::class,'getmapel'])->name('getmapel');
-    Route::get('/plugin',[PluginController::class,'index'])->name('plugin.index');
     
-    Route::post('/gtk/import/index',[GTKController::class,'GTKimportIndex'])->name('GTKimportIndex');
-    Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
-
-
-    // Menampilkan form import plugin
-    Route::get('/plugin/import', [PluginController::class, 'showImportForm'])->name('pluginImportForm');
-    // Proses import plugin
-    Route::post('/plugin/import', [PluginController::class, 'importPlugin'])->name('pluginImport');
-
-
 });
-Route::post('/logout',[authController::class,'logout'])->name('logout');
-// route Regency Administrasi
-Route::post('/getkabupaten',[RegionController::class,'getkabupaten'])->name('getkabupaten');
-Route::post('/getkecamatan',[RegionController::class,'getkecamatan'])->name('getkecamatan');
-Route::post('/getdesa',[RegionController::class,'getdesa'])->name('getdesa');
-
-
-Route::get('/fullcalender',[FullCalenderController::class,'index']);
-Route::post('/fullcalenderAjax',[FullCalenderController::class,'ajax']);
-Route::post('/addEventModal',[FullCalenderController::class,'addEventModal']);
-
-// route export
-Route::get('/export/users', [PDFController::class, 'generatePDFUserAll'])->name('export.users');
-Route::get('/export/users/admin', [PDFController::class, 'generatePDFUserAdmin'])->name('export.userAdmin');
-Route::get('/export/users/walikelas', [PDFController::class, 'generatePDFUserWalikelas'])->name('export.userWalikelas');
-Route::get('/export/users/gtks', [PDFController::class, 'generatePDFUserGuru'])->name('export.userGuru');
-Route::get('/export/users/students', [PDFController::class, 'generatePDFUserSiswa'])->name('export.userSiswa');
-
-Route::get('/export/gtks', [PDFController::class, 'generatePDFGTKAll'])->name('export.gtks');
-Route::get('/export/students', [PDFController::class, 'generatePDFSiswaAll'])->name('export.students');
-Route::get('/export/RFIDstudents', [PDFController::class, 'generatePDFRFIDstudents'])->name('export.RFIDstudents');
-Route::get('/export/RFIDteachers', [PDFController::class, 'generatePDFRFIDteachers'])->name('export.RFIDstudents');
-Route::get('/export/jadwal/{id_kelas}', [PDFController::class, 'generateJadwal'])->name('export.jadwal');
-Route::get('/export/score/{id}', [PDFController::class, 'generateScore'])->name('export.score');
-
-Route::get('/report/absentrfid/student', [reportController::class, 'reportRFIDStudent'])->name('reportRFIDStudent');
-Route::get('/report/absentrfid/teacher', [reportController::class, 'reportRFIDTeacher']);
-Route::get('/report/absent/students', [reportController::class, 'reportAbsentStudent']);
-Route::get('/report/absent/kelas', [PDFController::class, 'reportAbsentKelas'])->name('absentKelas');
-
-Route::get('/qr/{code}', [barcodeController::class, 'generateQRCode'])->name('qr.generate');
-Route::get('/card', [barcodeController::class, 'card'])->name('card');
-Route::get('/class/time', [inOutTimeController::class, 'indexClass'])->name('index.class');
-Route::post('/class/time/update', [inOutTimeController::class, 'classTimeUpdate'])->name('time.update');
-
-
-// Routes dari Plugin
-use App\Http\Controllers\plugin\PluginStudentController;
-Route::middleware('auth')->group(function () {
-    Route::post('/akademik/datainduk/studentImport', [PluginStudentController::class, 'studentImport'])->name('studentImport');
-    Route::get('/akademik/datainduk/student/import', [PluginStudentController::class, 'studentIndex'])->name('studentIndex');
-});
+// End dari Plugin

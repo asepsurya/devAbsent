@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\plugin;
 
 use App\Models\Kelas;
 use App\Models\Mapel;
@@ -10,6 +10,7 @@ use App\Models\ClassRoom;
 use App\Models\StudentScore;
 use Illuminate\Http\Request;
 use App\Models\ClassRoomPeople;
+use App\Http\Controllers\Controller;
 
 class ClassRoomController extends Controller
 {

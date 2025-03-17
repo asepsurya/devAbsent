@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\plugin;
 
 use App\Models\Kelas;
+use App\Models\Mapel;
 use App\Models\tasks;
 use App\Models\Comment;
 use App\Models\student;
@@ -23,6 +24,107 @@ use Illuminate\Console\View\Components\Task;
 
 class ClassRoomDetailController extends Controller
 {
+
+    // kelas
+    public function index(){
+        if(request('archive')){$archive = 'true';}else{$archive = 'false';}
+
+
+            if(auth()->user()->role == "siswa") {
+                 // Get all ClassRoomPeople entries for the current student (not just the first one)
+                $classRoomPeople = ClassRoomPeople::where('nis', auth()->user()->nomor)->get();
+
+                // If there are matching entries for the student
+                if ($classRoomPeople->isNotEmpty()) {
+                    // Retrieve the associated classrooms for all the records
+                    $data = $classRoomPeople->flatMap(function ($classRoomPeopleEntry) {
+                        return $classRoomPeopleEntry->getClass()->with(['user', 'mapel', 'people'])->get();
+                    });
+                } else {
+                    // If no entries for the student, set data to an empty collection
+                    $data = collect(); // Or handle as necessary (e.g., return an error message)
+                }
+
+             }
+
+             else if (auth()->user()->role == "superadmin" || auth()->user()->role == "admin" ) {
+                // For other roles, fetch the classrooms with 'user', 'mapel', and 'people' relationships
+                $data = ClassRoom::where(['archive' => $archive])
+                    ->with(['people', 'mapel', 'user'])
+                    ->get();
+            }
+            else {
+               // For other roles, fetch the classrooms with 'user', 'mapel', and 'people' relationships
+               $data = ClassRoom::where(['auth' => auth()->user()->nomor, 'archive' => $archive])
+                   ->with(['people', 'mapel', 'user'])
+                   ->get();
+            }
+
+
+
+        return view('plugin.classroom.index',[
+            'title'=> 'Ruangan Kelas Saya',
+            'class'=> $data,
+
+        ]);
+    }
+    public function detail($id){
+        return view('plugin.classroom.detail',[
+            'title'=> 'Detail',
+            'myclass'=>ClassRoom::where('class_code',$id)->with(['gtk','user'])->get(),
+            'students'=>student::where('status','1')->get(),
+            'class'=>Kelas::orderBy('id', 'DESC')->with(['jurusanKelas','jmlRombel'])->get(),
+            'peserta'=>ClassRoomPeople::where('id_kelas',$id)->with(['getScore','peopleStudent'])->get(),
+            'task'=>tasks::where('id_kelas',$id)->orderBy('id', 'DESC')->with(['media','links','user','user.gtk','comment'])->get(),
+            'duedate'=>tasks::upcomingTasks()->where('id_kelas',$id)->orderBy('due_date')->get(),
+            'score'=>StudentScore::where(['student_id'=>auth()->user()->nomor])->get()
+        ],compact('id'));
+    }
+    public function recommend(request $request){
+        // GET Mapel Recomend from Input User
+        $query = $request->get('query', '');
+        $mapels = Mapel::where('nama', 'LIKE', "%{$query}%")->get();
+        return response()->json($mapels);
+    }
+
+    public function add(request $request){
+        ClassRoom::create([
+            'name'=>$request->name,
+            'description'=>$request->description,
+            'id_mapel'=>$request->id_mapel,
+            'auth'=>$request->auth,
+            'class_code'=>$request->code_class,
+            'archive'=>'false',
+        ]);
+        toastr()->success('Kelas '.$request->name.' Berhasil dibuat');
+        return redirect()->back();
+    }
+    public function update(request $request){
+        ClassRoom::where('class_code',$request->code_class)->update([
+            'name'=>$request->name,
+            'description'=>$request->description,
+            'id_mapel'=>$request->id_mapel,
+        ]);
+        toastr()->success('Kelas '.$request->name.' Berhasil diubah');
+        return redirect()->back();
+    }
+    public function archive($id){
+        if(request('act')){
+            ClassRoom::where('id',$id)->update([
+                'archive'=>'false',
+            ]);
+            toastr()->success('Kelas Berhasil dipulihkan');
+        }else{
+            ClassRoom::where('id',$id)->update([
+                'archive'=>'true',
+            ]);
+            toastr()->success('Kelas Berhasil diarsipkan');
+        }
+        return redirect()->back();
+    }
+
+    // for Detail Class
+
     public function adduser(request $request){
                 // Get the class id from the hidden input
         $id_kelas = $request->input('id_kelas');
@@ -127,7 +229,7 @@ class ClassRoomDetailController extends Controller
     }
 
     public function tugas($id){
-        return view('classroom.work.tugas',[
+        return view('plugin.classroom.work.tugas',[
             'title'=>'Tugas'
         ],compact('id'));
     }
@@ -325,7 +427,7 @@ class ClassRoomDetailController extends Controller
         $urls = !empty($urls) ? $urls : [];
 
         // Pass all the data to the view
-        return view('classroom.work.tugasEdit', [
+        return view('plugin.classroom.work.tugasEdit', [
             'title' => 'Edit Tugas ',
         ], compact('task', 'taskFiles', 'taskLinks', 'videoIds', 'urls','task_id'));  // Ensure the correct variable name is used
 
@@ -349,7 +451,7 @@ class ClassRoomDetailController extends Controller
 
 
     public function tambahQuiz($id_kelas , $task_id){
-        return view('classroom.work.quiz.quizAdd',[
+        return view('plugin.classroom.work.quiz.quizAdd',[
             'title'=>'Quiz'
         ],compact('id_kelas','task_id'));
     }
@@ -359,7 +461,7 @@ class ClassRoomDetailController extends Controller
         $name = $task ? $task->judul : null;
 
         $userId = auth()->user()->nomor; // Pastikan ini sesuai dengan database
-        return view('classroom.work.quiz.quizList', [
+        return view('plugin.classroom.work.quiz.quizList', [
             'title' => 'My Quiz',
             'name_task' => $name,
             'quest' => question::where('task_id', $task_id)->orderBy('id', 'DESC')->get(),
@@ -380,8 +482,6 @@ class ClassRoomDetailController extends Controller
                 'jawaban' => 'required|in:A,B,C,D,E',
                 'task_id' => 'required|integer',
             ]);
-
-
 
             // Save data to the Question model
             $question = new Question();
@@ -404,7 +504,7 @@ class ClassRoomDetailController extends Controller
     public function editQuiz($id_kelas, $id, $task_id){
         $task = tasks::where('id', $task_id)->first();
         $name = $task ? $task->judul : null;
-        return view('classroom.work.quiz.quizUpdate',[
+        return view('plugin.classroom.work.quiz.quizUpdate',[
             'title'=>$name,
             'question'=>question::where('id',$id)->get()
         ],compact('id_kelas','id','task_id'));
@@ -462,7 +562,7 @@ class ClassRoomDetailController extends Controller
         ->get();
 
         $studentScore = StudentScore::where('student_id',$studentId)->first();
-        return view('classroom.work.quiz.quiz',[
+        return view('plugin.classroom.work.quiz.quiz',[
             'title'=>'Quiz',
             'questions'=>question::where('task_id',$task_id)->inRandomOrder()->get(),
             'questionsAnswer'=>$questionsAnswer,
@@ -559,8 +659,6 @@ class ClassRoomDetailController extends Controller
 
             ]);
 
-
-
     }
 
     public function quizDelete($id){
@@ -585,7 +683,7 @@ class ClassRoomDetailController extends Controller
         ->with('user')
         ->get();
         $files = fileTugas::where(['task_id'=> $task_id,'student_id'=>auth()->user()->nomor])->get();
-        return view('classroom.taskdetail',[
+        return view('plugin.classroom.taskdetail',[
             'title'=>'Detail Tugas',
                 'myclass'=>ClassRoom::where('class_code',$id_kelas)->with('user')->get(),
                 'task'=>tasks::where(['id_kelas'=>$id_kelas,'id'=>$task_id])->orderBy('id', 'DESC')->with(['media','links','user'])->get(),

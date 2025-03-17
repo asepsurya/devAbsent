@@ -1,3 +1,8 @@
+<style>
+    #plugin ul{
+        margin-bottom:1px;
+    }
+</style>
 <div class="sidebar" id="sidebar">
     <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
@@ -45,14 +50,19 @@
                                 </a>
                             </li>
                         @endif
-                        <li class="{{ Request::is('plugin') ? 'active' : ''}}">
+                        <li class="{{ Request::is('plugin') ? 'active' : ''}}" >
                             <a href="{{ route('plugin.index') }}">
                                 <i class="ti ti-plug"></i><span>Plugin</span>
                             </a>
                         </li>
+
                     </ul>
                 </li>
-               
+                <li>
+                    <ul style="margin-top:-13px;">
+                        @include('partial.menu_plugin')
+                    </ul>
+                </li>
 
                 @if(auth()->user()->role == 'siswa')
                     <li>
@@ -215,13 +225,13 @@
                         <h6 class="submenu-hdr"><span>Jadwal dan Kelas</span></h6>
                         @endif
 
-                        @can('Ruangan Kelas')
+                        {{-- @can('Ruangan Kelas')
                             <li class="{{ Request::is('classroom*') ? 'active' : ''}}">
                                 <a href="/classroom">
                                     <i class="ti ti-building"></i><span>Ruangan Kelas</span>
                                 </a>
                             </li>
-                        @endcan
+                        @endcan --}}
 
                         @can('Setelan Masuk Keluar')
                             <li class="{{ Request::is('class/time') ? 'active' : ''}}">
@@ -259,15 +269,13 @@
                         </li>
                         @endcan
 
-                        @can('Kalender Akademik')
+                        {{-- @can('Kalender Akademik')
                             <li class="{{ Request::is('kalender') ? 'active' : ''}}">
                                 <a href="/kalender">
                                     <i class="ti ti-calendar"></i><span>Kalender Akademik</span>
                                 </a>
                             </li>
-
-
-                        @endcan
+                        @endcan --}}
 
                         @can('Setelan Hari Libur')
                             <li class="{{ Request::is('holidays') ? 'active' : ''}}">
@@ -336,7 +344,10 @@
                         @endcan
                     </ul>
 
+
                 </li>
+
+
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-@extends('classroom.layout.classRoom')
+@extends('plugin.classroom.layout.classRoom')
 @section('css')
 <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/emoji-button.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
@@ -587,7 +587,7 @@
                     </div>
 
                     <div id="emojiPicker" class="mt-2" style="display: none;  z-index: 1000;border-radius:30px; border: 1px solid #ccc; background-color: white; padding: 10px; ">
-                       @include('classroom.partial_detail.emote')
+                       @include('plugin.classroom.partial_detail.emote')
 
                         <!-- Add more emoji buttons here -->
                     </div>

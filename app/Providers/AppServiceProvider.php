@@ -4,6 +4,7 @@ namespace App\Providers;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Setting;
+use App\Models\TahunPelajaran;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
@@ -25,19 +26,31 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
+
         if (Schema::hasTable('users')) {
-            // Jika tabel 'users' ada, lanjutkan untuk mengambil data pengguna aktif
-            $activeUsers = User::where('status', '1')->get();
-            $countActiveUsers = $activeUsers->count();
-        
-            // Bagikan data pengguna aktif ke semua tampilan
-            view()->share('countActiveUsers', $countActiveUsers);
+            // Ambil pengguna aktif
+            $countActiveUsers = User::where('status', '1')->count();
         } else {
-            // Jika tabel 'users' tidak ada, bisa melakukan sesuatu atau memberi peringatan
-            // Misalnya, tidak melanjutkan proses atau menampilkan pesan error
-            // Log::warning('Tabel users tidak ditemukan.');
+            // Jika tabel users tidak ada, set nilai default untuk menghindari error
+            $countActiveUsers = 0;
         }
+
+        // Pastikan tabel `tahun_pelajaran` ada sebelum melakukan query
+        if (Schema::hasTable('tahun_pelajarans')) {
+            $akademik = TahunPelajaran::where('status', '1')->first();
+        } else {
+            $akademik = null;
+        }
+
+        // Gunakan optional() untuk menghindari error jika data tidak ditemukan
+        $tahunAjaran = optional($akademik)->tahun_pelajaran
+                       ? optional($akademik)->tahun_pelajaran . ' - ' . optional($akademik)->semester
+                       : 'Tidak ada data';
+
+        // Bagikan data ke semua tampilan agar bisa digunakan di blade
+        view()->share('countActiveUsers', $countActiveUsers);
+        view()->share('tahunAjaran', $tahunAjaran);
+
 
 
 

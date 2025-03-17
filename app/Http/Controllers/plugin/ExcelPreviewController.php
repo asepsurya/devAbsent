@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\plugin;
 
 use App\Models\question;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelPreviewController extends Controller

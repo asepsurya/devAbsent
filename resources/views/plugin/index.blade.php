@@ -10,81 +10,97 @@
         color: #000000;
         text-decoration: none;
     }
-   
+
 </style>
 @endsection
 @section('container')
-    <div class="d-flex">
-        <h3 class="mb-4 me-4">Plugin</h3>
+<div class="d-md-flex d-block align-items-center justify-content-between mb-3 ">
+    <div class="my-auto mb-2">
+        <h3 class="page-title mb-1">Plugin dan Fitur Manajemen</h3>
+        <nav>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="/dashboard">Beranda</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Plugin</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
         <div >
-            <a href="{{ route('pluginImportForm') }}" target="_blank" rel="noopener noreferrer"><button class="btn btn-primary btn-sm">Tambah Plugin Baru</button></a>
+            <a href="{{ route('pluginImportForm') }}"  rel="noopener noreferrer"><button class="btn btn-primary ">Tambah Plugin Baru</button></a>
         </div>
     </div>
-    
-    <ul class="nav mb-3">
-        <li class="nav-item">
-            <a class="nav-link active" href="#">Semua (2)</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Nonaktif (2)</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Tersedia Pembaruan (1)</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Pembaruan otomatis Dinonaktifkan (2)</a>
-        </li>
-    </ul>
-    
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <select class="form-select select">
-                <option>Tindakan Massal</option>
-                <option>Aktifkan</option>
-                <option>Hapus</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-primary">Terapkan</button>
-        </div>
+</div>
+
+
+    <div class="d-flex mt-3 justify-content-between">
+        <ul class="nav mb-3">
+            <li class="nav-item">
+                <a class="nav-link active" href="/plugin?data=all">
+                    Semua
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request('data') == 'active' ? 'active' : '' }}" href="/plugin?data=active">
+                    Aktif
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request('data') == 'nonactive' ? 'active' : '' }}" href="/plugin?data=nonactive">
+                    Nonaktif
+                </a>
+            </li>
+        </ul>
+
         <div class="col-md-4">
             <input type="text" id="searchPlugin" class="form-control" placeholder="Cari plugin yang terinstal">
         </div>
     </div>
     <div class="table-responsive">
-    <table class="table table-bordered" id="pluginTable">
+    <table class="table " id="pluginTable">
         <thead>
             <tr>
-                <th>
-                    <div class="form-check form-check-md">
-                        <input class="form-check-input" type="checkbox"  id="selectAll">
-                    </div>
+                <th class="border">
+                   #
                 </th>
-                <th width="40%">Plugin</th>
-                <th>Deskripsi</th>
+                <th width="40%" class="border">Plugin</th>
+                <th class="border">Deskripsi</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>
-                    <div class="form-check form-check-md">
-                        <input class="form-check-input plugin-checkbox" type="checkbox">
-                    </div>
+            @php $no =1 ;@endphp
+            @if ($data->count())
+
+            @foreach ($data as $item )
+            <tr >
+                <td class="border">
+                    {{ $no++ }}
+                </td >
+                <td class="plugin-name" class="border"><strong>{{ $item->name }}</strong><br >
+                    @if($item->status == 1)
+                        <a href="/plugin/status?class=nonactive&val={{ $item->alias}}" class="text-danger me-3">Nonaktifkan</a>
+                    @else
+                        <a href="/plugin/status?class=active&val={{ $item->alias}}" class="text-primary">Aktifkan</a> |
+                        <a href="{{ route('deletePlugin',$item->alias) }}" class="text-danger">Hapus</a>
+                    @endif
+
                 </td>
-                <td class="plugin-name"><strong>Antispam Akismet: Perlindungan Spam</strong><br><a href="#" class="text-primary">Aktifkan</a></td>
-                <td>Digunakan oleh jutaan orang, Akismet sangat mungkin adalah cara terbaik di dunia untuk <strong>melindungi blog Anda dari spam</strong>. Membuat situs Anda terlindungi bahkan saat Anda tidur.<br>
-                    <small>Versi 5.3.5 | Oleh <a href="#">Automattic - Tim Antispam</a> | <a href="#">Tampilkan rincian</a></small></td>
+                <td class="border">{{ $item->description }}<br>
+                    <small>Versi {{ $item->version }} | Oleh <a href="#" class="text-primary">{{ $item->auth }}</a> </td>
             </tr>
-            <tr>
-                <td>
-                    <div class="form-check form-check-md">
-                        <input class="form-check-input plugin-checkbox" type="checkbox">
-                    </div>
-                </td>
-                <td class="plugin-name"><strong>Hello Dolly</strong><br><a href="#" class="text-primary">Aktifkan</a></td>
-                <td>Ini bukan hanya sebuah plugin, namun mewakili harapan dan antusiasme dari sebuah generasi utuh yang dirangkum oleh lagu terkenal.<br>
-                    <small>Versi 1.7.2 | Oleh <a href="#">Matt Mullenweg</a> | <a href="#">Tampilkan rincian</a></small></td>
-            </tr>
+
+            @endforeach
+            @else
+               <tr class="border">
+                    <td colspan="3">
+                        <div class="d-flex justify-content-center">
+                            Plugin belum ada yang dipasang
+                        </div>
+
+                    </td>
+               </tr>
+            @endif
         </tbody>
     </table>
     </div>
@@ -93,7 +109,7 @@
         document.getElementById("searchPlugin").addEventListener("keyup", function() {
             let searchValue = this.value.toLowerCase();
             let rows = document.querySelectorAll("#pluginTable tbody tr");
-            
+
             rows.forEach(row => {
                 let pluginName = row.querySelector(".plugin-name").textContent.toLowerCase();
                 if (pluginName.includes(searchValue)) {
@@ -104,11 +120,6 @@
             });
         });
 
-        document.getElementById("selectAll").addEventListener("change", function() {
-            let checkboxes = document.querySelectorAll(".plugin-checkbox");
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-        });
+
     </script>
 @endsection

@@ -1,4 +1,4 @@
-@extends('classroom.layout.classRoom')
+@extends('plugin.classroom.layout.classRoom')
 
 @section('content')
 @foreach ($myclass as $item )
@@ -6,10 +6,10 @@
 {{-- End Header --}}
 <div class="pt-5">
     <div class="tab-content px-3">
-    @include('classroom.partial_detail.forumTab')
-    @include('classroom.partial_detail.tugasTab')
-    @include('classroom.partial_detail.orangTab')
-        @include('classroom.partial_detail.nilaiTab')
+    @include('plugin.classroom.partial_detail.forumTab')
+    @include('plugin.classroom.partial_detail.tugasTab')
+    @include('plugin.classroom.partial_detail.orangTab')
+        @include('plugin.classroom.partial_detail.nilaiTab')
     </div>
 </div>
 

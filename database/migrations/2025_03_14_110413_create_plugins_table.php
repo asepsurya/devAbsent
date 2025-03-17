@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('status');
             $table->string('version')->nullable();
             $table->string('auth')->nullable();
-            $table->string('description')->nullable();
+            $table->LongText('description')->nullable();
             $table->timestamps();
         });
     }

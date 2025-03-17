@@ -32,7 +32,31 @@
     <link rel="stylesheet" href="{{ asset('asset/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
+    <style>
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
 
+        .search-suggestions div {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-suggestions div:hover {
+            background: #f8f9fa;
+        }
+    </style>
     @yield('css')
 </head>
 
