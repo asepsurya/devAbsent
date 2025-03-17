@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('plugins', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('alias');
             $table->string('status');
             $table->string('version')->nullable();
             $table->string('auth')->nullable();
