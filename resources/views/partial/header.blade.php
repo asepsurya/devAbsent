@@ -41,11 +41,11 @@
             </div>
 
 
-            <div class="pe-2">
+            <div class="pe-1">
               <a data-bs-toggle="modal" data-bs-target="#changePassword" class="btn btn-outline-light bg-white  position-relative "><span class="ti ti-key"></span> Ubah Password</a>
             </div>
                {{-- Night Mode --}}
-               <div class="pe-2">
+               <div class="pe-1">
                 <a href="#" id="dark-mode-toggle" class="dark-mode-toggle activate btn btn-outline-light bg-white btn-icon me-1">
                     <i class="ti ti-moon"></i>
                 </a>
@@ -53,7 +53,12 @@
                     <i class="ti ti-brightness-up"></i>
                 </a>
             </div>
-            <div class="pe-21">
+            <div class="pe-1">
+                <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Cek Update" data-bs-original-title="Cek Update!">
+                    <i class="ti ti-refresh"></i>
+                </a>
+            </div>
+            <div class="pe-1">
                 <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" id="btnFullscreen">
                     <i class="ti ti-maximize"></i>
                 </a>

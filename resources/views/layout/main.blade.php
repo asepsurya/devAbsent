@@ -73,14 +73,17 @@
                 {{-- main Content --}}
                 
                 @if ($updateAvailable)
-                <div class="alert alert-warning">
-                    <strong>Update Available!</strong>
-                    <form method="POST" action="{{ route('update.app') }}" id="updateForm">
-                        @csrf
-                        <button type="submit" id="updateButton" class="btn btn-primary">Update Now</button>
-                    </form>
-                </div>
             
+                <div class="alert alert-primary" role="alert">
+                     <div class="d-flex justify-content-between">
+                        <h4 class="text-primary mt-3">Update Available!</h4>
+                        <form method="POST" action="{{ route('update.app') }}" id="updateForm">
+                            @csrf
+                            <button type="submit btn-sm" id="updateButton" class="btn btn-primary btn-sm my-2">Update Now</button>
+                        </form>
+                     </div>
+                  </div>
+                        
                 <script>
                     // Ambil elemen tombol update
                     const updateButton = document.getElementById('updateButton');
