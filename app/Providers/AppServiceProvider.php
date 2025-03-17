@@ -41,6 +41,9 @@ class AppServiceProvider extends ServiceProvider
         } else {
             $akademik = null;
         }
+        
+
+        $updateAvailable = Cache::get('update_available', false); // Mengambil status pembarua
 
         // Gunakan optional() untuk menghindari error jika data tidak ditemukan
         $tahunAjaran = optional($akademik)->tahun_pelajaran
@@ -50,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
         // Bagikan data ke semua tampilan agar bisa digunakan di blade
         view()->share('countActiveUsers', $countActiveUsers);
         view()->share('tahunAjaran', $tahunAjaran);
+        view()->share('updateAvailable', $updateAvailable);
 
 
 

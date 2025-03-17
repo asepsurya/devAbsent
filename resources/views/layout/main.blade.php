@@ -22,6 +22,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.2/feather.min.js" integrity="sha512-zMm7+ZQ8AZr1r3W8Z8lDATkH05QG5Gm2xc6MlsCdBz9l6oE8Y7IXByMgSm/rdRQrhuHt99HAYfMljBOEZ68q5A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css"/>
     <link rel="stylesheet" href="{{ asset('asset/css/daterangepicker.css') }}">
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <link href="{{ asset('asset/Plugins/select2/css/select2.min.css') }}" rel="stylesheet" />
     <script src="{{ asset('asset/Plugins/select2/js/select2.min.js') }}"></script>
@@ -68,6 +71,79 @@
         <div class="page-wrapper">
             <div class="content blank-page">
                 {{-- main Content --}}
+                
+                @if ($updateAvailable)
+                <div class="alert alert-warning">
+                    <strong>Update Available!</strong>
+                    <form method="POST" action="{{ route('update.app') }}" id="updateForm">
+                        @csrf
+                        <button type="submit" id="updateButton" class="btn btn-primary">Update Now</button>
+                    </form>
+                </div>
+            
+                <script>
+                    // Ambil elemen tombol update
+                    const updateButton = document.getElementById('updateButton');
+            
+                    // Submit form dengan AJAX
+                    document.getElementById('updateForm').addEventListener('submit', function (e) {
+                        e.preventDefault();  // Mencegah form submit default
+            
+                        // Menambahkan animasi berputar pada tombol
+                        updateButton.disabled = true;
+                        updateButton.innerHTML = 'Updating... <i class="fas fa-spinner fa-spin"></i>'; // Mengubah teks dan menambahkan spinner
+            
+                        // Mengirim permintaan POST untuk update aplikasi
+                        fetch("{{ route('update.app') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                // Menampilkan SweetAlert jika update berhasil
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Aplikasi berhasil diperbarui.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();  // Reload halaman untuk memuat pembaruan
+                                });
+                            } else {
+                                // Menampilkan SweetAlert jika update gagal
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Gagal memperbarui aplikasi. Coba lagi nanti.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    // Mengaktifkan kembali tombol dan mengubah teksnya
+                                    updateButton.disabled = false;
+                                    updateButton.innerHTML = 'Update Now';
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan. Coba lagi nanti.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                // Mengaktifkan kembali tombol dan mengubah teksnya
+                                updateButton.disabled = false;
+                                updateButton.innerHTML = 'Update Now';
+                            });
+                        });
+                    });
+                </script>
+            
+            @endif
+            
                 @yield('container')
                 @include('sweetalert::alert')
             </div>

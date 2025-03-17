@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\reportController;
+use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\AbsensiController;
-use App\Http\Controllers\barcodeController;
 
+use App\Http\Controllers\barcodeController;
 use App\Http\Controllers\landingController;
 use App\Http\Controllers\leassonController;
 use App\Http\Controllers\lisensiController;
@@ -27,12 +28,13 @@ use App\Http\Controllers\inOutTimeController;
 use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
-
 use App\Http\Controllers\FullCalenderController;
+use App\Http\Controllers\plugin\CommentController;
 use App\Http\Controllers\verifikasiUserController;
+use App\Http\Controllers\plugin\ExcelPreviewController;
 use App\Http\Controllers\plugin\config\deletePluginController;
-use App\Http\Controllers\plugin\config\pluginController;
 use App\Http\Controllers\plugin\config\statusPluginController;
+use App\Http\Controllers\plugin\config\pluginController;
 
 Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
@@ -249,6 +251,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/plugin/delete{id}', [deletePluginController::class, 'deletePlugin'])->name('deletePlugin');
     Route::get('/plugin/status', [statusPluginController::class, 'statusPlugin'])->name('sttatusPlugin');
 
+    Route::post('/update-app', [UpdateController::class, 'updateApp'])->name('update.app');
 });
 Route::post('/logout',[authController::class,'logout'])->name('logout');
 // route Regency Administrasi
@@ -280,3 +283,5 @@ Route::get('/qr/{code}', [barcodeController::class, 'generateQRCode'])->name('qr
 Route::get('/card', [barcodeController::class, 'card'])->name('card');
 Route::get('/class/time', [inOutTimeController::class, 'indexClass'])->name('index.class');
 Route::post('/class/time/update', [inOutTimeController::class, 'classTimeUpdate'])->name('time.update');
+
+/* */
