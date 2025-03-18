@@ -36,18 +36,10 @@ class GTKController extends Controller
     public function card(){
         $data = gtk::where('id',request('data'))->with('JenisGTK')->get();
         foreach($data as $item){ $nama = $item->nama;$nik=$item->nik; }
-        return view('akdemik.datainduk.card.gtkCard',[
+        return view('GTK.gtkAction.gtkCard',[
             'title'=>'Kartu Nama ',
             'data'=>$data
         ],compact('nama','nik'));
-    }
-
-    public function cardmulti(request $request){
-        $data = gtk::whereIn('id',$request->id)->get();
-
-        return view('GTK.gtkAction.printCardGTK',[
-            'data'=>$data
-       ]);
     }
 
     public function employmenttypesIndex(){

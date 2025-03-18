@@ -97,14 +97,14 @@ class DataIndukController extends Controller
         ]);
     }
 
-    public function dataIndukStudentCardmulti(request $request){
+    // public function dataIndukStudentCardmulti(request $request){
 
-        $data = student::whereIn('id',$request->id)->get();
+    //     $data = student::whereIn('id',$request->id)->get();
 
-        return view('akdemik.datainduk.card.printCardStudent',[
-            'data'=>$data
-       ]);
-    }
+    //     return view('akdemik.datainduk.card.printCardStudent',[
+    //         'data'=>$data
+    //    ]);
+    // }
 
     public function dataIndukJurusan(){
         return view('akdemik.datainduk.jurusan',[

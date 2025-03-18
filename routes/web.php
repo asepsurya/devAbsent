@@ -29,9 +29,7 @@ use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\FullCalenderController;
-use App\Http\Controllers\plugin\CommentController;
 use App\Http\Controllers\verifikasiUserController;
-use App\Http\Controllers\plugin\ExcelPreviewController;
 use App\Http\Controllers\plugin\config\deletePluginController;
 use App\Http\Controllers\plugin\config\statusPluginController;
 use App\Http\Controllers\plugin\config\pluginController;
@@ -108,7 +106,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/akademik/datainduk/studentEksportExcel',[DataIndukController::class,'studentEksportExcel'])->name('studentEksportExcel');
     Route::get('/akademik/datainduk/studentcard',[DataIndukController::class,'dataIndukStudentCard'])->name('dataIndukStudentCard');
-    Route::post('/akademik/datainduk/studentcardmulti',[DataIndukController::class,'dataIndukStudentCardmulti'])->name('dataIndukStudentCardmulti');
+    // Route::post('/akademik/datainduk/studentcardmulti',[DataIndukController::class,'dataIndukStudentCardmulti'])->name('dataIndukStudentCardmulti');
     Route::get('/akademik/lulusan',[DataIndukController::class,'lulusan'])->name('dataIndukStudentlulusan');
 
     Route::get('/akademik/datainduk/jurusan',[DataIndukController::class,'dataIndukJurusan']);
@@ -159,7 +157,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/gtk/dataIndukGTKfoto',[GTKController::class,'GTKfoto'])->name('GTKfoto');
     Route::get('/gtk/cetak',[GTKController::class,'card'])->name('card');
-    Route::post('/gtk/cetakmulti',[GTKController::class,'cardmulti'])->name('cardmulti');
+
     // route rfid
     Route::get('/rfid',[rfidController::class,'rfid'])->name('rfid');
     Route::get('/rfid/delete{id}',[rfidController::class,'rfidDelete'])->name('rfidDelete');
@@ -284,4 +282,9 @@ Route::get('/card', [barcodeController::class, 'card'])->name('card');
 Route::get('/class/time', [inOutTimeController::class, 'indexClass'])->name('index.class');
 Route::post('/class/time/update', [inOutTimeController::class, 'classTimeUpdate'])->name('time.update');
 
+/* */
+/* */
+ /* */
+ /* */
+/* */
 /* */
