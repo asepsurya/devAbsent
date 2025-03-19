@@ -5,6 +5,12 @@
     .btn-check:checked+.btn, .btn.active, .btn.show, .btn.show:hover, .btn:first-child:active, :not(.btn-check)+.btn:active{
         background-color: #cdcdcd;
     }
+    html .darkmode .nav-tabs li a, html[data-theme="dark"] .nav-tabs li a {
+        color: rgb(0, 0, 0);
+    }
+    html .darkmode span, html .darkmode p, html .darkmode a, html[data-theme="dark"] span, html[data-theme="dark"] p, html[data-theme="dark"] a {
+        color: rgb(181, 181, 181);
+    }
 </style>
 @endsection
 {{-- header --}}
@@ -96,14 +102,14 @@
                                         <td>{{ $item->rombelStudent->nama }}</td>
 
                                         <td class="border">
-                                            <div class="form-check form-check-md">
+                                            <div class="form-check form-check-md d-flex justify-content-center">
                                                 <input class="form-check-input a" value="H" type="radio" name="status[{{ $item->nis }}]"
                                                 id="h-{{ $item->id }}"
                                                 @if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('id_mapel'))->first()->status == 'H') checked @endif>
                                             </div>
                                         </td>
                                         <td class="border">
-                                            <div class="form-check form-check-md">
+                                            <div class="form-check form-check-md d-flex justify-content-center">
                                                 <input class="form-check-input a" value="S" type="radio" name="status[{{ $item->nis }}]"
                                                 id="s-{{ $item->id }}"
 
@@ -111,17 +117,17 @@
                                             </div>
                                         </td>
                                         <td class="border">
-                                            <div class="form-check form-check-md">
+                                            <div class="form-check form-check-md d-flex justify-content-center">
                                                 <input class="form-check-input a" value="I" type="radio" name="status[{{ $item->nis }}]"
                                                 id="i-{{ $item->id }}"
                                                 @if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('id_mapel'))->first()->status == 'I') checked @endif>
                                             </div>
                                         </td>
                                         <td class="border">
-                                            <div class="form-check form-check-md">
+                                            <div class="form-check form-check-md d-flex justify-content-center">
                                                 <input class="form-check-input a" value="A" type="radio" name="status[{{ $item->nis }}]"
                                                 id="a-{{ $item->id }}"
-@if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('id_mapel'))->first()->status == 'A') checked @endif>
+                                                    @if($absent->count() && $item->rombelAbsentClass->where('tanggal', request('tanggal'))->where('id_mapel', request('id_mapel'))->first()->status == 'A') checked @endif>
                                             </div>
                                         </td>
                                         <td hidden>
@@ -193,7 +199,7 @@
                         <div class="col d-flex justify-content-center mb-3">
                             <img src="{{ optional($item->rombelStudent)->foto
                             ? asset('storage/' . $item->rombelStudent->foto)
-                            : asset('assets/img/user-default.jpg') }}"
+                            : asset('asset/img/user-default.jpg') }}"
                         class="avatar avatar-xxxl me-4 img-thumbnail rounded-pill" alt="foto">
 
                         </div>

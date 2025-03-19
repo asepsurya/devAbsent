@@ -22,11 +22,7 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-        <div class="pe-1 mb-2">
-            <button type="button" class="btn btn-outline-light bg-white  me-1" data-bs-toggle="modal" data-bs-target="#studentModal">
-                <i class="ti ti-printer"></i> Cetak Kartu Siswa
-            </button>
-        </div>
+   
      
         <div class="dropdown me-2 mb-2">
             <a href="javascript:void(0);" class="dropdown-toggle btn btn-light fw-medium d-inline-flex align-items-center " data-bs-toggle="dropdown" >
@@ -141,8 +137,6 @@
 </div>
 @endforeach
 
-
-@include('akdemik.datainduk.card.modalcard')
 @section('javascript')
 <script src="{{ asset('asset/js/DataTables.js') }}"></script>
 <!-- Custom Script -->

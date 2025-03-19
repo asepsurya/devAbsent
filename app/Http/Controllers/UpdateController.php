@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Process;
 
 class UpdateController extends Controller
 {
@@ -42,5 +44,9 @@ class UpdateController extends Controller
                 'message' => 'Failed to update the application. Please try again later.',
             ], 500);
         }
+    }
+
+    public function checkupdate(request $request){
+        Artisan::call('check:updates');
     }
 }

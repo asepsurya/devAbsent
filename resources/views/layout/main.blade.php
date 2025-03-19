@@ -73,30 +73,27 @@
                 {{-- main Content --}}
                 
                 @if ($updateAvailable)
-            
-                <div class="alert alert-primary" role="alert">
-                     <div class="d-flex justify-content-between">
+                <div id="updateAlert" class="alert alert-primary" role="alert">
+                    <div class="d-flex justify-content-between">
                         <h4 class="text-primary mt-3">Update Available!</h4>
                         <form method="POST" action="{{ route('update.app') }}" id="updateForm">
                             @csrf
-                            <button type="submit btn-sm" id="updateButton" class="btn btn-primary btn-sm my-2">Update Now</button>
+                            <button type="submit" id="updateButton" class="btn btn-primary btn-sm my-2">Update Now</button>
                         </form>
-                     </div>
-                  </div>
-                        
-                <script>
-                    // Ambil elemen tombol update
-                    const updateButton = document.getElementById('updateButton');
+                    </div>
+                </div>
             
-                    // Submit form dengan AJAX
+                <script>
                     document.getElementById('updateForm').addEventListener('submit', function (e) {
                         e.preventDefault();  // Mencegah form submit default
             
-                        // Menambahkan animasi berputar pada tombol
-                        updateButton.disabled = true;
-                        updateButton.innerHTML = 'Updating... <i class="fas fa-spinner fa-spin"></i>'; // Mengubah teks dan menambahkan spinner
+                        const updateButton = document.getElementById('updateButton');
+                        const updateAlert = document.getElementById('updateAlert');
             
-                        // Mengirim permintaan POST untuk update aplikasi
+                        // Menonaktifkan tombol dan menambahkan spinner
+                        updateButton.disabled = true;
+                        updateButton.innerHTML = 'Updating... <i class="fas fa-spinner fa-spin"></i>';
+            
                         fetch("{{ route('update.app') }}", {
                             method: 'POST',
                             headers: {
@@ -107,7 +104,16 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.status === 'success') {
-                                // Menampilkan SweetAlert jika update berhasil
+                                // Menampilkan alert sukses
+                                updateAlert.classList.remove('alert-primary');
+                                updateAlert.classList.add('alert-success');
+                                updateAlert.innerHTML = `
+                                    <div class="d-flex justify-content-between">
+                                        <h4 class="text-success mt-3">Update Completed!</h4>
+                                        <button class="btn btn-success btn-sm my-2" disabled>Updated</button>
+                                    </div>
+                                `;
+            
                                 Swal.fire({
                                     title: 'Success!',
                                     text: 'Aplikasi berhasil diperbarui.',
@@ -117,14 +123,13 @@
                                     location.reload();  // Reload halaman untuk memuat pembaruan
                                 });
                             } else {
-                                // Menampilkan SweetAlert jika update gagal
+                                // Jika gagal, kembalikan tampilan tombol
                                 Swal.fire({
                                     title: 'Error!',
                                     text: 'Gagal memperbarui aplikasi. Coba lagi nanti.',
                                     icon: 'error',
                                     confirmButtonText: 'OK'
                                 }).then(() => {
-                                    // Mengaktifkan kembali tombol dan mengubah teksnya
                                     updateButton.disabled = false;
                                     updateButton.innerHTML = 'Update Now';
                                 });
@@ -137,15 +142,14 @@
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                // Mengaktifkan kembali tombol dan mengubah teksnya
                                 updateButton.disabled = false;
                                 updateButton.innerHTML = 'Update Now';
                             });
                         });
                     });
                 </script>
-            
             @endif
+            
             
                 @yield('container')
                 @include('sweetalert::alert')

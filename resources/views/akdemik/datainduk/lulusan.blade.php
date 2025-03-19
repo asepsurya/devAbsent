@@ -120,8 +120,6 @@
 </div>
 @endforeach
 
-
-@include('akdemik.datainduk.card.modalcard')
 @section('javascript')
 <script src="{{ asset('asset/js/DataTables.js') }}"></script>
 <!-- Custom Script -->

@@ -112,36 +112,29 @@ class deletePluginController extends Controller
   }
 
   private function removeController($id){
-    // Path ke info.php dalam folder plugin yang diekstrak
-    $infoFile = storage_path('app/plugins/extracted/' . $id . '/info.php');
+   // Path ke folder controller di dalam folder plugin yang diekstrak
+   $controllerFolder = storage_path('app/plugins/extracted/' . $id . '/controller');
 
-    // Pastikan file info.php ada
-    if (!File::exists($infoFile)) {
-        \Log::error("File info.php tidak ditemukan untuk plugin '$id'.");
-        return response()->json(['error' => 'File info.php tidak ditemukan.'], 404);
-    }
+   // Periksa apakah folder tersebut ada
+   if (File::exists($controllerFolder) && File::isDirectory($controllerFolder)) {
+       // Ambil semua file dalam folder controller
+       $controllerFiles = File::files($controllerFolder);
 
-    // Ambil informasi dari info.php
-    $info = include $infoFile;
+       // Loop melalui setiap file dan hapus sesuai dengan lokasinya
+       foreach ($controllerFiles as $file) {
+           $controllerName = $file->getFilename(); // Ambil nama file (misal: "MyController.php")
 
-    // Pastikan file info.php mengandung nama controller
-    if (!isset($info['name_controller'])) {
-        \Log::error("Tidak ditemukan nama controller dalam info.php untuk plugin '$id'.");
-        return response()->json(['error' => 'Nama controller tidak ditemukan dalam info.php.'], 404);
-    }
+           // Path ke controller di dalam aplikasi berdasarkan nama file
+           $pluginControllerPath = app_path('Http/Controllers/plugin/' . $controllerName);
 
-    $controllerName = $info['name_controller'];  // Contoh: 'PluginStudentController.php'
+           // Hapus file dari folder plugin yang diekstrak
+           File::delete($file->getPathname());
 
-    // Path ke controller di dalam aplikasi
-    $pluginControllerPath = app_path('Http/Controllers/plugin/' . $controllerName);
-
-    // Hapus file controller jika ada
-    if (File::exists($pluginControllerPath)) {
-        File::delete($pluginControllerPath);
-
-        return response()->json(['message' => "Controller '$controllerName' berhasil dihapus."]);
-    } else {
-        return response()->json(['error' => "Controller '$controllerName' tidak ditemukan."], 404);
+           // Hapus file dari folder aplikasi jika ada
+           if (File::exists($pluginControllerPath) && File::isFile($pluginControllerPath)) {
+               File::delete($pluginControllerPath);
+           }
+       }
     }
   }
 

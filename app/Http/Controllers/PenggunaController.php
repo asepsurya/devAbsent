@@ -33,7 +33,10 @@ class PenggunaController extends Controller
     }
     public function useremployeesIndex(request $request){
         if ($request->ajax()) {
-            return DataTables::of(user::where(['role'=>'guru'])->orderBy('id', 'DESC'))->addIndexColumn()->toJson();
+            return DataTables::of(User::whereIn('role', ['guru', 'walikelas'])->orderBy('id', 'DESC'))
+            ->addIndexColumn()
+            ->toJson();
+        
         }
 
         return view('pengguna.GTK',[

@@ -28,11 +28,11 @@ use App\Http\Controllers\inOutTimeController;
 use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
-use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\verifikasiUserController;
+use App\Http\Controllers\plugin\config\pluginController;
+use App\Http\Controllers\setelanHari\setelanHariController;
 use App\Http\Controllers\plugin\config\deletePluginController;
 use App\Http\Controllers\plugin\config\statusPluginController;
-use App\Http\Controllers\plugin\config\pluginController;
 
 Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
@@ -250,6 +250,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/plugin/status', [statusPluginController::class, 'statusPlugin'])->name('sttatusPlugin');
 
     Route::post('/update-app', [UpdateController::class, 'updateApp'])->name('update.app');
+    Route::get('/check-update', [UpdateController::class, 'checkupdate'])->name('checkupdate');
+ 
 });
 Route::post('/logout',[authController::class,'logout'])->name('logout');
 // route Regency Administrasi
@@ -282,9 +284,16 @@ Route::get('/card', [barcodeController::class, 'card'])->name('card');
 Route::get('/class/time', [inOutTimeController::class, 'indexClass'])->name('index.class');
 Route::post('/class/time/update', [inOutTimeController::class, 'classTimeUpdate'])->name('time.update');
 
-/* */
-/* */
- /* */
- /* */
-/* */
-/* */
+// Routes dari Plugin plugin944887
+use App\Http\Controllers\plugin\EventController;
+Route::middleware('auth')->group(function () {
+    Route::get('/kalender',[EventController::class,'kalender']);
+    Route::get('/events', [EventController::class, 'events']);  // Fetch events
+    Route::post('/events/create', [EventController::class, 'create']);  // Create new event
+    Route::get('/events/{id}', [EventController::class, 'destroy']);
+
+    Route::get('/fullcalender',[EventController::class,'index']);
+    Route::post('/fullcalenderAjax',[EventController::class,'ajax']);
+    Route::post('/addEventModal',[EventController::class,'addEventModal']);
+});
+// End dari Plugin

@@ -81,7 +81,7 @@
                                 <h5>Tanda Tangan</h5>
                             </div>
                             <div class="alert alert-info" role="alert">
-                                Bagian ini bertujuan untuk menghubungkan postingan Instagram ke dalam aplikasi. Dengan mengintegrasikan Instagram ke aplikasi, pengguna dapat melihat, berinteraksi, atau berkongsi kandungan dari Instagram secara langsung dalam aplikasi ini.
+                                Bagian ini digunakan untuk menentukan tanda tangan dan stample sekolah pada kartu.
                               </div>
                             <div class="d-flex align-items-center justify-content-between flex-wrap border mb-3 p-3 pb-0 rounded">
                                 <div class="row align-items-center flex-fill">
@@ -181,7 +181,7 @@
                                 <h5>Layout kartu</h5>
                             </div>
                             <div class="alert alert-info" role="alert">
-                                Bagian ini bertujuan untuk menghubungkan postingan Instagram ke dalam aplikasi. Dengan mengintegrasikan Instagram ke aplikasi, pengguna dapat melihat, berinteraksi, atau berkongsi kandungan dari Instagram secara langsung dalam aplikasi ini.
+                                Bagian ini digunakan untuk menentukan desain kartu siswa maupun guru, yang dapat disesuaikan sepenuhnya sesuai kebutuhan dan preferensi pengguna.
                               </div>
 
                               <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">

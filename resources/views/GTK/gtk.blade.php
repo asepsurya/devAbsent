@@ -19,19 +19,7 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-
-        <div class="pe-1 mb-2">
-            <div class="pe-1 mb-2 mt-2">
-                <button type="button" class="btn btn-outline-light bg-white  me-1" data-bs-toggle="modal" data-bs-target="#gtkModal">
-                    <i class="ti ti-printer"></i> Cetak Kartu
-                </button>
-            </div>
-        </div>
-        <div class="pe-1 mb-2">
-            <a href="#" class="btn btn-outline-light bg-white  me-1" data-bs-toggle="modal" data-bs-target="#import">
-                <i class="ti ti-file-arrow-left "></i> Import
-            </a>
-        </div>
+     
         <div class="dropdown me-2 mb-2">
             <a href="javascript:void(0);" class="dropdown-toggle btn btn-light fw-medium d-inline-flex align-items-center"
                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -186,7 +174,6 @@
         </div>
     </div>
 </div>
-@include('GTK.gtkAction.modalcard')
 @endforeach
 @section('javascript')
 

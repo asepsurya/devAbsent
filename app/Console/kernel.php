@@ -16,6 +16,10 @@ class Kernel extends ConsoleKernel
         // Daftarkan perintah-perintah kustom kamu di sini
         Commands\CheckForUpdates::class,
     ];
+    
+    protected $middleware = [
+        \App\Http\Middleware\CheckDatabase::class,
+    ];
 
     /**
      * Define the application's command schedule.

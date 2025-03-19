@@ -44,11 +44,14 @@
                     <div class="settings-profile-upload p-3" >
                         <span class="profile-pic">
 
-                        @if($item->$relation->$img)
-                        <a href="{{ asset('storage/' . $item->$relation->$img) }}" data-lightbox="image-{{ $item->id }}" data-title="Profile Photo">
-                            <img src="{{ asset('storage/' . $item->$relation->$img) }}"  alt="foto"  ></a>
+                        @if(optional($item->$relation)->$img)
+                            <a href="{{ asset('storage/' . $item->$relation->$img) }}" 
+                               data-lightbox="image-{{ $item->id }}" 
+                               data-title="Profile Photo">
+                                <img src="{{ asset('storage/' . $item->$relation->$img) }}" alt="foto">
+                            </a>
                         @else
-                            <img src="{{ asset('asset/img/user-default.jpg') }}"  alt="foto">
+                            <img src="{{ asset('asset/img/user-default.jpg') }}" alt="foto">
                         @endif
                         </span>
                     <form action="{{ route('imageProfile') }}" method="post" enctype="multipart/form-data">

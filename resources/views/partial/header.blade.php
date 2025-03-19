@@ -33,7 +33,7 @@
 
             </div>
 
-            <div class="me-2">
+            <div class="pe-1">
                 <a href="#" class="btn btn-outline-light fw-normal bg-white d-flex align-items-center p-2" >
                     <i class="ti ti-calendar-due me-1"></i>Tahun Ajaran : {{ $tahunAjaran }}
                 </a>
@@ -41,7 +41,7 @@
             </div>
 
 
-            <div class="pe-1">
+            <div class="pe-1 me-1">
               <a data-bs-toggle="modal" data-bs-target="#changePassword" class="btn btn-outline-light bg-white  position-relative "><span class="ti ti-key"></span> Ubah Password</a>
             </div>
                {{-- Night Mode --}}
@@ -54,7 +54,9 @@
                 </a>
             </div>
             <div class="pe-1">
-                <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Cek Update" data-bs-original-title="Cek Update!">
+                <a href="#" id="checkUpdateBtn" class="btn btn-outline-light bg-white btn-icon me-1" 
+                   data-bs-toggle="tooltip" data-bs-placement="top" 
+                   aria-label="Cek Update" data-bs-original-title="Cek Update!">
                     <i class="ti ti-refresh"></i>
                 </a>
             </div>
@@ -211,3 +213,48 @@
 
 </div>
 
+<script>
+    $(document).ready(function () {
+        $("#checkUpdateBtn").click(function (e) {
+            e.preventDefault(); // Mencegah reload halaman
+
+            $.ajax({
+                url: "/check-update",
+                type: "get",
+                data: {
+                    _token: "{{ csrf_token() }}" // Kirim CSRF token
+                },
+                beforeSend: function() {
+                    Swal.fire({
+                        title: "Checking for updates...",
+                        text: "Please wait...",
+                        icon: "info",
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
+                success: function (response) {
+                    Swal.fire({
+                        title: "Update Check Completed!",
+                        text: response.message, // Menampilkan hasil dari server
+                        icon: "success"
+                    }).then((result) => {
+                        if (result.isConfirmed || result.isDismissed) {
+                            location.reload(); // Reload halaman setelah user menutup alert
+                        }
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to check updates.",
+                        icon: "error"
+                    });
+                }
+            });
+        });
+    });
+</script>

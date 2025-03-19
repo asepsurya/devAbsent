@@ -36,6 +36,13 @@
   background-color: DodgerBlue !important; 
   color: #ffffff; 
 }
+  /* Search box */
+  .search-box {
+            display: block;
+            margin-top: 10px;
+            
+        }
+        
 </style>
 <div class="sidebar" id="sidebar">
     <div class="sidebar-inner slimscroll">
@@ -49,12 +56,13 @@
                 </li>
             </ul>
             <ul>
-                <form autocomplete="off" action="/action_page.php">
-                    <div class="autocomplete mb-3" style="width:220px;">
-                      <input id="myInput" type="text" name="myCountry" placeholder="Cari Menu...." class="form-control">
+                <!-- Search Box -->
+                <form autocomplete="off" action="/action_page.php" class="search-box">
+                    <div class="autocomplete mb-3 w-100" >
+                        <input id="myInput" type="text" name="myCountry" placeholder="Cari Menu...." class="form-control">
                     </div>
-                   
-                  </form>
+                </form>
+        
             </ul>
             <ul  id="menu">
                 <li>

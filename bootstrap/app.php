@@ -23,8 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
             'statusRegister' => \App\Http\Middleware\RegisterCheck::class,
             'PDF' => Barryvdh\DomPDF\Facade::class,
-
+            'check.database' => \App\Http\Middleware\CheckDatabase::class,
         ]);
+        
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
