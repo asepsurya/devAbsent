@@ -2,7 +2,7 @@
 <p align="center"><a href="https://absent.saktiproject.my.id" target="_blank"><img src="https://drive.usercontent.google.com/download?id=1CC7oxC75oAwwW9hUiqjKEGAraOZ5u9B-&export=view&authuser=0" width="100%" alt="Absensi SAKTI Logo"></a></p>
 
 
-## Tentang Absensi Sakti aaa
+## Tentang Absensi Sakti
 
 Absensi Sakti adalah website berbasis Internet Of Things (IoT) untuk management data absensi disebuah instansi yang di buat dan kembangkan oleh Sakti Project Community.
 
