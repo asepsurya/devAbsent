@@ -13,7 +13,7 @@ class SettingSeeder extends Seeder
      */
     public function run(): void
     {
-       $settingData = [
+        $settingData = [
             ['key'=>'site_name','value'=>'SEKOLAH SAKTI'],
             ['key'=>'nama_yayasan','value'=>'YAYASAN BAKTI TAMAN ARAFAH'],
             ['key'=>'slogan','value'=>'Maju Bersama, SMK BISAA!!!'],
@@ -40,13 +40,16 @@ class SettingSeeder extends Seeder
             ['key'=>'studentBG_back_default','value'=>''],
             ['key'=>'gtkBG_front_default','value'=>''],
             ['key'=>'gtkBG_back_default','value'=>''],
-            ['key'=>'device','value'=>'device1'],
-
-
-
-
-
-       ];
-       Setting::insert($settingData);
+            ['key'=>'device','value'=>'device2'],
+        ];
+        
+        // Insert data satu per satu menggunakan `updateOrCreate`
+        foreach ($settingData as $data) {
+            Setting::updateOrCreate(
+                ['key' => $data['key']], // Mencari berdasarkan key
+                ['value' => $data['value']] // Update jika sudah ada, insert jika belum
+            );
+        }
+        
     }
 }

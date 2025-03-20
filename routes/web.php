@@ -34,6 +34,7 @@ use App\Http\Controllers\verifikasiUserController;
 use App\Http\Controllers\plugin\config\pluginController;
 use App\Http\Controllers\setelanHari\setelanHariController;
 
+
 Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/home',[landingController::class,'home'])->name('home');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
