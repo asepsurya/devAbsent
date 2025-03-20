@@ -20,7 +20,9 @@ class UpdateController extends Controller
 
             // Update dependensi composer
             $composerUpdate = shell_exec('composer install --no-dev --optimize-autoloader');
-
+            Artisan::call('artisan db:migrate --force');
+            Artisan::call('artisan db:seed --force');
+            
             // Clear cache dan config cache
             $cacheClear = shell_exec('php artisan optimize:clear');
 
@@ -35,7 +37,7 @@ class UpdateController extends Controller
                 'composerUpdate' => $composerUpdate,
                 'cacheClear' => $cacheClear,
             ]);
-            Artisan::call('artisan db:seed --force');
+            
         } catch (\Exception $e) {
             // Jika terjadi kesalahan, catat kesalahan dan beri respons error
             Log::error('Update failed: ' . $e->getMessage());

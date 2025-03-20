@@ -10,6 +10,12 @@
         border: 2px solid #007bff;
         box-shadow: 0 0 10px rgba(28, 134, 248, 0.5);
     }
+    .hover-effect:hover {
+        transform: scale(1.02);
+        transition: 0.3s ease-in-out;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
 </style>
 @endsection
 @section('container')
@@ -39,9 +45,9 @@
             <h4>Select Device :</h4>
         </div>
         <div class="col-lg-6">
-            <label class="card device-card">
+            <label class="card device-card hover-effect">
                 <input type="radio" name="device" value="device1" class="device-radio" hidden>
-                <div class="card-body">
+                <div class="card-body my-2">
                     <div class="d-flex justify-content-between mb-3">
                         <h5>Windows USB RFID READER 13.56MHZ </h5>
                         @if(app('settings')['device'] == 'device1')
@@ -49,12 +55,12 @@
                         @endif
                     </div>
                     <div class="d-flex justify-content-center">
-                        <img src="{{ asset('asset/img/device.png') }}" alt="" width="300">
+                        <img src="{{ asset('asset/img/device.png') }}" alt="" width="310">
                     </div>
                 </div>
             </label>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-6 hover-effect">
             <label class="card device-card">
                 <input type="radio" name="device" value="device2" class="device-radio" hidden>
                 <div class="card-body">
@@ -65,7 +71,7 @@
                         @endif
                     </div>
                     <div class="d-flex justify-content-center">
-                        <img src="{{ asset('asset/img/device.png') }}" alt="" width="300">
+                        <img src="{{ asset('asset/img/device2.png') }}" alt="" width="200">
                     </div>
                 </div>
             </label>

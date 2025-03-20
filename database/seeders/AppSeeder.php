@@ -392,7 +392,7 @@ class AppSeeder extends Seeder
         // SEEDER UNTUK USER GURU TENAGA KEPENPENDIDIKAN
         // ----------------------------------------------------------------
 
-        User::updateOrCreate(
+        $user1= User::updateOrCreate(
             ['nomor' => '6376372635140006'], // Kunci unik
             [
                 'nama' => 'SAMPLE WALIKELAS',
@@ -405,9 +405,9 @@ class AppSeeder extends Seeder
             ]
         );
         
-        $user->assignRole($role1);
+        $user1->assignRole($role1);
 
-        User::updateOrCreate(
+        $user2 = User::updateOrCreate(
             ['nomor' => '6376372635140008'], // Kunci unik
             [
                 'nama' => 'SAMPLE GURU',
@@ -419,9 +419,9 @@ class AppSeeder extends Seeder
                 'remember_token' => Str::random(60), // Gunakan token random
             ]
         );
-        $user->assignRole($role2);
+        $user2->assignRole($role2);
 
-        User::updateOrCreate(
+        $user3 = User::updateOrCreate(
             ['email' => 'admin@saktiproject.my.id'], // Cek berdasarkan email
             [
                 'nomor' => '20271907', 
@@ -434,9 +434,9 @@ class AppSeeder extends Seeder
             ]
         );
         
-        $user->assignRole($role4);
+        $user3->assignRole($role4);
 
-        User::updateOrCreate(
+        $user4 = User::updateOrCreate(
             ['email' => 'superAdmin.sakti@gmail.com'], // Cek berdasarkan email
             [
                 'nomor' => '9987762233',
@@ -449,7 +449,7 @@ class AppSeeder extends Seeder
             ]
         );
         
-        $user->assignRole($role5);
+        $user4->assignRole($role5);
 
         //-----------------------------------------------------------------
         // SEEDER UNTUK JENIS GTK

@@ -5,13 +5,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GTKController;
 use App\Http\Controllers\PDFController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\reportController;
-use App\Http\Controllers\UpdateController;
 
+use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\barcodeController;
 use App\Http\Controllers\landingController;
@@ -32,9 +33,15 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\plugin\EventController;
 use App\Http\Controllers\verifikasiUserController;
 use App\Http\Controllers\plugin\config\pluginController;
-use App\Http\Controllers\setelanHari\setelanHariController;
 
 
+Route::get('/migration', function () {
+    // Jalankan migration
+    Artisan::call('migrate', ['--force' => true]);
+    Artisan::call('db:seed'); // Menjalankan Seeder
+    // Redirect ke halaman utama
+    return redirect('/');
+});
 Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/home',[landingController::class,'home'])->name('home');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
@@ -46,6 +53,7 @@ Route::get('/role/create',[authController::class,'create'])->middleware('role:wa
 Route::middleware(['statusRegister'])->group(function () {
     Route::get('/register',[authController::class,'registerIndex']);
 });
+
 Route::middleware('guest')->group(function () {
     // route Auth
     Route::get('/login',[authController::class,'loginIndex'])->middleware('guest')->name('login');
@@ -288,18 +296,3 @@ Route::get('/qr/{code}', [barcodeController::class, 'generateQRCode'])->name('qr
 Route::get('/card', [barcodeController::class, 'card'])->name('card');
 Route::get('/class/time', [inOutTimeController::class, 'indexClass'])->name('index.class');
 Route::post('/class/time/update', [inOutTimeController::class, 'classTimeUpdate'])->name('time.update');
-
-// Routes dari Plugin plugin944887
-use App\Http\Controllers\plugin\config\deletePluginController;
-use App\Http\Controllers\plugin\config\statusPluginController;
-Route::middleware('auth')->group(function () {
-    Route::get('/kalender',[EventController::class,'kalender']);
-    Route::get('/events', [EventController::class, 'events']);  // Fetch events
-    Route::post('/events/create', [EventController::class, 'create']);  // Create new event
-    Route::get('/events/{id}', [EventController::class, 'destroy']);
-
-    Route::get('/fullcalender',[EventController::class,'index']);
-    Route::post('/fullcalenderAjax',[EventController::class,'ajax']);
-    Route::post('/addEventModal',[EventController::class,'addEventModal']);
-});
-// End dari Plugin
