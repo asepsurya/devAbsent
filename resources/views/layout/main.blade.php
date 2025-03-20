@@ -73,15 +73,20 @@
                 {{-- main Content --}}
                 
                 @if ($updateAvailable)
-                <div id="updateAlert" class="alert alert-primary" role="alert">
-                    <div class="d-flex justify-content-between">
-                        <h4 class="text-primary mt-3">Update Available!</h4>
-                        <form method="POST" action="{{ route('update.app') }}" id="updateForm">
-                            @csrf
-                            <button type="submit" id="updateButton" class="btn btn-primary btn-sm my-2">Update Now</button>
-                        </form>
+                <div id="updateAlert" class="alert alert-primary d-flex align-items-center justify-content-between" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="ti ti-info-circle me-2"></i>
+                        <div class="text-primary">
+                            <strong>Update Tersedia!</strong>
+                            <p class="mb-0">Versi baru telah tersedia. Update sekarang?</p>
+                        </div>
                     </div>
+                    <form method="POST" action="{{ route('update.app') }}" id="updateForm">
+                        @csrf
+                        <button type="submit" id="updateButton" class="btn btn-primary">Update Now</button>
+                    </form>
                 </div>
+                
             
                 <script>
                     document.getElementById('updateForm').addEventListener('submit', function (e) {
@@ -108,10 +113,13 @@
                                 updateAlert.classList.remove('alert-primary');
                                 updateAlert.classList.add('alert-success');
                                 updateAlert.innerHTML = `
-                                    <div class="d-flex justify-content-between">
-                                        <h4 class="text-success mt-3">Update Completed!</h4>
-                                        <button class="btn btn-success btn-sm my-2" disabled>Updated</button>
-                                    </div>
+                                      <div class="d-flex align-items-center">
+                                            <i class="ti ti-info-circle me-2"></i>
+                                                <div class="text-success">
+                                                    <strong>Update Berhasil!</strong>
+                                                    <p class="mb-0">Terimakasih telah update aplikasi kami. Tunggu update selanjutnya</p>
+                                                </div>
+                                        </div>
                                 `;
             
                                 Swal.fire({

@@ -16,7 +16,7 @@ class UpdateController extends Controller
         // Menjalankan perintah Git Pull untuk memperbarui aplikasi
         try {
             // Update aplikasi dengan melakukan pull dari GitHub
-            $gitPull = shell_exec('git pull origin main'); // Gantilah dengan branch yang sesuai jika diperlukan
+            $gitPull = shell_exec('git pull origin'); // Gantilah dengan branch yang sesuai jika diperlukan
 
             // Update dependensi composer
             $composerUpdate = shell_exec('composer install --no-dev --optimize-autoloader');
@@ -35,6 +35,7 @@ class UpdateController extends Controller
                 'composerUpdate' => $composerUpdate,
                 'cacheClear' => $cacheClear,
             ]);
+            Artisan::call('artisan db:seed --force');
         } catch (\Exception $e) {
             // Jika terjadi kesalahan, catat kesalahan dan beri respons error
             Log::error('Update failed: ' . $e->getMessage());
@@ -48,5 +49,6 @@ class UpdateController extends Controller
 
     public function checkupdate(request $request){
         Artisan::call('check:updates');
+        
     }
 }
