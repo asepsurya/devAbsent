@@ -29,8 +29,12 @@ class landingController extends Controller
         return  json_encode($data);
     }
 
+    public function home(){
+        return view('frontpage.myIndex');
+    }
 
-    
+
+
 
 
 }

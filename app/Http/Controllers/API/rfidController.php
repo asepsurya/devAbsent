@@ -191,4 +191,7 @@ class rfidController extends Controller
          // For demonstration, return the RFID value (or process it as needed)
 
     }
+
+
+
 }

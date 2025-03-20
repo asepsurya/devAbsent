@@ -366,7 +366,7 @@
   </div>
 </div>
 
-@endforeach
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -378,14 +378,27 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="" method="GET">
+
           <div class="modal-body m-0 p-0 ">
               <div class="alert-primary p-4">
                   <div class=" ">
                       <h4 class="mb-2">RFID Scanner</h4>
                       <!-- RFID Input Box -->
-                      <input id="rfid-input" name="key" placeholder="Scan your RFID card" autofocus class="form-control" readonly>
-                      <button id="submit-rfid"  class="btn btn-primary  mt-3 w-100" style="margin-top: 10px;">Pilih</button>
+                            @if(app('settings')['device'] == 'device1')
+                        <form action="{{ route('rfidInputDevice1') }}" method="POST">
+                            @csrf
+                            <input type="text" name="nis" value="{{ $item->nis }}" hidden>
+                            <input id="deviceRFID" name="key" placeholder="Scan your RFID card" class="form-control" >
+                            <button class="btn btn-primary  mt-3 w-100" style="margin-top: 10px;">Pilih</button>
+                        </form>
+                            @else
+                        <form action="" method="GET">
+                            <input id="rfid-input" name="key" placeholder="Scan your RFID card" autofocus class="form-control" >
+                            <button id="submit-rfid"  class="btn btn-primary  mt-3 w-100" style="margin-top: 10px;">Pilih</button>
+                        </form>
+                            @endif
+
+
                       <br>
                       <small> Jika data ini sudah terisi, maka data RFID tersebut belum terikat atau tertaut berdasarkan data terakhir yang diinput.</small>
                       <div id="response"></div> <!-- Area to show server response -->
@@ -400,11 +413,13 @@
     </div>
   </div>
 </div>
-
+@endforeach
 
 @section('javascript')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+
 <script>
     document.getElementById('studentForm').addEventListener('submit', function () {
         document.getElementById('loading-indicator').style.display = 'block';

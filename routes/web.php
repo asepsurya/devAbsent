@@ -7,11 +7,12 @@ use App\Http\Controllers\GTKController;
 use App\Http\Controllers\PDFController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\authController;
+use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\reportController;
 use App\Http\Controllers\UpdateController;
-use App\Http\Controllers\AbsensiController;
 
+use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\barcodeController;
 use App\Http\Controllers\landingController;
 use App\Http\Controllers\leassonController;
@@ -28,13 +29,13 @@ use App\Http\Controllers\inOutTimeController;
 use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\plugin\EventController;
 use App\Http\Controllers\verifikasiUserController;
 use App\Http\Controllers\plugin\config\pluginController;
 use App\Http\Controllers\setelanHari\setelanHariController;
-use App\Http\Controllers\plugin\config\deletePluginController;
-use App\Http\Controllers\plugin\config\statusPluginController;
 
 Route::get('/',[landingController::class,'index'])->name('index');
+Route::get('/home',[landingController::class,'home'])->name('home');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
 // Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
 Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
@@ -240,6 +241,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/gtk/import/index',[GTKController::class,'GTKimportIndex'])->name('GTKimportIndex');
     Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
 
+    Route::get('/device',[DeviceController::class,'index'])->name('device');
+    Route::post('/device',[DeviceController::class,'deviceInput'])->name('deviceInput');
+    Route::post('/rfidInput', [DeviceController::class, 'rfidInputDevice1'])->name('rfidInputDevice1');
 
     // Menampilkan form import plugin
     Route::get('/plugin',[PluginController::class,'index'])->name('plugin.index');
@@ -251,7 +255,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/update-app', [UpdateController::class, 'updateApp'])->name('update.app');
     Route::get('/check-update', [UpdateController::class, 'checkupdate'])->name('checkupdate');
- 
+
 });
 Route::post('/logout',[authController::class,'logout'])->name('logout');
 // route Regency Administrasi
@@ -285,7 +289,8 @@ Route::get('/class/time', [inOutTimeController::class, 'indexClass'])->name('ind
 Route::post('/class/time/update', [inOutTimeController::class, 'classTimeUpdate'])->name('time.update');
 
 // Routes dari Plugin plugin944887
-use App\Http\Controllers\plugin\EventController;
+use App\Http\Controllers\plugin\config\deletePluginController;
+use App\Http\Controllers\plugin\config\statusPluginController;
 Route::middleware('auth')->group(function () {
     Route::get('/kalender',[EventController::class,'kalender']);
     Route::get('/events', [EventController::class, 'events']);  // Fetch events

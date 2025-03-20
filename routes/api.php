@@ -16,6 +16,7 @@ Route::get('/absent/entry',[rfidController::class,'rfidadd'])->name('rfidadd');
 
 Route::get('/device/check',[deviceController::class,'cekLisensi'])->name('cekLisensi');
 Route::get('/process-rfid', [rfidController::class, 'processRfid'])->name('processRfid');
+
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');

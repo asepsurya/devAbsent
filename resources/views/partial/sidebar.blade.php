@@ -22,27 +22,20 @@
 .autocomplete-items div {
   padding: 10px;
   cursor: pointer;
-  background-color: #fff; 
-  border-bottom: 1px solid #d4d4d4; 
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
 }
 
 /*when hovering an item:*/
 .autocomplete-items div:hover {
-  background-color: #e9e9e9; 
+  background-color: #e9e9e9;
 }
 
 /*when navigating through the items using the arrow keys:*/
 .autocomplete-active {
-  background-color: DodgerBlue !important; 
-  color: #ffffff; 
+  background-color: DodgerBlue !important;
+  color: #ffffff00;
 }
-  /* Search box */
-  .search-box {
-            display: block;
-            margin-top: 10px;
-            
-        }
-        
 </style>
 <div class="sidebar" id="sidebar">
     <div class="sidebar-inner slimscroll">
@@ -56,13 +49,12 @@
                 </li>
             </ul>
             <ul>
-                <!-- Search Box -->
-                <form autocomplete="off" action="/action_page.php" class="search-box">
+                <form autocomplete="off" action="/action_page.php">
                     <div class="autocomplete mb-3 w-100" >
-                        <input id="myInput" type="text" name="myCountry" placeholder="Cari Menu...." class="form-control">
+                      <input id="myInput" type="text" name="myCountry" placeholder="Cari Menu...." class="form-control">
                     </div>
-                </form>
-        
+
+                  </form>
             </ul>
             <ul  id="menu">
                 <li>
@@ -263,6 +255,13 @@
                         </li>
 
                         @endcan
+                        @can('device')
+                        <li class="{{ Request::is('device') ? 'active' : ''}}">
+                            <a href="/device">
+                                <i class="ti ti-devices"></i><span>Device Scanner RFID</span>
+                            </a>
+                        </li>
+                        @endcan
                     </ul>
 
                 </li>
@@ -317,13 +316,6 @@
                 </li>
                 @endcan
 
-                {{-- @can('Kalender Akademik')
-                            <li class="{{ Request::is('kalender') ? 'active' : ''}}">
-                <a href="/kalender">
-                    <i class="ti ti-calendar"></i><span>Kalender Akademik</span>
-                </a>
-                </li>
-                @endcan --}}
 
                 @can('Setelan Hari Libur')
                 <li class="{{ Request::is('holidays') ? 'active' : ''}}">
@@ -332,6 +324,7 @@
                     </a>
                 </li>
                 @endcan
+
             </ul>
             </li>
 
@@ -399,47 +392,54 @@
 </div>
 
 <script>
-
 function autocomplete(inp, arr) {
   var currentFocus;
-  
+
   inp.addEventListener("input", function(e) {
       var a, b, i, val = this.value;
       closeAllLists();
-      if (!val) { return false;}
+      if (!val) { return false; }
       currentFocus = -1;
-      
+
       a = document.createElement("DIV");
       a.setAttribute("id", this.id + "autocomplete-list");
       a.setAttribute("class", "autocomplete-items");
-      
+
       this.parentNode.appendChild(a);
-      
+
       for (i = 0; i < arr.length; i++) {
         if (arr[i].label.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
           b = document.createElement("DIV");
-          
+
           b.innerHTML = "<strong>" + arr[i].label.substr(0, val.length) + "</strong>";
           b.innerHTML += arr[i].label.substr(val.length);
-          
+
+          if (arr[i].description) {
+            b.innerHTML += "<br><small style='color: gray;'>" + arr[i].description + "</small>";
+          }
+
+          if (arr[i].fullPath) {
+            b.innerHTML += "<br><small style='color: gray;text-size:5px;'>" + arr[i].fullPath + "</small>";
+          }
+
           b.innerHTML += "<input type='hidden' value='" + arr[i].label + "' data-url='" + arr[i].value + "'>";
-          
+
           b.addEventListener("click", function(e) {
               let inputField = this.getElementsByTagName("input")[0];
               inp.value = inputField.value;
               let url = inputField.getAttribute("data-url");
-              
+
               if (url) {
-                window.location.href = url; // Redirect ke URL terkait
+                window.location.href = url;
               }
-              
+
               closeAllLists();
           });
           a.appendChild(b);
         }
       }
   });
-  
+
   inp.addEventListener("keydown", function(e) {
       var x = document.getElementById(this.id + "autocomplete-list");
       if (x) x = x.getElementsByTagName("div");
@@ -485,11 +485,28 @@ function autocomplete(inp, arr) {
   });
 }
 
-// Ambil teks menu + linknya
+// Ambil teks menu + linknya + keterangan + lokasi menu
+function getMenuPath(item) {
+    let path = [];
+    let current = item;
+    while (current && current.tagName !== "BODY") {
+        if (current.tagName === "LI" && current.querySelector("a")) {
+            let linkText = current.querySelector("a").textContent.trim();
+            if (linkText) {
+                path.unshift(linkText);
+            }
+        }
+        current = current.parentElement;
+    }
+    return path.join(" → ");
+}
+
 let menuItems = Array.from(document.querySelectorAll("ul li a"))
     .map(item => ({
         label: item.textContent.trim(),
-        value: item.href
+        value: item.href,
+        description: item.getAttribute("data-description") || "",
+        fullPath: getMenuPath(item.closest("li"))
     }))
     .filter(item => item.label.length > 0);
 
