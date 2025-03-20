@@ -40,7 +40,7 @@ class SettingSeeder extends Seeder
             ['key'=>'studentBG_back_default','value'=>''],
             ['key'=>'gtkBG_front_default','value'=>''],
             ['key'=>'gtkBG_back_default','value'=>''],
-            ['key'=>'device','value'=>'device2'],
+            ['key'=>'device','value'=>'device1'],
         ];
         
         // Insert data satu per satu menggunakan `updateOrCreate`
