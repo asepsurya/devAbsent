@@ -10,7 +10,7 @@ Aplikasi dan website ini dibangun untuk mengatasi permasalahan pencatatan absens
 
 Mesin yang digunakan untuk aplikasi ini terdapat dua jenis, menggunakan idcard dan menggunakan fingerprint. Dengan adanya sistem ini, diharapkan bisa membantu mengatasi permasalahan-permasalahan yang telah disebutkan.
 
-## Fitur Absensi Sakti
+## Fitur Absensi Saktia
 
 - Dashboard Admin, Walikelas, Guru dan Siswa
 - Fitur absensi RFID/Fingerprint untuk guru maupun siswa
