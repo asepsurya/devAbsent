@@ -19,9 +19,16 @@ class landingController extends Controller
         $username = $this->instagramService->getUsername($userId);  // Fetch username
         $feed = $this->instagramService->getFeed($userId);
 
-        return view('frontpage.index',[
-            'absent'=>absentsHistory::where('date',date('d/m/Y'))->count()
-        ],compact('feed','username'));
+        if(app('settings')['device'] == 'device1'){
+            return view('frontpage.myIndex',[
+                'absent'=>absentsHistory::where('date',date('d/m/Y'))->count()
+            ],compact('feed','username'));
+        }else{
+            return view('frontpage.index',[
+                'absent'=>absentsHistory::where('date',date('d/m/Y'))->count()
+            ],compact('feed','username'));
+        }
+       
     }
 
     public function listabsents(){

@@ -154,15 +154,15 @@
                                     @endif
 
                                     @if(auth()->user()->role == "admin" || auth()->user()->role == "superadmin" )
-                                    <img src='{{ asset(' asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                    <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                     @endif
 
                                     @if(auth()->user()->role == "guru")
                                     @if(Auth::user()->gtk == NULL)
-                                    <img src='{{ asset(' asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                    <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                     @else
                                     @if(Auth::user()->gtk->gambar == "" )
-                                    <img src='{{ asset(' asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                    <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                     @else
                                     <img src="{{ asset('storage/'. Auth::user()->gtk->gambar )}}" alt='Img'
                                         class='img-fluid'>
@@ -172,7 +172,7 @@
 
 
                                     @if(auth()->user()->role == "admin")
-                                    <img src='{{ asset(' asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                                    <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
                                     @endif
 
                                     </span>
@@ -330,7 +330,7 @@
                     </div>
                 </div>
 
-
+                
                 <div class="row">
                     @if (!empty($feed->data) && count($feed->data) > 0)
                     @foreach($feed->data as $index => $post)
