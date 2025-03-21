@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Setup Database</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
+
     <style>
         .bg-light-gradient {
             background: linear-gradient(135deg, #f8f9fa, #e9ecef, #dee2e6);
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 /* Animation for rotating and scaling the spinner */
-@keyframes l20-2{ 
+@keyframes l20-2{
   0%    {transform:scaleY(1)  rotate(0deg)}
   49.99%{transform:scaleY(1)  rotate(135deg)}
   50%   {transform:scaleY(-1) rotate(0deg)}
@@ -160,8 +160,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     </style>
 </head>
-<body class=" flex items-center justify-center min-h-screen bg-light-gradient" >
+<body class=" flex items-center justify-center min-h-screen bg-light-gradient">
+
     <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+        <center><img src="https://i.ibb.co.com/201gRgvw/logo.png" alt="" width="100"></center>
         <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">Pengaturan Database</h2>
         <form action="" method="post" class="space-y-4" id="myForm">
             <div>
@@ -185,16 +187,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     class="w-full mt-1 p-3 border rounded-lg focus:ring focus:ring-blue-300 outline-none">
             </div>
             <button type="submit" id="submitButton" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-                <span id="buttonText"><i class="ti ti-users"></i> Simpan & Mulai Aplikasi</span>
+                <span id="buttonText"><i class="ti ti-users"></i> Install </span>
                 <center>
                     <div id="loadingSpinner" class="hidden loader"></div>
                 </center>
-            
+
             </button>
         </form>
+        <center> <br> <p>&copy; <span id="year"></span> Absensi Sakti. All rights reserved.</p></center>
     </div>
+    <br>
 
-  
-  
+
 </body>
 </html>

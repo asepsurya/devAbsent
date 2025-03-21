@@ -109,13 +109,18 @@ class rfidController extends Controller
                             $nama = $a->nama;
                         }
                     }
-                    return response()->json([
-                        'waktu'=>Carbon::parse(now())->translatedFormat('d/m/Y'),
-                        'nama'=>$nama,
-                        'uid'=>$item->id_rfid,
-                        'status'=>$status,
+                    if(request('type') == 'device1'){
+                        return redirect()->route('index');
+                    }else{
+                        return response()->json([
+                            'waktu'=>Carbon::parse(now())->translatedFormat('d/m/Y'),
+                            'nama'=>$nama,
+                            'uid'=>$item->id_rfid,
+                            'status'=>$status,
 
-                    ]);
+                        ]);
+                    }
+
                 }
             }
         } else {
@@ -138,6 +143,7 @@ class rfidController extends Controller
                 return [
                     'nama'=>$item->gtk->nama,
                     'id' =>$item->gtk->id_rfid,
+                    'uid' =>$item->gtk->nik,
                     'foto' =>$item->gtk->gambar,
                     'jam' =>$item->time,
 
@@ -146,6 +152,7 @@ class rfidController extends Controller
                 return [
                     'nama'=>$item->student->nama,
                     'id' =>$item->student->id_rfid,
+                    'uid' =>$item->student->nis,
                     'foto' =>$item->student->foto,
                     'jam' =>$item->time,
                 ];
