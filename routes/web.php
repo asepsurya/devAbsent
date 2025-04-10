@@ -31,6 +31,7 @@ use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\plugin\EventController;
 use App\Http\Controllers\verifikasiUserController;
+use App\Http\Controllers\setelanHari\setelanHariController;
 
 // Plugin Controller ---------------------------------------------
 use App\Http\Controllers\plugin\config\pluginController;
