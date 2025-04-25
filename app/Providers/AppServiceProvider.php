@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Setting;
 use App\Models\TahunPelajaran;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
@@ -43,6 +44,8 @@ class AppServiceProvider extends ServiceProvider
         }
         
 
+        if (config('app.env') === 'production') { URL::forceScheme('https'); } 
+        
         $updateAvailable = Cache::get('update_available', false); // Mengambil status pembarua
 
         // Gunakan optional() untuk menghindari error jika data tidak ditemukan

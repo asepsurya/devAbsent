@@ -31,6 +31,7 @@ use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\plugin\EventController;
 use App\Http\Controllers\verifikasiUserController;
+use App\Http\Controllers\setelanHari\setelanHariController;
 
 // Plugin Controller ---------------------------------------------
 use App\Http\Controllers\plugin\config\pluginController;
@@ -390,12 +391,3 @@ Route::middleware('auth')->group(function () {
 // -------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------- START PLUGIN INSTALL HERE -------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------------------
-
-// Routes dari Plugin plugin568351
-use App\Http\Controllers\plugin\PluginStudentController;
-Route::middleware('auth')->group(function () {
-    Route::get('/akademik/plugin/import', [PluginStudentController::class, 'dataImport'])->name('dataImport');
-    Route::post('/akademik/datainduk/studentImport', [PluginStudentController::class, 'studentImport'])->name('studentImport');
-    Route::get('/akademik/datainduk/student/import', [PluginStudentController::class, 'studentIndex'])->name('studentIndex');
-});
-// End dari Plugin
