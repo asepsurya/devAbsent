@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -28,107 +28,138 @@
     <!--    Stylesheets-->
     <!-- ===============================================-->
     <style>
-       .scan-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
+        .scan-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
 
         .scan-box {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 200px;
-        height: 200px;
-        transform: translate(-50%, -50%);
-        border: 2px solid lime;
-        box-shadow: 0 0 10px lime;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            transform: translate(-50%, -50%);
+            border: 2px solid lime;
+            box-shadow: 0 0 10px lime;
         }
 
+        .topbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1050;
+            transition: top 0.3s;
+        }
 
-       .nav-link.active {
+        /* Navbar Styling */
+        .navbar {
+            z-index: 1000;
+            background-color: white;
+            transition: margin-top 0.3s;
+        }
+
+        .mt-5 {
+            margin-top: 50px !important;
+        }
+
+        .nav-link.active {
             border-bottom: 3px solid #5F37EF;
-            border-radius: 0.375rem; /* rounded-md */
+            border-radius: 0.375rem;
+            /* rounded-md */
         }
-         body {
-            
+
+        body {
+
             font-family: 'Inter', sans-serif;
         }
+
         .media-fixed-size {
             width: 100%;
-            height: 300px; /* Atur tinggi sesuai kebutuhan */
-            object-fit: cover; /* Agar gambar/video mengisi kotak dengan baik */
+            height: 300px;
+            /* Atur tinggi sesuai kebutuhan */
+            object-fit: cover;
+            /* Agar gambar/video mengisi kotak dengan baik */
             border-radius: 8px;
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-            }
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
     </style>
     <link href="{{ asset('landing/css/theme.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
     <link rel="stylesheet" href="{{ asset('asset/css/customlanding.css') }}">
     <style>
-      /* Gallery style */
-      .instagram-feed {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-          gap: 16px;
-          margin: 0 auto;
-          padding: 20px;
-          max-width: 1000px;
-      }
-      .post {
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          overflow: hidden;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      .post img {
-          width: 100%;
-          height: auto;
-          display: block;
-      }
-      .post p {
-          padding: 10px;
-          font-size: 14px;
-          color: #333;
-          margin: 0;
-          text-align: center;
-      }
-      .post a {
-          display: block;
-      }
-  </style>
-  </head>
-  <body>
+        /* Gallery style */
+        .instagram-feed {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1000px;
+        }
+
+        .post {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .post p {
+            padding: 10px;
+            font-size: 14px;
+            color: #333;
+            margin: 0;
+            text-align: center;
+        }
+
+        .post a {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
     <!-- ===============================================-->
     <!--    Main Content-->
     <!-- ===============================================-->
-    
+
     <main class="main" id="top">
-      
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top nav user-menu" data-navbar-on-scroll="data-navbar-on-scroll" >
-            
+        <div id="topbar" class="topbar py-1 text-center text-white bg-primary">
+            <small>🔔 Info penting di sini — promo diskon 50% sampai besok!</small>
+            <button class="btn-close btn-close-white" id="closeTopbar" aria-label="Close"></button>
+        </div>
+        <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light fixed-top nav user-menu mt-5" data-navbar-on-scroll="data-navbar-on-scroll">
+
             <div class="container-fluid">
-        
+
                 {{-- Logo --}}
                 <a class="navbar-brand d-flex align-items-center" href="/">
-                    <img src="{{ !empty(app('settings')['site_logo']) ? asset('storage/' . app('settings')['site_logo']) : asset('asset/img/default-logo.png') }}" alt="Logo" width="50px"/>
+                    <img src="{{ !empty(app('settings')['site_logo']) ? asset('storage/' . app('settings')['site_logo']) : asset('asset/img/default-logo.png') }}" alt="Logo" width="50px" />
                     <h5 class="mb-0 ms-2 mt-1">{{ app('settings')['site_name'] }}</h5>
                 </a>
-        
+
                 {{-- Toggler (Mobile) --}}
-                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-        
+
                 {{-- Navbar Right Side --}}
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto align-items-lg-center gap-3 "> {{-- fs-5 = ukuran font ideal --}}
-                        
-                       {{-- Menu Navigasi --}}
+
+                        {{-- Menu Navigasi --}}
                         <li class="nav-item">
                             <a class="nav-link px-2" href="#section1">
                                 <i class="ti ti-home me-1"></i> Beranda
@@ -154,7 +185,7 @@
                                 <i class="ti ti-photo me-1"></i> Dokumentasi
                             </a>
                         </li>
-                
+
                         {{-- Login / Profil User --}}
                         @if(auth()->user())
                         <li class="nav-item ps-2 d-block d-md-none">
@@ -166,27 +197,27 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center px-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 @php
-                                    $userImg = asset('asset/img/user-default.jpg');
-                                    if(auth()->user()->role == 'siswa' && Auth::user()->student?->foto) {
-                                        $userImg = asset('storage/' . Auth::user()->student->foto);
-                                    } elseif(in_array(auth()->user()->role, ['guru', 'walikelas']) && Auth::user()->gtk?->gambar) {
-                                        $userImg = asset('storage/' . Auth::user()->gtk->gambar);
-                                    }
+                                $userImg = asset('asset/img/user-default.jpg');
+                                if(auth()->user()->role == 'siswa' && Auth::user()->student?->foto) {
+                                $userImg = asset('storage/' . Auth::user()->student->foto);
+                                } elseif(in_array(auth()->user()->role, ['guru', 'walikelas']) && Auth::user()->gtk?->gambar) {
+                                $userImg = asset('storage/' . Auth::user()->gtk->gambar);
+                                }
                                 @endphp
                                 <img src="{{ $userImg }}" class="rounded-circle me-2" width="36" height="36" alt="User">
                                 {{-- <span class="fw-semibold">{{ auth()->user()->nama }}</span> --}}
                             </a>
-                        
+
                             <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm" aria-labelledby="userDropdown">
                                 @php
-                                    $role = auth()->user()->role;
-                                    $link = match($role) {
-                                        'admin' => route('dashboard.admin'),
-                                        'walikelas' => route('dashboard.walikelas'),
-                                        'superadmin' => route('dashboard.superadmin'),
-                                        'guru' => route('dashboard.teacher'),
-                                        default => route('dashboard.student')
-                                    };
+                                $role = auth()->user()->role;
+                                $link = match($role) {
+                                'admin' => route('dashboard.admin'),
+                                'walikelas' => route('dashboard.walikelas'),
+                                'superadmin' => route('dashboard.superadmin'),
+                                'guru' => route('dashboard.teacher'),
+                                default => route('dashboard.student')
+                                };
                                 @endphp
                                 <li>
                                     <a class="dropdown-item" href="{{ $link }}">
@@ -200,7 +231,9 @@
                                     </a>
                                 </li>
                                 @endif
-                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
                                 <li>
                                     <form action="{{ route('logout') }}" method="post" class="dropdown-item m-0 p-0">
                                         @csrf
@@ -211,54 +244,54 @@
                                 </li>
                             </ul>
                         </li>
-                        
+
                         <li class="nav-item ps-2 d-none d-md-block">
                             <a href="#" data-bs-toggle="modal" data-bs-target="#barcodeModal">
                                 <img src="{{ asset('landing/img/qr.webp') }}" alt="" width="30">
                             </a>
                         </li>
-                        
-                       
+
+
                         @else
                         {{-- Tombol Login --}}
-                       
+
                         <li class="nav-item">
                             <a class="btn btn-primary btn-sm px-3 py-2 fw-semibold ms-2 shadow-sm" href="/login" role="button">
                                 Login Aplikasi
                             </a>
                         </li>
-                        
-                        
+
+
                         @endif
-                        
+
                     </ul>
                 </div>
-                
+
             </div>
         </nav>
-        
-      <section class="py-0 bg-light-gradient" id="section1">
-        <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:contain;">
-        </div>
 
-   
-          
-        <!--/.bg-holder-->
-
-        <div class="container">
-
-          <div class="row align-items-center">
-
-            <div class="col-lg-6 col-md-5 order-md-1 pt-7">
-                <img class="img-fluid" src="{{ asset('landing/img/illustrations/hero.png') }}" alt="">
-                {{-- <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script><dotlottie-player src="https://lottie.host/a08fe931-1e93-4930-b4b0-714be508f0fc/XZEEsrlaoz.json" background="transparent" speed="1" style="width: 600px; height: 600px" direction="-1" playMode="bounce" loop autoplay></dotlottie-player> --}}
+        <section class="py-0 bg-light-gradient" id="section1">
+            <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:contain;">
             </div>
-          
-            <div class="col-md-7 col-lg-6 text-center text-md-start pt-7">
-                
-                <h4 class="mb-3"><span class="ti ti-calendar-due"></span> {{ Carbon\Carbon::parse(now())->translatedFormat('l, d F Y') }} | <span id="jam" class="text-muted"></span> </h4>
-                <h1 class="display-2 fw-bold fs-4 fs-md-5 fs-xl-6  " style="line-height: 1.2;">Absensi Pintar,  <br>Kerja lebih Cerdas.</h1>
-                <h5 class=" typewrite pb-3 text-muted" data-period="1000" data-type='[
+
+
+
+            <!--/.bg-holder-->
+
+            <div class="container">
+
+                <div class="row align-items-center">
+
+                    <div class="col-lg-6 col-md-5 order-md-1 " style="padding-top:150px;">
+                        <img class="img-fluid" src="{{ asset('landing/img/illustrations/hero.png') }}" alt="">
+                        {{-- <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script><dotlottie-player src="https://lottie.host/a08fe931-1e93-4930-b4b0-714be508f0fc/XZEEsrlaoz.json" background="transparent" speed="1" style="width: 600px; height: 600px" direction="-1" playMode="bounce" loop autoplay></dotlottie-player> --}}
+                    </div>
+
+                    <div class="col-md-7 col-lg-6 text-center text-md-start pt-7">
+
+                        <h4 class="mb-3"><span class="ti ti-calendar-due"></span> {{ Carbon\Carbon::parse(now())->translatedFormat('l, d F Y') }} | <span id="jam" class="text-muted"></span> </h4>
+                        <h1 class="display-2 fw-bold fs-4 fs-md-5 fs-xl-6  " style="line-height: 1.2;">Absensi Pintar, <br>Kerja lebih Cerdas.</h1>
+                        <h5 class=" typewrite pb-3 text-muted" data-period="1000" data-type='[
                         "Selamat datang di Absensi Pintar! Semoga hari Anda menyenangkan.",
                         "Hallo, apa kabar? Semoga harimu produktif!",
                         "Apakah Anda sudah absen hari ini? Jangan lupa untuk mengisi absen ya!",
@@ -266,109 +299,109 @@
                         "Selamat datang! Ayo, absensi hari ini sudah terisi?"
                     ]
                     '></h5>
-                <div class=" mb-2 mt-2">
-                        <div id="info"></div>
-                        <div class="mb-3" hidden>
-                            <label class="form-label">UID :</label>
-                            <select name="id_rfid" id="id_rfid" class="form-control" disabled></select>
-                            <label class="form-label my-3">Nama Lengkap :</label>
-                            <input type="text" class="form-control " id="nama"  disabled>
+                        <div class=" mb-2 mt-2">
+                            <div id="info"></div>
+                            <div class="mb-3" hidden>
+                                <label class="form-label">UID :</label>
+                                <select name="id_rfid" id="id_rfid" class="form-control" disabled></select>
+                                <label class="form-label my-3">Nama Lengkap :</label>
+                                <input type="text" class="form-control " id="nama" disabled>
 
-                        </div>
+                            </div>
 
-                        <center><label><span class="ti ti-history"></span> Riwayat Absensi</label></center>
-                        <div class="table-responsive bg-white scrollme">
-                            <table class="table table-nowrap mb-0 table-fixed"  >
-                                <thead>
-                                    <tr >
-                                        <th class="bg-light-400"> <span class="ti ti-calendar-event"></span> Tanggal</th>
-                                        <th class="bg-light-400"> <span class="ti ti-users"></span> Nama Lengkap</th>
-                                        <th class="bg-light-400">Status</th>
+                            <center><label><span class="ti ti-history"></span> Riwayat Absensi</label></center>
+                            <div class="table-responsive bg-white scrollme">
+                                <table class="table table-nowrap mb-0 table-fixed">
+                                    <thead>
+                                        <tr>
+                                            <th class="bg-light-400"> <span class="ti ti-calendar-event"></span> Tanggal</th>
+                                            <th class="bg-light-400"> <span class="ti ti-users"></span> Nama Lengkap</th>
+                                            <th class="bg-light-400">Status</th>
 
-                                    </tr>
-                                </thead>
+                                        </tr>
+                                    </thead>
 
                                     <tbody id="myData"></tbody>
                                     <div id="loadingSpinner" class="mt-2" style="display:none;">
                                         <center><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading data...</center>
-                                      </div>
-                            </table>
-                        </div>
-                        <!-- Loading Spinner (Hidden by default) -->
+                                    </div>
+                                </table>
+                            </div>
+                            <!-- Loading Spinner (Hidden by default) -->
 
+                        </div>
+                    </div>
+
+                    {{-- <a class="btn btn-lg btn-info rounded-pill me-2" href="#" role="button">Start a New Store </a><span> or  </span><a class="btn btn-link ps-1 ps-md-4 ps-lg-1" href="#" role="button"> Customize &amp; Extend ›</a> --}}
+                </div>
+            </div>
+            </div>
+        </section>
+
+
+        <!-- ============================================-->
+        <!-- <section> begin ============================-->
+        <section class="py-6" id="section2">
+
+            <div class="container">
+                <div class="row flex-center">
+                    <div class="col-auto text-center my-">
+                        <h1 class="display-3 fw-bold">Berita Terbaru</h1>
                     </div>
                 </div>
 
-              {{-- <a class="btn btn-lg btn-info rounded-pill me-2" href="#" role="button">Start a New Store </a><span> or  </span><a class="btn btn-link ps-1 ps-md-4 ps-lg-1" href="#" role="button"> Customize &amp; Extend ›</a> --}}
-            </div>
-          </div>
-        </div>
-      </section>
+
+                <div class="row">
+                    @if (!empty($feed->data) && count($feed->data) > 0)
+                    @foreach($feed->data as $index => $post)
+                    @if ($index < 3) <!-- Limit to 3 posts -->
+                        <div class="col-md-4 mb-5 mb-md-0">
+                            <!-- Check if the media is an image or a video -->
+                            @if(Str::contains($post->media_url, '.mp4') || Str::contains($post->media_url, '.mov'))
+                            <!-- If it's a video -->
+                            <video class="media-fixed-size" controls>
+                                <source src="{{ $post->media_url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            @else
+                            <!-- If it's an image -->
+                            <img class="media-fixed-size" src="{{ $post->media_url }}" alt="" loading="lazy" />
+                            @endif
+
+                            <div class="mt-3 text-center text-md-start">
+                                <h5 class="display-6 fs-2 fw-bold">
+                                    <!-- Display the username -->
+                                    @ {{ $username }}
+                                </h5>
+                                <p class="mb-0">{{ \Illuminate\Support\Str::limit($post->caption, 100) }}</p>
+                                <a class="btn btn-link ps-0" href="{{ $post->permalink }}" target="_BLANK" role="button"> Lebih Lanjut... ›</a>
+                            </div>
+                        </div>
+
+                        @endif
+                        @endforeach
+                        @else
+                        @if(isset($feed->error) && $feed->error->code == 400)
+                        <div class="col-12 text-center">
+                            <p class="h4 text-danger">Akses tidak dijinkan atau kode autentikasi salah. Coba lagi nanti.</p>
+                        </div>
+                        @else
+                        <div class="col-12 text-center">
+                            <p class="h4 text-danger">Data tidak ditemukan atau terjadi kesalahan. Coba lagi nanti.</p>
+                        </div>
+                        @endif
+                        @endif
 
 
-      <!-- ============================================-->
-      <!-- <section> begin ============================-->
-      <section class="py-6" id="section2">
 
-        <div class="container">
-          <div class="row flex-center">
-            <div class="col-auto text-center my-">
-              <h1 class="display-3 fw-bold">Berita Terbaru</h1>
-            </div>
-          </div>
-
-
-          <div class="row">
-            @if (!empty($feed->data) && count($feed->data) > 0)
-            @foreach($feed->data as $index => $post)
-            @if ($index < 3) <!-- Limit to 3 posts -->
-            <div class="col-md-4 mb-5 mb-md-0">
-                <!-- Check if the media is an image or a video -->
-                @if(Str::contains($post->media_url, '.mp4') || Str::contains($post->media_url, '.mov'))
-                <!-- If it's a video -->
-                    <video class="media-fixed-size" controls>
-                        <source src="{{ $post->media_url }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                @else
-                    <!-- If it's an image -->
-                    <img class="media-fixed-size" src="{{ $post->media_url }}" alt="" loading="lazy"/>
-                @endif
-                
-                <div class="mt-3 text-center text-md-start">
-                    <h5 class="display-6 fs-2 fw-bold">
-                        <!-- Display the username -->
-                        @ {{ $username }}
-                    </h5>
-                    <p class="mb-0">{{ \Illuminate\Support\Str::limit($post->caption, 100) }}</p>
-                    <a class="btn btn-link ps-0" href="{{ $post->permalink }}" target="_BLANK" role="button"> Lebih Lanjut... ›</a>
                 </div>
-            </div>
+            </div><!-- end of .container-->
 
-                @endif
-                @endforeach
-                @else
-                @if(isset($feed->error) && $feed->error->code == 400)
-                <div class="col-12 text-center">
-                    <p class="h4 text-danger">Akses tidak dijinkan atau kode autentikasi salah. Coba lagi nanti.</p>
-                </div>
-                @else
-                <div class="col-12 text-center">
-                    <p class="h4 text-danger">Data tidak ditemukan atau terjadi kesalahan. Coba lagi nanti.</p>
-                </div>
-                @endif
-                @endif
+        </section>
+        <!-- <section> close ============================-->
+        <!-- ============================================-->
 
-
-
-          </div>
-        </div><!-- end of .container-->
-
-      </section>
-      <!-- <section> close ============================-->
-      <!-- ============================================-->
-
-      {{-- <section class="bg-100 pb-0 mb-0" id="section3">
+        {{-- <section class="bg-100 pb-0 mb-0" id="section3">
         <div class="container">
           <div class="row flex-center">
             <div class="col-xl-5 text-center mb-5 z-index-1">
@@ -382,104 +415,105 @@
           <!--/.bg-holder-->
           <img class="img-fluid position-relative z-index-1" src="{{ asset('landing/img/gallery/people.png') }}" alt="" />
         </div>
-      </section> --}}
+        </section> --}}
 
-      <section class="py-0">
+        <section class="py-0">
 
-        <!--/.bg-holder-->
+            <!--/.bg-holder-->
 
-        <div class="container-fluid px-0" style="margin-bottom:-40px">
-          <div class="card py-4 border-0 rounded-0 bg-primary">
-            <div class="card-body">
-              <div class="row flex-center">
-                <div class="col-xl-9 d-flex justify-content-center  mb-xl-0">
-                  <h2 class="text-light fw-bold">Track Attendance Effortlessly with Modern Technology.<br />A Modern Approach to Seamless Attendance</h2>
+            <div class="container-fluid px-0" style="margin-bottom:-40px">
+                <div class="card py-4 border-0 rounded-0 bg-primary">
+                    <div class="card-body">
+                        <div class="row flex-center">
+                            <div class="col-xl-9 d-flex justify-content-center  mb-xl-0">
+                                <h2 class="text-light fw-bold">Track Attendance Effortlessly with Modern Technology.<br />A Modern Approach to Seamless Attendance</h2>
+                            </div>
+                            <div class="col-xl-3 text-center"><a class="btn btn-lg btn-outline-light rounded-pill" href="/login">GET STARTED</a></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-xl-3 text-center"><a class="btn btn-lg btn-outline-light rounded-pill" href="/login">GET STARTED</a></div>
-              </div>
             </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- ============================================-->
-      <!-- <section> begin ============================-->
+        <!-- ============================================-->
+        <!-- <section> begin ============================-->
 
-      <section class=" pt-0 pb-0" style="background-color: #421ec0; color: white;">
-        <div class="container">
-          <div class="row flex-center">
+        <section class=" pt-0 pb-0" style="background-color: #421ec0; color: white;">
+            <div class="container">
+                <div class="row flex-center">
 
-          </div>
-          {{-- <div class="row flex-center">
-            <div class="col-auto py-4"><a href="#"><img class="img-fluid" src="{{ asset('asset/img/logo-white.png') }}" alt="" width="200" /></a></div>
-          </div> --}}
-          {{-- <hr class="opacity-25" /> --}}
-         <div class="d-flex justify-content-center py-3">
-            <p>&copy; <span id="year"></span> Absensi Sakti. All rights reserved.</p>
-         </div>
-        </div><!-- end of .container-->
+                </div>
+                {{-- <div class="row flex-center">
+            <div class="col-auto py-4"><a href="#"><img class="img-fluid" src="{{ asset('asset/img/logo-white.png') }}" alt="" width="200" /></a>
+            </div>
+            </div> --}}
+            {{-- <hr class="opacity-25" /> --}}
+            <div class="d-flex justify-content-center py-3">
+                <p>&copy; <span id="year"></span> Absensi Sakti. All rights reserved.</p>
+            </div>
+            </div><!-- end of .container-->
 
-      </section>
-      <!-- <section> close ============================-->
-      <!-- ============================================-->
-
+        </section>
+        <!-- <section> close ============================-->
+        <!-- ============================================-->
 
 
-      <!-- ============================================-->
-      <!-- <section> begin ============================-->
 
-      <!-- <section> close ============================-->
-      <!-- ============================================-->
+        <!-- ============================================-->
+        <!-- <section> begin ============================-->
+
+        <!-- <section> close ============================-->
+        <!-- ============================================-->
 
     </main>
     <!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->
-   
-  <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-    <div class="modal-content">
-      <div class="modal-header  ">
-        <h5 class="modal-title" id="exampleModalLabel">Absensi Berhasil</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body " id="modalBody" >
-        ...
-    
 
-      </div>
-      
-    </div>
-  </div>
-</div>
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header  ">
+                    <h5 class="modal-title" id="exampleModalLabel">Absensi Berhasil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body " id="modalBody">
+                    ...
 
-<!-- Modal -->
-<div class="modal fade" id="barcodeModal" tabindex="-1" aria-labelledby="barcodeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Scan QR Code</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                </div>
+
+            </div>
         </div>
-        <div class="modal-body position-relative">
-          <video id="video" class="w-100 rounded" autoplay></video>
-  
-          <!-- Kotak Fokus -->
-          <div class="scan-overlay">
-            <div class="scan-box"></div>
-          </div>
-  
-          <div class="mt-3 text-center">
-            <div id="message" class="text-muted">Arahkan QR code ke kotak...</div>
-            <div id="result" class="fw-bold text-success mt-2"></div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-  
+
+    <!-- Modal -->
+    <div class="modal fade" id="barcodeModal" tabindex="-1" aria-labelledby="barcodeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Scan QR Code</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body position-relative">
+                    <video id="video" class="w-100 rounded" autoplay></video>
+
+                    <!-- Kotak Fokus -->
+                    <div class="scan-overlay">
+                        <div class="scan-box"></div>
+                    </div>
+
+                    <div class="mt-3 text-center">
+                        <div id="message" class="text-muted">Arahkan QR code ke kotak...</div>
+                        <div id="result" class="fw-bold text-success mt-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ===============================================-->
     <!--    JavaScripts-->
     <!-- ===============================================-->
@@ -488,393 +522,448 @@
     {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> --}}
     <script src="{{ asset('landing/vendors/is/is.min.js') }}"></script>
     <script src="{{ asset('landing/js/theme.js') }}"></script>
-   
-    
-     <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
-   
+
+
+    <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <script>
-let scanning = true;
-let lastScanTime = 0;
+        window.addEventListener('scroll', function() {
+            const topbar = document.getElementById('topbar');
+            const navbar = document.getElementById('mainNavbar');
 
-// Akses elemen video dan result
-const video = document.getElementById('video');
-const resultElement = document.getElementById('result');
-const messageElement = document.getElementById('message');
+            if (window.scrollY > 50) {
+                topbar.style.top = "-50px"; // hide topbar
+                navbar.classList.remove('mt-5'); // hilangkan margin-top navbar
+            } else {
+                topbar.style.top = "0"; // tampilkan topbar
+                navbar.classList.add('mt-5'); // kasih margin-top navbar
+            }
+        });
+        document.getElementById('closeTopbar').addEventListener('click', function() {
+            const topbar = document.getElementById('topbar');
+            const navbar = document.getElementById('mainNavbar');
 
-// Fungsi untuk memulai scan menggunakan webcam
-function startScanner() {
-  // Meminta izin untuk menggunakan kamera
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-    .then(stream => {
-      video.srcObject = stream;
-      video.setAttribute("playsinline", true); // Untuk iPhone
-      video.play();
-      requestAnimationFrame(scanBarcode);
-    })
-    .catch(err => {
-      messageElement.textContent = "Gagal mengakses kamera: " + err.message;
-    });
-}
+            topbar.style.display = 'none';
 
-// Fungsi untuk memindai QR Code
-function scanBarcode() {
-  const currentTime = Date.now();
-  // Batasi pemindaian setiap 100ms
-  if (currentTime - lastScanTime < 100) {
-    requestAnimationFrame(scanBarcode);
-    return;
-  }
+            
+           // Hapus class mt-5 dari navbar
+            navbar.classList.remove('mt-5');
+        });
 
-  lastScanTime = currentTime;
+        // aktifkan link saat scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
 
-  if (video.videoWidth === 0 || video.videoHeight === 0) {
-    requestAnimationFrame(scanBarcode);
-    return;
-  }
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 60) {
+                    current = section.getAttribute('id');
+                }
+            });
 
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
-
-  // Mengurangi resolusi agar pemindaian lebih cepat
-  const downscaleFactor = 0.5;
-  canvas.width = video.videoWidth * downscaleFactor;
-  canvas.height = video.videoHeight * downscaleFactor;
-
-  // Menggambar gambar video pada canvas
-  context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  // Tentukan ukuran dan posisi area yang akan dipindai (kotak hijau)
-  const scanWidth = 220;
-  const scanHeight = 220;
-  const scanX = (canvas.width - scanWidth) / 2;
-  const scanY = (canvas.height - scanHeight) / 2;
-
-  // Ambil data gambar dari area yang ditentukan
-  const imageData = context.getImageData(scanX, scanY, scanWidth, scanHeight);
-
-  // Coba scan barcode menggunakan jsQR
-  const code = jsQR(imageData.data, scanWidth, scanHeight, {
-    inversionAttempts: "dontInvert",
-  });
-
-  if (code) {
-    resultElement.textContent = code.data; // Menampilkan hasil barcode
-    scanning = false; // Hentikan pemindaian
-    video.srcObject.getTracks().forEach(track => track.stop()); // Stop webcam
-  } else {
-    messageElement.textContent = "Mencari QR code...";
-    requestAnimationFrame(scanBarcode); // Lanjutkan pemindaian
-  }
-}
-
-// Start scanner ketika modal dibuka
-$('#barcodeModal').on('shown.bs.modal', function () {
-  startScanner();
-});
-
-// Hentikan scan saat modal ditutup
-$('#barcodeModal').on('hidden.bs.modal', function () {
-  const stream = video.srcObject;
-  const tracks = stream.getTracks();
-  tracks.forEach(track => track.stop());
-});
-
-
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
 
     </script>
     <script>
-        
-         document.getElementById('year').textContent = new Date().getFullYear();
+        let scanning = true;
+        let lastScanTime = 0;
+
+        // Akses elemen video dan result
+        const video = document.getElementById('video');
+        const resultElement = document.getElementById('result');
+        const messageElement = document.getElementById('message');
+
+        // Fungsi untuk memulai scan menggunakan webcam
+        function startScanner() {
+            // Meminta izin untuk menggunakan kamera
+            navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: "environment"
+                    }
+                })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.setAttribute("playsinline", true); // Untuk iPhone
+                    video.play();
+                    requestAnimationFrame(scanBarcode);
+                })
+                .catch(err => {
+                    messageElement.textContent = "Gagal mengakses kamera: " + err.message;
+                });
+        }
+
+        // Fungsi untuk memindai QR Code
+        function scanBarcode() {
+            const currentTime = Date.now();
+            // Batasi pemindaian setiap 100ms
+            if (currentTime - lastScanTime < 100) {
+                requestAnimationFrame(scanBarcode);
+                return;
+            }
+
+            lastScanTime = currentTime;
+
+            if (video.videoWidth === 0 || video.videoHeight === 0) {
+                requestAnimationFrame(scanBarcode);
+                return;
+            }
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            // Mengurangi resolusi agar pemindaian lebih cepat
+            const downscaleFactor = 0.5;
+            canvas.width = video.videoWidth * downscaleFactor;
+            canvas.height = video.videoHeight * downscaleFactor;
+
+            // Menggambar gambar video pada canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Tentukan ukuran dan posisi area yang akan dipindai (kotak hijau)
+            const scanWidth = 220;
+            const scanHeight = 220;
+            const scanX = (canvas.width - scanWidth) / 2;
+            const scanY = (canvas.height - scanHeight) / 2;
+
+            // Ambil data gambar dari area yang ditentukan
+            const imageData = context.getImageData(scanX, scanY, scanWidth, scanHeight);
+
+            // Coba scan barcode menggunakan jsQR
+            const code = jsQR(imageData.data, scanWidth, scanHeight, {
+                inversionAttempts: "dontInvert"
+            , });
+
+            if (code) {
+                resultElement.textContent = code.data; // Menampilkan hasil barcode
+                scanning = false; // Hentikan pemindaian
+                video.srcObject.getTracks().forEach(track => track.stop()); // Stop webcam
+            } else {
+                messageElement.textContent = "Mencari QR code...";
+                requestAnimationFrame(scanBarcode); // Lanjutkan pemindaian
+            }
+        }
+
+        // Start scanner ketika modal dibuka
+        $('#barcodeModal').on('shown.bs.modal', function() {
+            startScanner();
+        });
+
+        // Hentikan scan saat modal ditutup
+        $('#barcodeModal').on('hidden.bs.modal', function() {
+            const stream = video.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+        });
+
+    </script>
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
         function menuToggle() {
-          const toggleMenu = document.querySelector(".menu");
-          toggleMenu.classList.toggle("active");
+            const toggleMenu = document.querySelector(".menu");
+            toggleMenu.classList.toggle("active");
         }
-      </script>
 
-<script>
-let modalOpen = false;  // Flag to track if the modal is open
-let lastData = null; // To track the last data to compare with new data
+    </script>
 
-function refreshdata() {
-    // Fetch updated RFID data
-    $.ajax({
-        url: "{{ route('rfidDataGET') }}",
-        method: "GET",
-        cache: false,
-        success: function (data) {
-            $('#id_rfid').html(data);
-        }
-    });
+    <script>
+        let modalOpen = false; // Flag to track if the modal is open
+        let lastData = null; // To track the last data to compare with new data
 
-    let id_rfid = $('#id_rfid').val();
-    var e = document.getElementById("id_rfid");
+        function refreshdata() {
+            // Fetch updated RFID data
+            $.ajax({
+                url: "{{ route('rfidDataGET') }}"
+                , method: "GET"
+                , cache: false
+                , success: function(data) {
+                    $('#id_rfid').html(data);
+                }
+            });
 
-    function onChange() {
-        var value = e.value;
+            let id_rfid = $('#id_rfid').val();
+            var e = document.getElementById("id_rfid");
 
-        // Fetch data based on the RFID value
-        $.ajax({
-            url: "{{ route('rfidData') }}",
-            method: "GET",
-            cache: false,
-            data: { id_rfid: id_rfid },
-            success: function (data) {
-                // Update name field with the received data
-                $('#nama').val(data.nama);
+            function onChange() {
+                var value = e.value;
 
-                // Check if the new data is different from the last data
-                if (data && JSON.stringify(data) !== JSON.stringify(lastData)) {
-                    // Only open the modal if it's not already open
-                    if (!modalOpen) {
-                        // Play text-to-voice message before showing the modal
-                        // Show the modal after the voice message is played
-                        setTimeout(() => {
-                            $('#successModal').modal('show');
-                            modalOpen = true; // Set flag to true since the modal is shown
+                // Fetch data based on the RFID value
+                $.ajax({
+                    url: "{{ route('rfidData') }}"
+                    , method: "GET"
+                    , cache: false
+                    , data: {
+                        id_rfid: id_rfid
+                    }
+                    , success: function(data) {
+                        // Update name field with the received data
+                        $('#nama').val(data.nama);
 
-                            // Dynamically insert data into modal body
-                            $('#modalBody').html(
-                            '<div class="d-flex justify-content-center mb-3">' +
-                                // Check if 'data.foto' is not null or undefined
-                                (data.foto ?
-                                    `<img src="{{ asset('storage') }}/${data.foto}" class="avatar me-4 avatar-rounded" style="width: 150px; height: 150px;" alt="foto">` :
-                                    `<img src="{{ asset('asset/img/user-default.jpg') }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto">`
-                                ) +
+                        // Check if the new data is different from the last data
+                        if (data && JSON.stringify(data) !== JSON.stringify(lastData)) {
+                            // Only open the modal if it's not already open
+                            if (!modalOpen) {
+                                // Play text-to-voice message before showing the modal
+                                // Show the modal after the voice message is played
+                                setTimeout(() => {
+                                    $('#successModal').modal('show');
+                                    modalOpen = true; // Set flag to true since the modal is shown
 
-                            '</div>' +
-                            '<div class="p-3">' +
-                                '<div class="mb-3"><label>NIS</label><input class="form-control" value="' + data.id + '" disabled></div>' +
-                                '<div class="mb-3"><label>Nama Lengkap</label><input class="form-control" value="' + data.nama + '" disabled></div>' +
-                                '<div class="mb-3"><label>Sudah Absen pada Pukul</label>'+
-                                    '<p><h1>'+data.jam+'</h1></p>'+
+                                    // Dynamically insert data into modal body
+                                    $('#modalBody').html(
+                                        '<div class="d-flex justify-content-center mb-3">' +
+                                        // Check if 'data.foto' is not null or undefined
+                                        (data.foto ?
+                                            `<img src="{{ asset('storage') }}/${data.foto}" class="avatar me-4 avatar-rounded" style="width: 150px; height: 150px;" alt="foto">` :
+                                            `<img src="{{ asset('asset/img/user-default.jpg') }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto">`
+                                        ) +
 
-                                '<div class="countdown">' +
-                                    '<small><i>Halaman ini akan ditutup secara otomatis dalam ' +
-                                    '<span id="countdownNumber">3</span> detik</i></small>' +
-                                '</div>' +
-                            '</div>'
-                        );
+                                        '</div>' +
+                                        '<div class="p-3">' +
+                                        '<div class="mb-3"><label>NIS</label><input class="form-control" value="' + data.id + '" disabled></div>' +
+                                        '<div class="mb-3"><label>Nama Lengkap</label><input class="form-control" value="' + data.nama + '" disabled></div>' +
+                                        '<div class="mb-3"><label>Sudah Absen pada Pukul</label>' +
+                                        '<p><h1>' + data.jam + '</h1></p>' +
 
-                        // Countdown Timer Logic
-                        let countdown = 3; // Countdown time in seconds
-                        let countdownInterval = setInterval(function() {
-                            countdown--; // Decrease the countdown value by 1
-                            $('#countdownNumber').text(countdown); // Update the countdown number on the page
+                                        '<div class="countdown">' +
+                                        '<small><i>Halaman ini akan ditutup secara otomatis dalam ' +
+                                        '<span id="countdownNumber">3</span> detik</i></small>' +
+                                        '</div>' +
+                                        '</div>'
+                                    );
 
-                            if (countdown <= 0) {
-                                clearInterval(countdownInterval); // Stop the interval when the countdown reaches 0
-                                $('#myModal').modal('hide'); // Assuming you're using Bootstrap for the modal
+                                    // Countdown Timer Logic
+                                    let countdown = 3; // Countdown time in seconds
+                                    let countdownInterval = setInterval(function() {
+                                        countdown--; // Decrease the countdown value by 1
+                                        $('#countdownNumber').text(countdown); // Update the countdown number on the page
+
+                                        if (countdown <= 0) {
+                                            clearInterval(countdownInterval); // Stop the interval when the countdown reaches 0
+                                            $('#myModal').modal('hide'); // Assuming you're using Bootstrap for the modal
+                                        }
+                                    }, 1000); // Run the interval every 1 second
+
+
+
+                                    // Update the lastData to the new data
+                                    lastData = data;
+                                    // playTextToVoice(`Selamat datang, ${data.nama}. Terimakasih sudah absen hari ini.`);
+                                    // Hide modal after 10 seconds
+                                    setTimeout(function() {
+                                        $('#successModal').modal('hide');
+                                        modalOpen = false; // Reset the flag as the modal is hidden
+                                    }, 10000); // 10000 milliseconds = 10 seconds
+                                }); // Wait for the voice to start before showing the modal
                             }
-                        }, 1000); // Run the interval every 1 second
-
-
-
-                            // Update the lastData to the new data
-                            lastData = data;
-                           // playTextToVoice(`Selamat datang, ${data.nama}. Terimakasih sudah absen hari ini.`);
-                            // Hide modal after 10 seconds
-                            setTimeout(function () {
+                        } else {
+                            // If data is the same or no data, hide the modal if it's open
+                            if (modalOpen) {
                                 $('#successModal').modal('hide');
                                 modalOpen = false; // Reset the flag as the modal is hidden
-                            }, 10000); // 10000 milliseconds = 10 seconds
-                        }); // Wait for the voice to start before showing the modal
+                            }
+                        }
                     }
-                } else {
-                    // If data is the same or no data, hide the modal if it's open
-                    if (modalOpen) {
-                        $('#successModal').modal('hide');
-                        modalOpen = false; // Reset the flag as the modal is hidden
-                    }
-                }
+                });
             }
-        });
-    }
 
-    e.onchange = onChange;
-    onChange();
-}
+            e.onchange = onChange;
+            onChange();
+        }
 
-// Play Text-to-Voice Function
-function playTextToVoice(message) {
-    if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(message);
-        utterance.lang = 'id-ID'; // Indonesian language
-        utterance.pitch = 1; // Normal pitch
-        utterance.rate = 1; // Normal speed
-        window.speechSynthesis.speak(utterance);
-    } else {
-        console.warn("Speech synthesis not supported in this browser.");
-    }
-}
-// Refresh data every 2 seconds
-setInterval(refreshdata, 5000);
-</script>
-<script>
-    $('#loadingSpinner').show();  // Show the loading spinner when the request starts
-    // Function to refresh data
-    function refreshdata2() {
-      var content = "";  // Start with an empty content variable
-      $.ajax({
-        url: "{{ route('listabsents') }}",  // The URL for your AJAX request
-        method: "GET",                      // HTTP method (GET or POST)
-        dataType: "json",                   // Expected data type from server
-        success: function(response) {
-          // Hide the loading spinner when the data is loaded
-          $('#loadingSpinner').hide();
+        // Play Text-to-Voice Function
+        function playTextToVoice(message) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(message);
+                utterance.lang = 'id-ID'; // Indonesian language
+                utterance.pitch = 1; // Normal pitch
+                utterance.rate = 1; // Normal speed
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.warn("Speech synthesis not supported in this browser.");
+            }
+        }
+        // Refresh data every 2 seconds
+        setInterval(refreshdata, 5000);
 
-          if (response.length === 0) {
-            // If no data is returned, show a no data message
-            content += '<tr>' +
-                          '<td colspan="3">' +
+    </script>
+    <script>
+        $('#loadingSpinner').show(); // Show the loading spinner when the request starts
+        // Function to refresh data
+        function refreshdata2() {
+            var content = ""; // Start with an empty content variable
+            $.ajax({
+                url: "{{ route('listabsents') }}", // The URL for your AJAX request
+                method: "GET", // HTTP method (GET or POST)
+                dataType: "json", // Expected data type from server
+                success: function(response) {
+                    // Hide the loading spinner when the data is loaded
+                    $('#loadingSpinner').hide();
+
+                    if (response.length === 0) {
+                        // If no data is returned, show a no data message
+                        content += '<tr>' +
+                            '<td colspan="3">' +
                             '<center><span class="ti ti-mood-confuzed"></span><i> Belum ada riwayat absensi untuk hari ini..</i>' +
-                          '</center>' +
-                        '</td>' +
-                      '</tr>';
-          } else {
-            // Directly update the table with the response data
-            content = '';  // Clear previous content
+                            '</center>' +
+                            '</td>' +
+                            '</tr>';
+                    } else {
+                        // Directly update the table with the response data
+                        content = ''; // Clear previous content
 
-            // We assume 'response' is an array of objects
-            response.forEach(function(item) {
-              var $alert = (item.status === 'ENTRY') ? 'alert alert-success' : 'alert alert-danger';
+                        // We assume 'response' is an array of objects
+                        response.forEach(function(item) {
+                            var $alert = (item.status === 'ENTRY') ? 'alert alert-success' : 'alert alert-danger';
 
-              content += '<tr class="' + $alert + '">';
-              content += '<td>' + item.date + ' <span class="ti ti-clock-hour-1"></span> ' + item.time + '</td>';
+                            content += '<tr class="' + $alert + '">';
+                            content += '<td>' + item.date + ' <span class="ti ti-clock-hour-1"></span> ' + item.time + '</td>';
 
-              // Check if 'student' or 'gtk' exists and generate the avatar accordingly
-              if (item.student) {
-                content += '<td>' +
-                             '<div class="d-flex align-items-center">' +
-                               '<a href="#" class="avatar avatar-md">';
+                            // Check if 'student' or 'gtk' exists and generate the avatar accordingly
+                            if (item.student) {
+                                content += '<td>' +
+                                    '<div class="d-flex align-items-center">' +
+                                    '<a href="#" class="avatar avatar-md">';
                                 if (!item.student.foto || item.student.foto.trim() === '') {
-                                  content += '<img src="{{ asset("asset/img/user-default.jpg") }}" class="img-fluid rounded-circle" alt="foto">';
+                                    content += '<img src="{{ asset("asset/img/user-default.jpg") }}" class="img-fluid rounded-circle" alt="foto">';
                                 } else {
                                     content += `<img src="{{ asset('storage/') }}/${item.student.foto}" class="img-fluid rounded-circle" alt="foto">`;
 
                                 }
-                content +=     '</a>' +
-                              '<div class="ms-2">' +
-                                '<p class="mb-0">' + item.student.nama + '</p>' +
-                              '</div>' +
-                            '</div>' +
-                          '</td>';
-              } else {
-                content += '<td>' +
-                             '<div class="d-flex align-items-center">' +
-                               '<a href="#" class="avatar avatar-md">';
+                                content += '</a>' +
+                                    '<div class="ms-2">' +
+                                    '<p class="mb-0">' + item.student.nama + '</p>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</td>';
+                            } else {
+                                content += '<td>' +
+                                    '<div class="d-flex align-items-center">' +
+                                    '<a href="#" class="avatar avatar-md">';
                                 if (!item.gtk.gambar || item.gtk.gambar.trim() === '') {
-                                  content += '<img src="{{ asset("asset/img/user-default.jpg") }}" class="img-fluid rounded-circle" alt="foto">';
+                                    content += '<img src="{{ asset("asset/img/user-default.jpg") }}" class="img-fluid rounded-circle" alt="foto">';
                                 } else {
-                                  content += '<img src="{{ asset("storage/' + item.gtk.gambar + '") }}" class="img-fluid rounded-circle" alt="foto">';
+                                    content += '<img src="{{ asset("storage/' + item.gtk.gambar + '") }}" class="img-fluid rounded-circle" alt="foto">';
                                 }
-                content +=     '</a>' +
-                              '<div class="ms-2">' +
-                                '<p class="mb-0">' + item.gtk.nama + '</p>' +
-                              '</div>' +
-                            '</div>' +
-                          '</td>';
-              }
+                                content += '</a>' +
+                                    '<div class="ms-2">' +
+                                    '<p class="mb-0">' + item.gtk.nama + '</p>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</td>';
+                            }
 
-              content += '<td>' + item.status + '</td></tr>';
+                            content += '<td>' + item.status + '</td></tr>';
+                        });
+                    }
+
+                    // Insert the newly built content into the table
+                    $('#myData').html(content);
+                }
+                , error: function() {
+                    // Hide the loading spinner in case of an error
+                    $('#loadingSpinner').hide();
+                    alert("Error fetching data.");
+                }
             });
-          }
-
-          // Insert the newly built content into the table
-          $('#myData').html(content);
-        },
-        error: function() {
-          // Hide the loading spinner in case of an error
-          $('#loadingSpinner').hide();
-          alert("Error fetching data.");
         }
-      });
-    }
 
-    // Set the interval to refresh data every 5 seconds (5000ms)
-    setInterval(refreshdata2, 5000);
+        // Set the interval to refresh data every 5 seconds (5000ms)
+        setInterval(refreshdata2, 5000);
 
-    // Initial data load when the page is first loaded
-    refreshdata2();
-  </script>
+        // Initial data load when the page is first loaded
+        refreshdata2();
 
-<script>
-function jam() {
-        var e = document.getElementById('jam'),
-        d = new Date(), h, m, s;
-        h = d.getHours();
-        m = set(d.getMinutes());
-        s = set(d.getSeconds());
+    </script>
 
-        e.innerHTML = h +':'+ m +':'+ s;
+    <script>
+        function jam() {
+            var e = document.getElementById('jam')
+                , d = new Date()
+                , h, m, s;
+            h = d.getHours();
+            m = set(d.getMinutes());
+            s = set(d.getSeconds());
 
-        setTimeout('jam()', 1000);
-    }
+            e.innerHTML = h + ':' + m + ':' + s;
 
-    function set(e) {
-        e = e < 10 ? '0'+ e : e;
-        return e;
-    }
+            setTimeout('jam()', 1000);
+        }
+
+        function set(e) {
+            e = e < 10 ? '0' + e : e;
+            return e;
+        }
 
 
-    var TxtType = function(el, toRotate, period) {
-    this.toRotate = toRotate;
-    this.el = el;
-    this.loopNum = 0;
-    this.period = parseInt(period, 10) || 2000;
-    this.txt = '';
-    this.tick();
-    this.isDeleting = false;
-    };
+        var TxtType = function(el, toRotate, period) {
+            this.toRotate = toRotate;
+            this.el = el;
+            this.loopNum = 0;
+            this.period = parseInt(period, 10) || 2000;
+            this.txt = '';
+            this.tick();
+            this.isDeleting = false;
+        };
 
-    TxtType.prototype.tick = function() {
-    var i = this.loopNum % this.toRotate.length;
-    var fullTxt = this.toRotate[i];
+        TxtType.prototype.tick = function() {
+            var i = this.loopNum % this.toRotate.length;
+            var fullTxt = this.toRotate[i];
 
-    if (this.isDeleting) {
-    this.txt = fullTxt.substring(0, this.txt.length - 1);
-    } else {
-    this.txt = fullTxt.substring(0, this.txt.length + 1);
-    }
+            if (this.isDeleting) {
+                this.txt = fullTxt.substring(0, this.txt.length - 1);
+            } else {
+                this.txt = fullTxt.substring(0, this.txt.length + 1);
+            }
 
-    this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+            this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
 
-    var that = this;
-    var delta = 200 - Math.random() * 100;
+            var that = this;
+            var delta = 200 - Math.random() * 100;
 
-    if (this.isDeleting) { delta /= 2; }
+            if (this.isDeleting) {
+                delta /= 2;
+            }
 
-    if (!this.isDeleting && this.txt === fullTxt) {
-    delta = this.period;
-    this.isDeleting = true;
-    } else if (this.isDeleting && this.txt === '') {
-    this.isDeleting = false;
-    this.loopNum++;
-    delta = 500;
-    }
+            if (!this.isDeleting && this.txt === fullTxt) {
+                delta = this.period;
+                this.isDeleting = true;
+            } else if (this.isDeleting && this.txt === '') {
+                this.isDeleting = false;
+                this.loopNum++;
+                delta = 500;
+            }
 
-    setTimeout(function() {
-    that.tick();
-    }, delta);
-    };
+            setTimeout(function() {
+                that.tick();
+            }, delta);
+        };
 
-    window.onload = function() {
-     jam();
-    var elements = document.getElementsByClassName('typewrite');
-    for (var i=0; i<elements.length; i++) {
-    var toRotate = elements[i].getAttribute('data-type');
-    var period = elements[i].getAttribute('data-period');
-    if (toRotate) {
-    new TxtType(elements[i], JSON.parse(toRotate), period);
-    }
-    }
-    // INJECT CSS
-    var css = document.createElement("style");
-    css.type = "text/css";
-    css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
-    document.body.appendChild(css);
-    };
-</script>
-  </body>
+        window.onload = function() {
+            jam();
+            var elements = document.getElementsByClassName('typewrite');
+            for (var i = 0; i < elements.length; i++) {
+                var toRotate = elements[i].getAttribute('data-type');
+                var period = elements[i].getAttribute('data-period');
+                if (toRotate) {
+                    new TxtType(elements[i], JSON.parse(toRotate), period);
+                }
+            }
+            // INJECT CSS
+            var css = document.createElement("style");
+            css.type = "text/css";
+            css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
+            document.body.appendChild(css);
+        };
+
+    </script>
+</body>
 
 </html>
-
