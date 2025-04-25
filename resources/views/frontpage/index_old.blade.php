@@ -21,50 +21,10 @@
     <meta name="msapplication-TileImage" content="{{ asset('landing/img/favicons/mstile-150x150.png') }}">
     <meta name="theme-color" content="#ffffff">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
-
     <!-- ===============================================-->
     <!--    Stylesheets-->
     <!-- ===============================================-->
-    <style>
-       .scan-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        }
 
-        .scan-box {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 200px;
-        height: 200px;
-        transform: translate(-50%, -50%);
-        border: 2px solid lime;
-        box-shadow: 0 0 10px lime;
-        }
-
-
-       .nav-link.active {
-            border-bottom: 3px solid #5F37EF;
-            border-radius: 0.375rem; /* rounded-md */
-        }
-         body {
-            
-            font-family: 'Inter', sans-serif;
-        }
-        .media-fixed-size {
-            width: 100%;
-            height: 300px; /* Atur tinggi sesuai kebutuhan */
-            object-fit: cover; /* Agar gambar/video mengisi kotak dengan baik */
-            border-radius: 8px;
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-            }
-    </style>
     <link href="{{ asset('landing/css/theme.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
     <link rel="stylesheet" href="{{ asset('asset/css/customlanding.css') }}">
@@ -105,167 +65,161 @@
     <!-- ===============================================-->
     <!--    Main Content-->
     <!-- ===============================================-->
-    
     <main class="main" id="top">
-      
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top nav user-menu" data-navbar-on-scroll="data-navbar-on-scroll" >
-            
-            <div class="container-fluid">
-        
-                {{-- Logo --}}
-                <a class="navbar-brand d-flex align-items-center" href="/">
-                    <img src="{{ !empty(app('settings')['site_logo']) ? asset('storage/' . app('settings')['site_logo']) : asset('asset/img/default-logo.png') }}" alt="Logo" width="50px"/>
-                    <h5 class="mb-0 ms-2 mt-1">{{ app('settings')['site_name'] }}</h5>
-                </a>
-        
-                {{-- Toggler (Mobile) --}}
-                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-        
-                {{-- Navbar Right Side --}}
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto align-items-lg-center gap-3 "> {{-- fs-5 = ukuran font ideal --}}
-                        
-                       {{-- Menu Navigasi --}}
-                        <li class="nav-item">
-                            <a class="nav-link px-2" href="#section1">
-                                <i class="ti ti-home me-1"></i> Beranda
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-2" href="#section2">
-                                <i class="ti ti-news me-1"></i> Berita
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-2" href="#section4">
-                                <i class="ti ti-building me-1"></i> Sekolah
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-2" href="https://www.instagram.com/sakt.iproject/" target="_BLANK">
-                                <i class="ti ti-users me-1"></i> Komunitas
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-2" href="#section5">
-                                <i class="ti ti-photo me-1"></i> Dokumentasi
-                            </a>
-                        </li>
-                
-                        {{-- Login / Profil User --}}
-                        @if(auth()->user())
-                        <li class="nav-item ps-2 d-block d-md-none">
-                            <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#barcodeModal">
-                                <i class="ti ti-scan me-1"></i> Scan Barcode
-                            </a>
-                        </li>
-                        {{-- Profil User Dropdown --}}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center px-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                @php
-                                    $userImg = asset('asset/img/user-default.jpg');
-                                    if(auth()->user()->role == 'siswa' && Auth::user()->student?->foto) {
-                                        $userImg = asset('storage/' . Auth::user()->student->foto);
-                                    } elseif(in_array(auth()->user()->role, ['guru', 'walikelas']) && Auth::user()->gtk?->gambar) {
-                                        $userImg = asset('storage/' . Auth::user()->gtk->gambar);
-                                    }
-                                @endphp
-                                <img src="{{ $userImg }}" class="rounded-circle me-2" width="36" height="36" alt="User">
-                                {{-- <span class="fw-semibold">{{ auth()->user()->nama }}</span> --}}
-                            </a>
-                        
-                            <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm" aria-labelledby="userDropdown">
-                                @php
-                                    $role = auth()->user()->role;
-                                    $link = match($role) {
-                                        'admin' => route('dashboard.admin'),
-                                        'walikelas' => route('dashboard.walikelas'),
-                                        'superadmin' => route('dashboard.superadmin'),
-                                        'guru' => route('dashboard.teacher'),
-                                        default => route('dashboard.student')
-                                    };
-                                @endphp
-                                <li>
-                                    <a class="dropdown-item" href="{{ $link }}">
-                                        <i class="ti ti-dashboard me-2"></i> Dashboard
-                                    </a>
-                                </li>
-                                @if ($role != 'superadmin')
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('profileIndex',auth()->user()->nomor) }}">
-                                        <i class="ti ti-user me-2"></i> Profile
-                                    </a>
-                                </li>
-                                @endif
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form action="{{ route('logout') }}" method="post" class="dropdown-item m-0 p-0">
-                                        @csrf
-                                        <button type="submit" class="btn btn-link dropdown-item">
-                                            <i class="ti ti-logout me-2"></i> Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                        
-                        <li class="nav-item ps-2 d-none d-md-block">
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#barcodeModal">
-                                <img src="{{ asset('landing/img/qr.webp') }}" alt="" width="30">
-                            </a>
-                        </li>
-                        
-                       
-                        @else
-                        {{-- Tombol Login --}}
-                       
-                        <li class="nav-item">
-                            <a class="btn btn-primary btn-sm px-3 py-2 fw-semibold ms-2 shadow-sm" href="/login" role="button">
-                                Login Aplikasi
-                            </a>
-                        </li>
-                        
-                        
-                        @endif
-                        
-                    </ul>
-                </div>
-                
+      <nav class="navbar navbar-expand-lg navbar-light fixed-top nav user-menu" data-navbar-on-scroll="data-navbar-on-scroll" style="border-bottom:1px solid #e7e7e7">
+        <div class="container-fluid">
+            <div class="d-flex ">
+            <a class="navbar-brand" href="/"><img src="{{ !empty(app('settings')['site_logo']) ? asset('storage/' . app('settings')['site_logo']) : asset('asset/img/default-logo.png') }}" alt="" width="50px"/></a>
+
+            <h5 class=" mt-3">{{ app('settings')['site_name'] }}</h5>
             </div>
-        </nav>
-        
+            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto ms-lg-5 ms-xl-8 border-bottom border-lg-bottom-0 ">
+              <li class="nav-item"><a class="nav-link fw-medium active" aria-current="page" href="#section1"> Beranda</a></li>
+              <li class="nav-item"><a class="nav-link fw-medium" href="#section2">Berita</a></li>
+              <li class="nav-item"><a class="nav-link fw-medium" href="#section3">Komunitas </a></li>
+
+            </ul>
+            <div class="d-flex align-items-center">
+
+            @if(auth()->user())
+            <div class="d-flex py-3 py-lg-0">
+                <div class="action">
+
+                    <div class="profil avatar avatar-md roundede" onclick="menuToggle();">
+                        {{-- user siswa --}}
+                        @if(auth()->user()->role == "siswa")
+                         @if(Auth::user()->student == NULL)
+                            <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
+                         @else
+                            @if(Auth::user()->student->foto == "" )
+                                <img src='{{ asset('asset/img/user-default.jpg')  }}' alt='Img' class='img-fluid'>
+                            @else
+                                <img src="{{ asset('storage/' . Auth::user()->student->foto) }}" alt="Img" class="img-fluid">
+                            @endif
+                         @endif
+                        @endif
+
+                       @if(auth()->user()->role == "guru")
+                         @if(Auth::user()->gtk == NULL)
+                            <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                         @else
+                            @if(Auth::user()->gtk->gambar == "" )
+                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                            @else
+                                <img src="{{ asset('storage/'. Auth::user()->gtk->gambar )}}" alt='Img' class='img-fluid'>
+                            @endif
+                         @endif
+                        @endif
+
+                        @if( auth()->user()->role == "walikelas")
+                            @if(Auth::user()->gtk == NULL)
+                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                            @else
+                            @if(Auth::user()->gtk->gambar == "" )
+                                <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                            @else
+                                <img src="{{ asset('storage/'. Auth::user()->gtk->gambar ) }}" alt='Img' class='img-fluid'>
+                            @endif
+                            @endif
+                        @endif
+
+                        @if(auth()->user()->role == "admin" || auth()->user()->role == "superadmin" )
+                            <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                        @endif
+
+                      @if(auth()->user()->role == "guru")
+                        @if(Auth::user()->gtk == NULL)
+                           <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                        @else
+                           @if(Auth::user()->gtk->gambar == "" )
+                               <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                           @else
+                               <img src="{{ asset('storage/'. Auth::user()->gtk->gambar )}}" alt='Img' class='img-fluid'>
+                           @endif
+                        @endif
+                       @endif
+
+
+                       @if(auth()->user()->role == "admin")
+                           <img src='{{ asset('asset/img/user-default.jpg') }}' alt='Img' class='img-fluid'>
+                       @endif
+
+                    </span>
+
+                    <div>
+
+                    </div>
+                    </div>
+                    <div class="menu">
+                      <h3 class="mb-0">{{ auth()->user()->nama }}<br>
+                        <div class="px-2 pt-1">
+                            <input type="text" class="form-control" value="{{ auth()->user()->email }}" disabled>
+                        </div>
+
+                        <small><span class="text-primary"></span></small></h3>
+                      <ul>
+                        <li>
+                            @if(auth()->user()->role =="admin")
+                                @php $link = route('dashboard.admin')  @endphp
+                            @elseif (auth()->user()->role=="walikelas")
+                                @php $link = route('dashboard.walikelas')  @endphp
+                            @elseif (auth()->user()->role=="superadmin")
+                                @php $link = route('dashboard.superadmin')  @endphp
+                            @elseif (auth()->user()->role == "guru")
+                                @php $link = route('dashboard.teacher')  @endphp
+                            @else
+                                @php $link = route('dashboard.student')  @endphp
+                             @endif
+                          <span class="ti ti-dashboard"></span><a href="{{ $link }}" class="mx-2"> Dashboard</a>
+                        </li>
+                        @if (auth()->user()->role != 'superadmin')
+                        <li>
+                            <span class="ti ti-user"></span><a href="{{ route('profileIndex',auth()->user()->nomor) }}" class="mx-2"> Profile</a>
+                        </li>
+                        @endif
+
+                        <li>
+                            <form action="{{ route('logout') }}" method="post">
+                             @csrf
+                                <span class="ti ti-logout"></span>
+                               <button class="mx-2" style="padding: 0;border: none;background: none;"> Logout</button>
+                            </form>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            @else
+            <form class="d-flex py-3 py-lg-0"><a class="btn btn-sm p-2 px-2 btn-info rounded-pill  me-2" href="/login" role="button"><span class="ti ti-login"></span> Masuk Aplikasi</a>
+            </form>
+            @endif
+          </div>
+        </div>
+      </nav>
       <section class="py-0 bg-light-gradient" id="section1">
         <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:contain;">
         </div>
-
-   
-          
         <!--/.bg-holder-->
 
         <div class="container">
 
           <div class="row align-items-center">
 
-            <div class="col-lg-6 col-md-5 order-md-1 pt-7">
+            <div class="col-lg-6 col-md-5 order-md-1 pt-9">
+
+                <center><h4 class="mb-3"><span class="ti ti-calendar-due"></span> {{ Carbon\Carbon::parse(now())->translatedFormat('l, d F Y') }} | <span id="jam" class="text-muted"></span> </h4></center>
                 <img class="img-fluid" src="{{ asset('landing/img/illustrations/hero.png') }}" alt="">
                 {{-- <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script><dotlottie-player src="https://lottie.host/a08fe931-1e93-4930-b4b0-714be508f0fc/XZEEsrlaoz.json" background="transparent" speed="1" style="width: 600px; height: 600px" direction="-1" playMode="bounce" loop autoplay></dotlottie-player> --}}
             </div>
-          
-            <div class="col-md-7 col-lg-6 text-center text-md-start pt-7">
-                
-                <h4 class="mb-3"><span class="ti ti-calendar-due"></span> {{ Carbon\Carbon::parse(now())->translatedFormat('l, d F Y') }} | <span id="jam" class="text-muted"></span> </h4>
-                <h1 class="display-2 fw-bold fs-4 fs-md-5 fs-xl-6  " style="line-height: 1.2;">Absensi Pintar,  <br>Kerja lebih Cerdas.</h1>
-                <h5 class=" typewrite pb-3 text-muted" data-period="1000" data-type='[
-                        "Selamat datang di Absensi Pintar! Semoga hari Anda menyenangkan.",
-                        "Hallo, apa kabar? Semoga harimu produktif!",
-                        "Apakah Anda sudah absen hari ini? Jangan lupa untuk mengisi absen ya!",
-                        "Selamat pagi! Jangan lupa untuk absen, ya!",
-                        "Selamat datang! Ayo, absensi hari ini sudah terisi?"
-                    ]
-                    '></h5>
+            <div class="col-md-7 col-lg-6 text-center text-md-start pt-md-9">
+                <h1 class="display-2 fw-bold fs-4 fs-md-5 fs-xl-6  ">Absensi Pintar,  <br>Kerja lebih Cerdas.</h1>
+                <h5 class=" typewrite pb-3 text-muted" data-period="2000" data-type='[ "Selamat Datang di Absensi Pintar","Hallo apa kabar..? ","Apakah anda sudah Absen Hari ini..?" ]'></h5>
                 <div class=" mb-2 mt-2">
                         <div id="info"></div>
                         <div class="mb-3" hidden>
@@ -312,7 +266,7 @@
 
         <div class="container">
           <div class="row flex-center">
-            <div class="col-auto text-center my-">
+            <div class="col-auto text-center my-4">
               <h1 class="display-3 fw-bold">Berita Terbaru</h1>
             </div>
           </div>
@@ -325,16 +279,16 @@
             <div class="col-md-4 mb-5 mb-md-0">
                 <!-- Check if the media is an image or a video -->
                 @if(Str::contains($post->media_url, '.mp4') || Str::contains($post->media_url, '.mov'))
-                <!-- If it's a video -->
-                    <video class="media-fixed-size" controls>
+                    <!-- If it's a video -->
+                    <video class="img-fluid shadow-sm rounded" controls>
                         <source src="{{ $post->media_url }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 @else
                     <!-- If it's an image -->
-                    <img class="media-fixed-size" src="{{ $post->media_url }}" alt="" loading="lazy"/>
+                    <img class="img-fluid shadow-sm rounded" src="{{ $post->media_url }}" alt="" loading="lazy"/>
                 @endif
-                
+
                 <div class="mt-3 text-center text-md-start">
                     <h5 class="display-6 fs-2 fw-bold">
                         <!-- Display the username -->
@@ -384,37 +338,37 @@
         </div>
       </section> --}}
 
-      <section class="py-0">
+      {{-- <section class="py-0">
 
         <!--/.bg-holder-->
 
-        <div class="container-fluid px-0" style="margin-bottom:-40px">
+        <div class="container-fluid px-0">
           <div class="card py-4 border-0 rounded-0 bg-primary">
             <div class="card-body">
               <div class="row flex-center">
                 <div class="col-xl-9 d-flex justify-content-center  mb-xl-0">
-                  <h2 class="text-light fw-bold">Track Attendance Effortlessly with Modern Technology.<br />A Modern Approach to Seamless Attendance</h2>
+                  <h2 class="text-light fw-bold">WooCommerce - the most customizable eCommerce<br />platform for building your online business.</h2>
                 </div>
-                <div class="col-xl-3 text-center"><a class="btn btn-lg btn-outline-light rounded-pill" href="/login">GET STARTED</a></div>
+                <div class="col-xl-3 text-center"><a class="btn btn-lg btn-outline-light rounded-pill" href="#">GET STARTED</a></div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </section> --}}
 
       <!-- ============================================-->
       <!-- <section> begin ============================-->
 
-      <section class=" pt-0 pb-0" style="background-color: #421ec0; color: white;">
+      <section class=" pt-0 pb-0">
         <div class="container">
-          <div class="row flex-center">
+          {{-- <div class="row justify-content-sm-between py-6">
 
-          </div>
+          </div> --}}
           {{-- <div class="row flex-center">
             <div class="col-auto py-4"><a href="#"><img class="img-fluid" src="{{ asset('asset/img/logo-white.png') }}" alt="" width="200" /></a></div>
           </div> --}}
-          {{-- <hr class="opacity-25" /> --}}
-         <div class="d-flex justify-content-center py-3">
+          <hr class="opacity-25" />
+         <div class="d-flex justify-content-center pb-3">
             <p>&copy; <span id="year"></span> Absensi Sakti. All rights reserved.</p>
          </div>
         </div><!-- end of .container-->
@@ -435,7 +389,7 @@
     <!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->
-   
+
   <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
     <div class="modal-content">
@@ -445,41 +399,15 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body " id="modalBody" >
+      <div class="modal-body" id="modalBody">
         ...
-    
 
       </div>
-      
+      {{-- <div class="modal-footer">
+      </div> --}}
     </div>
   </div>
 </div>
-
-<!-- Modal -->
-<div class="modal fade" id="barcodeModal" tabindex="-1" aria-labelledby="barcodeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Scan QR Code</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body position-relative">
-          <video id="video" class="w-100 rounded" autoplay></video>
-  
-          <!-- Kotak Fokus -->
-          <div class="scan-overlay">
-            <div class="scan-box"></div>
-          </div>
-  
-          <div class="mt-3 text-center">
-            <div id="message" class="text-muted">Arahkan QR code ke kotak...</div>
-            <div id="result" class="fw-bold text-success mt-2"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
     <!-- ===============================================-->
     <!--    JavaScripts-->
     <!-- ===============================================-->
@@ -488,102 +416,9 @@
     {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> --}}
     <script src="{{ asset('landing/vendors/is/is.min.js') }}"></script>
     <script src="{{ asset('landing/js/theme.js') }}"></script>
-   
-    
      <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
-   
+
     <script>
-let scanning = true;
-let lastScanTime = 0;
-
-// Akses elemen video dan result
-const video = document.getElementById('video');
-const resultElement = document.getElementById('result');
-const messageElement = document.getElementById('message');
-
-// Fungsi untuk memulai scan menggunakan webcam
-function startScanner() {
-  // Meminta izin untuk menggunakan kamera
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-    .then(stream => {
-      video.srcObject = stream;
-      video.setAttribute("playsinline", true); // Untuk iPhone
-      video.play();
-      requestAnimationFrame(scanBarcode);
-    })
-    .catch(err => {
-      messageElement.textContent = "Gagal mengakses kamera: " + err.message;
-    });
-}
-
-// Fungsi untuk memindai QR Code
-function scanBarcode() {
-  const currentTime = Date.now();
-  // Batasi pemindaian setiap 100ms
-  if (currentTime - lastScanTime < 100) {
-    requestAnimationFrame(scanBarcode);
-    return;
-  }
-
-  lastScanTime = currentTime;
-
-  if (video.videoWidth === 0 || video.videoHeight === 0) {
-    requestAnimationFrame(scanBarcode);
-    return;
-  }
-
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
-
-  // Mengurangi resolusi agar pemindaian lebih cepat
-  const downscaleFactor = 0.5;
-  canvas.width = video.videoWidth * downscaleFactor;
-  canvas.height = video.videoHeight * downscaleFactor;
-
-  // Menggambar gambar video pada canvas
-  context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  // Tentukan ukuran dan posisi area yang akan dipindai (kotak hijau)
-  const scanWidth = 220;
-  const scanHeight = 220;
-  const scanX = (canvas.width - scanWidth) / 2;
-  const scanY = (canvas.height - scanHeight) / 2;
-
-  // Ambil data gambar dari area yang ditentukan
-  const imageData = context.getImageData(scanX, scanY, scanWidth, scanHeight);
-
-  // Coba scan barcode menggunakan jsQR
-  const code = jsQR(imageData.data, scanWidth, scanHeight, {
-    inversionAttempts: "dontInvert",
-  });
-
-  if (code) {
-    resultElement.textContent = code.data; // Menampilkan hasil barcode
-    scanning = false; // Hentikan pemindaian
-    video.srcObject.getTracks().forEach(track => track.stop()); // Stop webcam
-  } else {
-    messageElement.textContent = "Mencari QR code...";
-    requestAnimationFrame(scanBarcode); // Lanjutkan pemindaian
-  }
-}
-
-// Start scanner ketika modal dibuka
-$('#barcodeModal').on('shown.bs.modal', function () {
-  startScanner();
-});
-
-// Hentikan scan saat modal ditutup
-$('#barcodeModal').on('hidden.bs.modal', function () {
-  const stream = video.srcObject;
-  const tracks = stream.getTracks();
-  tracks.forEach(track => track.stop());
-});
-
-
-
-    </script>
-    <script>
-        
          document.getElementById('year').textContent = new Date().getFullYear();
         function menuToggle() {
           const toggleMenu = document.querySelector(".menu");
