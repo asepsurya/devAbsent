@@ -94,7 +94,7 @@
                             </td>
                             @if (Request::is('class/time'))
                             <td hidden><input type="text" name="id_kelas[]" value="{{ $item->id }}"></td>
-                            <td class="border"><input type="time" name="jam_masuk[]" id="time" value="{{ $item->inOutTime->jam_masuk ?? ''}}" class="form-control"></td>
+                            <td class="border"><input type="time" name="jam_masuk[]" id="time" value="{{ $item->inOutTime->jam_masuk ?? app('settings')['start_school']}}" class="form-control"></td>
                             <td class="border"><input type="time" name="jam_keluar[]"  value="{{ $item->inOutTime->jam_pulang ?? ''}}" class="form-control"></td>
                             @endif
                             <td>

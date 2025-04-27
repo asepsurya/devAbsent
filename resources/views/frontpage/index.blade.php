@@ -13,7 +13,7 @@
     <!-- ===============================================-->
     <!--    Favicons-->
     <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('asset/img/logo-icon.png') }}">
+    {{-- <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('asset/img/logo-icon.png') }}"> --}}
     <link rel="icon" type="image/png" sizes="32x32" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo']) }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo']) }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_logo'])  }}">
@@ -74,7 +74,7 @@
         }
 
         body {
-
+            padding-top: 120px;
             font-family: 'Inter', sans-serif;
         }
 
@@ -137,8 +137,8 @@
 
     <main class="main" id="top">
         <div id="topbar" class="topbar py-1 text-center text-white bg-primary">
-            <small>🔔 Info penting di sini — promo diskon 50% sampai besok!</small>
-            <button class="btn-close btn-close-white" id="closeTopbar" aria-label="Close"></button>
+            <small>🔔 Selamat datang di sistem absensi - {{ app('settings')['site_name'] }} </small>
+            <button class="btn-close btn-close-white" id="closeTopbar" aria-label="Close" hidden></button>
         </div>
         <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light fixed-top nav user-menu mt-5" data-navbar-on-scroll="data-navbar-on-scroll">
 
@@ -245,13 +245,6 @@
                             </ul>
                         </li>
 
-                        <li class="nav-item ps-2 d-none d-md-block">
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#barcodeModal">
-                                <img src="{{ asset('landing/img/qr.webp') }}" alt="" width="30">
-                            </a>
-                        </li>
-
-
                         @else
                         {{-- Tombol Login --}}
 
@@ -282,12 +275,39 @@
 
                 <div class="row align-items-center">
 
-                    <div class="col-lg-6 col-md-5 order-md-1 " style="padding-top:150px;">
-                        <img class="img-fluid" src="{{ asset('landing/img/illustrations/hero.png') }}" alt="">
-                        {{-- <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script><dotlottie-player src="https://lottie.host/a08fe931-1e93-4930-b4b0-714be508f0fc/XZEEsrlaoz.json" background="transparent" speed="1" style="width: 600px; height: 600px" direction="-1" playMode="bounce" loop autoplay></dotlottie-player> --}}
+                    <div class="col-lg-6 col-md-5 order-md-1 " >
+                        <!-- Carousel -->
+                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                        <!-- Gambar Slide -->
+                        <div class="carousel-item active">
+                            <img src="{{ asset('landing/img/illustrations/hero.png') }}" class="d-block w-100 img-fluid" alt="Hero Image">
+                        </div>
+
+                        <!-- Lottie Animation Slide -->
+                        <div class="carousel-item">
+                            <img src="{{ asset('landing/img/illustrations/hero.png') }}" class="d-block w-100 img-fluid" alt="Hero Image">
+                            {{-- <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+                            <dotlottie-player src="https://lottie.host/a08fe931-1e93-4930-b4b0-714be508f0fc/XZEEsrlaoz.json"
+                            background="transparent" speed="1" style="width: 600px; height: 600px" direction="-1" playMode="bounce" loop autoplay>
+                            </dotlottie-player> --}}
+                        </div>
+                        </div>
+
+                        <!-- Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
 
-                    <div class="col-md-7 col-lg-6 text-center text-md-start pt-7">
+                    </div>
+
+                    <div class="col-md-7 col-lg-6 text-center text-md-start pt-3">
 
                         <h4 class="mb-3"><span class="ti ti-calendar-due"></span> {{ Carbon\Carbon::parse(now())->translatedFormat('l, d F Y') }} | <span id="jam" class="text-muted"></span> </h4>
                         <h1 class="display-2 fw-bold fs-4 fs-md-5 fs-xl-6  " style="line-height: 1.2;">Absensi Pintar, <br>Kerja lebih Cerdas.</h1>
@@ -309,30 +329,10 @@
 
                             </div>
 
-                            <center><label><span class="ti ti-history"></span> Riwayat Absensi</label></center>
-                            <div class="table-responsive bg-white scrollme">
-                                <table class="table table-nowrap mb-0 table-fixed">
-                                    <thead>
-                                        <tr>
-                                            <th class="bg-light-400"> <span class="ti ti-calendar-event"></span> Tanggal</th>
-                                            <th class="bg-light-400"> <span class="ti ti-users"></span> Nama Lengkap</th>
-                                            <th class="bg-light-400">Status</th>
 
-                                        </tr>
-                                    </thead>
-
-                                    <tbody id="myData"></tbody>
-                                    <div id="loadingSpinner" class="mt-2" style="display:none;">
-                                        <center><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading data...</center>
-                                    </div>
-                                </table>
-                            </div>
-                            <!-- Loading Spinner (Hidden by default) -->
-
-                        </div>
                     </div>
 
-                    {{-- <a class="btn btn-lg btn-info rounded-pill me-2" href="#" role="button">Start a New Store </a><span> or  </span><a class="btn btn-link ps-1 ps-md-4 ps-lg-1" href="#" role="button"> Customize &amp; Extend ›</a> --}}
+                    <a class="btn btn-lg btn-info rounded-pill me-2" href="/login" role="button">Get Started </a><span> or  </span><a class="btn btn-link ps-1 ps-md-4 ps-lg-1" href="/register" role="button"> Customize &amp; Extend ›</a>
                 </div>
             </div>
             </div>
@@ -382,14 +382,23 @@
                         @endforeach
                         @else
                         @if(isset($feed->error) && $feed->error->code == 400)
-                        <div class="col-12 text-center">
-                            <p class="h4 text-danger">Akses tidak dijinkan atau kode autentikasi salah. Coba lagi nanti.</p>
-                        </div>
+                            <div class="col-12 text-center">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-exclamation-circle me-2"></i>
+                                    <strong>Error!</strong> Akses tidak dijinkan atau kode autentikasi salah. Coba lagi nanti.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
                         @else
-                        <div class="col-12 text-center">
-                            <p class="h4 text-danger">Data tidak ditemukan atau terjadi kesalahan. Coba lagi nanti.</p>
-                        </div>
+                            <div class="col-12 text-center pt-3">
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-cloud-slash me-2"></i>
+                                    <strong>Peringatan!</strong> Data tidak ditemukan atau tidak terhubung dengan Internet. Coba lagi nanti.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
                         @endif
+
                         @endif
 
 
@@ -470,50 +479,6 @@
     <!--    End of Main Content-->
     <!-- ===============================================-->
 
-    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header  ">
-                    <h5 class="modal-title" id="exampleModalLabel">Absensi Berhasil</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body " id="modalBody">
-                    ...
-
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="barcodeModal" tabindex="-1" aria-labelledby="barcodeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Scan QR Code</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body position-relative">
-                    <video id="video" class="w-100 rounded" autoplay></video>
-
-                    <!-- Kotak Fokus -->
-                    <div class="scan-overlay">
-                        <div class="scan-box"></div>
-                    </div>
-
-                    <div class="mt-3 text-center">
-                        <div id="message" class="text-muted">Arahkan QR code ke kotak...</div>
-                        <div id="result" class="fw-bold text-success mt-2"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- ===============================================-->
     <!--    JavaScripts-->
     <!-- ===============================================-->
@@ -544,7 +509,7 @@
 
             topbar.style.display = 'none';
 
-            
+
            // Hapus class mt-5 dari navbar
             navbar.classList.remove('mt-5');
         });
@@ -571,98 +536,7 @@
         });
 
     </script>
-    <script>
-        let scanning = true;
-        let lastScanTime = 0;
 
-        // Akses elemen video dan result
-        const video = document.getElementById('video');
-        const resultElement = document.getElementById('result');
-        const messageElement = document.getElementById('message');
-
-        // Fungsi untuk memulai scan menggunakan webcam
-        function startScanner() {
-            // Meminta izin untuk menggunakan kamera
-            navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: "environment"
-                    }
-                })
-                .then(stream => {
-                    video.srcObject = stream;
-                    video.setAttribute("playsinline", true); // Untuk iPhone
-                    video.play();
-                    requestAnimationFrame(scanBarcode);
-                })
-                .catch(err => {
-                    messageElement.textContent = "Gagal mengakses kamera: " + err.message;
-                });
-        }
-
-        // Fungsi untuk memindai QR Code
-        function scanBarcode() {
-            const currentTime = Date.now();
-            // Batasi pemindaian setiap 100ms
-            if (currentTime - lastScanTime < 100) {
-                requestAnimationFrame(scanBarcode);
-                return;
-            }
-
-            lastScanTime = currentTime;
-
-            if (video.videoWidth === 0 || video.videoHeight === 0) {
-                requestAnimationFrame(scanBarcode);
-                return;
-            }
-
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-
-            // Mengurangi resolusi agar pemindaian lebih cepat
-            const downscaleFactor = 0.5;
-            canvas.width = video.videoWidth * downscaleFactor;
-            canvas.height = video.videoHeight * downscaleFactor;
-
-            // Menggambar gambar video pada canvas
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            // Tentukan ukuran dan posisi area yang akan dipindai (kotak hijau)
-            const scanWidth = 220;
-            const scanHeight = 220;
-            const scanX = (canvas.width - scanWidth) / 2;
-            const scanY = (canvas.height - scanHeight) / 2;
-
-            // Ambil data gambar dari area yang ditentukan
-            const imageData = context.getImageData(scanX, scanY, scanWidth, scanHeight);
-
-            // Coba scan barcode menggunakan jsQR
-            const code = jsQR(imageData.data, scanWidth, scanHeight, {
-                inversionAttempts: "dontInvert"
-            , });
-
-            if (code) {
-                resultElement.textContent = code.data; // Menampilkan hasil barcode
-                scanning = false; // Hentikan pemindaian
-                video.srcObject.getTracks().forEach(track => track.stop()); // Stop webcam
-            } else {
-                messageElement.textContent = "Mencari QR code...";
-                requestAnimationFrame(scanBarcode); // Lanjutkan pemindaian
-            }
-        }
-
-        // Start scanner ketika modal dibuka
-        $('#barcodeModal').on('shown.bs.modal', function() {
-            startScanner();
-        });
-
-        // Hentikan scan saat modal ditutup
-        $('#barcodeModal').on('hidden.bs.modal', function() {
-            const stream = video.srcObject;
-            const tracks = stream.getTracks();
-            tracks.forEach(track => track.stop());
-        });
-
-    </script>
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -673,215 +547,7 @@
 
     </script>
 
-    <script>
-        let modalOpen = false; // Flag to track if the modal is open
-        let lastData = null; // To track the last data to compare with new data
 
-        function refreshdata() {
-            // Fetch updated RFID data
-            $.ajax({
-                url: "{{ route('rfidDataGET') }}"
-                , method: "GET"
-                , cache: false
-                , success: function(data) {
-                    $('#id_rfid').html(data);
-                }
-            });
-
-            let id_rfid = $('#id_rfid').val();
-            var e = document.getElementById("id_rfid");
-
-            function onChange() {
-                var value = e.value;
-
-                // Fetch data based on the RFID value
-                $.ajax({
-                    url: "{{ route('rfidData') }}"
-                    , method: "GET"
-                    , cache: false
-                    , data: {
-                        id_rfid: id_rfid
-                    }
-                    , success: function(data) {
-                        // Update name field with the received data
-                        $('#nama').val(data.nama);
-
-                        // Check if the new data is different from the last data
-                        if (data && JSON.stringify(data) !== JSON.stringify(lastData)) {
-                            // Only open the modal if it's not already open
-                            if (!modalOpen) {
-                                // Play text-to-voice message before showing the modal
-                                // Show the modal after the voice message is played
-                                setTimeout(() => {
-                                    $('#successModal').modal('show');
-                                    modalOpen = true; // Set flag to true since the modal is shown
-
-                                    // Dynamically insert data into modal body
-                                    $('#modalBody').html(
-                                        '<div class="d-flex justify-content-center mb-3">' +
-                                        // Check if 'data.foto' is not null or undefined
-                                        (data.foto ?
-                                            `<img src="{{ asset('storage') }}/${data.foto}" class="avatar me-4 avatar-rounded" style="width: 150px; height: 150px;" alt="foto">` :
-                                            `<img src="{{ asset('asset/img/user-default.jpg') }}" class="avatar avatar-xxxl me-4 avatar-rounded" alt="foto">`
-                                        ) +
-
-                                        '</div>' +
-                                        '<div class="p-3">' +
-                                        '<div class="mb-3"><label>NIS</label><input class="form-control" value="' + data.id + '" disabled></div>' +
-                                        '<div class="mb-3"><label>Nama Lengkap</label><input class="form-control" value="' + data.nama + '" disabled></div>' +
-                                        '<div class="mb-3"><label>Sudah Absen pada Pukul</label>' +
-                                        '<p><h1>' + data.jam + '</h1></p>' +
-
-                                        '<div class="countdown">' +
-                                        '<small><i>Halaman ini akan ditutup secara otomatis dalam ' +
-                                        '<span id="countdownNumber">3</span> detik</i></small>' +
-                                        '</div>' +
-                                        '</div>'
-                                    );
-
-                                    // Countdown Timer Logic
-                                    let countdown = 3; // Countdown time in seconds
-                                    let countdownInterval = setInterval(function() {
-                                        countdown--; // Decrease the countdown value by 1
-                                        $('#countdownNumber').text(countdown); // Update the countdown number on the page
-
-                                        if (countdown <= 0) {
-                                            clearInterval(countdownInterval); // Stop the interval when the countdown reaches 0
-                                            $('#myModal').modal('hide'); // Assuming you're using Bootstrap for the modal
-                                        }
-                                    }, 1000); // Run the interval every 1 second
-
-
-
-                                    // Update the lastData to the new data
-                                    lastData = data;
-                                    // playTextToVoice(`Selamat datang, ${data.nama}. Terimakasih sudah absen hari ini.`);
-                                    // Hide modal after 10 seconds
-                                    setTimeout(function() {
-                                        $('#successModal').modal('hide');
-                                        modalOpen = false; // Reset the flag as the modal is hidden
-                                    }, 10000); // 10000 milliseconds = 10 seconds
-                                }); // Wait for the voice to start before showing the modal
-                            }
-                        } else {
-                            // If data is the same or no data, hide the modal if it's open
-                            if (modalOpen) {
-                                $('#successModal').modal('hide');
-                                modalOpen = false; // Reset the flag as the modal is hidden
-                            }
-                        }
-                    }
-                });
-            }
-
-            e.onchange = onChange;
-            onChange();
-        }
-
-        // Play Text-to-Voice Function
-        function playTextToVoice(message) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(message);
-                utterance.lang = 'id-ID'; // Indonesian language
-                utterance.pitch = 1; // Normal pitch
-                utterance.rate = 1; // Normal speed
-                window.speechSynthesis.speak(utterance);
-            } else {
-                console.warn("Speech synthesis not supported in this browser.");
-            }
-        }
-        // Refresh data every 2 seconds
-        setInterval(refreshdata, 5000);
-
-    </script>
-    <script>
-        $('#loadingSpinner').show(); // Show the loading spinner when the request starts
-        // Function to refresh data
-        function refreshdata2() {
-            var content = ""; // Start with an empty content variable
-            $.ajax({
-                url: "{{ route('listabsents') }}", // The URL for your AJAX request
-                method: "GET", // HTTP method (GET or POST)
-                dataType: "json", // Expected data type from server
-                success: function(response) {
-                    // Hide the loading spinner when the data is loaded
-                    $('#loadingSpinner').hide();
-
-                    if (response.length === 0) {
-                        // If no data is returned, show a no data message
-                        content += '<tr>' +
-                            '<td colspan="3">' +
-                            '<center><span class="ti ti-mood-confuzed"></span><i> Belum ada riwayat absensi untuk hari ini..</i>' +
-                            '</center>' +
-                            '</td>' +
-                            '</tr>';
-                    } else {
-                        // Directly update the table with the response data
-                        content = ''; // Clear previous content
-
-                        // We assume 'response' is an array of objects
-                        response.forEach(function(item) {
-                            var $alert = (item.status === 'ENTRY') ? 'alert alert-success' : 'alert alert-danger';
-
-                            content += '<tr class="' + $alert + '">';
-                            content += '<td>' + item.date + ' <span class="ti ti-clock-hour-1"></span> ' + item.time + '</td>';
-
-                            // Check if 'student' or 'gtk' exists and generate the avatar accordingly
-                            if (item.student) {
-                                content += '<td>' +
-                                    '<div class="d-flex align-items-center">' +
-                                    '<a href="#" class="avatar avatar-md">';
-                                if (!item.student.foto || item.student.foto.trim() === '') {
-                                    content += '<img src="{{ asset("asset/img/user-default.jpg") }}" class="img-fluid rounded-circle" alt="foto">';
-                                } else {
-                                    content += `<img src="{{ asset('storage/') }}/${item.student.foto}" class="img-fluid rounded-circle" alt="foto">`;
-
-                                }
-                                content += '</a>' +
-                                    '<div class="ms-2">' +
-                                    '<p class="mb-0">' + item.student.nama + '</p>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</td>';
-                            } else {
-                                content += '<td>' +
-                                    '<div class="d-flex align-items-center">' +
-                                    '<a href="#" class="avatar avatar-md">';
-                                if (!item.gtk.gambar || item.gtk.gambar.trim() === '') {
-                                    content += '<img src="{{ asset("asset/img/user-default.jpg") }}" class="img-fluid rounded-circle" alt="foto">';
-                                } else {
-                                    content += '<img src="{{ asset("storage/' + item.gtk.gambar + '") }}" class="img-fluid rounded-circle" alt="foto">';
-                                }
-                                content += '</a>' +
-                                    '<div class="ms-2">' +
-                                    '<p class="mb-0">' + item.gtk.nama + '</p>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</td>';
-                            }
-
-                            content += '<td>' + item.status + '</td></tr>';
-                        });
-                    }
-
-                    // Insert the newly built content into the table
-                    $('#myData').html(content);
-                }
-                , error: function() {
-                    // Hide the loading spinner in case of an error
-                    $('#loadingSpinner').hide();
-                    alert("Error fetching data.");
-                }
-            });
-        }
-
-        // Set the interval to refresh data every 5 seconds (5000ms)
-        setInterval(refreshdata2, 5000);
-
-        // Initial data load when the page is first loaded
-        refreshdata2();
-
-    </script>
 
     <script>
         function jam() {

@@ -388,6 +388,7 @@
                         <form action="{{ route('rfidInputDevice1') }}" method="POST">
                             @csrf
                             <input type="text" name="nis" value="{{ $item->nis }}" hidden>
+                            <input type="text" name="old_rfid" value="{{ $item->id_rfid }}" hidden>
                             <input id="deviceRFID" name="key" placeholder="Scan your RFID card" class="form-control" >
                             <button class="btn btn-primary  mt-3 w-100" style="margin-top: 10px;">Pilih</button>
                         </form>

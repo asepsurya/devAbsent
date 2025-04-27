@@ -137,39 +137,73 @@ class rfidController extends Controller
     }
     // Untuk Mengambil Data
     public function rfidData(request $request){
-        $data = absentsHistory::where('uid',$request->id_rfid)->get();
-        foreach($data as $item){
-            if($item->gtk){
-                return [
-                    'nama'=>$item->gtk->nama,
-                    'id' =>$item->gtk->id_rfid,
-                    'uid' =>$item->gtk->nik,
-                    'foto' =>$item->gtk->gambar,
-                    'jam' =>$item->time,
+        date_default_timezone_set('Asia/Jakarta');
+        // Ambil data absensi berdasarkan UID
+            $data = absentsHistory::where('uid', $request->id_rfid)
+            ->orderBy('id', 'DESC')
+            ->get();
 
-                ];
-            }else{
-                return [
-                    'nama'=>$item->student->nama,
-                    'id' =>$item->student->id_rfid,
-                    'uid' =>$item->student->nis,
-                    'foto' =>$item->student->foto,
-                    'jam' =>$item->time,
-                ];
-            }
+        foreach ($data as $item) {
+        $statusAbsen = 'Absen Tepat Waktu';
+        $terlambat = null;
 
+        // Ambil jam mulai sekolah dari settings
+        $startSchool = app('settings')['start_school']; // Misal jam mulai sekolah (contoh: 07:30)
+
+        // Waktu sekarang
+        $currentTime = Carbon::now();
+
+        // Jika waktu sekarang lebih besar dari waktu mulai sekolah, berarti terlambat
+        if ($currentTime->greaterThan(Carbon::parse($startSchool))) {
+        $terlambat = $currentTime->diffInMinutes(Carbon::parse($startSchool)); // Hitung berapa menit terlambat
+        $statusAbsen = 'Terlambat';
+        }
+
+        // Tentukan nama dan jabatan/ jurusan
+        if ($item->gtk) {
+        return [
+            'nama' => $item->gtk->nama,
+            'id' => $item->gtk->id_rfid,
+            'uid' => $item->gtk->nik,
+            'foto' => $item->gtk->gambar,
+            'jam' => $item->time,
+            'jenis_kelamin' => $item->gtk->gender,
+            'statusAbsent' => $statusAbsen,
+            'status' => $item->status,
+            'terlambat' => $terlambat, // Tambahkan waktu terlambat
+            'jabatan' => $item->gtk->JenisGTK->nama, // Jabatan untuk guru
+            'tipe'=>'Guru',
+            'keterangan'=>$item->gtk->JenisGTK->nama ?? ''
+        ];
+        } else {
+        return [
+            'nama' => $item->student->nama,
+            'id' => $item->student->id_rfid,
+            'uid' => $item->student->nis,
+            'foto' => $item->student->foto,
+            'jam' => $item->time,
+            'jenis_kelamin' => $item->student->gender,
+            'statusAbsent' => $statusAbsen,
+            'status' => $item->status,
+            'terlambat' => $terlambat, // Waktu terlambat untuk siswa
+            'jurusan' => $item->student->jurusan, // Jurusan untuk siswa
+            'tipe'=>'Siswa',
+            'keterangan'=>$item->student->getKelas->nama_kelas.' '.$item->student->getKelas->jurusanKelas->nama_jurusan
+        ];
+        }
         }
 
     }
 
-    public function rfidDataGET(request $request){
+    public function rfidDataGET(Request $request)
+    {
+        $dateToday = date('d/m/Y');
+        $data = absentsHistory::where('date', $dateToday)
+                    ->orderBy('id', 'DESC')
+                    ->first();
 
-        $data = absentsHistory::where('date',date('d/m/Y'))->orderBy('id','DESC')->get();
-        foreach($data as $item){
-            $option = "<option value='$item->uid' selected> $item->uid</option>";
-             return $option;
-         }
 
+        return $data ? $data->uid : null;
     }
 
     public function rfidDelete($id){

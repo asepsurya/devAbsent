@@ -44,7 +44,7 @@
                 <li>
                     <a href="javascript:void(0);" class="d-flex align-items-center border bg-white rounded p-2 mb-4">
                         <img src="{{ app('settings')['site_logo'] == '' ? asset('asset/img/default-logo.png') : asset('storage/'.app('settings')['site_logo'])  }}" class="avatar avatar-md img-fluid rounded" alt="Profile">
-                        <span class="text-dark ms-2 fw-normal">{{ app('settings')['site_name'] }}</span>
+                        <span class="text-dark ms-2 fw-normal" style="line-height: 1.4;">{{ app('settings')['site_name'] }}</span>
                     </a>
                 </li>
             </ul>

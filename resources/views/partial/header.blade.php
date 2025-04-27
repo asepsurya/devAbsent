@@ -31,13 +31,17 @@
                     <h3><span class="ti ti-chalkboard"></span> Quiz</h3>
                 @endif
 
+                {{-- <a href="#" class="btn btn-success align-items-center p-2" >
+                    <i class="ti ti-calendar-due me-1"></i>Lakukan Absensi Siswa
+                </a> --}}
             </div>
+
+
 
             <div class="pe-1">
                 <a href="#" class="btn btn-outline-light fw-normal bg-white d-flex align-items-center p-2" >
                     <i class="ti ti-calendar-due me-1"></i>Tahun Ajaran : {{ $tahunAjaran }}
                 </a>
-
             </div>
 
 
@@ -54,8 +58,8 @@
                 </a>
             </div>
             <div class="pe-1">
-                <a href="#" id="checkUpdateBtn" class="btn btn-outline-light bg-white btn-icon me-1" 
-                   data-bs-toggle="tooltip" data-bs-placement="top" 
+                <a href="#" id="checkUpdateBtn" class="btn btn-outline-light bg-white btn-icon me-1"
+                   data-bs-toggle="tooltip" data-bs-placement="top"
                    aria-label="Cek Update" data-bs-original-title="Cek Update!">
                     <i class="ti ti-refresh"></i>
                 </a>

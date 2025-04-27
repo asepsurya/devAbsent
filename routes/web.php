@@ -41,6 +41,7 @@ use App\Http\Controllers\plugin\config\deletePluginController;
 
 Route::get('/',[landingController::class,'index'])->name('index');
 Route::get('/listabsents',[landingController::class,'listabsents'])->name('listabsents');
+Route::get('/absen-summary',[landingController::class,'getAbsenSummary'])->name('absen.summary');
 // Route::get('/rfid/data',[rfidController::class,'rfidData'])->name('rfidData');
 Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDataGET');
 Route::get('/role',[authController::class,'role'])->name('role');
@@ -70,7 +71,7 @@ Route::middleware('auth')->group(function () {
     // -------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------- Profile Route ---------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
-    
+
     Route::get('/profile/{id}',[authController::class,'profileIndex'])->name('profileIndex');
     Route::post('/profile/edit/action',[authController::class,'profileUpdate'])->name('profileUpdate');
     Route::post('/profile/edit/imageProfile',[authController::class,'imageProfile'])->name('imageProfile');
@@ -180,7 +181,7 @@ Route::middleware('auth')->group(function () {
     // -------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------- SETELAN WALIKELAS ROUTE ---------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
-   
+
     Route::get('/akademik/pengaturan/walikelas',[PengaturanAkademik::class,'PengaturanWalikelas'])->name('PengaturanWalikelas');
     Route::post('/akademik/pengaturan/walikelasAdd',[PengaturanAkademik::class,'pengaturanWalikelasAdd'])->name('pengaturanWalikelasAdd');
     Route::post('/akademik/pengaturan/walikelasEdit',[PengaturanAkademik::class,'pengaturanWalikelasEdit'])->name('pengaturanWalikelasEdit');
@@ -188,7 +189,7 @@ Route::middleware('auth')->group(function () {
     // -------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------- GURU TENAGA KEPENDENDIDIDKAN GTK ROUTE ---------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
-   
+
     Route::get('/gtk/all',[GTKController::class,'GTKall'])->name('GTKall');
     Route::get('/gtk/add',[GTKController::class,'GTKaddIndex'])->name('GTKaddIndex');
     Route::post('/gtk/addAction',[GTKController::class,'GTKadd'])->name('GTKadd');
@@ -198,7 +199,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/gtk/dataIndukGTKfoto',[GTKController::class,'GTKfoto'])->name('GTKfoto');
     Route::get('/gtk/cetak',[GTKController::class,'card'])->name('card');
-    
+
     Route::get('/gtk/employment_types',[GTKController::class,'employmenttypesIndex']);
     Route::post('/gtk/employment_typesAdd',[GTKController::class,'employmenttypesIndexAdd'])->name('employmenttypesIndexAdd');
     Route::post('/gtk/employment_typesUpdate',[GTKController::class,'employmenttypesIndexUpdate'])->name('employmenttypesIndexUpdate');
@@ -207,7 +208,7 @@ Route::middleware('auth')->group(function () {
     // -------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------- RFID ROUTE ------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
-    
+
     Route::get('/rfid',[rfidController::class,'rfid'])->name('rfid');
     Route::get('/rfid/delete{id}',[rfidController::class,'rfidDelete'])->name('rfidDelete');
 
@@ -245,11 +246,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/absentrfid/teacher', [reportController::class, 'reportRFIDTeacher']);
     Route::get('/report/absent/students', [reportController::class, 'reportAbsentStudent']);
     Route::get('/report/absent/kelas', [PDFController::class, 'reportAbsentKelas'])->name('absentKelas');
-    
+
     // -------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------- ROUTE PENGGUNA ------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
-  
+
     Route::get('/user/administrator',[penggunaController::class,'userAdministratorIndex'])->name('userAdministratorIndex');
     Route::post('/user/administratorAdd',[penggunaController::class,'userAdministratorAdd'])->name('userAdministratorAdd');
     Route::get('/user/students',[penggunaController::class,'userStudentsIndex'])->name('userStudentsIndex');
@@ -302,7 +303,7 @@ Route::middleware('auth')->group(function () {
     // Route::post('/class/leasson/time/update',[leassonController::class,'updateleassonTime'])->name('leasson.updatetime');
     // Route::get('/class/leasson/time/delete/{id}',[leassonController::class,'deleteleassonTime'])->name('leasson.deletetime');
 
-   
+
     // -------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------- SETELAN APLIKASI ROUTE --------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
@@ -330,7 +331,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/gtk/import/index',[GTKController::class,'GTKimportIndex'])->name('GTKimportIndex');
     Route::post('/gtk/import',[GTKController::class,'GTKimport'])->name('GTKimport');
-    
+
     // -------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------- PLUGIN CONTROLLER  --------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
@@ -380,7 +381,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/getkabupaten',[RegionController::class,'getkabupaten'])->name('getkabupaten');
     Route::post('/getkecamatan',[RegionController::class,'getkecamatan'])->name('getkecamatan');
     Route::post('/getdesa',[RegionController::class,'getdesa'])->name('getdesa');
-    
+
     Route::get('/qr/{code}', [barcodeController::class, 'generateQRCode'])->name('qr.generate');
     Route::get('/card', [barcodeController::class, 'card'])->name('mycard');
 
@@ -391,3 +392,62 @@ Route::middleware('auth')->group(function () {
 // -------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------- START PLUGIN INSTALL HERE -------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------------------
+
+// Routes dari Plugin plugin906373
+use App\Http\Controllers\plugin\PluginStudentController;
+Route::middleware('auth')->group(function () {
+    Route::get('/akademik/plugin/import', [PluginStudentController::class, 'dataImport'])->name('dataImport');
+    Route::post('/akademik/datainduk/studentImport', [PluginStudentController::class, 'studentImport'])->name('studentImport');
+    Route::get('/akademik/datainduk/student/import', [PluginStudentController::class, 'studentIndex'])->name('studentIndex');
+});
+// End dari Plugin
+
+// Routes dari Plugin plugin242032
+
+use App\Http\Controllers\plugin\CommentController;
+use App\Http\Controllers\plugin\ExcelPreviewController;
+use App\Http\Controllers\plugin\ClassRoomDetailController;
+
+Route::middleware('auth')->group(function () {
+    // class Room
+    Route::get('/classroom', [ClassRoomDetailController::class, 'index'])->name('classroom.index');
+    Route::post('/classroom/add', [ClassRoomDetailController::class, 'add'])->name('classroom.add');
+    Route::post('/classroom/update', [ClassRoomDetailController::class, 'update'])->name('classroom.update');
+    Route::get('/classroom/archive/{id}', [ClassRoomDetailController::class, 'archive'])->name('classroom.archive');
+    Route::get('/classroom/detail/{id}', [ClassRoomDetailController::class, 'detail'])->name('classroom.detail');
+    Route::get('/classroom/recommend', [ClassRoomDetailController::class, 'recommend'])->name('classroom.recommend');
+
+    Route::post('/classroom/detail/adduser', [ClassRoomDetailController::class, 'adduser'])->name('classroom.adduser');
+    Route::post('/classroom/detail/adduserClass', [ClassRoomDetailController::class, 'adduserClass'])->name('classroom.adduserClass');
+    Route::get('/classroom/detail/deleteuserClass/{id}', [ClassRoomDetailController::class, 'deleteuserClass'])->name('classroom.deleteuserClass');
+    Route::get('/classroom/detail/tugas/{task_id}/{id_kelas}', [ClassRoomDetailController::class, 'detailTugas'])->name('classroom.detailTugas');
+    Route::get('/classroom/addwork/{id}', [ClassRoomDetailController::class, 'tugas'])->name('classroom.tugas');
+    Route::post('/classroom/addwork/add', [ClassRoomDetailController::class, 'tambahTugas'])->name('classroom.tambahTugas');
+    Route::get('/classroom/addwork/edit/{task_id}', [ClassRoomDetailController::class, 'editTugas'])->name('classroom.editTugas');
+    Route::post('/classroom/addwork/edit/action', [ClassRoomDetailController::class, 'editTugasAction'])->name('classroom.editTugasAction');
+    Route::get('/classroom/addwork/edit/filedelete/{id}', [ClassRoomDetailController::class, 'filedelete'])->name('classroom.filedelete');
+    Route::post('/classroom/addwork/edit/linkdelete', [ClassRoomDetailController::class, 'linkdelete'])->name('classroom.linkdelete');
+    Route::post('/classroom/addAnnouncement', [ClassRoomDetailController::class, 'addAnnouncement'])->name('classroom.addAnnouncement');
+    Route::get('/classroom/addwork/delete/{task_id}', [ClassRoomDetailController::class, 'deleteTaskAction'])->name('classroom.deleteTaskAction');
+    Route::post('/classroom/addwork/delete/quiz', [ClassRoomDetailController::class, 'deletequizAction'])->name('classroom.quizTaskAction');
+
+    Route::get('/classroom/questions/{id_kelas}/{task_id}/list', [ClassRoomDetailController::class, 'quiz'])->name('classroom.quiz');
+    Route::get('/classroom/questions/{id_kelas}/{task_id}/create', [ClassRoomDetailController::class, 'tambahQuiz'])->name('classroom.tambahQuiz');
+    Route::get('/classroom/questions/{id_kelas}/{id}/{task_id}/update', [ClassRoomDetailController::class, 'editQuiz'])->name('classroom.editQuiz');
+
+    Route::post('/classroom/question/add', [ClassRoomDetailController::class, 'quizAdd'])->name('classroom.quizAdd');
+    Route::post('/classroom/question/update', [ClassRoomDetailController::class, 'quizUpdate'])->name('classroom.quizUpdate');
+    Route::get('/classroom/question/delete/{id}', [ClassRoomDetailController::class, 'quizDelete'])->name('classroom.quizDelete');
+    Route::get('/quiz/{id_kelas}/{task_id}', [ClassRoomDetailController::class, 'quizIndex'])->name('quiz');
+    Route::post('/quiz/submit', [ClassRoomDetailController::class, 'quizSubmit'])->name('quiz.submit');
+    Route::post('/quiz/finish', [ClassRoomDetailController::class, 'quizFinish'])->name('quiz.finish');
+
+    Route::get('/download/{filename}', [ClassRoomDetailController::class, 'download'])->name('download');
+    Route::post('/preview-excel', [ExcelPreviewController::class, 'previewExcel'])->name('preview.excel');
+    Route::post('/save-preview-data', [ExcelPreviewController::class, 'savePreviewData'])->name('save.preview.data');
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
+
+    
+});
+// End dari Plugin

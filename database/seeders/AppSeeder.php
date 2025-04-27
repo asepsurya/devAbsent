@@ -13,6 +13,8 @@ use App\Models\student;
 use App\Models\JenisGTK;
 use App\Models\grupMapel;
 use App\Models\walikelas;
+use App\Models\ref_jadwal;
+use App\Models\setelanHari;
 use Illuminate\Support\Str;
 use App\Models\TahunPelajaran;
 use Illuminate\Database\Seeder;
@@ -48,14 +50,14 @@ class AppSeeder extends Seeder
             ['nama' => 'Project IPAS', 'jml_jam' => '2', 'type' => 'Kejuruan', 'status' => '1'],
             ['nama' => 'Dasar-Dasar Layanan Kesehatan', 'jml_jam' => '2', 'type' => 'Kejuruan', 'status' => '1'],
         ];
-        
+
         foreach ($mapelData as $data) {
             Mapel::updateOrCreate(
                 ['nama' => $data['nama']], // Kunci unik (berdasarkan nama mapel)
                 $data // Data yang akan diperbarui atau dibuat
             );
         }
-        
+
 
         //-----------------------------------------------------------------
         // SEEDER UNTUK TAHUN PELAJARAN
@@ -65,7 +67,7 @@ class AppSeeder extends Seeder
             ['tahun_pelajaran' => '2024/2025', 'semester' => 'Ganjil', 'status' => '1'],
             ['tahun_pelajaran' => '2024/2025', 'semester' => 'Genap', 'status' => '2'],
         ];
-        
+
         foreach ($tahunPelajaranData as $data) {
             TahunPelajaran::updateOrCreate(
                 [
@@ -86,14 +88,14 @@ class AppSeeder extends Seeder
             ['nama_jurusan' => 'Teknologi Farmasi', 'kurikulum' => 'Kurikulum Merdeka', 'status' => '1'],
             ['nama_jurusan' => 'Layanan Kesehatan', 'kurikulum' => 'Kurikulum Merdeka', 'status' => '1'],
         ];
-        
+
         foreach ($jurusanData as $data) {
             Jurusan::updateOrCreate(
                 ['nama_jurusan' => $data['nama_jurusan']], // Kunci unik
                 $data // Data yang akan diperbarui atau dibuat
             );
         }
-        
+
 
         //-----------------------------------------------------------------
         // SEEDER UNTUK JURUSAN
@@ -107,7 +109,7 @@ class AppSeeder extends Seeder
             ['nama_kelas' => 'XII', 'id_jurusan' => '1', 'sub_kelas' => '', 'kapasitas' => '30', 'status' => '1'],
             ['nama_kelas' => 'XII', 'id_jurusan' => '2', 'sub_kelas' => '', 'kapasitas' => '30', 'status' => '1'],
         ];
-        
+
         foreach ($kelasData as $data) {
             Kelas::updateOrCreate(
                 [
@@ -117,7 +119,7 @@ class AppSeeder extends Seeder
                 $data // Data untuk diperbarui atau dibuat
             );
         }
-        
+
         //-----------------------------------------------------------------
         // SEEDER UNTUK RFID
         // ----------------------------------------------------------------
@@ -143,7 +145,7 @@ class AppSeeder extends Seeder
             ['id_rfid' => 'RFID005'], // Kunci unik untuk pencarian
             ['status' => '2'] // Data yang akan diperbarui atau dibuat
         );
-        
+
 
         //-----------------------------------------------------------------
         // SEEDER UNTUK ROLE AND PERMISSION
@@ -312,7 +314,7 @@ class AppSeeder extends Seeder
                 'remember_token' => Str::random(60), // Generate token random
             ]
         );
-        
+
         $user->assignRole($role3);
 
         //-----------------------------------------------------------------
@@ -340,7 +342,7 @@ class AppSeeder extends Seeder
                 'id_rfid' => 'RFID003',
             ]
         );
-        
+
 
         gtk::updateOrCreate(
             ['nik' => '6376372635140008'], // Kunci unik
@@ -363,7 +365,7 @@ class AppSeeder extends Seeder
                 'id_rfid' => 'RFID004',
             ]
         );
-        
+
 
         gtk::updateOrCreate(
             ['nik' => '6376372635140009'], // Kunci unik untuk identifikasi data
@@ -386,7 +388,7 @@ class AppSeeder extends Seeder
                 'id_rfid' => 'RFID005',
             ]
         );
-        
+
 
         //-----------------------------------------------------------------
         // SEEDER UNTUK USER GURU TENAGA KEPENPENDIDIKAN
@@ -404,7 +406,7 @@ class AppSeeder extends Seeder
                 'remember_token' => Str::random(60), // Gunakan random token
             ]
         );
-        
+
         $user1->assignRole($role1);
 
         $user2 = User::updateOrCreate(
@@ -424,7 +426,7 @@ class AppSeeder extends Seeder
         $user3 = User::updateOrCreate(
             ['email' => 'admin@saktiproject.my.id'], // Cek berdasarkan email
             [
-                'nomor' => '20271907', 
+                'nomor' => '20271907',
                 'nama' => 'Admin',
                 'role' => '1',
                 'status' => '2',
@@ -433,7 +435,7 @@ class AppSeeder extends Seeder
                 'remember_token' => Str::random(60),
             ]
         );
-        
+
         $user3->assignRole($role4);
 
         $user4 = User::updateOrCreate(
@@ -448,7 +450,7 @@ class AppSeeder extends Seeder
                 'remember_token' => Str::random(60),
             ]
         );
-        
+
         $user4->assignRole($role5);
 
         //-----------------------------------------------------------------
@@ -518,6 +520,52 @@ class AppSeeder extends Seeder
                 'id_gtk' => '6376372635140006',
             ]
         );
+
+        //-----------------------------------------------------------------
+        // SEEDER UNTUK REFERENSI JADWAL
+        // ----------------------------------------------------------------
+        $jadwals = [
+            ['ref' => 'Upacara Bendera', 'waktu' => '45'],
+            ['ref' => 'Istirahat', 'waktu' => '10'],
+            ['ref' => 'Ishoma', 'waktu' => '10'],
+        ];
+
+        foreach ($jadwals as $jadwal) {
+            ref_jadwal::updateOrCreate(
+                [
+                    'ref' => $jadwal['ref'],
+                    'waktu' => $jadwal['waktu'],
+                    'status' => '1',
+                ],
+                [
+                    'ref_ID' => random_int(1000000000, 9999999999)
+                ]
+            );
+        }
+        //-----------------------------------------------------------------
+        // SEEDER UNTUK SETELAN HARI
+        // ----------------------------------------------------------------
+        $jadwals = [
+            ['status' => '1','id_hari'=> '1'],
+            ['status' => '1','id_hari'=> '2'],
+            ['status' => '1','id_hari'=> '3'],
+            ['status' => '1','id_hari'=> '4'],
+            ['status' => '1','id_hari'=> '5'],
+            ['status' => '1','id_hari'=> '6'],
+        ];
+
+        foreach ($jadwals as $jadwal) {
+            setelanHari::updateOrCreate(
+                [
+                    'id_hari' => $jadwal['id_hari'],
+                ],
+                [
+                    'status' => $jadwal['status'],
+                ]
+            );
+        }
+
+
         //-----------------------------------------------------------------
         // SEEDER SETELAN DEFAULT
         // ----------------------------------------------------------------
@@ -526,5 +574,7 @@ class AppSeeder extends Seeder
         //-----------------------------------------------------------------
         // *********************** END SEEDER ***********************
         // ----------------------------------------------------------------
+
+
 
 }

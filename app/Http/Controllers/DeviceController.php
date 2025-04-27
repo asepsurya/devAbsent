@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\rfid;
+use App\Models\User;
+use App\Models\absent;
+use App\Models\rombel;
 use App\Models\Setting;
 use App\Models\student;
+use App\Models\absentMapel;
 use Illuminate\Http\Request;
+use App\Models\absentsHistory;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 
@@ -25,21 +30,33 @@ class DeviceController extends Controller
     }
 
     public function rfidInputDevice1(request $request){
-         // Check if RFID key already exists
-        $exists =  student::where('id_rfid',$request->key)->exists();
 
-        if ($exists) {
-            toastr()->warning('UID :'.$request->key.' already exists!');
-            return redirect()->back();
+        student::where('nis',$request->nis)->update(['id_rfid'=>$request->key]);
+        $cek = rfid::where('id_rfid',$request->key)->get();
+        if($cek->count()){
+            rfid::where('id_rfid',$request->key)->update(['status'=>'2']);
+        }else{
+            rfid::create([
+                'id_rfid' => $request->key,
+                'status' => 2,
+            ]);
         }
 
-        rfid::create([
-            'id_rfid' => $request->key,
-            'status' => 2,
-        ]);
-        student::where('nis',$request->nis)->update([
-            'id_rfid' => $request->key,
-        ]);
+        // Method ubah rfid ketika  RFID Berubah
+        $cekrfid = absent::where('id_rfid',$request->old_rfid)->get();
+        if($cekrfid->count()){
+            if($cekrfid->where('id_rfid',$request->old_rfid) !== $request->key ){
+                rfid::where('id_rfid',$request->old_rfid)->update(['status'=>'1']);
+                absent::where('id_rfid',$request->old_rfid)->update(['id_rfid'=>$request->key]);
+                absentsHistory::where('uid',$request->old_rfid)->update(['uid'=>$request->key]);
+            }
+        }
+
+        $cek = rombel::where('nis',$request->nis)->get();
+        if($cek->count()){
+            rombel::where('nis',$request->nis)->update(['id_rfid'=>$request->key]);
+        }
+        return redirect()->back();
         toastr()->success('RFID'.$request->key.' berhasil disetel');
 
 
