@@ -90,12 +90,13 @@
                             </a>
                         </li>
                         @endif
+                        @if(auth()->user()->role == 'admin' || auth()->user()->role == 'superadmin')
                         <li class="{{ Request::is('plugin') ? 'active' : ''}}">
                             <a href="{{ route('plugin.index') }}">
                                 <i class="ti ti-plug"></i><span>Plugin</span>
                             </a>
                         </li>
-
+                        @endif
                     </ul>
                 </li>
                 <li>

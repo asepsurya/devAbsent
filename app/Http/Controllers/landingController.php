@@ -25,22 +25,17 @@ class landingController extends Controller
         return false;
     }
     public function index(){
-        if($this->isConnected()) {
-            try {
-                $username = $this->instagramService->getUsername($userId);
-                $feed = $this->instagramService->getFeed($userId);
-            } catch (\Exception $e) {
-                // Kalau gagal, kosongkan variabelnya biar view tetap jalan
-                $username = null;
-                $feed = [];
-
-                // Optional: simpan log errornya
-                \Log::error('Instagram API error: ' . $e->getMessage());
-            }
-        } else {
-            $username = null;
-            $feed = [];
+        if($this->isConnected()){
+            $userId = app('settings')['instagram_userID'] ?? env('INSTAGRAM_USER_ID'); // your Instagram user ID
+            $username = $this->instagramService->getUsername($userId);  // Fetch username
+            $feed = $this->instagramService->getFeed($userId);
+        }else{
+            $userId =[];
+            $username =[];
+            $feed =[];
         }
+
+
         if(auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')) {
             return view('frontpage.myIndex', [
                 'absent' => absentsHistory::where('date', date('d/m/Y'))->count()

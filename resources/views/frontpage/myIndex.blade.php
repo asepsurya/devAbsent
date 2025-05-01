@@ -23,7 +23,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
-
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <!-- ===============================================-->
     <!--    Stylesheets-->
     <!-- ===============================================-->
@@ -77,7 +77,10 @@
 
             font-family: 'Inter', sans-serif;
         }
-
+        #reader {
+            width: 300px;
+            margin: auto;
+        }
         .media-fixed-size {
             width: 100%;
             height: 300px;
@@ -617,29 +620,28 @@
     </div> --}}
 
     <!-- Modal -->
-    <div class="modal fade" id="barcodeModal" tabindex="-1" aria-labelledby="barcodeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Scan QR Code</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body position-relative">
-                    <video id="video" class="w-100 rounded" autoplay></video>
-
-                    <!-- Kotak Fokus -->
-                    <div class="scan-overlay">
-                        <div class="scan-box"></div>
-                    </div>
-
-                    <div class="mt-3 text-center">
-                        <div id="message" class="text-muted">Arahkan QR code ke kotak...</div>
-                        <div id="result" class="fw-bold text-success mt-2"></div>
-                    </div>
-                </div>
-            </div>
+    <!-- Modal -->
+<div class="modal fade" id="barcodeModal" tabindex="-1" aria-labelledby="barcodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Scan Barcode / QR Code</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
         </div>
+        <div class="modal-body">
+            <div id="scan-loading" style="display: none; text-align: center; margin-bottom: 10px;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div>Memproses data...</div>
+            </div>
+
+          <div id="qr-reader" style="width:100%;"></div>
+          <p id="scan-result" class="mt-3 text-center"></p>
+        </div>
+      </div>
     </div>
+  </div>
 
     <!-- ===============================================-->
     <!--    JavaScripts-->
@@ -650,6 +652,111 @@
     <script src="{{ asset('landing/vendors/is/is.min.js') }}"></script>
     <script src="{{ asset('landing/js/theme.js') }}"></script>
     <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
+    {{-- barcode scanner --}}
+    <script>
+        let scanner;
+
+        function startScanner() {
+            if (!scanner) {
+                scanner = new Html5QrcodeScanner("qr-reader", {
+                    fps: 10,
+                    qrbox: 250,
+                    rememberLastUsedCamera: true,
+                    showTorchButtonIfSupported: true,
+                    showZoomSliderIfSupported: true,
+                    showScanButtonIfSupported: true, // tombol "Scan from file"
+                    supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA, Html5QrcodeScanType.SCAN_TYPE_FILE]
+                });
+
+                scanner.render(onScanSuccess, onScanError);
+            }
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+
+            if (decodedText) {
+                // Tampilkan loading
+                const loadingElement = document.getElementById('scan-loading');
+                if (loadingElement) {
+                    loadingElement.style.display = 'block';
+                }
+
+                const form = document.createElement("form");
+                form.method = "GET";
+                form.action = "/api/absent/entry";
+
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "rfid";
+                input.value = decodedText;
+                form.appendChild(input);
+
+                document.body.appendChild(form);
+                $('#id_rfid').val(decodedText);
+                const queryString = new URLSearchParams({ rfid: decodedText }).toString();
+                const url = form.action + "?" + queryString;
+
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) throw new Error("Gagal mengirim data");
+                        return response.text();
+                    })
+                    .then(data => {
+                        console.log("Response dari server:", data);
+
+                        // Sembunyikan loading
+                        if (loadingElement) {
+                            loadingElement.style.display = 'none';
+                        }
+
+                        // ✅ Tutup modal
+                        const modalElement = document.getElementById('barcodeModal');
+                        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                        if (modalInstance) {
+                            modalInstance.hide(); // Close modal
+                        }
+
+                        // Scanner restart otomatis saat modal dibuka lagi
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("❌ Gagal mengirim data ke server.");
+
+                        // Sembunyikan loading juga jika gagal
+                        if (loadingElement) {
+                            loadingElement.style.display = 'none';
+                        }
+                    });
+
+                // Hentikan scanner
+                scanner.clear();
+                scanner = null;
+            } else {
+                document.getElementById('scan-result').innerText = "❌ QR Code tidak valid.";
+            }
+        }
+
+
+
+        function onScanError(errorMessage) {
+            // Biarkan kosong untuk mencegah spam log
+        }
+
+        function stopScanner() {
+            if (scanner) {
+                scanner.clear().then(() => {
+                    scanner = null;
+                    document.getElementById('scan-result').innerText = '';
+                });
+            }
+        }
+
+        // Hubungkan ke modal
+        document.getElementById('barcodeModal').addEventListener('shown.bs.modal', startScanner);
+        document.getElementById('barcodeModal').addEventListener('hidden.bs.modal', stopScanner);
+    </script>
+
+
 
    <script>
    document.getElementById('rfidInput2').addEventListener('change', function() {
@@ -791,98 +898,7 @@
         });
 
     </script>
-    <script>
-        let scanning = true;
-        let lastScanTime = 0;
 
-        // Akses elemen video dan result
-        const video = document.getElementById('video');
-        const resultElement = document.getElementById('result');
-        const messageElement = document.getElementById('message');
-
-        // Fungsi untuk memulai scan menggunakan webcam
-        function startScanner() {
-            // Meminta izin untuk menggunakan kamera
-            navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: "environment"
-                    }
-                })
-                .then(stream => {
-                    video.srcObject = stream;
-                    video.setAttribute("playsinline", true); // Untuk iPhone
-                    video.play();
-                    requestAnimationFrame(scanBarcode);
-                })
-                .catch(err => {
-                    messageElement.textContent = "Gagal mengakses kamera: " + err.message;
-                });
-        }
-
-        // Fungsi untuk memindai QR Code
-        function scanBarcode() {
-            const currentTime = Date.now();
-            // Batasi pemindaian setiap 100ms
-            if (currentTime - lastScanTime < 100) {
-                requestAnimationFrame(scanBarcode);
-                return;
-            }
-
-            lastScanTime = currentTime;
-
-            if (video.videoWidth === 0 || video.videoHeight === 0) {
-                requestAnimationFrame(scanBarcode);
-                return;
-            }
-
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-
-            // Mengurangi resolusi agar pemindaian lebih cepat
-            const downscaleFactor = 0.5;
-            canvas.width = video.videoWidth * downscaleFactor;
-            canvas.height = video.videoHeight * downscaleFactor;
-
-            // Menggambar gambar video pada canvas
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            // Tentukan ukuran dan posisi area yang akan dipindai (kotak hijau)
-            const scanWidth = 220;
-            const scanHeight = 220;
-            const scanX = (canvas.width - scanWidth) / 2;
-            const scanY = (canvas.height - scanHeight) / 2;
-
-            // Ambil data gambar dari area yang ditentukan
-            const imageData = context.getImageData(scanX, scanY, scanWidth, scanHeight);
-
-            // Coba scan barcode menggunakan jsQR
-            const code = jsQR(imageData.data, scanWidth, scanHeight, {
-                inversionAttempts: "dontInvert"
-            , });
-
-            if (code) {
-                resultElement.textContent = code.data; // Menampilkan hasil barcode
-                scanning = false; // Hentikan pemindaian
-                video.srcObject.getTracks().forEach(track => track.stop()); // Stop webcam
-            } else {
-                messageElement.textContent = "Mencari QR code...";
-                requestAnimationFrame(scanBarcode); // Lanjutkan pemindaian
-            }
-        }
-
-        // Start scanner ketika modal dibuka
-        $('#barcodeModal').on('shown.bs.modal', function() {
-            startScanner();
-        });
-
-        // Hentikan scan saat modal ditutup
-        $('#barcodeModal').on('hidden.bs.modal', function() {
-            const stream = video.srcObject;
-            const tracks = stream.getTracks();
-            tracks.forEach(track => track.stop());
-        });
-
-    </script>
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
