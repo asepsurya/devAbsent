@@ -429,7 +429,7 @@
                                             <input type="text" name="rfidInput2" class="form-control form-control-lg" id="rfidInput2" maxlength="10" placeholder="Silahkan Tempelkan Kartu RFID anda..">
                                           </div>
 
-                                        <input type="text" name="id_rfid" class="form-control" id="id_rfid" maxlength="10" placeholder="Masukan ID Kartu anda" hidden>
+                                        <input type="text" name="rfid" class="form-control" id="id_rfid" maxlength="10" placeholder="Masukan ID Kartu anda" hidden>
 
                                         <input type="text" name="type" class="form-control" value="device1" hidden>
                                         <button hidden>a</button>
@@ -658,7 +658,7 @@
           var rfidValue = document.getElementById("rfidInput2").value; // Get the RFID value from the input
           var typeValue = document.querySelector('input[name="type"]').value; // Get the hidden type field value
 
-          var url = `${this.action}?rfid=${rfidValue}`;  // Build the URL with query parameters
+          var url = `/api/absent/entry?rfid=${rfidValue}`;  // Build the URL with query parameters
 
           fetch(url, {
             method: 'GET',
