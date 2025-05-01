@@ -10,6 +10,7 @@ use App\Models\rfid;
 use App\Models\absent;
 use App\Models\student;
 use App\Models\entyrfid;
+use App\Models\inOutTime;
 use Illuminate\Http\Request;
 use App\Models\absentsHistory;
 use App\Http\Controllers\Controller;
@@ -36,105 +37,134 @@ class rfidController extends Controller
         ],200);
     }
 
-    public function rfidadd(request $request) {
+    public function rfidadd(Request $request)
+    {
         date_default_timezone_set('Asia/Jakarta');
-        $timenow= date('H:i');
-        $data = rfid::where('id_rfid',$request->rfid)->get();
-        if($data->count()) {
-            foreach($data as $item){
-                if($item->status == '1') {
+        $timenow = Carbon::now();
+
+        // Ambil data RFID dan relasi student/GTK
+        $item = rfid::with(['rfidStudent', 'rfidGTK'])->where('id_rfid', $request->rfid)->first();
+
+        // Jika RFID tidak ditemukan → buat baru
+        if (!$item) {
+            rfid::create([
+                'id_rfid' => $request->rfid,
+                'status' => '1'
+            ]);
+            return response()->json(['status' => 'INVALID']);
+        }
+
+        // Cek status RFID
+        if ($item->status == '1') {
+            return response()->json(['status' => 'RFID Not Bind']);
+        }
+
+        if ($item->status == '3') {
+            return response()->json(['status' => 'BLOCKED']);
+        }
+
+        // Ambil UID dari student/GTK
+        $uid = optional($item->rfidStudent)->nis ?? optional($item->rfidGTK)->nik;
+
+        if (!$uid) {
+            return response()->json([
+                'status' => 'UID_NOT_FOUND',
+                'message' => 'RFID tidak terhubung ke data siswa atau GTK.'
+            ]);
+        }
+
+        // Cek apakah sudah absen hari ini
+        $cekAbsen = absent::where('id_rfid', $request->rfid)
+            ->where('tanggal', $timenow->format('d/m/Y'))
+            ->first();
+
+        if ($cekAbsen) {
+            // EXIT logic
+            $status = "EXIT";
+
+            if ($item->rfidStudent) {
+                $id_kelas = $item->rfidStudent->id_kelas;
+                $cek = inOutTime::where('id_kelas', $id_kelas)->first();
+                $jamPulang = $cek ? Carbon::parse($cek->jam_pulang) : Carbon::createFromTimeString('16:00');
+
+                if ($timenow->lessThan($jamPulang)) {
                     return response()->json([
-                        'status'=>'RFID Not Bind',
+                        'status' => 'BELUM_WAKTUNYA',
+                        'sss'=>$id_kelas,
+                        'message' => 'Maaf, jam pulang belum saatnya'
                     ]);
-                } else if($item->status == '3') {
-                        return response()->json([
-                            'status'=>'BLOCKED',
-                    ]);
-                } else {
-                    $cek = absent::where([
-                        'id_rfid'=>$request->rfid,'tanggal'=>date('d/m/Y')
-                    ])->get();
-
-                    if($cek->count()){
-                         // sudah absen Input jam Out
-                        $status ="EXIT";
-                        absent::where('id_rfid',$request->rfid)->update([
-                            'out'=>$timenow,
-                            'status'=>'H'
-                        ]);
-                        // method untuk tidak multiple history ketika sudah EXIT
-                          $cekhistory = absentsHistory::where([
-                            'date'=>date('d/m/Y'),
-                            'uid'=>$item->id_rfid,
-                            'status'=>'EXIT'
-                          ]);
-
-                            if($cekhistory->count() == 0){
-                                absentsHistory::create([
-                                    'date'=>date('d/m/Y'),
-                                    'time'=>$timenow,
-                                    'uid'=>$item->id_rfid,
-                                    'status'=>$status
-                                ]);
-                            }
-
-                    } else {
-                        // belum absen Input  jam entry
-                        $status = "ENTRY";
-                        absent::create([
-                            'tanggal'=>date('d/m/Y'),
-                            'uid'=> $item->rfidStudent->nis ?? $item->rfidGTK->nik ,
-                            'id_rfid'=>$item->id_rfid,
-                            'entry'=> $timenow,
-                            'status'=>'H'
-                        ]);
-
-                        absentsHistory::create([
-                            'date'=>date('d/m/Y'),
-                            'time'=>$timenow,
-                            'uid'=>$item->id_rfid,
-                            'status'=>$status
-                        ]);
-                    }
-
-                    $ceknama = gtk::where('id_rfid',$request->rfid)->get();
-                    if($ceknama->count()){
-                        foreach($ceknama as $a){
-                            $nama = $a->nama;
-                        }
-                    }
-                    $cekNama2 = student::where('id_rfid',$request->rfid)->get();
-                    if($cekNama2->count()){
-                        foreach($cekNama2 as $a){
-                            $nama = $a->nama;
-                        }
-                    }
-                    if(request('type') == 'device1'){
-                        return redirect()->route('index');
-                    }else{
-                        return response()->json([
-                            'waktu'=>Carbon::parse(now())->translatedFormat('d/m/Y'),
-                            'nama'=>$nama,
-                            'uid'=>$item->id_rfid,
-                            'status'=>$status,
-
-                        ]);
-                    }
-
                 }
             }
-        } else {
-            rfid::create([
-                'id_rfid'=>$request->rfid,
-                'status'=>'1'
+
+            // Update jam keluar
+            $cekAbsen->update([
+                'out' => $timenow,
+                'status' => 'H'
             ]);
 
+           // Cek apakah sudah ada history dengan status ini (ENTRY / EXIT)
+            $alreadyLogged = absentsHistory::where([
+                'date' => $timenow->format('d/m/Y'),
+                'uid' => $item->id_rfid,
+                'status' => $status
+            ])->exists();
+
+            $bolehSimpanHistory = false;
+
+            if ($item->rfidStudent) {
+                // Siswa: cukup pastikan belum dicatat
+                $bolehSimpanHistory = !$alreadyLogged;
+            } elseif ($item->rfidGTK) {
+                // GTK: pastikan belum dicatat status ENTRY / EXIT-nya hari ini
+                $bolehSimpanHistory = !$alreadyLogged;
+            }
+
+            if ($bolehSimpanHistory) {
+                absentsHistory::create([
+                    'date' => $timenow->format('d/m/Y'),
+                    'time' => $timenow->format('H:i:s'),
+                    'uid' => $item->id_rfid,
+                    'status' => $status
+                ]);
+            }
+
+
+        } else {
+            // ENTRY logic
+            $status = "ENTRY";
+
+            absent::create([
+                'tanggal' => $timenow->format('d/m/Y'),
+                'uid' => $uid,
+                'id_rfid' => $item->id_rfid,
+                'entry' => $timenow,
+                'status' => 'H'
+            ]);
+
+            absentsHistory::create([
+                'date' => $timenow->format('d/m/Y'),
+                'time' => $timenow->format('H:i:s'),
+                'uid' => $item->id_rfid,
+                'status' => $status
+            ]);
+        }
+
+        // Ambil nama dari student atau GTK
+        $nama = optional($item->rfidStudent)->nama ?? optional($item->rfidGTK)->nama ?? 'Tidak diketahui';
+
+        // Cek apakah dari perangkat tertentu
+        if ($request->type == 'device1') {
+            return redirect()->route('index');
+        } else {
             return response()->json([
-                // RFID TIDAK TERDAFTAR - INPUT RFID
-                'status'=>'INVALID',
+                'waktu' => $timenow->translatedFormat('d/m/Y - H:i'),
+                'nama' => $nama,
+                'uid' => $item->id_rfid,
+                'status' => $status,
             ]);
         }
     }
+
     // Untuk Mengambil Data
     public function rfidData(request $request){
         date_default_timezone_set('Asia/Jakarta');
@@ -188,7 +218,9 @@ class rfidController extends Controller
             'terlambat' => $terlambat, // Waktu terlambat untuk siswa
             'jurusan' => $item->student->jurusan, // Jurusan untuk siswa
             'tipe'=>'Siswa',
-            'keterangan'=>$item->student->getKelas->nama_kelas.' '.$item->student->getKelas->jurusanKelas->nama_jurusan
+          'keterangan' =>
+            ($item->student->getKelas->nama_kelas ?? '-') . ' ' .
+            ($item->student->getKelas->jurusanKelas->nama_jurusan ?? ' ')
         ];
         }
         }

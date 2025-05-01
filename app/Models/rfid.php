@@ -16,5 +16,6 @@ class rfid extends Model
     public function rfidGTK(){
         return $this->belongsTo('App\Models\gtk','id_rfid','id_rfid');
     }
+
 }
 

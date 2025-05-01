@@ -176,12 +176,25 @@
     box-shadow: none;
     border-color: #ced4da; /* atau warna border default */
 }
+#typing-text::after {
+    content: '|';
+    animation: blink 0.7s infinite;
+    color: black;
+    font-weight: bold;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
     </style>
     <link href="{{ asset('landing/css/theme.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
     <link rel="stylesheet" href="{{ asset('asset/css/customlanding.css') }}">
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    </style>
+
 </head>
 <body>
     <!-- ===============================================-->
@@ -211,10 +224,11 @@
 
                         {{-- Menu Navigasi --}}
                         <li class="nav-item">
-                            <a class="nav-link px-2 active" href="#section1">
-                                <i class="ti ti-home me-1"></i> SELAMAT DATANG DI APLIKASI ABSENSI SISWA
+                            <a class="nav-link px-2 " href="#section1">
+
+                              <span >Aplikasi Absensi Siswa</span>
                             </a>
-                        </li>
+                          </li>
 
 
                         {{-- Login / Profil User --}}
@@ -341,20 +355,7 @@
                                 </div>
                             </table>
                         </div>
-                        {{-- <div class="card shadow" style="width: 18rem;">
-                            <!-- Gambar Foto -->
-                            <img src="https://via.placeholder.com/100" alt="Foto Siswa" class="photo mx-auto d-block">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">John Doe</h5>
-                                <p class="card-text">
-                                    <strong>NIS:</strong> 123456789<br>
-                                    <strong>Jenis Kelamin:</strong> Laki-laki<br>
-                                    <strong>Jurusan:</strong> Teknik Informatika
-                                </p>
-                            </div>
-                        </div> --}}
-                        {{-- <img class="img-fluid" src="{{ asset('landing/img/illustrations/hero.png') }}" alt=""> --}}
-                        {{-- <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script><dotlottie-player src="https://lottie.host/a08fe931-1e93-4930-b4b0-714be508f0fc/XZEEsrlaoz.json" background="transparent" speed="1" style="width: 600px; height: 600px" direction="-1" playMode="bounce" loop autoplay></dotlottie-player> --}}
+
                     </div>
                     <div class=" pt-6">
 
@@ -649,6 +650,81 @@
     <script src="{{ asset('landing/vendors/is/is.min.js') }}"></script>
     <script src="{{ asset('landing/js/theme.js') }}"></script>
     <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
+
+   <script>
+   document.getElementById('rfidInput2').addEventListener('change', function() {
+        const rfid = document.getElementById('rfidInput2').value;
+
+        if (rfid) {
+            // Tampilkan loading saat mulai request
+            Swal.fire({
+                title: 'Memproses...',
+                text: 'Silakan tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            fetch(`/api/absent/entry?rfid=${rfid}`)
+                .then(response => response.json())
+                .then(data => {
+                    Swal.close(); // Tutup loading saat respons diterima
+
+                    if (data.status === 'INVALID') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'RFID Tidak Terdaftar',
+                            text: 'Silakan daftarkan RFID terlebih dahulu!',
+                            confirmButtonColor: '#d33'
+                        });
+                    } else if (data.status === 'RFID Not Bind') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'RFID Belum Tertaut',
+                            text: 'Silakan hubungkan RFID dengan akun terlebih dahulu!',
+                            confirmButtonColor: '#d33'
+                        });
+                    } else if (data.status === 'BELUM_WAKTUNYA') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Perhatian',
+                            text: 'Saat ini belum waktunya pulang. Mohon tunggu hingga jam pulang tiba.',
+                            confirmButtonColor: '#d33'
+                        });
+                    } else {
+                        // Jika berhasil, bisa tampilkan info lainnya di sini
+                        console.log('Data berhasil:', data);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Absensi Berhasil',
+                            html: `<b>${data.nama}</b><br>Status: ${data.status}<br>Waktu: ${data.waktu}`,
+                            confirmButtonColor: '#3085d6'
+                        });
+                    }
+                })
+                .catch(err => {
+                    Swal.close(); // Tutup loading saat error juga
+                    console.error('Request error:', err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi Kesalahan',
+                        text: 'Gagal menghubungi server. Coba lagi nanti.',
+                        confirmButtonColor: '#d33'
+                    });
+                });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'RFID Kosong',
+                text: 'Silakan masukkan RFID terlebih dahulu!',
+                confirmButtonColor: '#d33'
+            });
+        }
+    });
+
+
+   </script>
 
     <script>
         // Handle form submission via AJAX
