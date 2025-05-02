@@ -90,7 +90,7 @@
 
                         // Menonaktifkan tombol dan menambahkan spinner
                         updateButton.disabled = true;
-                        updateButton.innerHTML = 'Updating... <i class="fas fa-spinner fa-spin"></i>';
+                        updateButton.innerHTML = 'Updating... <i class="ti ti-loader"></i>';
 
                         fetch("{{ route('update.app') }}", {
                             method: 'POST',
