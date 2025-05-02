@@ -11,9 +11,7 @@ class Comment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'task_id',
-        'comment'
+        'comment', 'user_id', 'username', 'task_id', 'parent_id'
     ];
 
     // Relationship with User model
@@ -27,8 +25,23 @@ class Comment extends Model
         return $this->belongsTo('App\Models\student','user_id','nis');
     }
 
-    public function comments()
+
+
+    // Balasan rekursif untuk nested comments
+    public function childrenRecursive()
     {
-        return $this->hasMany(Comment::class);  // A user can have many comments
+        return $this->children()->with('childrenRecursive', 'gtkFoto', 'studentFoto');
+    }
+
+    // Relasi ke user GTK
+    public function gtkFoto()
+    {
+        return $this->belongsTo('App\Models\gtk','user_id','nik');
+    }
+
+    // Relasi ke user Student
+    public function studentFoto()
+    {
+        return $this->belongsTo('App\Models\student','user_id','nis');
     }
 }

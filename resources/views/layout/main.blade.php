@@ -12,23 +12,31 @@
 
     <title>{{ app('settings')['site_name'] }} | {{ $title }}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_fav']) }}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    {{-- <script src="{{ asset('asset/js/theme.js') }}"></script> --}}
     <script src="{{ asset('asset/js/lightDark.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <link rel="stylesheet" href="{{ asset('asset/css/boostrap.min.css') }}">
-    <script src="{{ asset('asset/js/feather.min.js') }}" ></script>
-    <link rel="stylesheet" href="{{ asset('asset/css/tabler-icon/tabler-icons.css') }}"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.2/feather.min.js" integrity="sha512-zMm7+ZQ8AZr1r3W8Z8lDATkH05QG5Gm2xc6MlsCdBz9l6oE8Y7IXByMgSm/rdRQrhuHt99HAYfMljBOEZ68q5A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="{{ asset('asset/css/tabler-icon/tabler-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/daterangepicker.css') }}">
-    <!-- SweetAlert2 CDN -->
-    <script src="{{ asset('asset/js/sweet-alert.js') }}"></script>
+
     <link href="{{ asset('asset/Plugins/select2/css/select2.min.css') }}" rel="stylesheet" />
     <script src="{{ asset('asset/Plugins/select2/js/select2.min.js') }}"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/bootstrap-datetimepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
     <style>
+        .ti-spin {
+            animation: spin 1s linear infinite;
+        }
+            @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         .search-suggestions {
             position: absolute;
             top: 100%;
