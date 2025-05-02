@@ -28,6 +28,18 @@
     <!--    Stylesheets-->
     <!-- ===============================================-->
     <style>
+        .absen-table {
+        table-layout: fixed;
+        width: 100%;
+        }
+
+        .absen-table td:first-child {
+        width: 130px;
+        white-space: nowrap;
+        }
+        .table-wrapper {
+        overflow-x: auto;
+        }
         .scan-overlay {
             position: absolute;
             top: 0;
@@ -137,59 +149,76 @@
             }
 
             .table td {
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid #eee;
-}
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid #eee;
+            }
 
-.table td:first-child {
-  color: #555;
-}
+            .table td:first-child {
+            color: #555;
+            }
 
-.badge-status {
-  padding: 0.4em 0.8em;
-  border-radius: 0.5rem;
-  font-size: 0.85rem;
-}
+            .badge-status {
+            padding: 0.4em 0.8em;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            }
 
-.badge-hadir {
-  background-color: #198754;
-  color: #fff;
-}
+            .badge-hadir {
+            background-color: #198754;
+            color: #fff;
+            }
 
-.badge-tidak {
-  background-color: #dc3545;
-  color: #fff;
-}
+            .badge-tidak {
+            background-color: #dc3545;
+            color: #fff;
+            }
+            .card2 {
+            
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            }
+            .card2 h6, .card2 h3{
+            color: #fff;
+            }
 
-/* shimmer loading */
-.skeleton {
-  display: inline-block;
-  height: 14px;
-  width: 100px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
-  background-size: 400% 100%;
-  animation: shimmer 1.2s ease-in-out infinite;
-}
+            .card2:hover {
+            transform: scale(1.05); /* Zoom in saat hover */
+            background-color: #333;  /* Ubah background saat hover (warna gelap untuk kontras) */
+            }
 
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-#rfidInput2:focus {
-    box-shadow: none;
-    border-color: #ced4da; /* atau warna border default */
-}
-#typing-text::after {
-    content: '|';
-    animation: blink 0.7s infinite;
-    color: black;
-    font-weight: bold;
-  }
+            .card2:hover h6, .card2:hover h3 {
+            color: #fff; /* Mengubah teks menjadi putih saat hover */
+            }
+            /* shimmer loading */
+            .skeleton {
+            display: inline-block;
+            height: 14px;
+            width: 100px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+            background-size: 400% 100%;
+            animation: shimmer 1.2s ease-in-out infinite;
+            }
 
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
+            @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+            }
+            #rfidInput2:focus {
+                box-shadow: none;
+                border-color: #ced4da; /* atau warna border default */
+            }
+            #typing-text::after {
+                content: '|';
+                animation: blink 0.7s infinite;
+                color: black;
+                font-weight: bold;
+            }
+
+            @keyframes blink {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0; }
+            }
+            
+           
     </style>
     <link href="{{ asset('landing/css/theme.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
@@ -223,27 +252,51 @@
 
                 {{-- Navbar Right Side --}}
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto align-items-lg-center gap-3 "> {{-- fs-5 = ukuran font ideal --}}
-
-                        {{-- Menu Navigasi --}}
-                        <li class="nav-item">
-                            <a class="nav-link px-2 " href="#section1">
-
-                              <span >Aplikasi Absensi Siswa</span>
-                            </a>
-                          </li>
-
-
+                    <ul class="navbar-nav ms-auto align-items-lg-center gap-2 "> {{-- fs-5 = ukuran font ideal --}}
                         {{-- Login / Profil User --}}
                         @if(auth()->user())
-                        <li class="nav-item ps-2 d-block d-md-none">
+                        {{-- Menu Navigasi --}}
+                        <li class="nav-item d-none d-md-inline">
+                            <a class="nav-link px-2">
+                              <span >Hallo, </span>{{ auth()->user()->nama }}
+                            </a>
+                          </li>
+                          @php
+                          $role = auth()->user()->role;
+                          $link = match($role) {
+                          'admin' => route('dashboard.admin'),
+                          'walikelas' => route('dashboard.walikelas'),
+                          'superadmin' => route('dashboard.superadmin'),
+                          'guru' => route('dashboard.teacher'),
+                          default => route('dashboard.student')
+                          };
+                          @endphp
+                          {{-- tampil di mobile saja --}}
+                          <li class="nav-item ps-2 d-block d-md-none pt-3">
+                              <a class="nav-link" href="{{ $link }}">
+                                  <i class="ti ti-dashboard me-2"></i> Dashboard
+                              </a>
+                          </li>
+                       
+                        <li class="nav-item ps-2 d-block d-md-none ">
                             <a href="#" class="nav-link " data-bs-toggle="modal" data-bs-target="#barcodeModal">
                                 <i class="ti ti-scan me-1"></i> Scan Barcode
                             </a>
                         </li>
+                        <li class="nav-item ps-2 d-block d-md-none " style="margin-left:-15px;">
+                            <form action="{{ route('logout') }}" method="post" class="dropdown-item m-0 p-0" >
+                                @csrf
+                                <button type="submit" class="btn btn-link dropdown-item">
+                                    <i class="ti ti-logout me-2"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                        {{-- end di mobile saja --}}
+                        {{-- ------------------------------------------------------------- --}}
                         {{-- Profil User Dropdown --}}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center px-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <li class="nav-item dropdown" style="z-index: 1050;">
+  
+                            <a class="nav-link dropdown-toggle d-flex align-items-center px-2 d-none d-md-inline" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 @php
                                 $userImg = asset('asset/img/user-default.jpg');
                                 if(auth()->user()->role == 'siswa' && Auth::user()->student?->foto) {
@@ -253,7 +306,7 @@
                                 }
                                 @endphp
                                 <img src="{{ $userImg }}" class="rounded-circle me-2" width="36" height="36" alt="User">
-                                {{-- <span class="fw-semibold">{{ auth()->user()->nama }}</span> --}}
+                                
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm" aria-labelledby="userDropdown">
@@ -292,14 +345,6 @@
                                 </li>
                             </ul>
                         </li>
-
-                        <li class="nav-item ps-2 d-none d-md-block">
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#barcodeModal">
-                                <img src="{{ asset('landing/img/qr.webp') }}" alt="" width="30">
-                            </a>
-                        </li>
-
-
                         @else
                         {{-- Tombol Login --}}
 
@@ -308,249 +353,175 @@
                                 Login Aplikasi
                             </a>
                         </li>
-
-
                         @endif
 
                     </ul>
                 </div>
 
+
+                
             </div>
         </nav>
 
-        <section class="py-0 bg-light-gradient" id="section1">
-            <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:contain;">
-            </div>
-
-
-
-            <!--/.bg-holder-->
-
-            <div class="container py-5">
-
-                <div class="row align-items-center">
-                    <div class="col-lg-6 col-md-5 order-md-1 " >
-                        <h4 class="mb-3"><span class="ti ti-calendar-due"></span> {{ Carbon\Carbon::parse(now())->translatedFormat('l, d F Y') }} | <span id="jam" class="text-muted"></span> </h4>
-                        <h4  class="display-2 fw-bold fs-4 fs-md-5 fs-xl-5  " style="line-height: 1.2;">Absensi Pintar, Kerja lebih Cerdas.</h4>
-                        <h5 class=" typewrite pb-3 text-muted" data-period="1000" data-type='[
-                            "Selamat datang di Absensi Pintar! Semoga hari Anda menyenangkan.",
-                            "Hallo, apa kabar? Semoga harimu produktif!",
-                            "Apakah Anda sudah absen hari ini? Jangan lupa untuk mengisi absen ya!",
-                            "Selamat pagi! Jangan lupa untuk absen, ya!",
-                            "Selamat datang! Ayo, absensi hari ini sudah terisi?"
-                        ]
-                        '></h5>
-
-                        <center><label><span class="ti ti-history"></span> Riwayat Absensi</label></center>
-                        <div class="table-responsive bg-white scrollme">
-                            <table class="table table-nowrap mb-0 table-fixed">
-                                <thead>
-                                    <tr>
-                                        <th class="bg-light-400"> <span class="ti ti-calendar-event"></span> Tanggal</th>
-                                        <th class="bg-light-400"> <span class="ti ti-users"></span> Nama Lengkap</th>
-                                        <th class="bg-light-400">Status</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody id="myData"></tbody>
-                                <idv id="loadingSpinner" class="mt-2" style="display:none;">
-                                    <center><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading data...</center>
-                                </div>
-                            </table>
-                        </div>
-
-                    </div>
-                    <div class=" pt-6">
-
-                        <div class="row pt-2">
-                            <!-- Sudah Absen Siswa -->
-                            <div class="col-md-6 col-lg-3 mb-3">
-                              <div class="card text-white bg-success shadow-sm">
-                                <div class="card-body d-flex align-items-center">
-                                  <i class="ti ti-user-check" style="font-size: 40px; margin-right: 15px;"></i>
-                                  <div>
-                                    <h6 class="mb-0"style="color: #fff">Siswa Sudah Absen</h6>
-                                    <h3 id="absenSiswaMasuk"style="color: #fff">0</h3>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <!-- Belum Absen Siswa -->
-                            <div class="col-md-6 col-lg-3 mb-3">
-                              <div class="card text-white bg-danger shadow-sm">
-                                <div class="card-body d-flex align-items-center">
-                                  <i class="ti ti-user-x" style="font-size: 40px; margin-right: 15px;"></i>
-                                  <div>
-                                    <h6 class="mb-0" style="color: #fff">Siswa Belum Absen</h6>
-                                    <h3 id="absenSiswaBelum" style="color: #fff">0</h3>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <!-- Sudah Absen GTK -->
-                            <div class="col-md-6 col-lg-3 mb-3">
-                              <div class="card text-white bg-primary shadow-sm">
-                                <div class="card-body d-flex align-items-center">
-                                  <i class="ti ti-users" style="font-size: 40px; margin-right: 15px;"></i>
-                                  <div>
-                                    <h6 class="mb-0" style="color: #fff">GTK Sudah Absen</h6>
-                                    <h3 id="absenGtkMasuk" style="color: #fff">0</h3>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <!-- Belum Absen GTK -->
-                            <div class="col-md-6 col-lg-3 mb-3">
-                              <div class="card text-white bg-warning shadow-sm">
-                                <div class="card-body d-flex align-items-center">
-                                  <i class="ti ti-users" style="font-size: 40px; margin-right: 15px;"></i>
-                                  <div>
-                                    <h6 class="mb-0" style="color: #fff">GTK Belum Absen</h6>
-                                    <h3 id="absenGtkBelum" style="color: #fff">0</h3>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+        <section class="py-0 bg-light-gradient" id="section1" >
+            <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:contain;"></div>
+          
+            <div class=" py-5 mt-5 px-4">
+              <div class="row align-items-start">
+                <!-- Left Column -->
+                <div class="col-lg-7 col-md-12 mb-4"style="z-index: 10;">
+                  <h4 class="mb-3">
+                    <span class="ti ti-calendar-due"></span>
+                    {{ Carbon\Carbon::parse(now())->translatedFormat('l, d F Y') }} |
+                    <span id="jam" class="text-muted"></span>
+                  </h4>
+                  <h4 class="display-2 fw-bold fs-4 fs-md-5" style="line-height: 1.2;">Absensi Pintar, Kerja lebih Cerdas.</h4>
+                  <h5 class="typewrite pb-3 text-muted"
+                    data-period="1000"
+                    data-type='[
+                      "Selamat datang di Absensi Pintar! Semoga hari Anda menyenangkan.",
+                      "Hallo, apa kabar? Semoga harimu produktif!",
+                      "Apakah Anda sudah absen hari ini? Jangan lupa untuk mengisi absen ya!",
+                      "Selamat pagi! Jangan lupa untuk absen, ya!",
+                      "Selamat datang! Ayo, absensi hari ini sudah terisi?"
+                    ]'>
+                  </h5>
+            
+                  <!-- Absensi Stats Cards -->
+                  <div class="row g-3">
+                    <div class="col-6 col-lg-3">
+                      <div class="card text-white bg-success shadow-sm card2">
+                        <div class="card-body d-flex align-items-center">
+                          <i class="ti ti-user-check fs-2 me-3"></i>
+                          <div style="color: #fff">
+                            <h6 class="mb-0">Siswa Absen</h6>
+                            <h3 id="absenSiswaMasuk">0</h3>
                           </div>
-
-
+                        </div>
                       </div>
-
-
-                    <div class="col-md-7 col-lg-6 text-center text-md-start ">
-
-                        <div class="container">
-                                <form action="/api/absent/entry" method="GET" id="absentForm">
-                                    <div class="mb-3">
-
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text bg-primary text-white">
-                                              <i class="ti ti-scan"></i>
-                                            </span>
-                                            <input type="text" name="rfidInput2" class="form-control form-control-lg" id="rfidInput2" maxlength="10" placeholder="Silahkan Tempelkan Kartu RFID anda..">
-                                          </div>
-
-                                        <input type="text" name="rfid" class="form-control" id="id_rfid" maxlength="10" placeholder="Masukan ID Kartu anda" hidden>
-
-                                        <input type="text" name="type" class="form-control" value="device1" hidden>
-                                        <button hidden>a</button>
-                                    </div>
-                                </form>
-
-
-                            <div class="row">
-                              <!-- Card Mahasiswa -->
-                              <div class="col">
-
-                                <div id="absenCard" class="card shadow rounded-3 border-0">
-                                    <div class="text-center p-4">
-                                      <img id="fotoMahasiswa"
-                                        src="{{ asset('asset/img/user-default.jpg') }}" loading="lazy"
-                                        class="rounded-circle"
-                                        style="width: 140px; height: 140px; object-fit: cover; border: 4px solid #fff; box-shadow: 0 3px 8px rgba(0,0,0,0.2);"
-                                        alt="Foto Mahasiswa">
-                                    </div>
-
-                                    <div class="card-body pt-0 p-0 m-0">
-                                      <h4 id="namaMahasiswa" class="card-title text-center fw-semibold mb-3">-</h4>
-
-                                      <table class="table mb-3">
-                                        <tbody>
-                                          <tr>
-                                            <td style="width: 130px;" class="fw-medium text-muted">Jenis Kelamin</td>
-                                            <td id="jenisKelamin">: -</td>
-                                          </tr>
-                                          <tr>
-                                            <td style="width: 130px;" class="fw-medium text-muted" id="labelKeterangan">Jurusan</td>
-                                            <td id="isiKeterangan">: -</td>
-                                          </tr>
-                                          <tr>
-                                            <td style="width: 130px;" class="fw-medium text-muted">UID</td>
-                                            <td id="nim">: -</td>
-                                          </tr>
-                                          <tr>
-                                            <td style="width: 130px;" class="fw-medium text-muted">Keterangan</td>
-                                            <td id="statusAbsen">: -</td>
-                                          </tr>
-                                          <tr>
-                                            <td style="width: 130px;" class="fw-medium text-muted">Status</td>
-                                            <td id="status">: -</td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-
-                                    </div>
-                                  </div>
-
-
-
-
-                        {{-- <div class=" my-5 mt-2">
-                            <div id="info"></div>
-                            <div class="mb-3" hidden>
-                                <label class="form-label">UID :</label>
-                                <select name="id_rfid" id="id_rfid" class="form-control" disabled></select>
-                                <label class="form-label my-3">Nama Lengkap :</label>
-                                <input type="text" class="form-control " id="nama" disabled>
-
-                            </div>
-
-                            <center><label><span class="ti ti-history"></span> Riwayat Absensi</label></center>
-                            <div class="table-responsive bg-white scrollme">
-                                <table class="table table-nowrap mb-0 table-fixed">
-                                    <thead>
-                                        <tr>
-                                            <th class="bg-light-400"> <span class="ti ti-calendar-event"></span> Tanggal</th>
-                                            <th class="bg-light-400"> <span class="ti ti-users"></span> Nama Lengkap</th>
-                                            <th class="bg-light-400">Status</th>
-
-                                        </tr>
-                                    </thead>
-
-                                    <tbody id="myData"></tbody>
-                                    <div id="loadingSpinner" class="mt-2" style="display:none;">
-                                        <center><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading data...</center>
-                                    </div>
-                                </table>
-                            </div>
-                            <!-- Loading Spinner (Hidden by default) -->
-
-                        </div> --}}
                     </div>
-
-                    {{-- <a class="btn btn-lg btn-info rounded-pill me-2" href="#" role="button">Start a New Store </a><span> or  </span><a class="btn btn-link ps-1 ps-md-4 ps-lg-1" href="#" role="button"> Customize &amp; Extend ›</a> --}}
+                    <div class="col-6 col-lg-3">
+                      <div class="card text-white bg-danger shadow-sm card2">
+                        <div class="card-body d-flex align-items-center">
+                          <i class="ti ti-user-x fs-2 me-3"></i>
+                          <div>
+                            <h6 class="mb-0">Belum Absen</h6>
+                            <h3 id="absenSiswaBelum">0</h3>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                      <div class="card text-white bg-primary shadow-sm card2">
+                        <div class="card-body d-flex align-items-center">
+                          <i class="ti ti-users fs-2 me-3"></i>
+                          <div>
+                            <h6 class="mb-0">GTK Absen</h6>
+                            <h3 id="absenGtkMasuk">0</h3>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                      <div class="card text-white bg-warning shadow-sm card2">
+                        <div class="card-body d-flex align-items-center">
+                          <i class="ti ti-users fs-2 me-3"></i>
+                          <div>
+                            <h6 class="mb-0">GTK Belum</h6>
+                            <h3 id="absenGtkBelum">0</h3>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+          
+                  <!-- Riwayat Absensi -->
+                  <div class="mt-4 ">
+                    <h6 class="text-center"><span class="ti ti-history"></span> Riwayat Absensi</h6>
+                    <div class="table-responsive bg-white scrollme table-wrapper">
+                      <table class="table table-nowrap mb-0 table-fixed ">
+                        <thead>
+                          <tr>
+                            <th class="bg-light-400">Tanggal</th>
+                            <th class="bg-light-400">Nama Lengkap</th>
+                            <th class="bg-light-400">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody id="myData"></tbody>
+                      </table>
+                      <div id="loadingSpinner" class="text-center py-2" style="display:none;">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading data...
+                      </div>
+                    </div>
+                  </div>
                 </div>
+          
+                <!-- Right Column -->
+                <div class="col-lg-5 col-md-12">
+                  <form action="/api/absent/entry" method="GET" id="absentForm" >
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <button type="button" class="input-group-text bg-primary text-white border-0" data-bs-toggle="modal" data-bs-target="#barcodeModal">
+                              <i class="ti ti-scan"></i>
+                            </button>
+                            <input type="text" name="rfidInput2" id="rfidInput2" class="form-control form-control-lg" maxlength="10" placeholder="Tempelkan Kartu RFID Anda..">
+                          </div>                          
+                      <input type="text" name="rfid" id="id_rfid" class="form-control" maxlength="10" hidden>
+                      <input type="text" name="type" value="device1" hidden>
+                      <button hidden>a</button>
+                    </div>
+                  </form>
+          
+                  <!-- Card Mahasiswa -->
+                  <div class="card shadow rounded-3 border-0">
+                    <div class="card-header">
+                        <span class="ti ti-user"></span> <b>Absensi Terakhir</b>
+                    </div>
+                    <div class="text-center p-4">
+                      <img id="fotoMahasiswa"
+                        src="{{ asset('asset/img/user-default.jpg') }}"
+                        class="rounded-circle"
+                        style="width: 140px; height: 140px; object-fit: cover; border: 4px solid #fff; box-shadow: 0 3px 8px rgba(0,0,0,0.2);"
+                        alt="Foto Mahasiswa">
+                    </div>
+          
+                    <div class="card-body pt-0 p-0 m-0 table-wrapper">
+                      <h4 id="namaMahasiswa" class="card-title text-center fw-semibold mb-3">-</h4>
+                      <table class="table mb-3 table-resphnsive absen-table">
+                        <tbody>
+                            <tr>
+                              <td class="fw-medium text-muted">Jenis Kelamin</td>
+                              <td id="jenisKelamin">: -</td>
+                            </tr>
+                            <tr>
+                              <td class="fw-medium text-muted" id="labelKeterangan">Jurusan</td>
+                              <td id="isiKeterangan">: -</td>
+                            </tr>
+                            <tr>
+                              <td class="fw-medium text-muted">UID</td>
+                              <td id="nim">: -</td>
+                            </tr>
+                            <tr>
+                              <td class="fw-medium text-muted">Keterangan</td>
+                              <td id="statusAbsen">: -</td>
+                            </tr>
+                            <tr>
+                              <td class="fw-medium text-muted">Status</td>
+                              <td id="status">: -</td>
+                            </tr>
+                          </tbody>
+                      </table>
+                    </div>
+                  </div>
+          
+                </div>
+              </div>
             </div>
-            </div>
-        </section>
-
-
-        <!-- <section> close ============================-->
-        <!-- ============================================-->
-
-        {{-- <section class="bg-100 pb-0 mb-0" id="section3" style="background-color: #fff">
-        <div class="container">
-          <div class="row flex-center">
-            <div class="col-xl-5 text-center mb-5 z-index-1">
-              <h1 class="display-3 fw-bold fs-4 fs-md-6">Supported by real people</h1>
-              <p>Our team of Happiness Engineers works remotely from 58 countries providing customer support across multiple time zones.</p>
-            </div>
-          </div>
-        </div>
-        <div class="position-relative text-center">
-
-          <!--/.bg-holder-->
-          <img class="img-fluid position-relative z-index-1" src="{{ asset('landing/img/gallery/people.png') }}" alt="" />
-        </div>
-        </section> --}}
+          </section>
+          
 
         <section class="py-0">
-
             <!--/.bg-holder-->
-
             <div class="container-fluid px-0" style="margin-bottom:-40px">
                 <div class="card py-4 border-0 rounded-0 bg-primary">
                     <div class="card-body">
