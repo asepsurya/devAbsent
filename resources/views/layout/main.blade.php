@@ -29,6 +29,11 @@
     <link rel="stylesheet" href="{{ asset('asset/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .ti-spin {
             animation: spin 1s linear infinite;
