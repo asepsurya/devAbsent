@@ -50,9 +50,9 @@ class authController extends Controller
         $validator ['id_kelas' ]= '';
         $validator['id_rombel']='';
         // validasi chaptcha
-        $request->validate([
-             'g-recaptcha-response' => 'required|captcha'
-        ]);
+        // $request->validate([
+        //      'g-recaptcha-response' => 'required|captcha'
+        // ]);
         student::create($validator);
         $validatedData = $request->validate([
             'nama'=>'required',

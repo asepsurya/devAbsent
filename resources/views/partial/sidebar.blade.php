@@ -91,8 +91,8 @@
                         </li>
                         @endif
                         @if(auth()->user()->role == 'admin' || auth()->user()->role == 'superadmin')
-                        <li class="{{ Request::is('plugin') ? 'active' : ''}}">
-                            <a href="{{ route('plugin.index') }}">
+                        <li class="{{ Request::is('plugin') ? 'active' : ''}}" >
+                            <a href="{{ route('plugin.index') }}" style="margin-bottom:5px">
                                 <i class="ti ti-plug"></i><span>Plugin</span>
                             </a>
                         </li>
@@ -377,6 +377,11 @@
                         <ul>
                             <li class="{{ Request::is('modules*') ? 'active' : ''}}">
                                 <a href="/modules"><i class="ti ti-users"></i><span>Pengaturan Hak Akses</span></a>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li class="{{ Request::is('backup/history*') ? 'active' : ''}}">
+                                <a href="/backup/history"><i class="ti ti-database-cog"></i><span>Backup Database</span></a>
                             </li>
                         </ul>
                         @endif

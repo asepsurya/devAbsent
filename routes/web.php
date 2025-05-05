@@ -8,6 +8,7 @@ use App\Http\Controllers\PDFController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\authController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\reportController;
@@ -28,15 +29,14 @@ use App\Http\Controllers\FileTugasController;
 use App\Http\Controllers\inOutTimeController;
 use App\Http\Controllers\kelaslistController;
 use App\Http\Controllers\AppsConfigController;
+
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\plugin\EventController;
-use App\Http\Controllers\verifikasiUserController;
-use App\Http\Controllers\setelanHari\setelanHariController;
 
 // Plugin Controller ---------------------------------------------
+use App\Http\Controllers\verifikasiUserController;
 use App\Http\Controllers\plugin\config\pluginController;
-use App\Http\Controllers\plugin\config\statusPluginController;
-use App\Http\Controllers\plugin\config\deletePluginController;
+use App\Http\Controllers\setelanHari\setelanHariController;
 
 
 Route::get('/',[landingController::class,'index'])->name('index');
@@ -239,6 +239,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/export/gtks', [PDFController::class, 'generatePDFGTKAll'])->name('export.gtks');
     Route::get('/export/students', [PDFController::class, 'generatePDFSiswaAll'])->name('export.students');
     Route::get('/export/RFIDstudents', [PDFController::class, 'generatePDFRFIDstudents'])->name('export.RFIDstudents');
+    Route::get('/export/RFIDteachers', [PDFController::class, 'generatePDFRFIDgtk'])->name('export.RFIDgtk');
     Route::get('/export/jadwal/{id_kelas}', [PDFController::class, 'generateJadwal'])->name('export.jadwal');
     Route::get('/export/score/{id}', [PDFController::class, 'generateScore'])->name('export.score');
 
@@ -365,6 +366,7 @@ Route::middleware('auth')->group(function () {
     // -------------------------------------------------------------------------------------------------------------------------------
     Route::post('/logout',[authController::class,'logout'])->name('logout');
 
+
 });
 
 // -------------------------------------------------------------------------------------------------------------------------------
@@ -385,10 +387,43 @@ Route::middleware('auth')->group(function () {
     Route::get('/qr/{code}', [barcodeController::class, 'generateQRCode'])->name('qr.generate');
     Route::get('/card', [barcodeController::class, 'card'])->name('mycard');
 
-// -------------------------------------------------------------------------------------------------------------------------------
+    Route::get('/check-event-controller', function () {
+        $path = app_path('Http/Controllers/plugin/EventController.php');
+        return response()->json(['exists' => file_exists($path)]);
+    });
+    Route::get('backup/database', [BackupController::class, 'backupDatabase'])->name('backup.database');
+    Route::get('backup/history', [BackupController::class, 'getBackupHistory'])->name('backup.history');
+    Route::get('backup/download/{filename}', [BackupController::class, 'downloadBackup'])->name('backup.download');
+
+
+    Route::get('/backup/partial-restore', [BackupController::class, 'showPartialRestore'])->name('backup.partialRestorePage');
+    Route::post('/backup/partial-restoredb', [BackupController::class, 'processPartialRestore'])->name('backup.processPartialRestore');
+    Route::delete('/backup/delete/{filename}', [BackupController::class, 'delete'])->name('backup.delete');
+
+    // -------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------- END ROUTE -------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------- START PLUGIN INSTALL HERE -------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------------------
+
+
+/* *//* */
+/* */
+// Routes dari Plugin plugin451238
+use App\Http\Controllers\plugin\config\deletePluginController;
+use App\Http\Controllers\plugin\config\statusPluginController;
+Route::middleware('auth')->group(function () {
+    Route::get('/kalender',[EventController::class,'kalender']);
+    Route::get('/events', [EventController::class, 'events']);  // Fetch events
+    Route::post('/events/create', [EventController::class, 'create']);  // Create new event
+    Route::get('/events/{id}', [EventController::class, 'destroy']);
+
+    Route::get('/fullcalender',[EventController::class,'index']);
+    Route::post('/fullcalenderAjax',[EventController::class,'ajax']);
+    Route::post('/addEventModal',[EventController::class,'addEventModal']);
+    Route::post('/editEventModal',[EventController::class,'editEventModal']);
+    Route::get('/hapusEventModal/{id}',[EventController::class,'hapusEventModal']);
+});
+// End dari Plugin

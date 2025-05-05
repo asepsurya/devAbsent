@@ -402,7 +402,56 @@ class PDFController extends Controller
 
     }
 
+    public function generatePDFRFIDgtk(){
+        $created = Carbon::now()->translatedFormat('l, d F Y H:i:s');
 
+        // Fetch data
+        $students = gtk::with('absentRFID')->get();
+        $holidays = Event::all();
+
+        // Check if 'type' request is "cetak"
+        if (request('type') == "cetak") {
+            // Return the view as HTML for printing
+            return view('exportPDF.ReportAbsesiRfid', [
+                'created' => $created,
+                'students' => $students,
+                'holiday' => $holidays
+            ]);
+        } else {
+            // Prepare data for the PDF
+            $data = [
+                'created' => $created,
+                'students' => $students,
+                'holiday' => $holidays
+            ];
+
+            // Set DOMPDF options
+            $options = new Options();
+            $options->set('image-cache', storage_path('app/pdf_cache'));  // Enable image caching
+            $options->set('isHtml5ParserEnabled', true);  // Enable HTML5 parser
+            $options->set('isPhpEnabled', true);  // Enable PHP functions (for handling images)
+            $options->set('image-dpi', 150);  // Change DPI for better image quality
+
+            // Initialize Dompdf with the specified options
+            $dompdf = new Dompdf($options);
+
+            // Load the view with the data and render the HTML content
+            $htmlContent = view('exportPDF.ReportAbsesiRfidGTK', $data)->render();
+
+            // Load HTML content into DOMPDF
+            $dompdf->loadHtml($htmlContent);
+
+            // Set paper size and orientation (A4 landscape)
+            $dompdf->setPaper('A4', 'landscape');
+
+            // Render the PDF (first pass: load HTML, second pass: render the PDF)
+            $dompdf->render();
+
+            // Output the PDF to the browser for download
+            return $dompdf->stream('LAPORAN_ABSENSI_RFID_GURU_' . Carbon::now()->format('Ymd') . '-' . rand(1000, 9999) . '.pdf');
+        }
+
+    }
 
 
 }

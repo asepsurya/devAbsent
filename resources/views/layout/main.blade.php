@@ -65,6 +65,22 @@
         .search-suggestions div:hover {
             background: #f8f9fa;
         }
+        /* sidebar left */
+        .sidebar .sidebar-menu>ul>li ul li a {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            /* display: flex
+        ; */
+            align-items: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            font-weight: 400;
+            font-size: 14px;
+            color: #6a7287;
+            position: relative;
+            width: 100%;
+            padding: 8px;
+        }
     </style>
     @yield('css')
 </head>
@@ -176,7 +192,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
 
-    @yield('javascript');
+
     <script src="{{ asset('asset/js/feather.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <script src="{{ asset('asset/js/owl.carousel.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
@@ -187,7 +203,7 @@
     <script src="{{ asset('asset/Plugins/daterangepicker/daterangepicker.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <script src="{{ asset('asset/js/bootstrap-datetimepicker.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <script src="{{ asset('asset/js/script.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
-
+    @yield('javascript');
 </body>
 
 </html>

@@ -170,7 +170,7 @@
                                             <input type="text" name="id_mapel[]" value="{{ request('id_mapel') }}">
                                             <input type="text" name="id_kelas[]" value="{{ request('kelas') }}">
                                             <input type="text" name="nis[]" value="{{ $item->nis }}">
-                                            <input type="text" name="id_gtk"  id="id_gtk" class="gtk" value="{{ request('gtk') }}">
+                                            <input type="text" name="id_gtk"   class="gtk" value="{{ request('gtk') }}">
                                             <input type="text" name="tanggal[]" value="{{ request('tanggal') }}">
                                         </td>
                                         <td>
@@ -334,7 +334,6 @@
 
 @if(session('refresh'))
     <script>
-        toastr.success('Berhasil Disimpan');
         window.location.reload(); // Refresh the page
     </script>
 @endif

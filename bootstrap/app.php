@@ -24,8 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'statusRegister' => \App\Http\Middleware\RegisterCheck::class,
             'PDF' => Barryvdh\DomPDF\Facade::class,
             'check.database' => \App\Http\Middleware\CheckDatabase::class,
+            'backup'=>App\Console\Commands\BackupDatabase::class,
         ]);
-        
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

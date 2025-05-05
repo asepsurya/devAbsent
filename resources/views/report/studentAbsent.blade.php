@@ -2,6 +2,8 @@
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
         table.dataTable thead th, table.dataTable thead td {
         padding: 10px 18px;
@@ -33,6 +35,14 @@
             text-align: right;
             padding-right: 30px;
         }
+
+    .dataTables_wrapper .dataTables_filter {
+        display: none;
+    }
+    .dataTables_wrapper .dataTables_length {
+       display: none;
+    }
+
     </style>
 @endsection
 @section('container')
@@ -51,105 +61,149 @@
             </ol>
         </nav>
     </div>
-    <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-        <div class="col mx-2">
-            <label for="">Tahun Pelajaran </label>
-            <select name="month"  class="form-control select" onchange="">
 
-                @foreach ($tahunpelajaran as $item)
-                <option value="{{ $item->id }}" > {{ $item->tahun_pelajaran }} - {{ $item->semester }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col mx-2">
-            <label for="">Bulan </label>
-            <select name="month" id="bulan" class="form-control select" onchange="">
-                @foreach (range(1, 12) as $monthNumber)
-                    <option value="{{ str_pad($monthNumber, 2, '0', STR_PAD_LEFT) }}"
-                        {{ (request('month') == str_pad($monthNumber, 2, '0', STR_PAD_LEFT)) || (!request()->has('month') && $monthNumber == now()->month) ? 'selected' : '' }}>
-                        {{ \Carbon\Carbon::create()->month($monthNumber)->format('F') }}
-                    </option>
-                @endforeach
-            </select>
-
-        </div>
-        <div class="col mx-2">
-            <label for="">Tahun </label>
-            <select name="year" class="form-control select" id="yearSelect">
-                <!-- Options will be added here by JavaScript -->
-
-                @php
-                $currentYear = date('Y'); // Get the current year
-                $startYear = 2000; // Define the starting year
-                @endphp
-
-                @for ($year = $startYear; $year <= $currentYear; $year++)
-                    <option value="{{ $year }}"
-                        {{ (request('year') == $year || (!request()->has('year') && $year == $currentYear)) ? 'selected' : '' }}>
-                        {{ $year }}
-                    </option>
-                @endfor
-            </select>
-        </div>
-
-
-    </div>
 </div>
 
 {{-- End Header --}}
 
-<div class="card" role="alert">
-    <div class="card-body p-3 bg-primary text-fixed-white rounded">
+<div class="container-fluid">
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-light d-flex align-items-center">
+            <i class="ti ti-calendar me-2 text-primary "></i>
+            <h6 class="mb-0">Filter Periode</h6>
+        </div>
 
-        <div class=" row g-3  mt-2">
-            <div class="d-flex justify-content-end g-3">
-                <div class="col-lg-2">
-                    <h4 class=" mb-0 text-fixed-white mt-4"><span class="ti ti-filter"></span> Filter Data</h4>
-                </div>
-                <div class="col mx-2">
-                    <label for="">Rombongan Belajar </label>
-                    <select name="kelas" class="form-control rombel">
-                        <option value="">Pilih Rombongan Belajar</option>
-                        <!-- Options will be added here by JavaScript -->
-                        @foreach ($kelas as $data )
-                        <option value="{{ $data->id }}" {{ $data->id == request('kelas') ? 'selected' : '' }}>{{
-                            $data->nama_kelas }} {{ $data->jurusanKelas->nama_jurusan }} {{ $data->sub_kelas }}</option>
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                {{-- Tahun Pelajaran --}}
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                        <i class="ti ti-book me-1 text-primary"></i> Tahun Pelajaran
+                    </label>
+                    <select name="tahun_pelajaran" class="form-select select">
+                        @foreach ($tahunpelajaran as $item)
+                            <option value="{{ $item->id }}">
+                                {{ $item->tahun_pelajaran }} - {{ $item->semester }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col mx-2">
-                    <label for="">Mata Pelajaran </label>
-                    <select name="mapel" class="form-control mapel">
-                        <option value="" >Pilih Mata Pelajaran</option>
-                        @if(request('mapel'))
-                        @foreach ($mapel as $mapel)
-                        <option value="{{ $mapel->id_mapel }}" {{ $mapel->id_mapel == request('mapel') ? 'Selected' :
-                            ''}}>{{ $mapel->mata_pelajaran->nama }} - {{ $mapel->guru->nama ?? 'Belum Diatur' }} </option>
+
+                {{-- Bulan --}}
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                        <i class="ti ti-calendar-month me-1 text-primary"></i> Bulan
+                    </label>
+                    <select name="month" id="bulan" class="form-select select">
+                        @foreach (range(1, 12) as $monthNumber)
+                            <option value="{{ str_pad($monthNumber, 2, '0', STR_PAD_LEFT) }}"
+                                {{ (request('month') == str_pad($monthNumber, 2, '0', STR_PAD_LEFT)) || (!request()->has('month') && $monthNumber == now()->month) ? 'selected' : '' }}>
+                                {{ \Carbon\Carbon::create()->month($monthNumber)->format('F') }}
+                            </option>
                         @endforeach
-                        @endif
                     </select>
                 </div>
-                <div class="mt-3">
-                    <button class="btn btn-light"><span class="ti ti-search"></span> Tampilkan Data</button>
+
+                {{-- Tahun --}}
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                        <i class="ti ti-calendar-stats me-1 text-primary"></i> Tahun
+                    </label>
+                    <select name="year" id="yearSelect" class="form-select  select">
+                        @php
+                            $currentYear = date('Y');
+                            $startYear = 2000;
+                        @endphp
+                        @for ($year = $startYear; $year <= $currentYear; $year++)
+                            <option value="{{ $year }}"
+                                {{ (request('year') == $year || (!request()->has('year') && $year == $currentYear)) ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
+                        @endfor
+                    </select>
                 </div>
             </div>
         </div>
-
     </div>
-</div>
-</form>
-<div class="card mt-3">
-    <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-        <h4 class="mb-3">Laporan Absensi Siswa</h4>
-        <div class="d-flex align-items-center flex-wrap">
 
-            <a href="/report/absent/kelas?month={{ request('month') }}&year={{ request('year') }}"  class="btn btn-outline-light bg-white mb-3" target="_blank">Exsport PDF</a>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-light d-flex align-items-center">
+            <i class="ti ti-filter me-2"></i>
+            <h5 class="mb-0">Filter Data</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                {{-- Rombongan Belajar --}}
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Rombongan Belajar</label>
+                    <select name="kelas" class="form-select rombel">
+                        <option value="">Pilih Rombongan Belajar</option>
+                        @foreach ($kelas as $data)
+                            <option value="{{ $data->id }}" {{ $data->id == request('kelas') ? 'selected' : '' }}>
+                                {{ $data->nama_kelas }} {{ $data->jurusanKelas->nama_jurusan }} {{ $data->sub_kelas }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Mata Pelajaran --}}
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Mata Pelajaran</label>
+                    <select name="mapel" class="form-select mapel">
+                        <option value="">Pilih Mata Pelajaran</option>
+                        @if(request('mapel'))
+                            @foreach ($mapel as $m)
+                                <option value="{{ $m->id_mapel }}" {{ $m->id_mapel == request('mapel') ? 'Selected' : '' }}>
+                                    {{ $m->mata_pelajaran->nama }} - {{ $m->guru->nama ?? 'Belum Diatur' }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+
+                {{-- Tombol --}}
+                <div class="col-md-4">
+                    <button class="btn btn-primary w-100">
+                        <i class="ti ti-search"></i> Tampilkan Data
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+
+</form>
+<div class="card mt-3 ">
+    <div class="card-header d-flex align-items-center bg-light justify-content-between flex-wrap pb-3 px-4">
+        <h4 class="mb-0  fw-bold"><span class="ti ti-report-analytics"></span> Laporan Absensi Siswa</h4>
+        <div class="d-flex align-items-center flex-wrap">
+            <div class="mb-3 me-2">show :</div>
+            <div class="mb-3 me-2">
+                <select id="pageLength" class="form-control select" aria-label="Rows per page">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+            <div class="input-icon-start mb-3 me-2 position-relative">
+                <span class="icon-addon">
+                    <i class="ti ti-search"></i>
+                </span>
+                <input type="text" class="form-control" placeholder="Cari Nama ..." id="customSearch">
+            </div>
+            <a href="/report/absent/kelas?month={{ request('month') }}&year={{ request('year') }}&tahunajar={{ request('tahun_pelajaran') }}&kelas={{ request('kelas') }}&mapel={{ request('mapel') }}"
+               class="btn btn-outline-light bg-white mb-3 px-4 py-2 fw-bold shadow-sm" target="_blank">
+               <span class="ti ti-file-type-pdf"></span>
+                Export PDF
+            </a>
+        </div>
+    </div>
+
     <div class="card-body p-0">
-
-        <div class="table-responsive">
-
+        <div class="table-responsive p-3">
             <table class="table  table-striped mb-0" id="myTable">
                 <thead>
                     <tr class="text-center">
@@ -160,7 +214,7 @@
                             $thisMonth = \Carbon\Carbon::now()->format('F'); // Current month name
 
                         @endphp
-                        <td colspan="32" class="border"><p class="d-flex justify-content-start">Bulan: {{ \Carbon\Carbon::create()->month((int) (request('month') ?: \Carbon\Carbon::now()->month))->format('F') }} {{ request('year') ?: \Carbon\Carbon::now()->format('Y') }}
+                        <td colspan="35" class="border"><p class="d-flex justify-content-start">Bulan: {{ \Carbon\Carbon::create()->month((int) (request('month') ?: \Carbon\Carbon::now()->month))->format('F') }} {{ request('year') ?: \Carbon\Carbon::now()->format('Y') }}
                         </p></td>
                     </tr>
                     <tr class="text-center">
@@ -287,24 +341,40 @@
         </div>
     </div>
 </div>
-<div class="accordions-items-seperate mt-2" id="accordionSpacingExample">
-    <div class="accordion-item">
+<div class="accordions-items-seperate mt-3" id="accordionSpacingExample">
+    <div class="accordion-item border rounded-3 overflow-hidden shadow-sm">
         <h2 class="accordion-header" id="headingSpacingOne">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#SpacingOne" aria-expanded="false" aria-controls="SpacingOne">
-                Event dan Hari Libur
+            <button class="accordion-button collapsed fw-semibold bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#SpacingOne" aria-expanded="true" aria-controls="SpacingOne">
+                📅 Event & Hari Libur
             </button>
         </h2>
-        <div id="SpacingOne" class="accordion-collapse collapse " aria-labelledby="headingSpacingOne" data-bs-parent="#accordionSpacingExample" style="">
+        <div id="SpacingOne" class="accordion-collapse collapse show" aria-labelledby="headingSpacingOne" data-bs-parent="#accordionSpacingExample">
             <div class="accordion-body">
-                <ul>
-                    @foreach ($holiday->where('type','holiday') as $key)
-                        <li>{{ $key->start }} / {{ $key->end }} | <strong>{{ $key->title }}</strong></li>
-                    @endforeach
-                </ul>
+                @if($holiday->where('type','holiday')->count() > 0)
+                    <ul class="list-group list-group-flush">
+                        @foreach ($holiday->where('type','holiday') as $key)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-calendar-event me-2 text-primary"></i>
+                                    <strong>{{ $key->title }}</strong>
+                                    <div class="small text-muted">
+                                        {{ \Carbon\Carbon::parse($key->start)->format('j F Y') }} s/d {{ \Carbon\Carbon::parse($key->end)->format('j F Y') }}
+                                    </div>
+                                </div>
+                                <span class="badge bg-success rounded-pill">Libur</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <div class="text-muted">Tidak ada event atau hari libur.</div>
+                @endif
             </div>
         </div>
     </div>
 </div>
+
+
+
 @section('javascript')
 
 <script>
@@ -356,16 +426,29 @@ $(document).ready(function() {
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#myTable').DataTable({
-            "paging": true,         // Enable pagination
-            "searching": true,      // Enable searching
-            "ordering": true,       // Enable column ordering
-            "lengthChange": true,   // Allow users to change the number of records per page
-            "info": true,           // Display table information (e.g., "Showing 1 to 10 of 50 entries")
-            "autoWidth": false,     // Disable auto column width calculation
-            "responsive": true      // Enable responsive design for mobile view
-        });
+    // Initialize the DataTable
+    var table = $('#myTable').DataTable({
+        "paging": true,         // Enable pagination
+        "searching": true,      // Enable searching
+        "ordering": true,       // Enable column ordering
+        "lengthChange": true,   // Allow users to change the number of records per page
+        "info": true,           // Display table information (e.g., "Showing 1 to 10 of 50 entries")
+        "autoWidth": false,     // Disable auto column width calculation
+        "responsive": true      // Enable responsive design for mobile view
     });
+
+    // Custom search function for DataTable
+    $('#customSearch').on('keyup', function() {
+        table.search(this.value).draw();  // Filter the DataTable based on input value
+    });
+
+    // Custom dropdown for changing the page length
+    $('#pageLength').on('change', function() {
+        var pageLength = $(this).val();
+        table.page.len(pageLength).draw();  // Update DataTable to show the selected number of rows per page
+    });
+});
+
 </script>
 <script>
      $(function(){

@@ -12,6 +12,4 @@ return [
     Maatwebsite\Excel\ExcelServiceProvider::class,
     Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
     Barryvdh\DomPDF\ServiceProvider::class,
-    
-    
 ];

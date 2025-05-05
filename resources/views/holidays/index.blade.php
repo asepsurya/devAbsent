@@ -14,19 +14,7 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-        <div class="pe-1 mb-2">
-            <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh">
-                <i class="ti ti-refresh"></i>
-            </a>
-        </div>
-        <div class="pe-1 mb-2">
-            <button type="button" class="btn btn-outline-light bg-white btn-icon me-1"
-                data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Print"
-                data-bs-original-title="Print">
-                <i class="ti ti-printer"></i>
-            </button>
-        </div>
+
        <div class="mb-2">
             <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-effect="effect-scale" data-bs-toggle="modal" data-bs-target="#add_holiday"><i class="ti ti-square-rounded-plus me-2"></i>Hari Libur</a>
             </div>
@@ -35,7 +23,11 @@
 {{-- End Header --}}
 <div class="card">
     <div class="card-header">
-        <h4>Daftar {{ $title }}</h4>
+        <div class="d-flex justify-content-between">
+            <div><h4 class="mt-2">Daftar {{ $title }}</h4></div>
+            <div><a href="/kalender" class="btn btn-outline-light bg-white  position-relative "><span class="ti ti-calendar-week"></span> Lihat di Kalender Akademik</a></div>
+        </div>
+
     </div>
     <div class="card-body p-0 ">
         <div class="table-responsive">
@@ -64,9 +56,10 @@
 
                         <td>
                             <div class="hstack gap-2 fs-15">
-                                <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i class="ti ti-pencil-minus"></i></a>
-                                <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-danger rounded-pill"><i class="ti ti-trash"></i></a>
-                            </div>
+                                <a  data-bs-effect="effect-scale" data-bs-toggle="modal" data-bs-target="#edit_holiday-{{ $key->id }}" class="btn btn-icon btn-sm btn-soft-info rounded-pill"><i class="ti ti-pencil-minus"></i></a>
+                                <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-danger rounded-pill btn-delete" data-url="/hapusEventModal/{{ $key->id }}">
+                                    <i class="ti ti-trash"></i>
+                                </a>
                         </td>
                     </tr>
 
@@ -116,4 +109,98 @@
     </div>
 </div>
 
+@foreach ($holidays as $key )
+<div class="modal fade" id="edit_holiday-{{ $key->id }}" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Hari Libur</h4>
+                <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+            <form action="/editEventModal" method="POST">
+                @csrf
+                <div class="modal-body pb-0">
+                    <input type="text" name="id" id="id" value="{{ $key->id }}" hidden>
+                    <div class="mb-3">
+                        <label class="form-label">Event Title <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" name="title" required value="{{ $key->title }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Start<span class="text-danger">*</span></label>
+                        <div class="cal-icon">
+                            <input class="form-control " type="date" name="start" required value="{{ $key->start }}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">End<span class="text-danger">*</span></label>
+                        <div class="cal-icon">
+                            <input class="form-control" type="date" name="end" required value="{{ $key->end }}">
+                        </div>
+                    </div>
+                    <input type="text" name="type" value="holiday" hidden>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Add Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+
+@section('javascript')
+<script>
+    $(document).on('click', '.btn-delete', function(e) {
+    e.preventDefault();
+    var url = $(this).data('url');
+
+    Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: "Data yang dihapus tidak bisa dikembalikan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e3342f',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Redirect ke URL hapus atau bisa juga pakai AJAX kalau mau
+            window.location.href = url;
+        }
+    });
+});
+</script>
+
+<script>
+    $(document).ready(function() {
+    $.ajax({
+        url: '/check-event-controller',
+        method: 'GET',
+        success: function(response) {
+            if (!response.exists) {
+                Swal.fire({
+                    title: 'Fitur Tidak Tersedia!',
+                    text: 'Anda harus install Kalender Akademik terlebih dahulu sebelum menggunakan fitur ini.',
+                    icon: 'error',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showCancelButton: false,
+                    confirmButtonText: 'Kembali'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.history.back();  // balik ke halaman sebelumnya
+                        // atau bisa pakai window.location.href = '/dashboard'; untuk redirect ke halaman tertentu
+                    }
+                });
+            }
+        }
+    });
+});
+
+</script>
+@endsection
 @endsection

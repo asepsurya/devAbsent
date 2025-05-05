@@ -195,89 +195,93 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($students as $data => $absentData)
-                <tr>
-                    <td class="text-center">{{ $loop->iteration }}</td>
-                    <td>{{ $absentData->nis }}</td>
-                    <td style="text-align: left;">{{ $absentData->nama }}</td>
+            @php
+            use Carbon\Carbon;
 
-                    @foreach (range(1, $daysInMonth) as $day2)
-                        @php
-                            $isSunday = \Carbon\Carbon::create($year, $month, $day2)->isSunday(); // Check if it's Sunday
-                            $date = \Carbon\Carbon::create($year, $month, $day2)->format('d/m/Y'); // Format the day into a date string
-                            $date2 = \Carbon\Carbon::create($year, $month, $day2)->format('Y-m-d'); // Format the day into a date string
-                            $isHoliday = in_array($date2, $hariLibur); // Check if it's a holiday
-                            $isHolidayEnd = in_array($date2, $hariLiburEnd); // Check if it's a holiday end
-                        @endphp
+            $selectedMapel = request('mapel');
+            $selectedMonth = request('month');
+            $selectedYear  = request('year');
 
-                        @php
-                            // Check if there is an attendance record for this date
-                            $attendance = $absentData->absentMapel->firstWhere('tanggal', $date);
-                        @endphp
+            // Helper function buat hitung jumlah kehadiran berdasarkan status
+            $getAttendanceCount = function($absentData, $status) use ($selectedMapel, $selectedMonth, $selectedYear) {
+                return $absentData->absentMapel->filter(function($item) use ($status, $selectedMapel, $selectedMonth, $selectedYear) {
+                    return Carbon::createFromFormat('d/m/Y', $item->tanggal)
+                        ->isSameMonth($selectedYear.'-'.$selectedMonth.'-01')
+                        && $item->status == $status
+                        && $item->id_mapel == $selectedMapel;
+                })->count();
+            };
+        @endphp
 
-                        <td @if ($attendance)
-                                @php
-                                    // Apply background color based on the status
-                                    $bgClass = match($attendance->status) {
-                                        'H' => 'text-center',   // For 'H' (Hadir), green success color
-                                        'I' => 'text-primary text-center',   // For 'I' (Izin), yellow warning color
-                                        'S' => 'text-warning text-center',   // For 'S' (Sakit), blue primary color
-                                        'A' => 'text-danger text-center',    // For 'A' (Absen), red danger color
-                                        default => ''
-                                    };
-                                @endphp
-                                class="{{ $bgClass }} text-center"
-                            @elseif ($isSunday)
-                                class="bg-danger text-danger"
-                            @endif
-                        >
-                            @if ($attendance)
-                                {{-- If attendance exists, display the entry and exit times --}}
-                                @if ($attendance->status == '')
-                                    -
-                                @else
-                                    <b><a id="popoverButton" data-bs-toggle="popover" data-bs-trigger="hover" title="Detail" data-bs-custom-class="header-info" data-bs-html="true"  data-bs-content="Entry : <span class='badge badge-soft-success d-inline-flex align-items-center'>
-                                        {{ $attendance->entry }} </span>  Out : <span class='badge badge-soft-success d-inline-flex align-items-center'>
-                                        {{ $attendance->out ?? '-' }} </span>">{{ $attendance->status ?? '-' }}</a></b>
-                                @endif
-                            @else
-                                {{-- If no attendance, display '-' --}}
+        @foreach ($students as $data => $absentData)
+            <tr>
+                <td class="text-center">{{ $loop->iteration }}</td>
+                <td>{{ $absentData->nis }}</td>
+                <td style="text-align: left;">{{ $absentData->nama }}</td>
+
+                @foreach (range(1, $daysInMonth) as $day2)
+                    @php
+                        $date   = Carbon::create($selectedYear, $selectedMonth, $day2)->format('d/m/Y');
+                        $date2  = Carbon::create($selectedYear, $selectedMonth, $day2)->format('Y-m-d');
+                        $isSunday = Carbon::create($selectedYear, $selectedMonth, $day2)->isSunday();
+                        $isHoliday = in_array($date2, $hariLibur);
+                        $isHolidayEnd = in_array($date2, $hariLiburEnd);
+
+                        // Cek absen untuk tanggal & mapel ini
+                        $attendance = $absentData->absentMapel->first(function($item) use ($date, $selectedMapel) {
+                            return $item->tanggal == $date && $item->id_mapel == $selectedMapel;
+                        });
+
+                        // Style cell berdasarkan status
+                        $bgClass = '';
+                        if ($attendance) {
+                            $bgClass = match($attendance->status) {
+                                'H' => 'text-center',
+                                'I' => 'text-primary text-center',
+                                'S' => 'text-warning text-center',
+                                'A' => 'text-danger text-center',
+                                default => ''
+                            };
+                        } elseif ($isSunday) {
+                            $bgClass = 'bg-danger text-danger';
+                        }
+                    @endphp
+
+                    <td class="{{ $bgClass }}">
+                        @if ($attendance)
+                            @if ($attendance->status == '')
                                 -
+                            @else
+                                <b>
+                                    <a id="popoverButton"
+                                       data-bs-toggle="popover"
+                                       data-bs-trigger="hover"
+                                       title="Detail"
+                                       data-bs-custom-class="header-info"
+                                       data-bs-html="true"
+                                       data-bs-content="
+                                        Entry : <span class='badge badge-soft-success d-inline-flex align-items-center'>
+                                        {{ $attendance->entry }}</span>
+                                        Out : <span class='badge badge-soft-success d-inline-flex align-items-center'>
+                                        {{ $attendance->out ?? '-' }}</span>">
+                                        {{ $attendance->status ?? '-' }}
+                                    </a>
+                                </b>
                             @endif
-                        </td>
-                    @endforeach
-
-                    {{-- Attendance Summary Columns (H, S, I, A counts) --}}
-                    <td class="text-center">
-                        {{ $absentData->absentMapel->filter(function($item) {
-                            return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
-                                ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'H';
-                        })->count() }}
+                        @else
+                            -
+                        @endif
                     </td>
+                @endforeach
 
-                    <td class="text-center">
-                        {{ $absentData->absentMapel->filter(function($item) {
-                            return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
-                                ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'S';
-                        })->count() }}
-                    </td>
+                {{-- Summary kolom --}}
+                <td class="text-center">{{ $getAttendanceCount($absentData, 'H') }}</td>
+                <td class="text-center">{{ $getAttendanceCount($absentData, 'S') }}</td>
+                <td class="text-center">{{ $getAttendanceCount($absentData, 'I') }}</td>
+                <td class="text-center">{{ $getAttendanceCount($absentData, 'A') }}</td>
+            </tr>
+        @endforeach
 
-                    <td class="text-center">
-                        {{ $absentData->absentMapel->filter(function($item) {
-                            return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
-                                ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'I';
-                        })->count() }}
-                    </td>
-
-                    <td class="text-center">
-                        {{ $absentData->absentMapel->filter(function($item) {
-                            return \Carbon\Carbon::createFromFormat('d/m/Y', $item->tanggal)
-                                ->isSameMonth(request('year').'-'.request('month').'-01') && $item->status == 'A';
-                        })->count() }}
-                    </td>
-
-                </tr>
-            @endforeach
         </tbody>
     </table>
     <!-- Area tanda tangan -->
