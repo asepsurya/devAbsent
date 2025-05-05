@@ -110,7 +110,7 @@
             </div>
 
             {{-- <a class="btn btn-outline-light bg-white mb-3 mx-1" href="/export/RFIDstudents?month={{ request('month') }}&year={{ request('year')}}&type=cetak"  target="_BLANK"><span class="ti ti-printer"></span> Cetak</a> --}}
-            <a href="/export/RFIDstudents?month={{ request('month') }}&year={{ request('year') }}"><button class="btn btn-outline-light bg-white mb-3"><span class="ti ti-file-type-pdf"></span> Exsport PDF</button></a>
+            <a href="/export/RFIDstudents?month={{ request('month') }}&year={{ request('year') }}" target="_BLANK"><button class="btn btn-outline-light bg-white mb-3"><span class="ti ti-file-type-pdf"></span> Exsport PDF</button></a>
         </div>
     </div>
     <div class="card-body p-0">

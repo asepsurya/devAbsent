@@ -108,8 +108,7 @@
                 </span>
                 <input type="text" class="form-control" placeholder="Cari Nama Guru..." id="customSearch">
             </div>
-
-            <a href="/export/RFIDteachers?month={{ request('month') }}&year={{ request('year') }}"><button class="btn btn-outline-light bg-white mb-3"><span class="ti ti-file-type-pdf"></span> Exsport PDF</button></a>
+            <a href="/export/RFIDteachers?month={{ request('month') }}&year={{ request('year') }}" target="_BLANK"button class="btn btn-outline-light bg-white mb-3"><span class="ti ti-file-type-pdf"></span> Exsport PDF</button></a>
         </div>
     </div>
     <div class="card-body p-0">

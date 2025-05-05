@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use PDF;
+use mPDF;
 use TCPDF;
 use Carbon\Carbon;
-use App\Models\gtk;
 use Dompdf\Dompdf;
+use App\Models\gtk;
 use Dompdf\Options;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Kelas;
+use App\Models\Mapel;
 use App\Models\tasks;
 use App\Models\absent;
 use App\Models\Lesson;
@@ -167,105 +168,41 @@ class PDFController extends Controller
     }
     public function generatePDFRFIDstudents(){
         // Get the current date and time
-    $created = Carbon::now()->translatedFormat('l, d F Y H:i:s');
+        $created = Carbon::now()->translatedFormat('l, d F Y H:i:s');
 
-    // Fetch data
-    $students = Student::with('absentRFID')->get();
-    $holidays = Event::all();
+        // Fetch data
+        $students = Student::with('absentRFID')->get();
+        $holidays = Event::all();
 
-    // Check if 'type' request is "cetak"
-    if (request('type') == "cetak") {
-        // Return the view as HTML for printing
         return view('exportPDF.ReportAbsesiRfid', [
             'created' => $created,
             'students' => $students,
             'holiday' => $holidays
         ]);
-    } else {
-        // Prepare data for the PDF
-        $data = [
-            'created' => $created,
-            'students' => $students,
-            'holiday' => $holidays
-        ];
-
-        // Set DOMPDF options
-        $options = new Options();
-        $options->set('image-cache', storage_path('app/pdf_cache'));  // Enable image caching
-        $options->set('isHtml5ParserEnabled', true);  // Enable HTML5 parser
-        $options->set('isPhpEnabled', true);  // Enable PHP functions (for handling images)
-        $options->set('image-dpi', 150);  // Change DPI for better image quality
-
-        // Initialize Dompdf with the specified options
-        $dompdf = new Dompdf($options);
-
-        // Load the view with the data and render the HTML content
-        $htmlContent = view('exportPDF.ReportAbsesiRfid', $data)->render();
-
-        // Load HTML content into DOMPDF
-        $dompdf->loadHtml($htmlContent);
-
-        // Set paper size and orientation (A4 landscape)
-        $dompdf->setPaper('A4', 'landscape');
-
-        // Render the PDF (first pass: load HTML, second pass: render the PDF)
-        $dompdf->render();
-
-        // Output the PDF to the browser for download
-        return $dompdf->stream('Absensi_Siswa_' . Carbon::now()->format('Ymd') . '-' . rand(1000, 9999) . '.pdf');
-    }
 
 
     }
-    public function reportAbsentKelas(){
-           // Get the current date and time
-            $created = Carbon::now()->translatedFormat('l, d F Y H:i:s');
+    public function reportAbsentKelas()
+    {
+        // Get the current date and time
+        $created = Carbon::now()->translatedFormat('l, d F Y H:i:s');
 
-            // Fetch data
-            $students = Student::with('absentMapel')->get();
-            $holidays = Event::all();
+        // Fetch data
+        $students = Student::with('absentMapel')->where('id_kelas',request('kelas'))->get();
+        $holidays = Event::all();
+        $kelas = kelas::where('id',request('kelas'))->first();
+        $mapel = Mapel::where('id',request('mapel'))->first();
+            // Prepare data for the PDF
+            $data = [
+                'created' => $created,
+                'students' => $students,
+                'holiday' => $holidays,
+                'kelas' => $kelas,
+                'mapel' => $mapel
+            ];
+            // Load the HTML content for the PDF   
+             return view('exportPDF.ReportAbsesiKelas', $data);
 
-            // Check if 'type' request is "cetak"
-            if (request('type') == "cetak") {
-                // Return the view as HTML for printing
-                return view('exportPDF.ReportAbsesiRfid', [
-                    'created' => $created,
-                    'students' => $students,
-                    'holiday' => $holidays
-                ]);
-            } else {
-                // Prepare data for the PDF
-                $data = [
-                    'created' => $created,
-                    'students' => $students,
-                    'holiday' => $holidays
-                ];
-
-                // Set DOMPDF options
-                $options = new Options();
-                $options->set('image-cache', storage_path('app/pdf_cache'));  // Enable image caching
-                $options->set('isHtml5ParserEnabled', true);  // Enable HTML5 parser
-                $options->set('isPhpEnabled', true);  // Enable PHP functions (for handling images)
-                $options->set('image-dpi', 150);  // Change DPI for better image quality
-
-                // Initialize Dompdf with the specified options
-                $dompdf = new Dompdf($options);
-
-                // Load the view with the data and render the HTML content
-                $htmlContent = view('exportPDF.ReportAbsesiKelas', $data)->render();
-
-                // Load HTML content into DOMPDF
-                $dompdf->loadHtml($htmlContent);
-
-                // Set paper size and orientation (A4 landscape)
-                $dompdf->setPaper('A4', 'landscape');
-
-                // Render the PDF (first pass: load HTML, second pass: render the PDF)
-                $dompdf->render();
-
-                // Output the PDF to the browser for download
-                return $dompdf->stream('Absensi_Siswa_' . Carbon::now()->format('Ymd') . '-' . rand(1000, 9999) . '.pdf');
-            }
     }
 
     public function generateJadwal($id_kelas)
@@ -279,12 +216,8 @@ class PDFController extends Controller
         $hari = setelanHari::where('status',1)->get();
         $jam =JamPelajaran::all();
         $title = $kelas;
-        // Load Blade view and pass data
-        $pdf = app('dompdf.wrapper')->loadView('exportPDF.jadwal', compact('jadwal','hari','jam','title'));
 
-        // Stream PDF to browser
-        return $pdf->stream('jadwal_pelajaran.pdf');
-
+        return view('exportPDF.jadwal',compact('jadwal','hari','jam','title'));
 
     }
 
@@ -393,12 +326,8 @@ class PDFController extends Controller
         $task = tasks::where('id_kelas',$id)->orderBy('id', 'DESC')->with(['media','links','user'])->get();  // Fetch all tasks
         $peserta = ClassRoomPeople::where('id_kelas',$id)->with('peopleStudent')->get();  // Fetch all participants
 
-        // Load the HTML view to render the table
-        $pdf = PDF::loadView('exportPDF.studentScore', compact('task', 'peserta','id'))
-         ->setPaper('a4', 'landscape');  // Set landscape orientation
-
-        // Download the generated PDF
-        return $pdf->download('export.pdf');
+        return view('exportPDF.studentScore', compact('task', 'peserta','id'));
+       
 
     }
 
@@ -408,48 +337,12 @@ class PDFController extends Controller
         // Fetch data
         $students = gtk::with('absentRFID')->get();
         $holidays = Event::all();
-
-        // Check if 'type' request is "cetak"
-        if (request('type') == "cetak") {
-            // Return the view as HTML for printing
-            return view('exportPDF.ReportAbsesiRfid', [
-                'created' => $created,
-                'students' => $students,
-                'holiday' => $holidays
-            ]);
-        } else {
-            // Prepare data for the PDF
-            $data = [
-                'created' => $created,
-                'students' => $students,
-                'holiday' => $holidays
-            ];
-
-            // Set DOMPDF options
-            $options = new Options();
-            $options->set('image-cache', storage_path('app/pdf_cache'));  // Enable image caching
-            $options->set('isHtml5ParserEnabled', true);  // Enable HTML5 parser
-            $options->set('isPhpEnabled', true);  // Enable PHP functions (for handling images)
-            $options->set('image-dpi', 150);  // Change DPI for better image quality
-
-            // Initialize Dompdf with the specified options
-            $dompdf = new Dompdf($options);
-
-            // Load the view with the data and render the HTML content
-            $htmlContent = view('exportPDF.ReportAbsesiRfidGTK', $data)->render();
-
-            // Load HTML content into DOMPDF
-            $dompdf->loadHtml($htmlContent);
-
-            // Set paper size and orientation (A4 landscape)
-            $dompdf->setPaper('A4', 'landscape');
-
-            // Render the PDF (first pass: load HTML, second pass: render the PDF)
-            $dompdf->render();
-
-            // Output the PDF to the browser for download
-            return $dompdf->stream('LAPORAN_ABSENSI_RFID_GURU_' . Carbon::now()->format('Ymd') . '-' . rand(1000, 9999) . '.pdf');
-        }
+        $data = [
+            'created' => $created,
+            'students' => $students,
+            'holiday' => $holidays
+        ];
+        return view('exportPDF.ReportAbsesiRfidGTK', $data);
 
     }
 

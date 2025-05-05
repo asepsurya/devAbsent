@@ -27,9 +27,9 @@
             <button type="button" class="btn btn-outline-light bg-white  me-1" onclick="history.back()">
                 <i class="ti ti-arrow-left"></i> Kembali
             </button>
-            <a href="{{ route('export.jadwal' ,$id) }}">
-            <button type="button" class="btn btn-primary  me-1" onclick="history.back()">
-                <i class="ti ti-download"></i> Download PDF
+            <a href="{{ route('export.jadwal' ,$id) }}" target="_BLANK" >
+            <button type="button" class="btn btn-primary  me-1">
+                <i class="ti ti-download"></i> CETAK JADWAL
             </button></a>
         </div>
 

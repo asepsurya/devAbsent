@@ -138,7 +138,7 @@
                 {{-- Rombongan Belajar --}}
                 <div class="col-md-4">
                     <label class="form-label fw-semibold">Rombongan Belajar</label>
-                    <select name="kelas" class="form-select rombel">
+                    <select name="kelas" class="form-select rombel" required>
                         <option value="">Pilih Rombongan Belajar</option>
                         @foreach ($kelas as $data)
                             <option value="{{ $data->id }}" {{ $data->id == request('kelas') ? 'selected' : '' }}>
@@ -151,7 +151,7 @@
                 {{-- Mata Pelajaran --}}
                 <div class="col-md-4">
                     <label class="form-label fw-semibold">Mata Pelajaran</label>
-                    <select name="mapel" class="form-select mapel">
+                    <select name="mapel" class="form-select mapel" required>
                         <option value="">Pilih Mata Pelajaran</option>
                         @if(request('mapel'))
                             @foreach ($mapel as $m)

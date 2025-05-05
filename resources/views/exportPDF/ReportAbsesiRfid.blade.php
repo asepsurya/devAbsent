@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Laporan Absensi RFID Siswa{{ date('dmY') }}- {{ rand() }}</title>
     <!-- Bootstrap 5 CSS -->
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Styling for the letterhead */
         .kop-surat {
@@ -71,11 +71,11 @@
         }
 
         td, th {
-    padding: 5px;
-    text-align: center;
-    border: 1px solid #ddd;
-    white-space: nowrap;  /* Hindari pemotongan konten pada kolom yang lebih lebar */
-}
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ddd;
+            white-space: nowrap;  /* Hindari pemotongan konten pada kolom yang lebih lebar */
+        }
 
         tr:nth-child(even) {
             background-color: #f2f2f2;
@@ -105,10 +105,10 @@
             margin-left: auto;
             margin-right: auto;
         }
-        body {
-        font-size: 10px;  /* Ukuran font lebih kecil untuk print */
-        font-family: Arial, sans-serif;
-    }
+            body {
+            font-size: 10px;  /* Ukuran font lebih kecil untuk print */
+            font-family: Arial, sans-serif;
+            }
 
             table {
                 page-break-inside: avoid;
@@ -117,11 +117,11 @@
             }
 
             td, th {
-    padding: 5px;
-    text-align: center;
-    border: 1px solid #ddd;
-    white-space: nowrap;  /* Hindari pemotongan konten pada kolom yang lebih lebar */
-}
+                padding: 5px;
+                text-align: center;
+                border: 1px solid #ddd;
+                white-space: nowrap;  /* Hindari pemotongan konten pada kolom yang lebih lebar */
+            }
 
             /* Force landscape mode */
             @page {
@@ -141,17 +141,47 @@
                 display: none;
             }
         }
+        @media print {
+            table {
+                page-break-inside: auto;
+            }
+
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            thead {
+                display: table-header-group; /* agar header tetap di atas saat pindah halaman */
+            }
+
+            tfoot {
+                display: table-footer-group;
+            }
+
+            a {
+                text-decoration: none;
+                color: black !important;
+            }
+
+            body {
+                margin: 0;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="kop-surat">
+        <div class="logo">
+            <img src="{{ app('settings')['site_logo'] === '' ? asset('asset/img/default-logo.png') : app('settings')['site_logo']  }}" alt="Logo">
+        </div>
         <div class="text">
-            <h1>{{ app('settings')['site_name'] }}</h1>
+            <h2>Laporan Absensi RFID Peserta Didik</h2>
+            <h1><b>{{ app('settings')['site_name'] }}</b></h1>
             <h2>{{ app('settings')['address'] }}</h2>
             <p>Telepon: {{ app('settings')['phone'] }} | Email: {{ app('settings')['email'] }}</p>
         </div>
-
     </div>
     @php
     $thisMonth = \Carbon\Carbon::now()->format('F'); // Current month name
@@ -165,7 +195,7 @@
                 <td rowspan="2" class="text-center"><p>Nomor Induk</p></td>
                 <td rowspan="2" class="text-center"><p>NAMA</p></td>
 
-                <td colspan="34"><center>Bulan: {{ \Carbon\Carbon::create()->month((int) (request('month') ?: \Carbon\Carbon::now()->month))->format('F') }} {{ request('year') ?: \Carbon\Carbon::now()->format('Y') }}
+                <td colspan="35"><center>Bulan: {{ \Carbon\Carbon::create()->month((int) (request('month') ?: \Carbon\Carbon::now()->month))->format('F') }} {{ request('year') ?: \Carbon\Carbon::now()->format('Y') }}
                 </center></td>
             </tr>
             <tr class="text-center">
@@ -292,10 +322,14 @@
         </div>
     </div>
 
-     <script>
-        // Automatically open the print dialog
+    <script>
         window.onload = function () {
             window.print();
+    
+            // Tunggu beberapa detik lalu tutup tab
+            setTimeout(function () {
+                window.close();
+            }, 1000); // 1 detik (atur sesuai kebutuhan)
         };
     </script>
 </body>

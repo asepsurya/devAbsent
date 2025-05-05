@@ -48,10 +48,20 @@ class BackupController extends Controller
 
     public function getBackupHistory()
     {
-        // Mengambil daftar file backup yang ada
-        $backupFiles = File::files(storage_path('app/backups'));
+        $backupPath = storage_path('app/backups');
 
-        return view('backup.history', ['backupFiles' => $backupFiles,'title'=>'Backup History']);
+        // Pastikan folder backups ada, kalau tidak buat
+        if (!File::exists($backupPath)) {
+            File::makeDirectory($backupPath, 0755, true); // true agar membuat folder secara rekursif
+        }
+    
+        // Ambil daftar file backup
+        $backupFiles = File::files($backupPath);
+    
+        return view('backup.history', [
+            'backupFiles' => $backupFiles,
+            'title' => 'Backup History'
+        ]);
     }
 
     public function downloadBackup($filename)
