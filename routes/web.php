@@ -47,6 +47,12 @@ Route::get('/rfid/dataget',[rfidController::class,'rfidDataGET'])->name('rfidDat
 Route::get('/role',[authController::class,'role'])->name('role');
 Route::get('/role/create',[authController::class,'create'])->middleware('role:walikelas');
 
+Route::get('/forgot-password',[authController::class,'lupapassword'])->name('lostPass');
+Route::get('/captcha-image', [authController::class, 'generate'])->name('captcha.image');
+Route::post('/reset-password2', [authController::class, 'submit'])->name('password.reset.submit');
+Route::post('/forgot-password', [authController::class, 'sendResetLink']);
+Route::get('/reset-password/{token}', [authController::class, 'showResetForm'])->name('resetpass');
+Route::post('/reset-password', [authController::class, 'resetPassword']);
 // -------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------- LOGIN REGISTER PAGE  --------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------------------

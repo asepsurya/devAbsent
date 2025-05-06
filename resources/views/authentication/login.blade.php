@@ -35,7 +35,7 @@
       transition: transform 0.2s ease-in-out;
       cursor: pointer;
     }
-  
+
     .list-group-item.hover-zoom:hover {
       transform: scale(1.02);
       background-color: #f8f9fa; /* warna latar saat hover */
@@ -80,7 +80,7 @@
                                 <form action="{{ route('loginAction') }}" method="post" id="loginForm">
                                     @csrf
                                     <div class="mb-3 ">
-                                        <label class="form-label">Username</label>
+                                        <label class="form-label">Email, NIK atau NIS </label>
                                         <div class="input-icon mb-3 position-relative">
                                             <span class="input-icon-addon">
                                                 <i class="ti ti-mail"></i>
@@ -158,22 +158,24 @@
             <div class="modal-body pt-0 m-0">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item hover-zoom d-flex justify-content-between align-items-start">
-                      <div>
-                        <div class="fw-bold">Lupa Kata Sandi</div>
-                        <small class="text-muted">Saya ingin mengatur ulang kata sandi untuk mengakses Aplikasi.</small>
-                      </div>
+                        <a href="{{ route('lostPass') }}">
+                        <div>
+                            <div class="fw-bold">Lupa Kata Sandi</div>
+                            <small class="text-muted">Saya ingin mengatur ulang kata sandi untuk mengakses Aplikasi.</small>
+                        </div>
+                        </a>
                       <span class="text-muted">&rsaquo;</span>
                     </li>
-                    <li class="list-group-item hover-zoom d-flex justify-content-between align-items-start">
+                    {{-- <li class="list-group-item hover-zoom d-flex justify-content-between align-items-start">
                       <div>
                         <div class="fw-bold">Lupa Akun</div>
                         <small class="text-muted">Saya lupa akun yang digunakan untuk mengakses Aplikasi.</small>
                       </div>
                       <span class="text-muted">&rsaquo;</span>
-                    </li>
-                    
+                    </li> --}}
+
                   </ul>
-                  
+
             </div>
           </div>
         </div>
@@ -363,7 +365,7 @@
                     </ul>
                 </div>
             </div>
-           
+
         </div>
         </div>
     </div>

@@ -6,16 +6,25 @@ use App\Models\gtk;
 use App\Models\User;
 use App\Models\student;
 use App\Models\Province;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Mail\ResetPasswordMail;
+use App\Models\PasswordResetToken;
 use Illuminate\Support\Facades\DB;
+use PHPMailer\PHPMailer\PHPMailer;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 
 class authController extends Controller
 {
+
     public function loginIndex(){
         return view('authentication.login',[
             'title'=>'Login App'
@@ -148,43 +157,43 @@ class authController extends Controller
     // login Action
     public function loginAction(request $request){
 
-        $cek = $request->validate([
-            'email'=>'required',
-            'password'=>'required|min:6',
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required|min:6',
         ]);
-        // validasi chaptcha
-        // $request->validate([
-        //      'g-recaptcha-response' => 'required|captcha'
-        // ]);
 
-        $cek['status'] = '2';
-        if(Auth::attempt($cek)){
+        // cari user berdasarkan email atau nomor
+        $user = \App\Models\User::where(function($query) use ($request) {
+                $query->where('email', $request->email)
+                      ->orWhere('nomor', $request->email);
+            })
+            ->where('status', '2') // misal status aktif
+            ->first();
+
+        if ($user && Hash::check($request->password, $user->password)) {
+            Auth::login($user);
             $request->session()->regenerate();
 
-            if(Auth()->user()->role === 'admin'){
-                toastr()->success('Login Berhasil');
-                return redirect()-> intended(route('dashboard.admin'));
-            } elseif(Auth()->user()->role === 'superadmin'){
-                toastr()->success('Login Berhasil');
-                return redirect()-> intended(route('dashboard.superadmin'));
+            toastr()->success('Login Berhasil');
 
-            }elseif(Auth()->user()->role === 'walikelas'){
-                toastr()->success('Login Berhasil');
-                return redirect()-> intended(route('dashboard.walikelas'));
-
-            }elseif(Auth()->user()->role === 'guru'){
-                toastr()->success('Login Berhasil');
-                return redirect()-> intended(route('dashboard.teacher'));
-
-            }elseif(Auth()->user()->role === 'siswa'){
-                toastr()->success('Login Berhasil');
-                return redirect()-> intended(route('dashboard.student'));
+            // redirect sesuai role
+            switch (Auth()->user()->role) {
+                case 'admin':
+                    return redirect()->intended(route('dashboard.admin'));
+                case 'superadmin':
+                    return redirect()->intended(route('dashboard.superadmin'));
+                case 'walikelas':
+                    return redirect()->intended(route('dashboard.walikelas'));
+                case 'guru':
+                    return redirect()->intended(route('dashboard.teacher'));
+                case 'siswa':
+                    return redirect()->intended(route('dashboard.student'));
+                default:
+                    return redirect('/');
             }
-        }else{
-            //jika login error
-            toastr()->error('Login Gagal!! Periksa Kembali Data Anda');
-            return back()->with('loginError','Login Gagal!! Periksa Kembali Data Anda');
-
+        } else {
+            toastr()->error('Login Gagal! Cek email/nomor dan password kamu.');
+            return back()->with('loginError', 'Login Gagal! Cek email/nomor dan password kamu.');
         }
 
     }
@@ -279,7 +288,147 @@ class authController extends Controller
         // abort(403);
     }
 
-    public function create(request $request){
-        return ' halama create';
+    public function lupapassword(){
+        return view('authentication.lupapass',[
+            'title'=>'Lupa Password'
+        ]);
+    }
+
+    public function generate()
+    {
+        // Ambil data provinsi, cache selama 1 jam
+        $provinsi = Cache::remember('daftar_provinsi', 60*60, function () {
+            $response = Http::get('https://ibnux.github.io/data-indonesia/provinsi.json');
+            return $response->successful() ? $response->json() : [];
+        });
+
+        // Pastikan data provinsi valid (bukan null atau kosong)
+        if (empty($provinsi)) {
+            return response('Tidak dapat mengambil data provinsi.', 500);
+        }
+
+        // Ambil provinsi random
+        $randomProvinsi = $provinsi[array_rand($provinsi)];
+        $text = $randomProvinsi['nama'];
+
+        // Simpan ke session untuk verifikasi nanti
+        Session::put('captcha_provinsi', $text);
+        \Log::info('Captcha Provinsi: ' . Session::get('captcha_provinsi'));
+
+        // Path font (pastikan font tersebut ada)
+        $fontPath = public_path('fonts/font.otf');  // Ganti dengan font yang sesuai
+
+        if (!file_exists($fontPath)) {
+            return response('Font file not found.', 500);
+        }
+
+        // Ukuran font yang digunakan
+        $fontSize = 20;
+
+        // Hitung bounding box untuk teks (ukuran lebar dan tinggi)
+        $bbox = imagettfbbox($fontSize, 0, $fontPath, $text);
+
+        // Hitung lebar dan tinggi teks
+        $textWidth = $bbox[2] - $bbox[0];  // Lebar teks (koordinat kanan - kiri)
+        $textHeight = $bbox[1] - $bbox[7]; // Tinggi teks (koordinat atas - bawah)
+
+        // Tentukan ukuran gambar berdasarkan lebar teks
+        $imageWidth = $textWidth + 20;  // Menambahkan margin agar tidak terlalu rapat
+        $imageHeight = $textHeight + 20; // Menambahkan margin
+
+        // Buat gambar dengan ukuran dinamis
+        $image = imagecreate($imageWidth, $imageHeight);
+
+        // Warna latar belakang dan teks
+        $bgColor = imagecolorallocate($image, 255, 255, 255);  // Putih
+        $textColor = imagecolorallocate($image, 255, 105, 180); // pink soft    // Hitam
+
+        // Posisi teks agar berada di tengah
+        $x = (imagesx($image) - $textWidth) / 2;  // Menempatkan teks di tengah secara horizontal
+        $y = (imagesy($image) + $textHeight) / 2; // Menempatkan teks di tengah secara vertikal
+
+        // Tulis teks di gambar
+        imagettftext($image, $fontSize, 0, $x, $y, $textColor, $fontPath, $text);
+
+        // Output sebagai image PNG
+        ob_start();
+        imagepng($image);
+        $imgData = ob_get_clean();
+        imagedestroy($image);
+
+        return response($imgData)->header('Content-Type', 'image/png');
+    }
+
+
+    public function submit(Request $request)
+    {
+
+        $custom =[
+            'email.required'=>'Email tidak boleh Kosong',
+            'email.email'=>'Email tidak valid',
+            'email.exists'=>'Email tidak terdaftar di sistem kami'
+        ];
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'captcha_input' => 'required'
+        ],$custom);
+
+        if ($request->captcha_input != session('captcha_provinsi')) {
+            return back()->with('error', 'Kode captcha tidak cocok.');
+        }
+
+        $token = Str::random(60);
+        PasswordResetToken::updateOrCreate(
+            ['email' => $request->email], // kondisi pencarian
+            [
+                'token' => $token,
+                'created_at' => now()
+            ]
+        );
+
+        Mail::to($request->email)->send(new ResetPasswordMail($token));
+        // Validasi dan proses reset password
+        $user = User::where('email',$request->email)->first(); // Ambil user berdasarkan ID
+        return back()->with('success', 'Password reset telah dikirim ke email anda.');
+    }
+
+
+    public function showResetForm($token){
+        $email = PasswordResetToken::where('token',$token)->first();
+        if (!$email) {
+            return redirect('/login')->with('error', 'Link reset password sudah kadaluarsa');
+        }
+
+        return view('authentication.reset-password',[
+            'token' =>$token,
+            'email'=>$email
+        ]);
+    }
+
+
+    public function resetPassword(request $request){
+
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|same:password_confirm',
+            'password_confirm' => 'required|same:password'
+        ]);
+
+        $request->validate([
+            'g-recaptcha-response' => 'required|captcha'
+       ]);
+
+       $user = User::where('email', $request->email)->update([
+        'password' => Hash::make($request->password_confirm)
+        ]);
+
+        PasswordResetToken::where('email',$request->email)->delete();
+
+        if($user){
+            return redirect('/login')->with('success', 'Password berhasil di-reset. Silakan login dengan password baru kamu.');
+        }else{
+            return back()->with('error', 'Reset password gagal.');
+        }
+
     }
 }
