@@ -34,10 +34,8 @@ use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
 
 // Plugin Controller ---------------------------------------------
-use App\Http\Controllers\plugin\EventController;
 use App\Http\Controllers\verifikasiUserController;
 use App\Http\Controllers\plugin\config\pluginController;
-
 use App\Http\Controllers\plugin\config\deletePluginController;
 use App\Http\Controllers\plugin\config\statusPluginController;
 
@@ -425,3 +423,5 @@ Route::middleware('auth')->group(function () {
 // -------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------- START PLUGIN INSTALL HERE -------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------------------
+
+/* */
