@@ -139,29 +139,28 @@ class deletePluginController extends Controller
   }
 
   private function removeRoute($id){
-        $webRoutesFile = base_path('routes/web.php');
+        $controllerFolder = storage_path('app/plugins/extracted/' . $id . '/routes');
+        $destinationPath = base_path('routes/plugins');
 
-        // Pastikan file web.php ada
-        if (!File::exists($webRoutesFile)) {
-            \Log::error("File web.php tidak ditemukan.");
-            return response()->json(['error' => 'File web.php tidak ditemukan.'], 404);
+        // Cek apakah folder hasil extract ada
+        if (!File::exists($controllerFolder)) {
+            \Log::warning("Folder routes tidak ditemukan di dalam hasil extract ($controllerFolder).");
+            return response()->json(['error' => 'Folder routes tidak ditemukan dalam hasil extract.'], 404);
         }
 
-        $webRoutesContent = File::get($webRoutesFile);
+        // Ambil semua file di dalam folder hasil extract
+        $files = File::allFiles($controllerFolder);
 
-        // Regex untuk menghapus semua dari satu "// Routes dari Plugin" ke "// Routes dari Plugin" berikutnya
-        $escapedId = preg_quote($id, '/'); // Escape karakter khusus pada ID
-        $pattern = "/\/\/ Routes dari Plugin\s*" . $escapedId . "[\s\S]*?\/\/ End dari Plugin\s*/";
+        // Loop setiap file dan hapus di folder tujuan
+        foreach ($files as $file) {
+            $filename = $file->getFilename();
+            $target = $destinationPath . '/' . $filename;
 
-
-        $updatedWebRoutes = preg_replace($pattern, ' ', $webRoutesContent);
-
-        // Simpan perubahan ke web.php hanya jika ada perubahan
-        if ($updatedWebRoutes !== $webRoutesContent) {
-            File::put($webRoutesFile, $updatedWebRoutes);
-            return response()->json(['message' => "Semua routes dari plugin berhasil dihapus."]);
-        } else {
-            return response()->json(['message' => "Tidak ada rute yang dihapus."]);
+            // Jika file ditemukan di routes/plugins, hapus
+            if (File::exists($target)) {
+                File::delete($target);
+                \Log::info("File {$filename} berhasil dihapus dari routes/plugins.");
+            }
         }
   }
 

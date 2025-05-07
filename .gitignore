@@ -20,8 +20,19 @@ yarn-error.log
 /.vscode
 
 .codegpt
-controllers/plugin/**
+# Mengabaikan semua file dan folder di dalam Controllers/plugin/
+Controllers/plugin/**
+
+# Mengabaikan semua file dan folder dalam resources/views/plugin/
 resources/views/plugin/**
+
+# Membolehkan index.blade.php dan import.blade.php tetap di-track
 !resources/views/plugin/index.blade.php
 !resources/views/plugin/import.blade.php
+
+# Mengabaikan file menu_plugin.blade.php
 resources/views/partial/menu_plugin.blade.php
+
+# Mengabaikan routes/plugins/ dan app/Imports
+routes/plugins/
+app/Imports

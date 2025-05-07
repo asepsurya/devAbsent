@@ -424,5 +424,9 @@ Route::middleware('auth')->group(function () {
 // ------------------------------------- START PLUGIN INSTALL HERE -------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------------------
 
-/* */
-/* */
+$pluginRoutes = glob(base_path('routes/plugins/*.php'));
+
+foreach ($pluginRoutes as $routeFile) {
+    \Log::info("Loading Route File: $routeFile");
+    require_once $routeFile;
+}

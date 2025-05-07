@@ -143,41 +143,24 @@ class pluginController extends Controller
     private function addRoutesFromPlugin($extractPath , $pluginName)
     {
 
-        // Cek apakah file routes.php ada di dalam folder plugin yang diekstrak
-        $pluginRoutesFile = $extractPath . '/routes.php';
+        $pluginRouteFolder = $extractPath . '/routes'; // Path sumber dalam plugin
+        $destinationPath = base_path('routes/plugins');
 
-        if (File::exists($pluginRoutesFile)) {
-            // Baca konten dari file routes.php plugin
-            $pluginRoutesContent = File::get($pluginRoutesFile);
+        // Cek apakah folder 'routes' ada dalam plugin
+        if (!File::exists($pluginRouteFolder)) {
+            \Log::warning('Folder routes tidak ditemukan dalam plugin. Proses dihentikan.');
+            return null; // Hentikan proses jika folder tidak ada
+        }
 
-            // Cek controller yang digunakan dalam routes.php
-            preg_match_all('/::class, (.*?)->/', $pluginRoutesContent, $matches);
-            if (isset($matches[1])) {
-                // Ambil controller dari matches
-                foreach ($matches[1] as $controller) {
-                    // Hapus spasi atau karakter lain yang tidak perlu
-                    $controller = trim($controller, " '\"");
-                    // Tentukan namespace untuk controller
-                    $controllerNamespace = "App\\Http\\Controllers\\plugin\\" . $controller;
-
-                    // Impor controller di atas web.php jika belum ada
-                    $this->addRoutesFromPlugin($controllerNamespace, $pluginName);
-                }
+        if (File::exists($pluginRouteFolder)) {
+            // Buat folder tujuan jika belum ada
+            if (!File::exists($destinationPath)) {
+                File::makeDirectory($destinationPath, 0755, true);
             }
 
-            // Path file web.php di Laravel
-            $webRoutesFile = base_path('routes/web.php');
-            // Baca isi web.php
-            $webRoutesContent = File::get($webRoutesFile);
-            // Tambahkan konten dari plugin routes.php ke dalam routes/web.php
-            // Hapus rute plugin lama jika ada
-
-            $pattern = "/\/\/ Routes dari Plugin\s*" . $pluginName . "[\s\S]*?\/\/ End dari Plugin\s*/";
-            $cleanWebRoutes = preg_replace($pattern, '', $webRoutesContent);
-
-            // Tambahkan rute plugin baru di bagian akhir file
-            $newRoutes = "\n// Routes dari Plugin" . " ". $pluginName . "\n" . $pluginRoutesContent . "\n// End dari Plugin\n";
-            File::put($webRoutesFile, $cleanWebRoutes . $newRoutes);
+            // Menyalin seluruh folder dan isinya ke dalam routes/plugins
+            File::copyDirectory($pluginRouteFolder, $destinationPath);
+            \Log::info('Routes dari plugin berhasil dipindahkan ke folder routes/plugins.');
         }
     }
 
