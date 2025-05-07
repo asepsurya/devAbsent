@@ -661,25 +661,23 @@
                             @foreach ($hadir as $a)
                                 <tr  class="table-row">
                                     <td>{{ $a->tanggal }}</td>
-                                    <td>{{ $a->entry }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($a->entry)->format('H:i') }}</td>
                                     <td>
-                                        @php
-                                        $entryTime = \Carbon\Carbon::parse($a->entry); // Convert the entry time to Carbon instance
-                                        $estimasiWaktu = (int) app('settings')['estimasi_waktu_masuk']; // Ensure estimasi_waktu_masuk is an integer
-                                        $thresholdTime = \Carbon\Carbon::parse($jamMasuk); // The base threshold time (7:00 AM)
-                                        $twentyMinutesThreshold = $thresholdTime->copy()->addMinutes(20); // 7:20 AM, copied to avoid modification of the original threshold time
-                                        $estimasiThreshold = $thresholdTime->copy()->addMinutes($estimasiWaktu); // Entry time threshold considering estimated time
+                                    @php
+                                        $entryTime = \Carbon\Carbon::parse($a->entry);
+                                        $estimasiWaktu = (int) app('settings')['estimasi_waktu_masuk']; // misalnya 45
+                                        $thresholdTime = \Carbon\Carbon::parse($jamMasuk); // 07:00
+                                        $estimasiThreshold = $thresholdTime->copy()->addMinutes($estimasiWaktu); // 07:45
                                     @endphp
 
-                                    @if($entryTime->lte($thresholdTime))
-                                        <span class="badge badge-warning"><span class="ti ti-info-circle"></span> Tepat Waktu</span>
-                                    @elseif($entryTime->lte($twentyMinutesThreshold)) <!-- Entry time before or at 7:20 AM -->
+                                    @if($entryTime->lte($estimasiThreshold))
                                         <span class="badge badge-success"><span class="ti ti-info-circle"></span> Tepat Waktu</span>
-                                    @elseif ($entryTime->lte($estimasiThreshold))  <!-- Entry time between 7:20 AM and the estimated time -->
-                                        <span class="badge badge-warning"><span class="ti ti-info-circle"></span> Setengah Hari</span>
-                                    @else  <!-- Entry time after the estimated time -->
+                                    @elseif($entryTime->lte($estimasiThreshold->copy()->addMinutes(15)))
+                                        <span class="badge badge-warning"><span class="ti ti-info-circle"></span> Sedikit Terlambat</span>
+                                    @else
                                         <span class="badge badge-danger"><span class="ti ti-info-circle"></span> Terlambat</span>
                                     @endif
+
 
 
                                     </td>

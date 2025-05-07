@@ -25,7 +25,28 @@
     <link rel="stylesheet" href="{{ asset('asset/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
+    {{-- <style>
+        .password-rules {
 
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px 16px;
+
+        }
+        .password-rules .rule-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .password-rules .rule-item .icon {
+            width: 20px;
+            display: inline-flex;
+            justify-content: center;
+            margin-right: 8px;
+            font-size: 16px;
+        } --}}
+    </style>
 <body class="account-page bg-light-gradient">
     <div class="bg-holder" style="background-image:url({{ asset('landing/img/illustrations/hero-bg.png') }});background-position:top right;background-size:cover;">
     <div class="main-wrapper">
@@ -40,6 +61,18 @@
                             <div class="card">
                                 <div class="card-body p-4">
                                     <h4 class="mb-4 text-center">Reset Password</h4>
+                                    @if ($errors->any())
+                                        <div class="card border-danger mb-3">
+                                            <div class="card-header bg-danger text-white">Ada Kesalahan</div>
+                                            <div class="card-body">
+                                                <ul class="mb-0">
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    @endif
 
                                     <form action="/reset-password" method="POST">
                                         @csrf
@@ -47,10 +80,9 @@
                                         <input type="hidden" name="email" value="{{ $email->email }}">
 
                                         <div class="mb-3">
-                                            <label class="form-label"> Password Baru</label>
+                                            <label class="form-label">Password Baru</label>
                                             <div class="pass-group position-relative">
-                                                <input type="password" class="pass-input form-control @error('password') is-invalid @enderror"
-                                                    placeholder="Masukan password kamu" name="password" id="password">
+                                                <input type="password" class="pass-input form-control @error('password') is-invalid @enderror" placeholder="Masukan password kamu" name="password" id="password">
                                                 <span class="ti ti-eye-off toggle-password position-absolute" data-target="#password" style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></span>
                                             </div>
                                             @error('password')
@@ -63,7 +95,7 @@
                                         <div class="mb-3">
                                             <label class="form-label">Konfirmasi Password</label>
                                             <div class="pass-group position-relative">
-                                                <input type="password" class="pass-input form-control @error('password') is-invalid @enderror"
+                                                <input type="password" class="pass-input form-control @error('password_confirm') is-invalid @enderror"
                                                     placeholder="Masukan kembali password kamu" name="password_confirm" id="password_confirm">
                                                 <span class="ti ti-eye-off toggle-password position-absolute" data-target="#password_confirm" style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></span>
                                             </div>
@@ -73,7 +105,23 @@
                                             </div>
                                             @enderror
                                         </div>
-
+                                        <div id="password-rules" class="password-rules">
+                                            <div id="rule-length" class="rule-item text-danger">
+                                                <span class="icon">✖</span> Minimal 8 karakter
+                                            </div>
+                                            <div id="rule-upper" class="rule-item text-danger">
+                                                <span class="icon">✖</span> Mengandung huruf besar
+                                            </div>
+                                            <div id="rule-lower" class="rule-item text-danger">
+                                                <span class="icon">✖</span> Mengandung huruf kecil
+                                            </div>
+                                            <div id="rule-number" class="rule-item text-danger">
+                                                <span class="icon">✖</span> Mengandung angka
+                                            </div>
+                                            <div id="rule-symbol" class="rule-item text-danger">
+                                                <span class="icon">✖</span> Mengandung simbol (@$!%*#?&)
+                                            </div>
+                                        </div>
                                          {{-- start Chatcha --}}
                                          <div class="my-3">
                                             {!! NoCaptcha::renderJs() !!}
@@ -102,6 +150,58 @@
     </div>
     </div>
     <script>
+
+        const passwordInput = document.getElementById('password');
+        const ruleLength = document.getElementById('rule-length');
+        const ruleUpper = document.getElementById('rule-upper');
+        const ruleLower = document.getElementById('rule-lower');
+        const ruleNumber = document.getElementById('rule-number');
+        const ruleSymbol = document.getElementById('rule-symbol');
+
+        passwordInput.addEventListener('input', function () {
+            const value = this.value;
+
+            // Cek panjang
+            ruleLength.innerHTML = (value.length >= 8) ? '✔ Minimal 8 karakter' : '✖ Minimal 8 karakter';
+            ruleLength.className = (value.length >= 8) ? 'text-success' : 'text-danger';
+
+            // Cek huruf besar
+            ruleUpper.innerHTML = /[A-Z]/.test(value) ? '✔ Mengandung huruf besar' : '✖ Mengandung huruf besar';
+            ruleUpper.className = /[A-Z]/.test(value) ? 'text-success' : 'text-danger';
+
+            // Cek huruf kecil
+            ruleLower.innerHTML = /[a-z]/.test(value) ? '✔ Mengandung huruf kecil' : '✖ Mengandung huruf kecil';
+            ruleLower.className = /[a-z]/.test(value) ? 'text-success' : 'text-danger';
+
+            // Cek angka
+            ruleNumber.innerHTML = /[0-9]/.test(value) ? '✔ Mengandung angka' : '✖ Mengandung angka';
+            ruleNumber.className = /[0-9]/.test(value) ? 'text-success' : 'text-danger';
+
+            // Cek simbol
+            ruleSymbol.innerHTML = /[@$!%*#?&]/.test(value) ? '✔ Mengandung simbol (@$!%*#?&)' : '✖ Mengandung simbol (@$!%*#?&)';
+            ruleSymbol.className = /[@$!%*#?&]/.test(value) ? 'text-success' : 'text-danger';
+        });
+
+        function updateRule(id, isValid) {
+            const el = document.getElementById(id);
+            el.querySelector('.icon').textContent = isValid ? '✔' : '✖';
+            el.className = 'rule-item ' + (isValid ? 'text-success' : 'text-danger');
+        }
+
+        passwordInput.addEventListener('input', function () {
+            const value = this.value;
+
+            updateRule('rule-length', value.length >= 8);
+            updateRule('rule-upper', /[A-Z]/.test(value));
+            updateRule('rule-lower', /[a-z]/.test(value));
+            updateRule('rule-number', /[0-9]/.test(value));
+            updateRule('rule-symbol', /[@$!%*#?&]/.test(value));
+        });
+
+    </script>
+
+    <script>
+
         document.querySelectorAll('.toggle-password').forEach(item => {
             item.addEventListener('click', function() {
                 const target = document.querySelector(this.getAttribute('data-target'));

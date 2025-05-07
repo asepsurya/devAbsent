@@ -45,8 +45,8 @@
                         <span class="profile-pic">
 
                         @if(optional($item->$relation)->$img)
-                            <a href="{{ asset('storage/' . $item->$relation->$img) }}" 
-                               data-lightbox="image-{{ $item->id }}" 
+                            <a href="{{ asset('storage/' . $item->$relation->$img) }}"
+                               data-lightbox="image-{{ $item->id }}"
                                data-title="Profile Photo">
                                 <img src="{{ asset('storage/' . $item->$relation->$img) }}" alt="foto">
                             </a>
@@ -88,7 +88,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Username</label>
+                                    <label class="form-label">Email</label>
                                     <input type="email" class="form-control" placeholder="Enter Email" value="{{ $item->email }}" disabled>
                                 </div>
                                 <div class="d-block d-xl-flex">

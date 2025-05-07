@@ -394,6 +394,7 @@ class authController extends Controller
 
 
     public function showResetForm($token){
+
         $email = PasswordResetToken::where('token',$token)->first();
         if (!$email) {
             return redirect('/login')->with('error', 'Link reset password sudah kadaluarsa');
@@ -407,26 +408,44 @@ class authController extends Controller
 
 
     public function resetPassword(request $request){
-
         $request->validate([
             'email' => 'required|email|exists:users,email',
-            'password' => 'required|same:password_confirm',
-            'password_confirm' => 'required|same:password'
-        ]);
-
-        $request->validate([
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/[A-Z]/',      // huruf besar
+                'regex:/[a-z]/',      // huruf kecil
+                'regex:/[0-9]/',      // angka
+                'regex:/[@$!%*#?&]/', // simbol
+                'same:password_confirm'           // harus sama dengan password_confirmation
+            ],
             'g-recaptcha-response' => 'required|captcha'
-       ]);
+        ], [
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.exists' => 'Email tidak terdaftar.',
 
-       $user = User::where('email', $request->email)->update([
-        'password' => Hash::make($request->password_confirm)
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.regex' => 'Password harus terdiri dari huruf besar, kecil, angka, dan simbol.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+
+            'g-recaptcha-response.required' => 'Captcha wajib diisi.',
+            'g-recaptcha-response.captcha' => 'Captcha tidak valid.'
         ]);
 
-        PasswordResetToken::where('email',$request->email)->delete();
+        // Update password
+        $user = User::where('email', $request->email)->update([
+            'password' => Hash::make($request->password)
+        ]);
 
-        if($user){
+        // Hapus token
+        PasswordResetToken::where('email', $request->email)->delete();
+
+        if ($user) {
             return redirect('/login')->with('success', 'Password berhasil di-reset. Silakan login dengan password baru kamu.');
-        }else{
+        } else {
             return back()->with('error', 'Reset password gagal.');
         }
 

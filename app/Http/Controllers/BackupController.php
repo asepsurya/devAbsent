@@ -54,10 +54,10 @@ class BackupController extends Controller
         if (!File::exists($backupPath)) {
             File::makeDirectory($backupPath, 0755, true); // true agar membuat folder secara rekursif
         }
-    
+
         // Ambil daftar file backup
         $backupFiles = File::files($backupPath);
-    
+
         return view('backup.history', [
             'backupFiles' => $backupFiles,
             'title' => 'Backup History'
@@ -74,7 +74,7 @@ class BackupController extends Controller
 
     public function showPartialRestore()
     {
-        // Ambil semua tabel di database aktif
+       // Ambil semua tabel di database aktif
         $tables = DB::select('SHOW TABLES');
 
         // Ambil nama field tabel dari hasil query
@@ -85,9 +85,56 @@ class BackupController extends Controller
             return $item->$key;
         }, $tables);
 
-        return view('backup.partial-restore',[
-            'title'=> 'Restone Database'
-        ], compact('tableNames'));
+        // Buat mapping alias tabel
+        $tableLabels = [
+            'gtks'              => 'Guru',
+            'students'          => 'Siswa',
+            'mapels'            => 'Mata Pelajaran',
+            'kelas'             => 'Kelas',
+            'jam_pelajarans'    => 'Jam Pelajaran',
+            'tahun_pelajarans'  => 'Tahun Ajaran',
+            'walikelas'         => 'Wali Kelas',
+            'tasks'             => 'Tugas',
+            'taskslinks'        => 'Link Tugas',
+            'tasksmedia'        => 'Media Tugas',
+            'student_scores'    => 'Nilai Siswa',
+            'student_answers'   => 'Jawaban Siswa',
+            'users'             => 'Pengguna',
+            'roles'             => 'Peran',
+            'permissions'       => 'Hak Akses',
+            'announcements'     => 'Pengumuman',
+            'comments'          => 'Komentar',
+            'ref_jadwals'       => 'Referensi Jadwal',
+            'rombels'           => 'Rombongan Belajar',
+            'provinces'         => 'Provinsi',
+            'regencies'         => 'Kabupaten',
+            'districts'         => 'Kecamatan',
+            'villages'          => 'Desa/Kelurahan',
+            'plugins'           => 'Plugin',
+            'backup_schedules'  => 'Jadwal Backup',
+            'file_tugas'        => 'File Tugas',
+            'absents'           => 'Absensi',
+            'absents_histories' => 'Riwayat Absensi',
+            'class_rooms'       => 'Ruang Kelas',
+            'class_room_people' => 'Anggota Kelas',
+            'entryrfids'        => 'Data Masuk (RFID)',
+            'events'            => 'Agenda/Kegiatan',
+            'questions'         => 'Pertanyaan',
+            'setelan_haris'     => 'Pengaturan Hari',
+            'settings'          => 'Pengaturan',
+        ];
+
+
+        // Buat array gabungan: key = nama tabel, value = label user-friendly
+        $tableList = [];
+        foreach ($tableNames as $tableName) {
+            $tableList[$tableName] = $tableLabels[$tableName] ?? ucwords(str_replace('_', ' ', $tableName));
+        }
+
+        return view('backup.partial-restore', [
+            'title' => 'Restore Database',
+            'tableList' => $tableList,
+        ]);
     }
 
     public function processPartialRestore(Request $request)
@@ -190,5 +237,20 @@ class BackupController extends Controller
             return redirect()->back()->with('error', 'File tidak ditemukan.');
         }
     }
+
+    public function setSchedule(Request $request)
+    {
+        $request->validate([
+            'frequency' => 'required|in:daily,weekly,monthly'
+        ]);
+
+        DB::table('backup_schedules')->updateOrInsert(
+            ['id' => 1],
+            ['frequency' => $request->frequency, 'last_backup_at' => null]
+        );
+
+        return back()->with('success', 'Jadwal backup berhasil disimpan.');
+    }
+
 
 }

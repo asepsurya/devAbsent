@@ -15,8 +15,9 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         // Daftarkan perintah-perintah kustom kamu di sini
         Commands\CheckForUpdates::class,
+        Commands\BackupDatabase::class,
     ];
-    
+
     protected $middleware = [
         \App\Http\Middleware\CheckDatabase::class,
     ];
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
     {
         // Menjadwalkan perintah kustom kamu
         $schedule->command('check:updates')->hourly(); // Menjalankan perintah setiap jam
+        // $schedule->command('backup:database')->dailyAt('02:00');
     }
 
     /**

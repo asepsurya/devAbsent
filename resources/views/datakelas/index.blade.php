@@ -110,7 +110,12 @@
                     </tbody>
                 </table>
                 @if (Request::is('class/time'))
-                <div class="d-flex justify-content-end m-2">
+                <div class="d-flex justify-content-between m-2">
+                    <div class="mt-2 ms-3">
+                        Default Jam masuk  : 07:00 |
+                        Default Jam Pulang : 16:00
+                    </div>
+
                     <button class="btn btn-primary">Simpan Data</button>
                 </div>
                 @endif

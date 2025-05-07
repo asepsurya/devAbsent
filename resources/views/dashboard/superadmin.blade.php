@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" /> --}}
    <style>
         .calendar {
             display: grid;
@@ -297,15 +297,15 @@
                     </div>
                     <div class="overflow-hidden flex-fill">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h2 class="counter">{{ $studentCount }}</h2>
+                            <h2 class="a">{{ $studentCount }}</h2>
                         </div>
                         <p>Peserta Didik</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold counter">{{ $studentActive }}</span></p>
+                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold a">{{ $studentActive }}</span></p>
                     <span class="text-light">|</span>
-                    <p>Tidak Aktif : <span class="text-dark fw-semibold counter">{{ $studentDeactive }}</span></p>
+                    <p>Tidak Aktif : <span class="text-dark fw-semibold a">{{ $studentDeactive }}</span></p>
                 </div>
             </div>
         </div>
@@ -319,15 +319,15 @@
                     </div>
                     <div class="overflow-hidden flex-fill">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h2 class="counter">{{ $gtkCount }}</h2>
+                            <h2 class="a">{{ $gtkCount }}</h2>
                         </div>
                         <p>GTK</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold counter">{{ $gtkActive }}</span></p>
+                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold a">{{ $gtkActive }}</span></p>
                     <span class="text-light">|</span>
-                    <p>Tidak Aktif : <span class="text-dark fw-semibold counter">{{ $gtkDeactive }}</span></p>
+                    <p>Tidak Aktif : <span class="text-dark fw-semibold a">{{ $gtkDeactive }}</span></p>
                 </div>
             </div>
         </div>
@@ -341,15 +341,15 @@
                     </div>
                     <div class="overflow-hidden flex-fill">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h2 class="counter">{{ $rombelCount }}</h2>
+                            <h2 class="a">{{ $rombelCount }}</h2>
                         </div>
                         <p>Rombongan Belajar</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold counter">{{ $rombelActive }}</span></p>
+                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold a">{{ $rombelActive }}</span></p>
                     <span class="text-light">|</span>
-                    <p>Tidak Aktif : <span class="text-dark fw-semibold counter">{{ $rombelDeactive }}</span></p>
+                    <p>Tidak Aktif : <span class="text-dark fw-semibold a">{{ $rombelDeactive }}</span></p>
                 </div>
             </div>
         </div>
@@ -363,16 +363,16 @@
                     </div>
                     <div class="overflow-hidden flex-fill">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h2 class="counter">{{ $kelasCount }}</h2>
+                            <h2 class="a">{{ $kelasCount }}</h2>
                             {{-- <span class="badge bg-success">1.2%</span> --}}
                         </div>
                         <p>Kelas</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold counter">{{ $kelasActive }}</span></p>
+                    <p class="mb-0">Aktif : <span class="text-dark fw-semibold a">{{ $kelasActive }}</span></p>
                     <span class="text-light">|</span>
-                    <p>Tidak Aktif : <span class="text-dark fw-semibold counter">{{ $kelasDeactive }}</span></p>
+                    <p>Tidak Aktif : <span class="text-dark fw-semibold a">{{ $kelasDeactive }}</span></p>
                 </div>
             </div>
         </div>
@@ -386,7 +386,7 @@
                     </div>
                     <div class="overflow-hidden flex-fill">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h2 class="counter">{{ $absenEntryCount }}</h2>
+                            <h2 class="a">{{ $absenEntryCount }}</h2>
                             {{-- <span class="badge bg-success">1.2%</span> --}}
                         </div>
                         <p>Absen Masuk</p>
@@ -395,7 +395,7 @@
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
                     <p class="mb-0"></p>
                     <span class="text-light"></span>
-                    <p class="mb-0">Belum : <span class="text-dark fw-semibold counter">{{ $studentActive + $gtkActive - $absenEntryCount }}</span></p>
+                    <p class="mb-0">Belum : <span class="text-dark fw-semibold a">{{ $studentActive + $gtkActive - $absenEntryCount }}</span></p>
                 </div>
             </div>
         </div>
@@ -409,7 +409,7 @@
                     </div>
                     <div class="overflow-hidden flex-fill">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h2 class="counter">{{ $absenOutCount }}</h2>
+                            <h2 class="a">{{ $absenOutCount }}</h2>
                             {{-- <span class="badge bg-success">1.2%</span> --}}
                         </div>
                         <p>Absen Pulang</p>
@@ -418,7 +418,7 @@
                 <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
                     <p class="mb-0"></p>
                     <span class="text-light"></span>
-                    <p class="mb-0">Belum : <span class="text-dark fw-semibold counter">{{ $studentActive + $gtkActive - $absenOutCount }}</span></p>
+                    <p class="mb-0">Belum : <span class="text-dark fw-semibold a">{{ $studentActive + $gtkActive - $absenOutCount }}</span></p>
                 </div>
             </div>
         </div>
@@ -495,11 +495,11 @@
 </div>
 </div>
 @section('javascript')
-<!-- Waypoints.js (Diperlukan oleh CounterUp) -->
+{{-- <!-- Waypoints.js (Diperlukan oleh aUp) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
 
-<!-- CounterUp.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
+<!-- aUp.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/a-Up/1.0.0/jquery.aup.min.js"></script> --}}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const slides = document.querySelectorAll('.slider-item'); // All slides

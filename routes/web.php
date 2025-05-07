@@ -405,6 +405,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/backup/partial-restore', [BackupController::class, 'showPartialRestore'])->name('backup.partialRestorePage');
     Route::post('/backup/partial-restoredb', [BackupController::class, 'processPartialRestore'])->name('backup.processPartialRestore');
     Route::delete('/backup/delete/{filename}', [BackupController::class, 'delete'])->name('backup.delete');
+    Route::post('/backup/backup_schedule', [BackupController::class, 'setSchedule'])->name('backup.schedule');
 
     // -------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------- END ROUTE -------------------------------------------------------------------------------

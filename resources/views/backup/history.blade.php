@@ -14,16 +14,26 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
+        <form method="POST" action="{{ route('backup.schedule') }}" id="backup-form" class="me-2" hidden>
+            @csrf
+
+            <select name="frequency" id="frequency" class="form-control select" onchange="document.getElementById('backup-form').submit()">
+                <option value="daily" {{ old('frequency') == 'daily' ? 'selected' : '' }}> Backup Harian</option>
+                <option value="weekly" {{ old('frequency') == 'weekly' ? 'selected' : '' }}>Backup Mingguan</option>
+                <option value="monthly" {{ old('frequency') == 'monthly' ? 'selected' : '' }}>Backup Bulanan</option>
+            </select>
+        </form>
 
         <!-- Tombol Backup Database -->
         <a href="{{ route('backup.database') }}" class="btn btn-primary me-2">
             <i class="ti ti-database-export"></i> Lakukan Backup Database
         </a>
-        <a href="{{ route('backup.partialRestorePage') }}" class="btn btn-outline-light bg-white">
-            <i class="ti ti-database-export"></i> Restone Database
-        </a>
 
+        <a href="{{ route('backup.partialRestorePage') }}" class="btn btn-outline-light bg-white">
+            <i class="ti ti-database-export"></i> Restore Database
+        </a>
     </div>
+
 </div>
 
 @if(session('message'))
@@ -50,7 +60,7 @@
     </thead>
     <tbody>
         @php $no=1; @endphp
-        @foreach($backupFiles as $file)
+        @forelse($backupFiles as $file)
         <tr>
             <td style="width: 1%;">{{ $no++ }}</td>
             <td style="width: 1%;">
@@ -68,7 +78,12 @@
                 </button>
             </td>
         </tr>
-        @endforeach
+        @empty
+        <tr>
+            <td colspan="5" class="text-center text-muted">Belum ada file backup tersedia.</td>
+        </tr>
+        @endforelse
+
     </tbody>
 </table>
 

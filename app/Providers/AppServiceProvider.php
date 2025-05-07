@@ -10,6 +10,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -35,17 +36,14 @@ class AppServiceProvider extends ServiceProvider
             // Jika tabel users tidak ada, set nilai default untuk menghindari error
             $countActiveUsers = 0;
         }
-
         // Pastikan tabel `tahun_pelajaran` ada sebelum melakukan query
         if (Schema::hasTable('tahun_pelajarans')) {
             $akademik = TahunPelajaran::where('status', '1')->first();
         } else {
             $akademik = null;
         }
-        
 
-        if (config('app.env') === 'production') { URL::forceScheme('https'); } 
-        
+        if (config('app.env') === 'production') { URL::forceScheme('https'); }
         $updateAvailable = Cache::get('update_available', false); // Mengambil status pembarua
 
         // Gunakan optional() untuk menghindari error jika data tidak ditemukan
@@ -58,13 +56,9 @@ class AppServiceProvider extends ServiceProvider
         view()->share('tahunAjaran', $tahunAjaran);
         view()->share('updateAvailable', $updateAvailable);
 
-
-
-
         // ubah lokasi ke Indi
         config(['app.locale' => 'id']);
 	    Carbon::setLocale('id');
-
 
         // user super Admin
         Gate::before(function ($user, $ability) {
@@ -72,7 +66,6 @@ class AppServiceProvider extends ServiceProvider
                 return true;
             }
         });
-
 
         // paginator
         Paginator::useBootstrapFive();
