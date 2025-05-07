@@ -20,15 +20,8 @@ yarn-error.log
 /.vscode
 
 .codegpt
-# Abaikan semua file di controllers/plugin
 controllers/plugin/**
-
-# Abaikan semua file di resources/views/plugin
 resources/views/plugin/**
-
-# Kecualikan file index.blade.php dan import.blade.php
 !resources/views/plugin/index.blade.php
 !resources/views/plugin/import.blade.php
-
-# Abaikan menu_plugin.blade.php di partial
 resources/views/partial/menu_plugin.blade.php
