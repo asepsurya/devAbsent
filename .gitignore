@@ -21,10 +21,10 @@ yarn-error.log
 
 .codegpt
 # Mengabaikan semua file dan folder di dalam Controllers/plugin/
-Controllers/plugin/**
+app/Http/Controllers/plugin/**
 
 # Membolehkan folder config di dalam plugin untuk tetap di-track oleh Git
-!Controllers/plugin/config/
+!app/Http/Controllers/plugin/config/
 
 # Mengabaikan file menu_plugin.blade.php
 resources/views/partial/menu_plugin.blade.php
