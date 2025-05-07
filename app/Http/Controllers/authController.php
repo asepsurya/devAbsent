@@ -5,6 +5,7 @@ use Validator;
 use App\Models\gtk;
 use App\Models\User;
 use App\Models\student;
+use App\Models\LoginLog;
 use App\Models\Province;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -68,6 +69,12 @@ class authController extends Controller
             'email' => 'required|email|unique:users',
             'password'=>'required|same:Cpassword|min:6',
 
+        ]);
+
+        LoginLog::create([
+            'user_id' => $event->user->id,
+            'device_name' => Request::header('User-Agent'),  // Nama Device
+            'ip_address' => Request::ip()                    // IP Address
         ]);
          // // enkripsi password
          $validatedData['password'] = Hash::make($validatedData['password'] );
@@ -450,4 +457,67 @@ class authController extends Controller
         }
 
     }
+    public function getLocation($ip)
+    {
+        $accessKey = env('IPINFO_API_KEY'); // Replace with your ipinfo.io API Key
+        $url = "https://ipinfo.io?token={$accessKey}";
+
+        // Call the API
+        $response = file_get_contents($url);
+
+        if ($response === false) {
+            return null;
+        }
+
+        // Decode JSON response
+        $locationData = json_decode($response);
+
+        // Cek jika data tidak valid
+        if (!isset($locationData->city) || !isset($locationData->region) || !isset($locationData->country)) {
+            return 'Not Available';
+        }
+
+        // Format lokasi: City, Region, Country
+        return "{$locationData->city}, {$locationData->region}, {$locationData->country}";
+    }
+
+    public function storeLocalIP(Request $request)
+    {   
+        $ip_address = $request->ip_address;
+        $cacheKey = "location_{$ip_address}";
+
+        // Langsung cek cache
+        if (Cache::has($cacheKey)) {
+            $location = Cache::get($cacheKey);
+        } else {
+            // Jika tidak ada di cache, cek di database apakah IP ini sudah pernah disimpan oleh user lain
+            $existingLog = LoginLog::where('ip_address', $ip_address)
+                ->whereNotNull('location')
+                ->first();
+            if ($existingLog) {
+                // Jika ditemukan di database, ambil lokasi langsung
+                $location = $existingLog->location;
+            } else {
+                // Jika tidak ditemukan, request API dan simpan di cache
+                $location = $this->getLocation($ip_address);
+
+                // Simpan di cache selama 24 jam (1440 menit)
+                Cache::put($cacheKey, $location, now()->addMinutes(1440));
+            }
+        }
+        // Update atau buat baru di database
+        LoginLog::where(['user_id'=> auth()->id()])->update([
+             'ip_address' => $ip_address,
+             'location' => $location ?? 'Not Available'
+        ]);
+
+        return response()->json([
+            'message' => 'IP Address dan lokasi berhasil diperbarui',
+            'ip_address' => $ip_address,
+            'location' => $location,
+        ]);
+
+
+    }
+
 }

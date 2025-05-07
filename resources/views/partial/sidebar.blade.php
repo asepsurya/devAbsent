@@ -324,6 +324,11 @@
                         <i class="ti ti-calendar-stats"></i><span>Hari Libur</span>
                     </a>
                 </li>
+                <li class="{{ Request::is('nilai') ? 'active' : ''}}">
+                    <a href="/nilai">
+                        <i class="ti ti-list-check"></i><span>Manajemen Penilaian</span>
+                    </a>
+                </li>
                 @endcan
 
             </ul>
@@ -337,11 +342,13 @@
                         <ul>
                             <li class="submenu">
                                 <a href="javascript:void(0);" class="{{ Request::is('report*') ? 'subdrop active' : ''}}">
-                                    <i class="ti ti-lock"></i><span>Laporan Absensi</span><span class="menu-arrow"></span>
+                                    <i class="ti ti-file-analytics"></i><span>Report dan Laporan </span><span class="menu-arrow"></span>
                                 </a>
                                 <ul>
                                     <li><a href="/report/absentrfid/student?month={{ \Carbon\Carbon::now()->format('m') }}&year={{ \Carbon\Carbon::now()->format('Y') }}" class="{{ Request::is('report/absentrfid*') ? 'active' : ''}}">Laporan RFID</a></li>
                                     <li><a href="/report/absent/students?month={{ \Carbon\Carbon::now()->format('m') }}&year={{ \Carbon\Carbon::now()->format('Y') }}" class="{{ Request::is('report/absent/students') ? 'active' : ''}}">Laporan Absensi Kelas</a></li>
+                                    <li><a href="{{ route('report.students') }}" class="{{ Request::is('report/student') ? 'active' : ''}}">Laporan Data Siswa</a></li>
+                                    <li><a href="{{ route('report.gtk') }}" class="{{ Request::is('report/gtk') ? 'active' : ''}}">Laporan Data Guru Tenaga Kependidikan</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -364,6 +371,7 @@
                                     <li><a href="/user/administrator" class="{{ Request::is('user/administrator') ? 'active' : ''}}">Administrator</a></li>
                                     <li><a href="/user/students" class="{{ Request::is('user/students') ? 'active' : ''}}">Peserta Didik</a></li>
                                     <li><a href="/user/teacher" class="{{ Request::is('user/teacher') ? 'active' : ''}}">Guru</a></li>
+                                    <li><a href="/user/logs" class="{{ Request::is('user/logs') ? 'active' : ''}}">Log Pengguna</a></li>
 
                                 </ul>
                             </li>

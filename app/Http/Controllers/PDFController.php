@@ -139,32 +139,32 @@ class PDFController extends Controller
             'gtks' => $gtks
         ];
 
-        $pdf = PDF::loadView('exportPDF.datagtk', $data)
-        ->setPaper('a4', 'landscape')
-        ->setWarnings(false);
-
-
-        return $pdf->stream('export-gtks-' . Carbon::now()->format('YmdHis') . '.pdf');
-        //return $pdf->download('export-gtks-' . Carbon::now()->format('YmdHis') . '.pdf');
+        return view('exportPDF.datagtk', $data);
+           //return $pdf->download('export-gtks-' . Carbon::now()->format('YmdHis') . '.pdf');
     }
 
     public function generatePDFSiswaAll() {
-        $students = student::orderBy('nama', 'asc')
-        ->get();
 
+        if (request('kelas')) {
+            $students = student::where('id_kelas', request('kelas'))
+                ->orderBy('nama', 'asc')
+                ->get();
+        } else {
+            $students = student::orderBy('nama', 'asc')
+                ->get();
+        }
+        
         App::setLocale('id');
         $data = [
             'title' => 'Data Siswa',
             'date'  => Carbon::now()->translatedFormat('l, d F Y H:i:s'),
-            'students' => $students
+            'students' => $students,
+            
         ];
-
-        $pdf = PDF::loadView('exportPDF.datasiswa', $data)
-        ->setPaper('a4', 'landscape')
-        ->setWarnings(false);
-
-        return $pdf->stream('export-students-' . Carbon::now()->format('YmdHis') . '.pdf');
-        //return $pdf->download('export-students-' . Carbon::now()->format('YmdHis') . '.pdf');
+        
+        return view('exportPDF.datasiswa', $data);
+        
+        
     }
     public function generatePDFRFIDstudents(){
         // Get the current date and time
@@ -344,6 +344,18 @@ class PDFController extends Controller
         ];
         return view('exportPDF.ReportAbsesiRfidGTK', $data);
 
+    }
+
+    public function reportstudent(){
+        return view('report.siswa',[
+            'title'=>'Laporan Data Siswa',
+            'kelas'=>Kelas::with(['jurusanKelas'])->get()
+        ]);
+    }
+    public function reportgtk(){
+        return view('report.guru',[
+            'title'=>'Laporan GTK',
+        ]);
     }
 
 

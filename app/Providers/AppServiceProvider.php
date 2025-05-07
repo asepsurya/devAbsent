@@ -3,6 +3,7 @@
 namespace App\Providers;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\absent;
 use App\Models\Setting;
 use App\Models\TahunPelajaran;
 use Illuminate\Support\Facades\URL;
@@ -13,8 +14,14 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 
+
 class AppServiceProvider extends ServiceProvider
 {
+    protected $listen = [
+        'Illuminate\Auth\Events\Login' => [
+            'App\Listeners\LogSuccessfulLogin',
+        ],
+    ];
     /**
      * Register any application services.
      */
@@ -28,7 +35,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
         if (Schema::hasTable('users')) {
             // Ambil pengguna aktif
             $countActiveUsers = User::where('status', '1')->count();

@@ -5,107 +5,144 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AbsensiSAKTI | Export Peserta Didik</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        @media print {
-            @page {
-                size: A4 landscape; /* Set size to A4 landscape */
-                margin: 0; /* No margin for full page */
-            }
-            body {
-                margin: 0; /* No margin for body */
-                height: 100vh; /* Full height */
-                width: 100vw; /* Full width */
-            }
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: white; /* Background color set to white */
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #343a40; /* Darker color for better visibility */
-        }
-        h2 {
-            font-size: 18px;
-            color: #6c757d;
+      
+         /* Styling for the letterhead */
+         .kop-surat {
+            font-family: Arial, sans-serif;
+            width: 100%;
+            border-bottom: 3px solid black;
+            padding-bottom: 10px;
             margin-bottom: 20px;
         }
-        a {
-            color: black; /* Change link color to black */
-            text-decoration: none; /* Remove underline from links */
+
+        .kop-surat img {
+            width: 70px;
+            height: auto;
+            float: left;
         }
-        a:hover {
-            text-decoration: underline; /* Underline on hover for better visibility */
-        }
-        footer {
-            position: fixed;
-            bottom: -15mm;
-            left: 0;
-            right: 0;
-            height: 20mm;
+
+        .kop-surat .text {
             text-align: center;
+        }
+
+        .kop-surat .text h1 {
+            font-size: 20px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .kop-surat .text h2 {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .kop-surat .text p {
+            margin: 0;
             font-size: 12px;
-            color: #6c757d;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
         }
-        .table-container {
-            margin-bottom: 60px; /* Ensure space for footer */
+         /* Print-specific styles */
+         @media print {
+            .signature-section {
+            margin-top: 50px;
+            text-align: center;
         }
-        table {
-            width: 100%; /* Set table width to 100% */
-            border-collapse: collapse; /* Merge borders for a cleaner look */
-            background-color: #f8f9fa; /* Light background for table */
+
+        .signature {
+            margin-top: 80px;
+            font-size: 14px;
+            text-align: center;
         }
-        th {
-            background-color: #00524b; /* Bootstrap primary color */
-            color: white;
-            text-align: center; /* Centered header text */
-            padding: 10px; /* Add padding for better spacing */
+
+        .signature .line {
+            margin-top: 40px;
+            border-top: 1px solid black;
+            width: 250px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        td {
-            text-align: left; /* Align text to the left by default */
-            padding: 8px; /* Add padding for better spacing */
-            border: 1px solid #ddd; /* Add borders to table cells */
+          
+
+            table {
+                page-break-inside: avoid;
+                border-collapse: collapse;
+                border: 1px solid black;
+            }
+
+            td, th {
+                padding: 5px;
+                text-align: center;
+                border: 1px solid #ddd;
+                white-space: nowrap;  /* Hindari pemotongan konten pada kolom yang lebih lebar */
+            }
+
+            /* Force landscape mode */
+            @page {
+                size: A4 landscape;
+                margin: 10mm;
+            }
+
+            .kop-surat {
+                page-break-after: avoid;
+            }
+
+            tr {
+                page-break-inside: avoid; /* Prevent rows from splitting */
+            }
+
+            .no-print {
+                display: none;
+            }
         }
-        /* Center text in the first column */
-        td:first-child {
-            text-align: center; /* Center text in the first column */
+        @media print {
+            table {
+                page-break-inside: auto;
+            }
+
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            thead {
+                display: table-header-group; /* agar header tetap di atas saat pindah halaman */
+            }
+
+            tfoot {
+                display: table-footer-group;
+            }
+
+            a {
+                text-decoration: none;
+                color: black !important;
+            }
+
+            body {
+                margin: 0;
+            }
         }
-        td.status-cell {
-            text-align: center; /* Ensure text is centered in the status column */
-            vertical-align: middle; /* Vertically center the text */
-        }
-        /* Alternate row colors */
-        tr:nth-child(odd) {
-            background-color: #ffffff; /* White background for odd rows */
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2; /* Light gray background for even rows */
-        }
-        tr:hover {
-            background-color: #e9ecef; /* Lighter hover color */
-        }
-        /* Page counter */
-        .page:after {
-            content: counter(page);
-        }
+       
+       
     </style>
 </head>
-<body>
+<body class="p-2">
 
     <!-- Header -->
-    <header>
-        <h1>{{ $title }}</h1>
-        <h2>Created at: {{ $date }}</h2>
-        <p>Downloaded from website <a href="https://absent.saktiproject.my.id">AbsensiSAKTI</a></p>
-    </header>
+    <div class="kop-surat">
+        <div class="logo">
+            <img src="{{ app('settings')['site_logo'] === '' ? asset('asset/img/default-logo.png') : app('settings')['site_logo']  }}" alt="Logo">
+        </div>
+        <div class="text">
+            <h2>LAPORAN DATA PESERTA DIDIK TAHUN AJARAN {{ strtoupper($tahunAjaran) }}
+            </h2>
+            <h1><b>{{ app('settings')['site_name'] }}</b></h1>
+            <h2>{{ app('settings')['address'] }}</h2>
+            <p>Telepon: {{ app('settings')['phone'] }} | Email: {{ app('settings')['email'] }}</p>
+        </div>
+    </div>
 
-    <div class="container table-container">
+    <div class=" ">
         <div class="table-responsive">
             <table class="table table-bordered table-striped">
                 <thead>
@@ -155,11 +192,26 @@
             </table>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer>
-        &copy; 2024 AbsensiSAKTI. All rights reserved. | Page <span class="page"></span>
-    </footer>
-
+    @if(!request('kelas'))
+        <script>
+            window.onload = function () {
+                // Tunggu sampai iframe benar-benar siap
+                const printContent = document.body;
+    
+                if (printContent) {
+                    // Tambahkan delay kecil untuk memastikan konten sudah ter-load
+                    setTimeout(function () {
+                        window.print();
+                    }, 500); // Delay 0.5 detik
+                }
+    
+                // Tutup tab setelah beberapa detik (agar pengguna bisa melihat preview sebentar)
+                setTimeout(function () {
+                    window.close();
+                }, 2000); // 2 detik (atur sesuai kebutuhan)
+            };
+        </script>
+    @endif
+   
 </body>
 </html>

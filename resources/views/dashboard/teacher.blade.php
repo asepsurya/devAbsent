@@ -1058,5 +1058,6 @@ getCurrentWeekRange();
     var body = document.body;
     body.classList.add("mini-sidebar");
 </script>
+<script src="{{ asset('asset/js/capture_ip.js') }}"></script>
 @endsection
 @endsection

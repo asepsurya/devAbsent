@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\student;
-use Illuminate\Support\Facades\Hash;
+use App\Models\LoginLog;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Artisan;
 use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\Permission\Models\Permission;
@@ -114,4 +117,14 @@ class PenggunaController extends Controller
         }
 
     }
+    
+    public function userLog(){
+        $title = 'Log Pengguna';
+        $logs = LoginLog::with('user')->latest()->get();
+        return view('pengguna.log', compact('logs','title'));
+    }
+
+    
+     
+   
 }

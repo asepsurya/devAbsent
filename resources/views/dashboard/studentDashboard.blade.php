@@ -626,7 +626,9 @@
 </div>
 
 @section('javascript')
+<script src="{{ asset('asset/js/capture_ip.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
 <script>
     $(document).ready(function(){
         var owl = $(".owl-carousel");

@@ -8,6 +8,7 @@ use App\Http\Controllers\PDFController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\authController;
+use App\Http\Controllers\nilaiController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\RegionController;
@@ -28,15 +29,17 @@ use App\Http\Controllers\DataIndukController;
 use App\Http\Controllers\FileTugasController;
 use App\Http\Controllers\inOutTimeController;
 use App\Http\Controllers\kelaslistController;
-use App\Http\Controllers\AppsConfigController;
 
+use App\Http\Controllers\AppsConfigController;
 use App\Http\Controllers\AnnouncementController;
-use App\Http\Controllers\plugin\EventController;
 
 // Plugin Controller ---------------------------------------------
+use App\Http\Controllers\plugin\EventController;
 use App\Http\Controllers\verifikasiUserController;
 use App\Http\Controllers\plugin\config\pluginController;
-use App\Http\Controllers\setelanHari\setelanHariController;
+
+use App\Http\Controllers\plugin\config\deletePluginController;
+use App\Http\Controllers\plugin\config\statusPluginController;
 
 
 Route::get('/',[landingController::class,'index'])->name('index');
@@ -53,6 +56,7 @@ Route::post('/reset-password2', [authController::class, 'submit'])->name('passwo
 Route::post('/forgot-password', [authController::class, 'sendResetLink']);
 Route::get('/reset-password/{token}', [authController::class, 'showResetForm'])->name('resetpass');
 Route::post('/reset-password', [authController::class, 'resetPassword']);
+
 // -------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------- LOGIN REGISTER PAGE  --------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------------------
@@ -77,7 +81,7 @@ Route::middleware('auth')->group(function () {
     // -------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------- Profile Route ---------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
-
+    Route::post('/store-local-ip', [authController::class, 'storeLocalIP']);
     Route::get('/profile/{id}',[authController::class,'profileIndex'])->name('profileIndex');
     Route::post('/profile/edit/action',[authController::class,'profileUpdate'])->name('profileUpdate');
     Route::post('/profile/edit/imageProfile',[authController::class,'imageProfile'])->name('imageProfile');
@@ -253,6 +257,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/absentrfid/teacher', [reportController::class, 'reportRFIDTeacher']);
     Route::get('/report/absent/students', [reportController::class, 'reportAbsentStudent']);
     Route::get('/report/absent/kelas', [PDFController::class, 'reportAbsentKelas'])->name('absentKelas');
+    Route::get('/report/student', [PDFController::class, 'reportstudent'])->name('report.students');
+    Route::get('/report/gtk', [PDFController::class, 'reportgtk'])->name('report.gtk');
 
     // -------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------- ROUTE PENGGUNA ------------------------------------------------------------------------
@@ -268,6 +274,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/user_privileges',[penggunaController::class,'userreportAbsentKelas_privilegesIndex']);
     Route::post('/user/changePassword',[penggunaController::class,'changePassword'])->name('changePassword');
     Route::post('/user/changeRole',[penggunaController::class,'changeRole'])->name('changeRole');
+    Route::get('/user/logs',[penggunaController::class,'userLog'])->name('log_pengguna');
 
     // -------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------- MENU VERIFIKAS USER ------------------------------------------------------------------------
@@ -368,6 +375,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/check-update', [UpdateController::class, 'checkupdate'])->name('checkupdate');
 
     // -------------------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------- MANAGEMENT PENILAIAN ------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------------------------------
+    Route::get('/nilai',[nilaiController::class,'index'])->name('nilai.index');
+    // -------------------------------------------------------------------------------------------------------------------------------
     // ------------------------------------- LOGOUT ROUTE --------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
     Route::post('/logout',[authController::class,'logout'])->name('logout');
@@ -414,23 +425,3 @@ Route::middleware('auth')->group(function () {
 // -------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------- START PLUGIN INSTALL HERE -------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------------------
-
-
-/* *//* */
-/* */
-// Routes dari Plugin plugin451238
-use App\Http\Controllers\plugin\config\deletePluginController;
-use App\Http\Controllers\plugin\config\statusPluginController;
-Route::middleware('auth')->group(function () {
-    Route::get('/kalender',[EventController::class,'kalender']);
-    Route::get('/events', [EventController::class, 'events']);  // Fetch events
-    Route::post('/events/create', [EventController::class, 'create']);  // Create new event
-    Route::get('/events/{id}', [EventController::class, 'destroy']);
-
-    Route::get('/fullcalender',[EventController::class,'index']);
-    Route::post('/fullcalenderAjax',[EventController::class,'ajax']);
-    Route::post('/addEventModal',[EventController::class,'addEventModal']);
-    Route::post('/editEventModal',[EventController::class,'editEventModal']);
-    Route::get('/hapusEventModal/{id}',[EventController::class,'hapusEventModal']);
-});
-// End dari Plugin
