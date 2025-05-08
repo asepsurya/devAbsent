@@ -26,12 +26,12 @@ app/Http/Controllers/plugin/**
 # Membolehkan folder config di dalam plugin untuk tetap di-track oleh Git
 !app/Http/Controllers/plugin/config/
 
-# Mengabaikan file menu_plugin.blade.php
-resources/views/partial/menu_plugin.blade.php
+# # Mengabaikan file menu_plugin.blade.php
+# resources/views/partial/menu_plugin.blade.php
 
 # Mengabaikan routes/plugins/ dan app/Imports
-routes/plugins/
-app/Imports
+# routes/plugins/
+# app/Imports
 
 # Mengabaikan semua file dan folder dalam resources/views/plugin/
 resources/views/plugin/**
