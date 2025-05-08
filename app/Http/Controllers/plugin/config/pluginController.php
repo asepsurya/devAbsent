@@ -256,5 +256,11 @@ class pluginController extends Controller
     }
 
 
+    public function store(){
+        return view('plugin.store',[
+            'title' => 'Plugin Store'
+        ]);
+    }
+
 
 }

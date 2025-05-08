@@ -27,8 +27,15 @@
         </nav>
     </div>
     <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-        <div >
-            <a href="{{ route('pluginImportForm') }}"  rel="noopener noreferrer"><button class="btn btn-primary ">Tambah Plugin Baru</button></a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('pluginImportForm') }}" class="btn btn-primary d-flex align-items-center gap-1">
+                <i class="ti ti-plus"></i>
+                <span>Tambah Plugin Baru</span>
+            </a>
+            <a href="{{ route('plugin.store') }}" class="btn btn-success d-flex align-items-center gap-1">
+                <i class="ti ti-shopping-cart"></i>
+                <span>Apps Store</span>
+            </a>
         </div>
     </div>
 </div>

@@ -36,6 +36,7 @@ use App\Http\Controllers\AnnouncementController;
 // Plugin Controller ---------------------------------------------
 use App\Http\Controllers\verifikasiUserController;
 use App\Http\Controllers\plugin\config\pluginController;
+use App\Http\Controllers\setelanHari\setelanHariController;
 use App\Http\Controllers\plugin\config\deletePluginController;
 use App\Http\Controllers\plugin\config\statusPluginController;
 
@@ -350,6 +351,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/plugin',[PluginController::class,'index'])->name('plugin.index');
     Route::get('/plugin/import', [PluginController::class, 'showImportForm'])->name('pluginImportForm');
+    Route::get('/plugin/store', [PluginController::class, 'store'])->name('plugin.store');
     // Proses import plugin
     Route::post('/plugin/import', [PluginController::class, 'importPlugin'])->name('pluginImport');
     Route::get('/plugin/delete{id}', [deletePluginController::class, 'deletePlugin'])->name('deletePlugin');
