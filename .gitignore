@@ -27,11 +27,11 @@ app/Http/Controllers/plugin/**
 !app/Http/Controllers/plugin/config/
 
 # # Mengabaikan file menu_plugin.blade.php
-# resources/views/partial/menu_plugin.blade.php
+resources/views/partial/menu_plugin.blade.php
 
-# Mengabaikan routes/plugins/ dan app/Imports
-# routes/plugins/
-# app/Imports
+# Mengabaikan routes/plugins/ 
+routes/plugins/
+app/Imports
 
 # Mengabaikan semua file dan folder dalam resources/views/plugin/
 resources/views/plugin/**
