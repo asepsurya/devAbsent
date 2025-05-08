@@ -39,3 +39,4 @@ resources/views/plugin/**
 # Membolehkan index.blade.php dan import.blade.php tetap di-track
 !resources/views/plugin/index.blade.php
 !resources/views/plugin/import.blade.php
+!resources/views/plugin/store.blade.php
