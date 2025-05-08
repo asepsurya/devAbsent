@@ -40,106 +40,111 @@ class pluginController extends Controller
         ]);
     }
 
+
+
     public function importPlugin(Request $request)
-    {
-       // Validasi file ZIP yang di-upload
+   {
+        // ✅ Validasi file ZIP yang di-upload
         $request->validate([
             'plugin_zip' => 'required|mimes:zip|max:10240', // 10MB Max
         ]);
 
         $file = $request->file('plugin_zip');
-        // Ambil nama file tanpa ekstensi
+
+        // ✅ Ambil nama file tanpa ekstensi
         $pluginZipName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $pluginPath = 'plugins/' . $pluginZipName . '.zip';
 
-
-        // Menyimpan file ZIP ke storage dengan nama yang diperoleh
+        // ✅ Simpan di folder /plugins di storage
         $pluginZipPath = $file->storeAs('plugins', $pluginZipName . '.zip');
 
-        // Membuka dan ekstrak file ZIP
-        $zip = new ZipArchive;
+        // ✅ Lokasi file yang disimpan
         $storagePath = storage_path('app/' . $pluginZipPath);
 
-        // Tentukan nama plugin berdasarkan nama file ZIP
-        // $pluginName = pathinfo($pluginZipPath, PATHINFO_FILENAME);
+        // ✅ Buat nama plugin unik (biar tidak tabrakan)
         $pluginName = 'plugin' . rand(100000, 999999);
 
-        // Tentukan folder ekstraksi
+        // ✅ Path untuk ekstraksi
         $extractBasePath = storage_path('app/plugins/extracted');
         $extractPath = $extractBasePath . '/' . $pluginName;
-         // **Cek apakah plugin dengan nama ini sudah ada**
-        if (Storage::exists($pluginName)) {
-            toastr()->info('Plugin Sudah Terpasang');
-            return redirect()->back();
-         }
-        // Pastikan folder tujuan ekstraksi ada
+
+        // ✅ Cek jika folder plugin sudah ada
+        if (File::exists($extractPath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Plugin sudah terpasang'
+            ], 400);
+        }
+
+        // ✅ Buat folder jika belum ada
         File::ensureDirectoryExists($extractPath);
 
+        $zip = new \ZipArchive;
+
         if ($zip->open($storagePath) === true) {
-            // Ekstrak file ZIP ke folder yang sudah ditentukan
+            // ✅ Ekstrak isi ZIP ke folder tujuan
             $zip->extractTo($extractPath);
             $zip->close();
 
-            // Path ke file info.php yang berada di dalam plugin ZIP yang telah diekstrak
+            // ✅ Path ke info.php yang wajib ada di dalam ZIP
             $infoFile = $extractPath . '/info.php';
 
             if (File::exists($infoFile)) {
-                // Memasukkan file info.php
+                // ✅ Ambil konfigurasi dari info.php
                 $info = include $infoFile;
 
-                // Memeriksa dan mengambil data dari info.php
-                $name_plugin = isset($info['name_plugin']) ? $info['name_plugin'] : 'Unknown Plugin';
-                $version = isset($info['version']) ? $info['version'] : '1.0.0';
-                $auth = isset($info['auth']) ? $info['auth'] : 'Unknown';
-                $description = isset($info['description']) ? $info['description'] : '';
+                // ✅ Ambil informasi plugin
+                $name_plugin = $info['name_plugin'] ?? 'Unknown Plugin';
+                $version = $info['version'] ?? '1.0.0';
+                $auth = $info['auth'] ?? 'Unknown';
+                $description = $info['description'] ?? '';
 
-                // Cek apakah plugin sudah ada di database dengan nama yang sama
+                // ✅ Cek apakah sudah ada di database
                 $existingPlugin = Plugin::where('name', $name_plugin)->first();
 
                 if ($existingPlugin) {
-                    // Jika plugin sudah ada, beri pesan error dan hentikan proses
-                    toastr()->warning( 'Plugin "' . $name_plugin . '" sudah terinstall.');
-                    return redirect()->route('plugin.index');
-                } else {
-
-                    // Membuat entri plugin baru di database menggunakan model Plugin
-                    Plugin::create([
-                        'name' => $name_plugin,
-                        'alias'=>$pluginName,
-                        'status' => '1', // Asumsi status aktif
-                        'version' => $version,
-                        'auth' => $auth,
-                        'description' => $description,
-                    ]);
-
-                    // Log untuk memastikan data plugin berhasil disimpan
-                    \Log::info('Plugin "' . $name_plugin . '" berhasil ditambahkan dengan versi: ' . $version);
-
-                    // Menambahkan routes jika ada file routes.php
-                    $this->addRoutesFromPlugin($extractPath, $pluginName);
-                    // Memindahkan controller jika ada di dalam folder controllers
-                    $this->moveControllers($extractPath);
-                    // memindahan folder view
-                    $this->moveViews($extractPath);
-                    // menambah menu
-                    $this->addMenu($extractPath);
-                    // optional import
-                    $this->addImport($extractPath);
-
-                    toastr()->success('Plugin "' . $name_plugin . '" berhasil diimpor dan di-install!');
-                    // Pesan sukses
-                    return redirect()->route('plugin.index');
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Plugin "' . $name_plugin . '" sudah terinstall.'
+                    ], 400);
                 }
+
+                // ✅ Simpan ke database
+                Plugin::create([
+                    'name' => $name_plugin,
+                    'alias' => $pluginName,
+                    'status' => '1',
+                    'version' => $version,
+                    'auth' => $auth,
+                    'description' => $description,
+                    'api_id' => $request->api_id ?? ''
+                ]);
+
+                \Log::info('Plugin "' . $name_plugin . '" berhasil ditambahkan dengan versi: ' . $version);
+
+                // ✅ Jalankan proses tambahan
+                $this->addRoutesFromPlugin($extractPath, $pluginName);
+                $this->moveControllers($extractPath);
+                $this->moveViews($extractPath);
+                $this->addMenu($extractPath);
+                $this->addImport($extractPath);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Plugin "' . $name_plugin . '" berhasil diimpor dan di-install!'
+                ], 200);
             } else {
-                toastr()->warning('File info.php tidak ditemukan di plugin.');
-                return redirect()->route('plugin.index');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File info.php tidak ditemukan di plugin.'
+                ], 400);
             }
         } else {
-            toastr()->error('Gagal mengekstrak file plugin.');
-            return redirect()->route('plugin.index');
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengekstrak file plugin.'
+            ], 500);
         }
-    }
-
+   }
     private function addRoutesFromPlugin($extractPath , $pluginName)
     {
 
@@ -260,6 +265,73 @@ class pluginController extends Controller
         return view('plugin.store',[
             'title' => 'Plugin Store'
         ]);
+    }
+
+    public function downloadPlugin(Request $request)
+    {
+        $request->validate([
+            'plugin_url' => 'required|url',
+            'plugin_name' => 'required|string'
+        ]);
+
+        try {
+            // 🔥 Ambil file dari URL eksternal menggunakan cURL agar lebih aman dan bisa handle error
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $request->plugin_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
+            $contents = curl_exec($ch);
+            $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpStatus !== 200 || !$contents) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengunduh plugin, URL tidak dapat diakses atau file tidak ditemukan.'
+                ]);
+            }
+
+            // 🔥 Simpan di Laravel Storage
+            $fileName = $request->plugin_name . '.zip';
+            $filePath = 'plugins/' . $fileName;
+
+            // Simpan file di storage (pastikan disk "public" sudah di-link)
+            Storage::disk('local')->put($filePath, $contents);
+
+            // 🔥 URL publik yang bisa diakses
+            $publicUrl = asset('storage/' . $filePath);
+
+            return response()->json([
+                'success' => true,
+                'file_path' => $publicUrl
+            ]);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengunduh plugin: ' . $e->getMessage()
+            ]);
+        }
+
+    }
+
+    public function checkPluginInstalled($id)
+    {
+        $isInstalled = plugin::where('api_id', $id)->exists();
+
+        return response()->json([
+            'installed' => $isInstalled
+        ]);
+    }
+
+    public function paymentPage($id) {
+        $plugin = Plugin::where('api_id',$id)->first();
+        if (!$plugin) {
+            return redirect()->route('plugin.index')->with('error', 'Plugin tidak ditemukan.');
+        }
+        return view('plugin.payment', compact('plugin'));
     }
 
 

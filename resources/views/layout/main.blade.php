@@ -5,18 +5,22 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <meta name="description" content="Absensi Sakti adalah aplikasi absensi pintar yang dirancang untuk memudahkan proses pencatatan kehadiran karyawan, siswa, atau anggota organisasi secara cepat, akurat, dan real-time.">
+    <meta name="description"
+        content="Absensi Sakti adalah aplikasi absensi pintar yang dirancang untuk memudahkan proses pencatatan kehadiran karyawan, siswa, atau anggota organisasi secara cepat, akurat, dan real-time.">
     <meta name="keywords" content="admin, estimates, bootstrap, business, html5, responsive, Projects">
     <meta name="author" content="Tasik Base Technology">
     <meta name="robots" content="noindex, nofollow">
 
     <title>{{ app('settings')['site_name'] }} | {{ $title }}</title>
-    <link rel="shortcut icon" type="image/x-icon" href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_fav']) }}">
+    <link rel="shortcut icon" type="image/x-icon"
+        href="{{ app('settings')['site_fav'] == '' ? asset('asset/img/default-logo.png') : asset('storage/' . app('settings')['site_fav']) }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     {{-- <script src="{{ asset('asset/js/theme.js') }}"></script> --}}
     <script src="{{ asset('asset/js/lightDark.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <link rel="stylesheet" href="{{ asset('asset/css/boostrap.min.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.2/feather.min.js" integrity="sha512-zMm7+ZQ8AZr1r3W8Z8lDATkH05QG5Gm2xc6MlsCdBz9l6oE8Y7IXByMgSm/rdRQrhuHt99HAYfMljBOEZ68q5A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.2/feather.min.js"
+        integrity="sha512-zMm7+ZQ8AZr1r3W8Z8lDATkH05QG5Gm2xc6MlsCdBz9l6oE8Y7IXByMgSm/rdRQrhuHt99HAYfMljBOEZ68q5A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="{{ asset('asset/css/tabler-icon/tabler-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/daterangepicker.css') }}">
 
@@ -38,10 +42,17 @@
         .ti-spin {
             animation: spin 1s linear infinite;
         }
-            @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         .search-suggestions {
             position: absolute;
             top: 100%;
@@ -65,6 +76,7 @@
         .search-suggestions div:hover {
             background: #f8f9fa;
         }
+
         /* sidebar left */
         .sidebar .sidebar-menu>ul>li ul li a {
             display: -webkit-box;
@@ -85,17 +97,19 @@
     @yield('css')
 </head>
 
-<body >
+<body>
 
     <div class="main-wrapper">
         @include('partial.header')
         @include('partial.sidebar')
+        @include('layout.ubahpassword')
         <div class="page-wrapper">
             <div class="content blank-page">
                 {{-- main Content --}}
 
                 @if ($updateAvailable)
-                <div id="updateAlert" class="alert alert-primary d-flex align-items-center justify-content-between" role="alert">
+                <div id="updateAlert" class="alert alert-primary d-flex align-items-center justify-content-between"
+                    role="alert">
                     <div class="d-flex align-items-center">
                         <i class="ti ti-info-circle me-2"></i>
                         <div class="text-primary">
@@ -178,27 +192,29 @@
                         });
                     });
                 </script>
-            @endif
+                @endif
                 @yield('container')
                 @include('sweetalert::alert')
             </div>
         </div>
-
     </div>
-    @include('layout.ubahpassword')
     <script src="{{ asset('asset/js/feather.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
-    <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
+    <script src="{{ asset('asset/js/jquery.slimscroll.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript">
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
 
 
 
     <script src="{{ asset('asset/js/owl.carousel.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
-    <script src="{{ asset('asset/js/rocket-loader.min.js') }}" data-cf-settings="d8aa163ebe66f835399f615d-|49" defer></script>
+    <script src="{{ asset('asset/js/rocket-loader.min.js') }}" data-cf-settings="d8aa163ebe66f835399f615d-|49" defer>
+    </script>
     <script src="{{ asset('asset/js/moment.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <script src="{{ asset('asset/js/feather.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
-    <script src="{{ asset('asset/Plugins/daterangepicker/daterangepicker.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
-    <script src="{{ asset('asset/js/bootstrap-datetimepicker.min.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
+    <script src="{{ asset('asset/Plugins/daterangepicker/daterangepicker.js') }}"
+        type="d8aa163ebe66f835399f615d-text/javascript"></script>
+    <script src="{{ asset('asset/js/bootstrap-datetimepicker.min.js') }}"
+        type="d8aa163ebe66f835399f615d-text/javascript"></script>
     <script src="{{ asset('asset/js/script.js') }}" type="d8aa163ebe66f835399f615d-text/javascript"></script>
     @yield('javascript');
 </body>

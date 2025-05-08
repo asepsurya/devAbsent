@@ -352,8 +352,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/plugin',[PluginController::class,'index'])->name('plugin.index');
     Route::get('/plugin/import', [PluginController::class, 'showImportForm'])->name('pluginImportForm');
     Route::get('/plugin/store', [PluginController::class, 'store'])->name('plugin.store');
+    Route::post('/plugin/download', [PluginController::class, 'downloadPlugin'])->name('plugin.download');
     // Proses import plugin
-    Route::post('/plugin/import', [PluginController::class, 'importPlugin'])->name('pluginImport');
+    Route::post('/plugin/import/action', [PluginController::class, 'importPlugin'])->name('pluginImport');
+    Route::get('/plugin/payment/{id}', [PluginController::class, 'paymentPage'])->name('plugin.payment');
+
+    Route::get('/plugin/check/{id}', [PluginController::class, 'checkPluginInstalled']);
+
     Route::get('/plugin/delete{id}', [deletePluginController::class, 'deletePlugin'])->name('deletePlugin');
     Route::get('/plugin/status', [statusPluginController::class, 'statusPlugin'])->name('sttatusPlugin');
 

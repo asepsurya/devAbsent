@@ -29,7 +29,7 @@ app/Http/Controllers/plugin/**
 # # Mengabaikan file menu_plugin.blade.php
 resources/views/partial/menu_plugin.blade.php
 
-# Mengabaikan routes/plugins/ 
+# Mengabaikan routes/plugins/
 routes/plugins/
 app/Imports
 
@@ -40,3 +40,4 @@ resources/views/plugin/**
 !resources/views/plugin/index.blade.php
 !resources/views/plugin/import.blade.php
 !resources/views/plugin/store.blade.php
+!resources/views/plugin/payment.blade.php

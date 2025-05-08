@@ -2,7 +2,6 @@
 @section('css')
 <style>
     .nav-tabs .nav-link.active {
-      
         border-color: #ddd #ddd #054c98 !important;
         color: #1a1a1a !important;
         font-weight: 500;
@@ -101,27 +100,29 @@
     .plugin-footer .right p {
         margin: 0;
     }
+
     .plugin-card img {
-            object-fit: cover;
-            height: 100px;
-            width: 100px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-        .plugin-card img {
-            object-fit: cover;
-            height: 80px;
-            width: 80px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-        .content.blank-page{
-            padding: 0px;
-            margin: 0px;
-        }
+        object-fit: cover;
+        height: 100px;
+        width: 100px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .plugin-card img {
+        object-fit: cover;
+        height: 80px;
+        width: 80px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .content.blank-page {
+        padding: 0px;
+        margin: 0px;
+    }
 </style>
 <style>
- 
     .plugin-footer {
         padding: 10px;
         border-top: 1px solid #eee;
@@ -144,7 +145,7 @@
         border-color: #007bff;
     }
 
-  
+
 
     /* Loading Spinner */
     .spinner {
@@ -158,32 +159,42 @@
     }
 
     @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
+        0% {
+            transform: rotate(0deg);
+        }
 
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+    }
 </style>
 @endsection
 @section('container')
-<div >
-    <ul class="nav nav-tabs mb-3 p-2 rounded" id="pluginTabs" role="tablist">
+
+    <ul class="nav nav-tabs mb-3 p-2 " id="pluginTabs" role="tablist" style="margin-top:-20px;">
         <li class="ms-2">
             <h2 class="mt-2 mb-0"><span class="ti ti-brand-appstore"></span> Apps Store</h2>
         </li>
-     
         <li class="ms-auto d-flex align-items-center gap-2">
-            <label class="mb-0" for="searchPlugin" style="font-size: 0.875rem;">Cari Plugin</label>
-            <input class="form-control " id="searchPlugin" style="max-width: 200px;" type="search" oninput="searchPlugin()" placeholder="Cari plugin...">
-         
+            <input class="form-control " id="searchPlugin" style="max-width: 200px;" type="search"
+                oninput="searchPlugin()" placeholder="Cari plugin...">
         </li>
         <li>
             <a href="/plugin/import" class="ms-2 btn btn-outline-primary">Unggah Plugin</a>
         </li>
     </ul>
 
-  <!-- Modal Detail Plugin -->
-<!-- Modal Detail Plugin -->
-    <div class="modal fade" id="pluginDetailModal" tabindex="-1" aria-labelledby="pluginDetailModalLabel" aria-hidden="true">
+    <!-- Modal Detail Plugin -->
+    <!-- Modal Detail Plugin -->
+    <div class="modal fade" id="pluginDetailModal" tabindex="-1" aria-labelledby="pluginDetailModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
@@ -204,14 +215,19 @@
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
-</div>
 
-<footer class=" text-white py-4 mt-5">
-    <div class=" text-center py-2 mt-3">
+
+<footer class="text-white py-2 bg-white border">
+    <div class="text-center ">
         <p class="mb-0 text-muted">© 2025 ScrollWebID. All Rights Reserved.</p>
     </div>
 </footer>
 
+@section('javascript')
+<script>
+    var body = document.body;
+    body.classList.add("mini-sidebar");
+</script>
 <script>
     const API_URL = 'https://admin.scrollwebid.com/api/plugin/list?token=PZV3QbOmeSzE';
     let allPlugins = [];
@@ -222,7 +238,7 @@
         try {
             const response = await fetch(API_URL);
             if (!response.ok) throw new Error('Data gagal diambil');
-            
+
             const result = await response.json();
             allPlugins = result.data; // Save all plugins
             renderPlugins(allPlugins); // Render all plugins initially
@@ -252,13 +268,13 @@
                     <div class="col-12 col-md-4">
                         <div class="plugin-card">
                             <div class="d-flex p-3 gap-3">
-                                <img src="https://admin.scrollwebid.com/storage/${plugin.logo}" 
-                                    alt="${plugin.plugin_name}" 
+                                <img src="https://admin.scrollwebid.com/storage/${plugin.logo}"
+                                    alt="${plugin.plugin_name}"
                                     class="rounded" width="80">
                                 <div>
                                     <h5 class="fw-bold">${plugin.plugin_name}</h5>
                                     <div class="d-flex gap-3 mt-2">
-                                        <button class="btn btn-primary btn-sm" onclick="installPlugin('${plugin.plugin_name}', '${plugin.zip_url}', this)">Instal Sekarang</button>
+                                        <button id="install-btn-${plugin.id}" class="btn btn-primary btn-sm" onclick="installPlugin('${plugin.plugin_name}', 'https://admin.scrollwebid.com/storage/${plugin.plugin_file}', ${plugin.id}, ${plugin.harga}, this)">Instal Sekarang</button>
                                         <a href="#" class="text-primary small align-self-center" onclick="showDetail(${index})">Rincian Lengkap</a>
                                     </div>
                                     <p class="mt-2 text-muted">
@@ -276,7 +292,7 @@
                                         <i class="fa-solid fa-star"></i>
                                         <i class="fa-solid fa-star"></i>
                                     </span>
-                                  
+
                                 </div>
                                 <div class="text-end">
                                     <p class="mb-0 fw-semibold">Diperbarui: <span class="fw-normal">${new Date(plugin.updated_at).toLocaleDateString()}</span></p>
@@ -296,16 +312,16 @@
     function showDetail(index) {
     const plugin = allPlugins[index];
     const modalContent = document.getElementById('pluginDetailContent');
-    
+
     // Menambahkan HTML yang lebih terstruktur dan rapi
     modalContent.innerHTML = `
         <div class="text-center mb-3">
-            <img src="https://admin.scrollwebid.com/storage/${plugin.logo}" 
+            <img src="https://admin.scrollwebid.com/storage/${plugin.logo}"
                  alt="${plugin.plugin_name}" class="rounded-circle mb-3" width="150">
         </div>
         <h4 class="text-primary fw-bold">${plugin.plugin_name}</h4>
         <p class="text-muted">${plugin.description}</p>
-        
+
         <div class="d-flex justify-content-between mt-3">
             <div>
                 <p><strong>Versi:</strong> ${plugin.versi}</p>
@@ -316,53 +332,150 @@
                 <p><strong>Hak Cipta :</strong> © ScroolWebID</p>
             </div>
         </div>
-        
+
         <hr>
         <div class="text-center">
-            <button class="btn btn-primary btn-lg w-100" onclick="installPlugin('${plugin.plugin_name}', '${plugin.zip_url}', this)">Instal Sekarang</button>
+             <button id="install-btn-${plugin.id}" class="btn btn-primary w-100" onclick="installPlugin('${plugin.plugin_name}', 'https://admin.scrollwebid.com/storage/${plugin.plugin_file}', ${plugin.id}, ${plugin.harga}, this)">Instal Sekarang</button>
         </div>
     `;
-    
+
     // Tampilkan modal menggunakan Bootstrap
     const myModal = new bootstrap.Modal(document.getElementById('pluginDetailModal'));
     myModal.show();
 }
 
+async function installPlugin(pluginName, pluginUrl, pluginid, harga, button) {
+    if (harga > 0) {
+        Swal.fire({
+            title: 'Plugin Berbayar',
+            text: `Plugin "${pluginName}" memiliki harga dan Anda akan diarahkan ke halaman pembayaran.`,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Lanjutkan Pembayaran',
+            cancelButtonText: 'Batal',
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-secondary'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/plugin/payment/${pluginid}`;
+            } else {
+                button.innerText = 'Instal Sekarang';
+                button.disabled = false;
+            }
+        });
+        return;
+    }
 
-    // Fungsi untuk menginstal plugin
-    async function installPlugin(pluginName, zipUrl, button) {
-        button.innerText = 'Menginstal...';
-        button.disabled = true;
+    button.innerText = 'Mengunduh Plugin...';
+    button.disabled = true;
 
-        try {
-            const response = await fetch('/plugin/import', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    try {
+        // ✅ Langkah 1: Download ZIP dari server Laravel
+        const downloadResponse = await fetch('/plugin/download', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                plugin_url: pluginUrl,
+                plugin_name: pluginName,
+                plugin_id: pluginid
+            })
+        });
+
+        if (!downloadResponse.ok) throw new Error('Gagal mengunduh plugin');
+
+        const downloadResult = await downloadResponse.json();
+        if (!downloadResult.success) {
+            Swal.fire({
+                title: 'Gagal Mengunduh Plugin',
+                text: downloadResult.message,
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
                 },
-                body: JSON.stringify({
-                    plugin_name: pluginName,
-                    zip_url: zipUrl
-                })
+                buttonsStyling: false
+            }).then(() => {
+                button.innerText = 'Instal Sekarang';
+                button.disabled = false;
+            });
+            return;
+        }
+
+
+        // ✅ Langkah 2: Ambil Blob dari URL hasil download
+        button.innerText = 'Menginstal...';
+
+        const blob = await fetch(downloadResult.file_path).then(res => res.blob());
+
+        // ✅ Buat FormData untuk kirim ke Laravel
+        const formData = new FormData();
+        formData.append('plugin_zip', blob, `${pluginName}.zip`);
+        formData.append('api_id', pluginid);
+
+        // ✅ Kirim ke Laravel untuk proses import
+        const installResponse = await fetch('/plugin/import/action', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: formData
+        });
+
+        const installResult = await installResponse.json();
+        if (installResult.success) {
+            Swal.fire({
+            title: 'Berhasil!',
+            text: `Plugin "${pluginName}" berhasil diinstal!`,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false
+        }).then(() => {
+            window.location.reload();
+        });
+
+        } else {
+            Swal.fire({
+                title: 'Gagal Menginstal Plugin',
+                text: `${installResult.message}`,
+                icon: 'error',
+                confirmButtonText: 'Coba Lagi',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
             });
 
-            if (!response.ok) throw new Error('Gagal menginstal plugin');
-
-            const result = await response.json();
-            if (result.success) {
-                alert(`Plugin ${pluginName} berhasil diinstal!`);
-            } else {
-                alert(`Gagal menginstal plugin: ${result.message}`);
-            }
-        } catch (error) {
-            console.error(error.message);
-            alert('Terjadi kesalahan saat menginstal plugin.');
-        } finally {
-            button.innerText = 'Instal Sekarang';
-            button.disabled = false;
         }
+    } catch (error) {
+        console.error(error.message);
+        Swal.fire({
+            title: 'Terjadi Kesalahan',
+            text: 'Terjadi kesalahan saat proses instalasi plugin.',
+            icon: 'error',
+            confirmButtonText: 'Coba Lagi',
+            customClass: {
+                confirmButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+
+    } finally {
+        button.innerText = 'Instal Sekarang';
+        button.disabled = false;
     }
+}
+
+
+
     // Fungsi pencarian plugin
     function searchPlugin() {
         const query = document.getElementById('searchPlugin').value.toLowerCase();
@@ -375,9 +488,7 @@
     window.onload = fetchPlugins;
 </script>
 
-
-
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@endsection
 @endsection
