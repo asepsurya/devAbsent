@@ -1,5 +1,3 @@
-{{--
-{{-- modal tambah Hari Libur --}}
 <div class="modal fade" id="changePassword" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -46,5 +44,5 @@
 
     </div>
 </div>
-</div> --}}
+</div>
 
