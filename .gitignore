@@ -27,7 +27,7 @@ app/Http/Controllers/plugin/**
 !app/Http/Controllers/plugin/config/
 
 # # Mengabaikan file menu_plugin.blade.php
-# resources/views/partial/menu_plugin.blade.php
+resources/views/partial/menu_plugin.blade.php
 
 # Mengabaikan routes/plugins/
 routes/plugins/
