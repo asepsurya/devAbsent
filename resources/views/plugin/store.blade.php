@@ -174,6 +174,9 @@
         width: 100%;
         z-index: 10;
     }
+    .btn-close {
+      color: #000;
+    }
 </style>
 @endsection
 @section('container')
@@ -207,6 +210,14 @@
             </div>
         </div>
     </div>
+    <div class="px-3 mb-3">
+        <div class="alert alert-info alert-dismissible fade show " role="alert">
+            <strong>Mohon Perhatian!</strong> Demi kenyamanan anda. Jika dibrowser ini terinstal exstensi IDM, Mohon di non-aktifkan dan restart kembali browser anda.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+ 
+
     <div class="row g-3 mx-3" id="plugin-list">
         <!-- Plugin cards will be loaded here -->
     </div>
@@ -224,6 +235,7 @@
 </footer>
 
 @section('javascript')
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     var body = document.body;
     body.classList.add("mini-sidebar");
